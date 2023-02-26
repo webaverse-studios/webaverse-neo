@@ -350,6 +350,140 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pixiv/three-vrm-core@npm:1.0.8":
+  version: 1.0.8
+  resolution: "@pixiv/three-vrm-core@npm:1.0.8"
+  dependencies:
+    "@pixiv/types-vrm-0.0": 1.0.0
+    "@pixiv/types-vrmc-vrm-1.0": 1.0.0
+  peerDependencies:
+    "@types/three": ^0.148.0
+    three: ^0.148.0
+  checksum: 08820898ce2775d285c4e3eb5571d5f75149946ddb66abb50ebe7ac5815f190a54396aa3c0c738555212fbc50808b87e5f0259c452c9bd158de0585a4a5e8626
+  languageName: node
+  linkType: hard
+
+"@pixiv/three-vrm-materials-hdr-emissive-multiplier@npm:1.0.7":
+  version: 1.0.7
+  resolution: "@pixiv/three-vrm-materials-hdr-emissive-multiplier@npm:1.0.7"
+  dependencies:
+    "@pixiv/types-vrmc-materials-hdr-emissive-multiplier-1.0": 1.0.0
+  peerDependencies:
+    "@types/three": ^0.148.0
+    three: ^0.148.0
+  checksum: 5c00b9701e7b42a408d871457f2f5902957f924a7a2d5a0b5ff96ab1c2ed6b282e29ff10622b75edf384c576cdcd2ab8be33276287315d41f2bb8f0a5f8f619c
+  languageName: node
+  linkType: hard
+
+"@pixiv/three-vrm-materials-mtoon@npm:1.0.7":
+  version: 1.0.7
+  resolution: "@pixiv/three-vrm-materials-mtoon@npm:1.0.7"
+  dependencies:
+    "@pixiv/types-vrm-0.0": 1.0.0
+    "@pixiv/types-vrmc-materials-mtoon-1.0": 1.0.0
+  peerDependencies:
+    "@types/three": ^0.148.0
+    three: ^0.148.0
+  checksum: 04d016f435556060cbf715957c5dc616744b9fd3e6422f2e15bf078e81d3ae814d58d08817ba053f29575f985932d2457f62a23d232bd0ab8784f443c1b9c31e
+  languageName: node
+  linkType: hard
+
+"@pixiv/three-vrm-materials-v0compat@npm:1.0.7":
+  version: 1.0.7
+  resolution: "@pixiv/three-vrm-materials-v0compat@npm:1.0.7"
+  dependencies:
+    "@pixiv/types-vrm-0.0": 1.0.0
+    "@pixiv/types-vrmc-materials-mtoon-1.0": 1.0.0
+  peerDependencies:
+    "@types/three": ^0.148.0
+    three: ^0.148.0
+  checksum: 2635185fe97df95c6e9f65c445109f8ee208f1d1f5e538bc6f774178e5cbdc611e588282f40a4c3b6ff676699216dc1f6de9ec93c4bf25b31adbaa870c263060
+  languageName: node
+  linkType: hard
+
+"@pixiv/three-vrm-node-constraint@npm:1.0.7":
+  version: 1.0.7
+  resolution: "@pixiv/three-vrm-node-constraint@npm:1.0.7"
+  dependencies:
+    "@pixiv/types-vrmc-node-constraint-1.0": 1.0.0
+  peerDependencies:
+    "@types/three": ^0.148.0
+    three: ^0.148.0
+  checksum: c0cf57e306c11d8567db8ba71376f350157f8530de340ad7147e28a4ffa6ae223df5b88e4f0a9c988ad4fe15fa4fc864e62fe9fd646fcfdb9618e3e2b0729763
+  languageName: node
+  linkType: hard
+
+"@pixiv/three-vrm-springbone@npm:1.0.7":
+  version: 1.0.7
+  resolution: "@pixiv/three-vrm-springbone@npm:1.0.7"
+  dependencies:
+    "@pixiv/types-vrm-0.0": 1.0.0
+    "@pixiv/types-vrmc-springbone-1.0": 1.0.0
+  peerDependencies:
+    three: ^0.148.0
+  checksum: 8ab535f68a210cb6cd7893ab33f31b739b2824f231442c3058fbc84ae5ae6c50afd5b6568b996e217929f4bccef6e06177fcde9836509b2545ed391636abe364
+  languageName: node
+  linkType: hard
+
+"@pixiv/three-vrm@npm:^1.0.8":
+  version: 1.0.8
+  resolution: "@pixiv/three-vrm@npm:1.0.8"
+  dependencies:
+    "@pixiv/three-vrm-core": 1.0.8
+    "@pixiv/three-vrm-materials-hdr-emissive-multiplier": 1.0.7
+    "@pixiv/three-vrm-materials-mtoon": 1.0.7
+    "@pixiv/three-vrm-materials-v0compat": 1.0.7
+    "@pixiv/three-vrm-node-constraint": 1.0.7
+    "@pixiv/three-vrm-springbone": 1.0.7
+  peerDependencies:
+    "@types/three": ^0.148.0
+    three: ^0.148.0
+  checksum: cb5d4d531d79b54c64dd5f320d2f53ec86a04b0bd4974a3b38c62a723580f161d923df56c12c79f4f2ea346c45c977bb27b40e674fbde7a18ffd1d67944f99b7
+  languageName: node
+  linkType: hard
+
+"@pixiv/types-vrm-0.0@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@pixiv/types-vrm-0.0@npm:1.0.0"
+  checksum: 15c695ba12c1fad1d43ae0c1ed5641eff95ca89d046d449bd7b49db66331e1734135315b4b3c83d8e1a5e4c88cd0841bc4409830a1f143076065eb68cd485184
+  languageName: node
+  linkType: hard
+
+"@pixiv/types-vrmc-materials-hdr-emissive-multiplier-1.0@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@pixiv/types-vrmc-materials-hdr-emissive-multiplier-1.0@npm:1.0.0"
+  checksum: cccbf4ae32664050833ec34710ccd53ff8a710821d011505c9ac42b0e419200f11e0e8d909fe0c022f40551d3719006668be873ae2fbf3ce3e008471850e248c
+  languageName: node
+  linkType: hard
+
+"@pixiv/types-vrmc-materials-mtoon-1.0@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@pixiv/types-vrmc-materials-mtoon-1.0@npm:1.0.0"
+  checksum: e4c7b985208d22ba66628be615e1bc96e75ad2edd73582baa65d631ef3982566de681457c824c7c8bd7e2fed929de2f2fc54606ce65886970243a74771207a48
+  languageName: node
+  linkType: hard
+
+"@pixiv/types-vrmc-node-constraint-1.0@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@pixiv/types-vrmc-node-constraint-1.0@npm:1.0.0"
+  checksum: 53354f36ca60ca950b0c0477f0a57e8664ca8f065eb3438b92527bc2840ba1520f79282934de96bf20485112c812c9f0611ef7a15c86b105bc31a4eb41990e46
+  languageName: node
+  linkType: hard
+
+"@pixiv/types-vrmc-springbone-1.0@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@pixiv/types-vrmc-springbone-1.0@npm:1.0.0"
+  checksum: 1585a717e5d7a4588c6de49a7d983cdab26cd838ab8ebf8a576646e7707cc1518d8fa5b7de00d26d381ff62582869cb7db85c655da133b339bf45aa94bc7fbff
+  languageName: node
+  linkType: hard
+
+"@pixiv/types-vrmc-vrm-1.0@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@pixiv/types-vrmc-vrm-1.0@npm:1.0.0"
+  checksum: a7bd2acdb63933eeb029a66e17269b4cca90a93f96a6ac4df522ff7a38b3a9438aaf0667902f73b721231e346b75e05b4203bf9e82f9960fdd3e10ab1743c2dc
+  languageName: node
+  linkType: hard
+
 "@soulofmischief/array.js@npm:^0.13.0":
   version: 0.13.1
   resolution: "@soulofmischief/array.js@npm:0.13.1"
@@ -428,18 +562,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@soulofmischief/js-utils@npm:=0.21.0":
-  version: 0.21.0
-  resolution: "@soulofmischief/js-utils@npm:0.21.0"
-  dependencies:
-    "@soulofmischief/array.js": ^0.22.0
-    "@soulofmischief/async.js": ^5.0.0
-    "@soulofmischief/strings": ^0.8.0
-    lodash-es: ^4.17.21
-  checksum: 939f8499c52ad8fa46ff8d90b9180f8eadd5754b28a660930829641005362ecb19f169117430ff17e9f96c8b49c8b02fbf30a0a10771f07bd109c97ff42171be
-  languageName: node
-  linkType: hard
-
 "@soulofmischief/js-utils@npm:^0.13.0, @soulofmischief/js-utils@npm:^0.13.1":
   version: 0.13.1
   resolution: "@soulofmischief/js-utils@npm:0.13.1"
@@ -470,6 +592,18 @@ __metadata:
     "@soulofmischief/async.js": ^5.0.0
     lodash: ^4.17.21
   checksum: 49e50355d214c027dc3f1964670c4965e02c4d5612f91389608d26329c86c6d2e34740bdbeed5c2e59d41d66d2ea161246969bc52f8b631a9392b43424ce4ac4
+  languageName: node
+  linkType: hard
+
+"@soulofmischief/js-utils@npm:^0.21.0":
+  version: 0.21.0
+  resolution: "@soulofmischief/js-utils@npm:0.21.0"
+  dependencies:
+    "@soulofmischief/array.js": ^0.22.0
+    "@soulofmischief/async.js": ^5.0.0
+    "@soulofmischief/strings": ^0.8.0
+    lodash-es: ^4.17.21
+  checksum: 939f8499c52ad8fa46ff8d90b9180f8eadd5754b28a660930829641005362ecb19f169117430ff17e9f96c8b49c8b02fbf30a0a10771f07bd109c97ff42171be
   languageName: node
   linkType: hard
 
@@ -567,26 +701,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@webaverse-studios/backend@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "@webaverse-studios/backend@workspace:."
-  dependencies:
-    "@feathersjs/cli": =5.0.0
-    "@webaverse-studios/eslint-config": =1.0.0
-    concurrently: =7.6.0
-    eslint: =8.34.0
-    eslint-plugin-jsdoc: =40.0.0
-    eslint-plugin-promise: =6.1.1
-    process: =0.11.10
-  languageName: unknown
-  linkType: soft
-
 "@webaverse-studios/engine@file:../engine::locator=%40webaverse-studios%2Fupstreet%40workspace%3Apackages%2Fupstreet":
   version: 0.1.0
-  resolution: "@webaverse-studios/engine@file:../engine#../engine::hash=9683ea&locator=%40webaverse-studios%2Fupstreet%40workspace%3Apackages%2Fupstreet"
+  resolution: "@webaverse-studios/engine@file:../engine#../engine::hash=e91b5c&locator=%40webaverse-studios%2Fupstreet%40workspace%3Apackages%2Fupstreet"
   dependencies:
+    "@pixiv/three-vrm": ^1.0.8
+    "@webaverse-studios/runtime": "file:../runtime"
+    murmurhash: ^2.0.1
     three: ^0.150.0
-  checksum: 247cef5e27b2df0abfd2af400fc6fe7dc906f56ed5ca887d89ee3ee5535a8334e81a67025462846d80179c7f1adecf55d80b7668d23d98f5c0bdd779d1e8551b
+    troika-three-text: ^0.47.1
+  checksum: 2119ea8cb80dfd6e509a509a424cfab75826407ace46a6e373f6ae14e196d2c93b73ef9d893b40281138530da184ab359ebd984b1039748c71bc5f01634272b4
   languageName: node
   linkType: hard
 
@@ -594,7 +718,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/engine@workspace:packages/engine"
   dependencies:
+    "@pixiv/three-vrm": ^1.0.8
+    "@webaverse-studios/runtime": "file:../runtime"
+    murmurhash: ^2.0.1
     three: ^0.150.0
+    troika-three-text: ^0.47.1
   languageName: unknown
   linkType: soft
 
@@ -609,15 +737,55 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@webaverse-studios/runtime@file:../runtime::locator=%40webaverse-studios%2Fengine%40file%3A..%2Fengine%23..%2Fengine%3A%3Ahash%3De91b5c%26locator%3D%2540webaverse-studios%252Fupstreet%2540workspace%253Apackages%252Fupstreet":
+  version: 0.1.0
+  resolution: "@webaverse-studios/runtime@file:../runtime#../runtime::hash=79de1d&locator=%40webaverse-studios%2Fengine%40file%3A..%2Fengine%23..%2Fengine%3A%3Ahash%3De91b5c%26locator%3D%2540webaverse-studios%252Fupstreet%2540workspace%253Apackages%252Fupstreet"
+  dependencies:
+    three: ^0.150.0
+  checksum: 3dbb1e54765ab6af5e6ef3707440b9e4c9b5522dfdb8a1f71f368935ed08ab3f10afeadaa492ea2318cb0ad1d5c834b4d3eae830b41748c71e35b8c0e073aab8
+  languageName: node
+  linkType: hard
+
+"@webaverse-studios/runtime@file:../runtime::locator=%40webaverse-studios%2Fengine%40workspace%3Apackages%2Fengine":
+  version: 0.1.0
+  resolution: "@webaverse-studios/runtime@file:../runtime#../runtime::hash=79de1d&locator=%40webaverse-studios%2Fengine%40workspace%3Apackages%2Fengine"
+  dependencies:
+    three: ^0.150.0
+  checksum: 3dbb1e54765ab6af5e6ef3707440b9e4c9b5522dfdb8a1f71f368935ed08ab3f10afeadaa492ea2318cb0ad1d5c834b4d3eae830b41748c71e35b8c0e073aab8
+  languageName: node
+  linkType: hard
+
+"@webaverse-studios/runtime@workspace:packages/runtime":
+  version: 0.0.0-use.local
+  resolution: "@webaverse-studios/runtime@workspace:packages/runtime"
+  dependencies:
+    three: ^0.150.0
+  languageName: unknown
+  linkType: soft
+
 "@webaverse-studios/upstreet@workspace:packages/upstreet":
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/upstreet@workspace:packages/upstreet"
   dependencies:
-    "@soulofmischief/js-utils": =0.21.0
+    "@soulofmischief/js-utils": ^0.21.0
     "@webaverse-studios/engine": "file:../engine"
     mithril: =2.2.2
     sass: =1.58.3
     vite: =4.1.0
+  languageName: unknown
+  linkType: soft
+
+"@webaverse-studios/webaverse-neo@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@webaverse-studios/webaverse-neo@workspace:."
+  dependencies:
+    "@feathersjs/cli": =5.0.0
+    "@webaverse-studios/eslint-config": =1.0.0
+    concurrently: =7.6.0
+    eslint: =8.34.0
+    eslint-plugin-jsdoc: =40.0.0
+    eslint-plugin-promise: =6.1.1
+    process: =0.11.10
   languageName: unknown
   linkType: soft
 
@@ -772,6 +940,15 @@ __metadata:
   version: 1.5.1
   resolution: "base64-js@npm:1.5.1"
   checksum: 669632eb3745404c2f822a18fc3a0122d2f9a7a13f7fb8b5823ee19d1d2ff9ee5b52c53367176ea4ad093c332fd5ab4bd0ebae5a8e27917a4105a4cfc86b1005
+  languageName: node
+  linkType: hard
+
+"bidi-js@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "bidi-js@npm:1.0.2"
+  dependencies:
+    require-from-string: ^2.0.2
+  checksum: 1e33008ed4b248b0350cfed5aebbc8717489bc0d3bcee9f5f99b778d82d997df621adefe6f22fffe005dc3bd8c08445b0b17af7c5d8d1a4a25f15f7702d30e68
   languageName: node
   linkType: hard
 
@@ -2152,6 +2329,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"murmurhash@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "murmurhash@npm:2.0.1"
+  checksum: 8bb90f43b1c41b1d046efe662a02dcc3cdbda4b42fbbadf7488046772d9eecf2b37ffb6cb73d0d96f2ff489d9f4a8252c674bbae588a6179f60854fe0bfe3325
+  languageName: node
+  linkType: hard
+
 "mute-stream@npm:0.0.8":
   version: 0.0.8
   resolution: "mute-stream@npm:0.0.8"
@@ -2480,6 +2664,13 @@ __metadata:
   version: 2.1.1
   resolution: "require-directory@npm:2.1.1"
   checksum: fb47e70bf0001fdeabdc0429d431863e9475e7e43ea5f94ad86503d918423c1543361cc5166d713eaa7029dd7a3d34775af04764bebff99ef413111a5af18c80
+  languageName: node
+  linkType: hard
+
+"require-from-string@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "require-from-string@npm:2.0.2"
+  checksum: a03ef6895445f33a4015300c426699bc66b2b044ba7b670aa238610381b56d3f07c686251740d575e22f4c87531ba662d06937508f0f3c0f1ddc04db3130560b
   languageName: node
   linkType: hard
 
@@ -2863,6 +3054,36 @@ __metadata:
   languageName: node
   linkType: hard
 
+"troika-three-text@npm:^0.47.1":
+  version: 0.47.1
+  resolution: "troika-three-text@npm:0.47.1"
+  dependencies:
+    bidi-js: ^1.0.2
+    troika-three-utils: ^0.47.0
+    troika-worker-utils: ^0.47.0
+    webgl-sdf-generator: 1.1.1
+  peerDependencies:
+    three: ">=0.125.0"
+  checksum: 854d74e1f53898a22d34788f29efea59d253037b6dd4c518b46c60ebb42960ce026d8ced5dde8a04143e963afbe92cdd55123fb9d9c2d1e555d1f9c31cdbe21f
+  languageName: node
+  linkType: hard
+
+"troika-three-utils@npm:^0.47.0":
+  version: 0.47.0
+  resolution: "troika-three-utils@npm:0.47.0"
+  peerDependencies:
+    three: ">=0.125.0"
+  checksum: 2541865d957317c9ceaf386025776ad431ad58ad4bea80782a4607f712f1ad13fe727cc83ac0e6063e9dedc2a7c2dfea8ca385fcdd5b8562bf777a6f87ed75f1
+  languageName: node
+  linkType: hard
+
+"troika-worker-utils@npm:^0.47.0":
+  version: 0.47.0
+  resolution: "troika-worker-utils@npm:0.47.0"
+  checksum: 9fa14a58feba121a80576131eafdfe02c095e2695c071250b6517ea4e40c4f0600be2a9f41da34fb24f6870091f528124d6e47f948c85fdf585dc97f4245d720
+  languageName: node
+  linkType: hard
+
 "ts-node@npm:^10.9.1":
   version: 10.9.1
   resolution: "ts-node@npm:10.9.1"
@@ -3036,6 +3257,13 @@ __metadata:
   dependencies:
     defaults: ^1.0.3
   checksum: 814e9d1ddcc9798f7377ffa448a5a3892232b9275ebb30a41b529607691c0491de47cba426e917a4d08ded3ee7e9ba2f3fe32e62ee3cd9c7d3bafb7754bd553c
+  languageName: node
+  linkType: hard
+
+"webgl-sdf-generator@npm:1.1.1":
+  version: 1.1.1
+  resolution: "webgl-sdf-generator@npm:1.1.1"
+  checksum: babf69e99ca22e8ff387bbe50a10519969ea8030d302d5ddf509ff15355e2981edf72edfcc1b29fed78fa73a79a2458c391b1ba7c9ada63ac5be665880ec5de0
   languageName: node
   linkType: hard
 

@@ -5,6 +5,10 @@
   "description": "Webaverse Game Engine",
   "main": "index.js",
   "dependencies": {
-    "three": "^0.150.0"
+    "@pixiv/three-vrm": "=1.0.8",
+    "@webaverse-studios/runtime": "file:../runtime",
+    "murmurhash": "=2.0.1",
+    "three": "=0.150.0",
+    "troika-three-text": "=0.47.1"
   }
 }

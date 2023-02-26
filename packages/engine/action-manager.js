@@ -2,113 +2,117 @@
 //   ZineData,
 // } from '../zine/zine-format.js';
 
-import {makeId} from './util.js';
-
-//
+import { makeId } from './util.js'
 
 export class ActionManager extends EventTarget {
-  constructor() {
-    super();
+  constructor () {
+    super()
   }
-  #actionByType = new Map(); // type -> [action]
-  #actionByActionId = new Map(); // actionId -> action
-  
-  addAction(action) {
+  #actionByType = new Map() // type -> [action]
+  #actionByActionId = new Map() // actionId -> action
+
+  addAction (action) {
     if (typeof action.type !== 'string') {
-      console.warn('type must be a string', action);
-      debugger;
+      console.warn('type must be a string', action)
+      debugger
     }
 
     action = {
-      ...action,
-    };
+      ...action
+    }
     if (action.actionId === undefined) {
-      action.actionId = makeId(8);
+      action.actionId = makeId(8)
     }
 
-    let actionTypesArray = this.#actionByType.get(action.type);
+    let actionTypesArray = this.#actionByType.get(action.type)
     if (!actionTypesArray) {
-      actionTypesArray = [];
-      this.#actionByType.set(action.type, actionTypesArray);
+      actionTypesArray = []
+      this.#actionByType.set(action.type, actionTypesArray)
     }
-    actionTypesArray.push(action);
+    actionTypesArray.push(action)
 
     if (this.#actionByActionId.has(action.actionId)) {
-      debugger;
+      debugger
     }
-    this.#actionByActionId.set(action.actionId, action);
+    this.#actionByActionId.set(action.actionId, action)
 
-    this.dispatchEvent(new MessageEvent('actionadded', {
-      data: {
-        action,
-      },
-    }));
+    this.dispatchEvent(
+      new MessageEvent('actionadded', {
+        data: {
+          action
+        }
+      })
+    )
 
-    return action;
+    return action
   }
-  removeAction(action) {
-    const actionTypesArray = this.#actionByType.get(action.type);
+  removeAction (action) {
+    const actionTypesArray = this.#actionByType.get(action.type)
     if (!actionTypesArray) {
-      debugger;
+      debugger
     }
-    const actionIndex = actionTypesArray.indexOf(action);
+    const actionIndex = actionTypesArray.indexOf(action)
     if (actionIndex === -1) {
-      debugger;
+      debugger
     }
-    actionTypesArray.splice(actionIndex, 1);
+    actionTypesArray.splice(actionIndex, 1)
     if (actionTypesArray.length === 0) {
-      this.#actionByType.delete(action.type);
+      this.#actionByType.delete(action.type)
     }
 
     if (!this.#actionByActionId.has(action.actionId)) {
-      debugger;
+      debugger
     }
-    this.#actionByActionId.delete(action.actionId);
+    this.#actionByActionId.delete(action.actionId)
 
-    this.dispatchEvent(new MessageEvent('actionremoved', {
-      data: {
-        action,
-      },
-    }));
+    this.dispatchEvent(
+      new MessageEvent('actionremoved', {
+        data: {
+          action
+        }
+      })
+    )
   }
-  removeActionType(type) {
+  removeActionType (type) {
     if (typeof type !== 'string') {
-      console.warn('type must be a string', type);
-      debugger;
+      console.warn('type must be a string', type)
+      debugger
     }
 
     // get the first action of the type
-    const actionTypesArray = this.#actionByType.get(type);
+    const actionTypesArray = this.#actionByType.get(type)
     if (actionTypesArray) {
-      const action = actionTypesArray.shift();
+      const action = actionTypesArray.shift()
       if (actionTypesArray.length === 0) {
-        this.#actionByType.delete(type);
+        this.#actionByType.delete(type)
       }
 
       if (!this.#actionByActionId.has(action.actionId)) {
-        debugger;
+        debugger
       }
-      this.#actionByActionId.delete(action.actionId);
+      this.#actionByActionId.delete(action.actionId)
 
-      this.dispatchEvent(new MessageEvent('actionremoved', {
-        data: {
-          action,
-        },
-      }));
+      this.dispatchEvent(
+        new MessageEvent('actionremoved', {
+          data: {
+            action
+          }
+        })
+      )
     } else {
-      debugger;
+      debugger
     }
   }
-  removeActionId(actionId) {
+  removeActionId (actionId) {
     if (typeof actionId !== 'string') {
-      console.warn('action id must be a string', actionId);
-      debugger;
+      console.warn('action id must be a string', actionId)
+      debugger
     }
 
     // get the first action of the type
-    const action = this.#actionByActionId.get(actionId);
+    const action = this.#actionByActionId.get(actionId)
     if (action) {
-      this.removeAction(action);
+      this.removeAction(action)
 
       // const action = actionTypesArray.shift();
       // if (actionTypesArray.length === 0) {
@@ -126,46 +130,46 @@ export class ActionManager extends EventTarget {
       //   },
       // }));
     } else {
-      debugger;
+      debugger
     }
   }
-  getActionType(type) {
+  getActionType (type) {
     if (typeof type !== 'string') {
-      console.warn('type must be a string', type);
-      debugger;
+      console.warn('type must be a string', type)
+      debugger
     }
-    const actionTypesArray = this.#actionByType.get(type);
+    const actionTypesArray = this.#actionByType.get(type)
     if (actionTypesArray) {
-      return actionTypesArray[0];
+      return actionTypesArray[0]
     } else {
-      return null;
+      return null
     }
   }
-  hasActionType(type) {
+  hasActionType (type) {
     if (typeof type !== 'string') {
-      console.warn('type must be a string', type);
-      debugger;
+      console.warn('type must be a string', type)
+      debugger
     }
-    return this.#actionByType.has(type);
+    return this.#actionByType.has(type)
   }
-  findAction(pred) {
+  findAction (pred) {
     for (const actionTypesArray of this.#actionByType.values()) {
       for (const action of actionTypesArray) {
         if (pred(action)) {
-          return action;
+          return action
         }
       }
     }
-    return null;
+    return null
   }
 
-  getActionsArray() {
-    const result = [];
+  getActionsArray () {
+    const result = []
     for (const actionTypesArray of this.#actionByType.values()) {
       for (const action of actionTypesArray) {
-        result.push(action);
+        result.push(action)
       }
     }
-    return result;
+    return result
   }
 }

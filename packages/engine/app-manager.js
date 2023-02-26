@@ -3,13 +3,11 @@ app manager binds z.js data to live running metaversefile apps.
 you can have as many app managers as you want.
 */
 
-import * as THREE from 'three';
+import * as THREE from 'three'
 // import {ZineData} from '../zine/zine-format.js';
 
-import {getRandomString} from './util.js';
-import {
-  App,
-} from '../app-runtime/app.js';
+import { getRandomString } from './util.js'
+import { App } from '@webaverse-studios/runtime'
 // import physicsManager from './physics/physics-manager.js';
 // import metaversefile from 'metaversefile';
 // import * as coreModules from './core-modules.js';
@@ -24,86 +22,84 @@ import {
 const localData = {
   timestamp: 0,
   frame: null,
-  timeDiff: 0,
-};
+  timeDiff: 0
+}
 // const localFrameOpts = {
 //   data: localData,
 // };
 // const frameEvent = new MessageEvent('frame', localFrameOpts);
 const frameEvent = {
   type: 'frame',
-  data: localData,
-};
+  data: localData
+}
 
 class AppManager extends THREE.Object3D {
-  constructor({
-    engine,
-  }) {
-    super();
+  constructor ({ engine }) {
+    super()
 
-    this.isAppManager = true;
-    
+    this.isAppManager = true
+
     // members
     if (!engine) {
-      console.warn('need engine', {engine});
-      debugger;
+      console.warn('need engine', { engine })
+      debugger
     }
-    this.engine = engine;
+    this.engine = engine
 
     // locals
-    this.apps = new Map();
-    this.transform = new Float32Array(10);
-    
+    this.apps = new Map()
+    this.transform = new Float32Array(10)
+
     // temps
     // this.pendingAddPromises = new Map();
     // this.unbindStateFn = null;
     // this.trackedAppUnobserveMap = new Map();
-    
-    this.onBeforeAppAdd = null;
-    this.onBeforeAppRemove = null;
+
+    this.onBeforeAppAdd = null
+    this.onBeforeAppRemove = null
 
     // this.bindEvents();
   }
 
-  #ownerApp;
-  getOwnerApp() {
-    return this.#ownerApp;
+  #ownerApp
+  getOwnerApp () {
+    return this.#ownerApp
   }
-  setOwnerApp(app) {
-    this.#ownerApp = app;
-  }
-
-  tick(timestamp, timeDiff, frame) {
-    localData.timestamp = timestamp;
-    localData.frame = frame;
-    localData.timeDiff = timeDiff;
-    this.dispatchEvent(frameEvent);
+  setOwnerApp (app) {
+    this.#ownerApp = app
   }
 
-  transplantApp(app, newAppManager) {
+  tick (timestamp, timeDiff, frame) {
+    localData.timestamp = timestamp
+    localData.frame = frame
+    localData.timeDiff = timeDiff
+    this.dispatchEvent(frameEvent)
+  }
+
+  transplantApp (app, newAppManager) {
     if (!this.apps.has(app.instanceId)) {
-      debugger;
+      debugger
     }
     if (newAppManager.apps.has(app.instanceId)) {
-      debugger;
+      debugger
     }
 
     // remove locally
-    this.apps.delete(app.instanceId);
-    this.remove(app);
+    this.apps.delete(app.instanceId)
+    this.remove(app)
     this.dispatchEvent({
       type: 'appremove',
-      data: app,
-    });
+      data: app
+    })
 
     // add remotely
-    newAppManager.apps.set(app.instanceId, app);
-    newAppManager.add(app);
-    app.updateMatrixWorld();
+    newAppManager.apps.set(app.instanceId, app)
+    newAppManager.add(app)
+    app.updateMatrixWorld()
     newAppManager.dispatchEvent({
       type: 'appadd',
-      data: app,
-    });
+      data: app
+    })
 
     // emit transplant event
     this.dispatchEvent({
@@ -111,20 +107,20 @@ class AppManager extends THREE.Object3D {
       data: {
         app,
         oldAppManager: this,
-        newAppManager,
-      },
-    });
+        newAppManager
+      }
+    })
   }
 
-  async loadScnFromUrl(srcUrl) {
-    const res = await fetch(srcUrl);
-    const j = await res.json();
-    const {objects} = j;
+  async loadScnFromUrl (srcUrl) {
+    const res = await fetch(srcUrl)
+    const j = await res.json()
+    const { objects } = j
 
-    const promises = [];
+    const promises = []
     for (let i = 0; i < objects.length; i++) {
       const p = (async () => {
-        const object = objects[i];
+        const object = objects[i]
         let {
           start_url,
           type,
@@ -132,22 +128,25 @@ class AppManager extends THREE.Object3D {
           position = [0, 0, 0],
           quaternion = [0, 0, 0, 1],
           scale = [1, 1, 1],
-          components = [],
-        } = object;
+          components = []
+        } = object
         // if (!start_url) {
         //   throw new Error('no start_url');
         // }
-        position = new THREE.Vector3().fromArray(position);
-        quaternion = new THREE.Quaternion().fromArray(quaternion);
-        scale = new THREE.Vector3().fromArray(scale);
-        
-        const baseUrl = import.meta.url;
+        position = new THREE.Vector3().fromArray(position)
+        quaternion = new THREE.Quaternion().fromArray(quaternion)
+        scale = new THREE.Vector3().fromArray(scale)
+
+        const baseUrl = import.meta.url
         // console.log('baseUrl', baseUrl);
-        const contentId = this.engine.importManager.getObjectUrl({
-          contentId: start_url,
-          type,
-          content,
-        }, baseUrl);
+        const contentId = this.engine.importManager.getObjectUrl(
+          {
+            contentId: start_url,
+            type,
+            content
+          },
+          baseUrl
+        )
         // console.log('url', url)
         // await loadApp(url, position, quaternion, scale, components);
 
@@ -157,19 +156,19 @@ class AppManager extends THREE.Object3D {
           position,
           quaternion,
           scale,
-          components,
+          components
           // instanceId = getRandomString(),
-        });
+        })
         // console.log('add app async 2');
-        await p;
+        await p
         // console.log('add app async 3');
-      })();
-      promises.push(p);
+      })()
+      promises.push(p)
     }
 
-    await Promise.all(promises);
+    await Promise.all(promises)
 
-    console.log('scene loaded:', srcUrl);
+    console.log('scene loaded:', srcUrl)
   }
 
   // XXX need to migrate migrations to a different local system...
@@ -197,11 +196,11 @@ class AppManager extends THREE.Object3D {
 
   /* bindState(nextAppsArray) {
     this.unbindState();
-  
+
     if (nextAppsArray) {
       const observe = e => {
         const {added, deleted} = e.changes;
-        
+
         for (const item of added.values()) {
           let appMap = item.content.type;
           if (appMap.constructor === Object) {
@@ -215,7 +214,7 @@ class AppManager extends THREE.Object3D {
           }
 
           const instanceId = appMap.get('instanceId');
-          
+
           const oldApp = this.apps.find(app => app.instanceId === instanceId);
           if (oldApp) {
             // console.log('accept migration add', instanceId);
@@ -244,10 +243,10 @@ class AppManager extends THREE.Object3D {
           const app = this.getAppByInstanceId(instanceId);
           let migrated = false;
           const peerOwnerAppManager = this.getPeerOwnerAppManager(instanceId);
-          
+
           if (peerOwnerAppManager) {
             // console.log('detected migrate app 1', instanceId, appManagers.length);
-            
+
             const e = new MessageEvent('trackedappexport', {
               data: {
                 instanceId,
@@ -261,12 +260,12 @@ class AppManager extends THREE.Object3D {
             migrated = true;
             break;
           }
-          
+
           // console.log('detected remove app 2', instanceId, appManagers.length);
-          
+
           if (!migrated) {
             // console.log('detected remove app 3', instanceId, appManagers.length);
-            
+
             this.dispatchEvent(new MessageEvent('trackedappremove', {
               data: {
                 instanceId,
@@ -299,17 +298,17 @@ class AppManager extends THREE.Object3D {
   /* trackedAppBound(instanceId) {
     return !!this.trackedAppUnobserveMap.get(instanceId)
   } */
-  
+
   /* async importTrackedApp(trackedApp) {
     const trackedAppBinding = trackedApp.toJSON();
     const {instanceId, contentId, transform, components} = trackedAppBinding;
-    
+
     const p = makePromise();
     p.instanceId = instanceId;
     this.pendingAddPromises.set(instanceId, p);
 
     let live = true;
-    
+
     const clear = e => {
       live = false;
       cleanup();
@@ -399,14 +398,14 @@ class AppManager extends THREE.Object3D {
       // }
     };
     trackedApp.observe(_observe);
-    
+
     const instanceId = trackedApp.get('instanceId');
     this.trackedAppUnobserveMap.set(instanceId, trackedApp.unobserve.bind(trackedApp, _observe));
   } */
 
   /* unbindTrackedApp(instanceId) {
     const fn = this.trackedAppUnobserveMap.get(instanceId);
-    
+
     if (fn) {
       this.trackedAppUnobserveMap.delete(instanceId);
       fn();
@@ -422,9 +421,9 @@ class AppManager extends THREE.Object3D {
     });
     this.addEventListener('trackedappremove', async e => {
       const {instanceId, app} = e.data;
-      
+
       this.unbindTrackedApp(instanceId);
-      
+
       this.removeApp(app);
       app.destroy();
     });
@@ -457,7 +456,7 @@ class AppManager extends THREE.Object3D {
         }
       }
     });
-    
+
     if (typeof window !== 'undefined') {
       const resize = e => {
         this.resize(e);
@@ -469,13 +468,13 @@ class AppManager extends THREE.Object3D {
     }
   } */
 
-  getApps() {
-    const apps = Array.from(this.apps.values());
-    return apps;
+  getApps () {
+    const apps = Array.from(this.apps.values())
+    return apps
   }
 
-  getAppByInstanceId(instanceId) {
-    return this.apps.get(instanceId);
+  getAppByInstanceId (instanceId) {
+    return this.apps.get(instanceId)
   }
 
   /* getAppByPhysicsId(physicsId) {
@@ -544,10 +543,10 @@ class AppManager extends THREE.Object3D {
     return false;
   } */
 
-  clear() {
-    throw new Error('not implemented');
+  clear () {
+    throw new Error('not implemented')
     // XXX iterate the apps Map
-    
+
     /* if (!this.isBound()) {
       const apps = this.apps.slice();
       for (const app of apps) {
@@ -560,17 +559,17 @@ class AppManager extends THREE.Object3D {
     } */
   }
 
-  async addAppAsync({
+  async addAppAsync ({
     contentId,
     app = new App(),
     position = new THREE.Vector3(),
     quaternion = new THREE.Quaternion(),
     scale = new THREE.Vector3(1, 1, 1),
     components = [],
-    instanceId = getRandomString(),
+    instanceId = getRandomString()
   }) {
     if (typeof contentId !== 'string') {
-      debugger;
+      debugger
     }
 
     if (this.onBeforeAppAdd && !this.isUpdating()) {
@@ -581,8 +580,8 @@ class AppManager extends THREE.Object3D {
         quaternion,
         scale,
         components,
-        instanceId,
-      });
+        instanceId
+      })
     }
 
     // const self = this;
@@ -598,15 +597,15 @@ class AppManager extends THREE.Object3D {
       position,
       scale,
       quaternion,
-      components,
-    });
-    app.instanceId = instanceId;
-    this.apps.set(instanceId, app);
+      components
+    })
+    app.instanceId = instanceId
+    this.apps.set(instanceId, app)
 
-    this.add(app);
-    app.updateMatrixWorld();
+    this.add(app)
+    app.updateMatrixWorld()
 
-    return app;
+    return app
 
     // const trackedApp = this.createApp(instanceId);
     // trackedApp.setData('instanceId', instanceId);
@@ -615,7 +614,7 @@ class AppManager extends THREE.Object3D {
     // trackedApp.setData('components', components);
 
     // const loadPromise = (async () => {
-      
+
     // })();
     // this.pendingAddPromises.set(instanceId, loadPromise);
 
@@ -663,59 +662,57 @@ class AppManager extends THREE.Object3D {
       instanceId,
     } = app;
     this.apps.set(instanceId, app);
-    
+
     this.dispatchEvent({
       type: 'appadd',
       data: app,
     });
   } */
 
-  removeApp(app) {
+  removeApp (app) {
     if (app.parent === this) {
       if (this.onBeforeAppRemove && !this.isUpdating()) {
         this.onBeforeAppRemove({
-          app,
-        });
+          app
+        })
       }
 
-      const {
-        instanceId,
-      } = app;
+      const { instanceId } = app
       if (this.apps.has(instanceId)) {
-        this.apps.delete(instanceId);
+        this.apps.delete(instanceId)
 
-        app.parent.remove(app);
-        app.destroy();
+        app.parent.remove(app)
+        app.destroy()
 
         this.dispatchEvent({
           type: 'appremove',
-          data: app,
-        });
+          data: app
+        })
       } else {
-        throw new Error('removing app not in app manager');
+        throw new Error('removing app not in app manager')
       }
     } else {
-      throw new Error('app not child of app manager');
+      throw new Error('app not child of app manager')
     }
   }
 
-  clear() {
-    const apps = Array.from(this.apps.values());
+  clear () {
+    const apps = Array.from(this.apps.values())
     for (const app of apps) {
-      this.removeApp(app);
+      this.removeApp(app)
     }
   }
 
-  #updating = false;
-  isUpdating() {
-    return this.#updating;
+  #updating = false
+  isUpdating () {
+    return this.#updating
   }
-  tx(fn) {
-    this.#updating = true;
+  tx (fn) {
+    this.#updating = true
     try {
-      fn();
+      fn()
     } finally {
-      this.#updating = false;
+      this.#updating = false
     }
   }
 
@@ -741,9 +738,9 @@ class AppManager extends THREE.Object3D {
   /* transplantApp(app, dstAppManager) {
     const {instanceId} = app;
     const srcAppManager = this;
-    
+
     this.unbindTrackedApp(instanceId);
-    
+
     let dstTrackedApp = null;
 
     const wrapTxFn = (srcAppManager.appsArray.doc === dstAppManager.appsArray.doc) ?
@@ -757,9 +754,9 @@ class AppManager extends THREE.Object3D {
       const contentId = srcTrackedApp.get('contentId');
       const transform = srcTrackedApp.get('transform');
       const components = srcTrackedApp.get('components');
-      
+
       srcAppManager.removeTrackedAppInternal(instanceId);
-      
+
       dstTrackedApp = dstAppManager.addTrackedAppInternal(
         instanceId,
         contentId,
@@ -767,7 +764,7 @@ class AppManager extends THREE.Object3D {
         components,
       );
     });
-    
+
     dstAppManager.bindTrackedApp(dstTrackedApp, app);
   } */
 
@@ -781,7 +778,7 @@ class AppManager extends THREE.Object3D {
       app.position.toArray(transform);
       app.quaternion.toArray(transform, 3);
       app.scale.toArray(transform, 7);
-      
+
       const dstTrackedApp = self.addTrackedAppInternal(
         instanceId,
         contentId,
@@ -829,7 +826,7 @@ class AppManager extends THREE.Object3D {
 
   /* pushAppUpdates() {
     if (this.appsArray) {
-      this.appsArray.doc.transact(() => { 
+      this.appsArray.doc.transact(() => {
         this.updatePhysics();
       }, 'push');
     }
@@ -855,7 +852,7 @@ class AppManager extends THREE.Object3D {
           const trackedApp = this.getTrackedApp(app.instanceId);
           if (trackedApp) {
             app.matrixWorld.decompose(localVector, localQuaternion, localVector2);
-        
+
             localVector.toArray(this.transform);
             localQuaternion.toArray(this.transform, 3);
             localVector2.toArray(this.transform, 7);
@@ -915,7 +912,7 @@ class AppManager extends THREE.Object3D {
       if(quaternion[0] !== 0 || quaternion[1] !== 0 || quaternion[2] !== 0) object.quaternion = quaternion;
       if(scale[0] !== 1 || scale[1] !== 1 || scale[2] !== 1) object.scale = scale;
       if(components && components.length > 0) object.components = components;
-    
+
       let contentId = trackedApp.get('contentId');
       const match = contentId.match(/^\/@proxy\/data:([^;,]+),([\s\S]*)$/);
       if (match) {
@@ -933,12 +930,10 @@ class AppManager extends THREE.Object3D {
     return {objects};
   } */
 
-  destroy() {
+  destroy () {
     for (const app of this.apps.values()) {
-      app.destroy();
+      app.destroy()
     }
   }
 }
-export {
-  AppManager,
-};
+export { AppManager }
