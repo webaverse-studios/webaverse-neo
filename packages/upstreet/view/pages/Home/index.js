@@ -1,4 +1,5 @@
 import m from 'mithril'
+import { WebaverseEngine } from '@webaverse-studios/engine'
 //import { throttle } from '@soulofmischief/js-utils'
 //import { Game } from '#Models/Game'
 import { body, canvas as _canvas } from './style.module.scss'
@@ -24,7 +25,14 @@ export default () => {
       //resizeListener = throttle(() => Game.resize(), 250 )
       addEventListener( 'resize', resizeListener )
 
-      // Start the game.
+      // Start the engine.
+
+      /*const { WebaverseEngine } = await import(
+        '@webaverse-studios/engine'
+      )*/
+
+      const engine = new WebaverseEngine({ dstCanvas: canvas })
+
       //await Game.reset()
       //await Game.start( canvas )
     },
