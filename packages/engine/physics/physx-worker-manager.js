@@ -1,6 +1,5 @@
 import { makeId } from './util.js'
-import PhysxWorker from './physx-worker.js'
-// import PhysxWorker from './physx-worker.js?worker';
+// import PhysxWorker from './physx-worker.js?worker'
 
 const defaultNumPhysicsWorkers = 2
 
@@ -19,10 +18,16 @@ class PhysicsWorkerManager {
         // create workers
         const workers = Array(this.numWorkers)
         for (let i = 0; i < this.numWorkers; i++) {
-          /* const worker = new Worker('./physx-worker.js?import', {
-            type: 'module',
-          }); */
-          const worker = new PhysxWorker()
+          // const worker = new Worker('./physx-worker.js?import', {
+          console.log('WORKER: ', new URL('./physx-worker.js', import.meta.url))
+          const worker = new Worker(
+            new URL('./physx-worker.js', import.meta.url),
+            {
+              type: 'module'
+            }
+          )
+          console.log(worker)
+          // const worker = new PhysxWorker()
           const cbs = new Map()
           worker.onmessage = e => {
             const { requestId } = e.data

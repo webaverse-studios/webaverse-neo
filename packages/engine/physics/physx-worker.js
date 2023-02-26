@@ -1,54 +1,56 @@
-import * as THREE from 'three';
-import physxLite from './physx-lite.js';
-import {makePromise} from './util.js'
+import * as THREE from 'three'
+import physxLite from './physx-lite.js'
+import { makePromise } from './util.js'
 
 const fakeMaterial = new THREE.MeshBasicMaterial({
-  color: 0xffffff,
-});
+  color: 0xffffff
+})
 
-let loaded = false;
-let running = false;
-let queue = [];
-const _handleMethod = ({
-  method,
-  args,
-}) => {
+let loaded = false
+let running = false
+let queue = []
+
+const _handleMethod = ({ method, args }) => {
   switch (method) {
     case 'cookGeometry': {
-      const {positions, indices} = args;
-      const geometry = new THREE.BufferGeometry();
-      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      geometry.setIndex(new THREE.BufferAttribute(indices, 1));
-      const mesh = new THREE.Mesh(geometry, fakeMaterial);
-      const result = physxLite.cookGeometryPhysics(mesh);
+      const { positions, indices } = args
+      const geometry = new THREE.BufferGeometry()
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+      geometry.setIndex(new THREE.BufferAttribute(indices, 1))
+      const mesh = new THREE.Mesh(geometry, fakeMaterial)
+      const result = physxLite.cookGeometryPhysics(mesh)
       return {
         result,
-        transfers: [result.buffer],
-      };
+        transfers: [result.buffer]
+      }
     }
     case 'cookConvexGeometry': {
-      const {positions, indices} = args;
-      const geometry = new THREE.BufferGeometry();
-      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      geometry.setIndex(new THREE.BufferAttribute(indices, 1));
-      const mesh = new THREE.Mesh(geometry, fakeMaterial);
-      const result = physxLite.cookConvexGeometryPhysics(mesh);
+      const { positions, indices } = args
+      const geometry = new THREE.BufferGeometry()
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+      geometry.setIndex(new THREE.BufferAttribute(indices, 1))
+      const mesh = new THREE.Mesh(geometry, fakeMaterial)
+      const result = physxLite.cookConvexGeometryPhysics(mesh)
       return {
         result,
-        transfers: [result.buffer],
-      };
+        transfers: [result.buffer]
+      }
     }
     case 'cookHeightfieldGeometry': {
-      const {numRows, numColumns, heights} = args;
-      const geometry = new THREE.BufferGeometry();
-      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      geometry.setIndex(new THREE.BufferAttribute(indices, 1));
-      const mesh = new THREE.Mesh(geometry, fakeMaterial);
-      const result = physxLite.cookHeightfieldGeometryPhysics(numRows, numColumns, heights);
+      const { numRows, numColumns, heights } = args
+      const geometry = new THREE.BufferGeometry()
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+      geometry.setIndex(new THREE.BufferAttribute(indices, 1))
+      const mesh = new THREE.Mesh(geometry, fakeMaterial)
+      const result = physxLite.cookHeightfieldGeometryPhysics(
+        numRows,
+        numColumns,
+        heights
+      )
       return {
         result,
-        transfers: [result.buffer],
-      };
+        transfers: [result.buffer]
+      }
     }
     // case 'meshoptSimplify': {
     //   const {positions, /* uvs, */ indices, targetRatio, targetError} = args;
@@ -77,75 +79,79 @@ const _handleMethod = ({
     //   };
     // }
     default: {
-      throw new Error(`unknown method: ${method}`);
+      throw new Error(`unknown method: ${method}`)
     }
   }
-};
+}
+
 const _handleMessage = async e => {
   if (loaded && !running) {
-    const {
-      data,
-      port,
-    } = e;
-    
-    {
-      running = true;
+    const { data, port } = e
 
-      const {requestId} = data;
-      const p = makePromise();
+    {
+      running = true
+
+      const { requestId } = data
+      const p = makePromise()
       try {
-        const spec = await _handleMethod(data);
-        p.resolve(spec);
+        const spec = await _handleMethod(data)
+        p.resolve(spec)
       } catch (err) {
-        p.reject(err);
+        p.reject(err)
       }
 
       if (requestId) {
-        p.then(spec => {
-          const {result = null, transfers = []} = spec ?? {};
-          port.postMessage({
-            method: 'response',
-            requestId,
-            result,
-          }, transfers);
-        }, err => {
-          port.postMessage({
-            requestId,
-            error: err.message,
-          });
-        });
+        p.then(
+          spec => {
+            const { result = null, transfers = [] } = spec ?? {}
+            port.postMessage(
+              {
+                method: 'response',
+                requestId,
+                result
+              },
+              transfers
+            )
+          },
+          err => {
+            port.postMessage({
+              requestId,
+              error: err.message
+            })
+          }
+        )
       }
 
-      running = false;
+      running = false
     }
     // next
     if (queue.length > 0) {
-      _handleMessage(queue.shift());
+      _handleMessage(queue.shift())
     }
   } else {
-    queue.push(e);
+    queue.push(e)
   }
-};
+}
 if (typeof self !== 'undefined') {
   self.onmessage = e => {
     if (loaded) {
       _handleMessage({
         data: e.data,
-        port: self,
-      });
+        port: self
+      })
     } else {
-      queue.push(e);
+      queue.push(e)
     }
-  };
+  }
 }
 
 if (typeof self !== 'undefined') {
-  (async () => {
-    await physxLite.waitForLoad();
+  ;(async () => {
+    await physxLite.waitForLoad()
 
-    loaded = true;
+    loaded = true
     if (queue.length > 0) {
-      _handleMessage(queue.shift());
+      _handleMessage(queue.shift())
     }
-  })();
+  })()
 }
