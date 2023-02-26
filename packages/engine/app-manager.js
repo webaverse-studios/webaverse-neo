@@ -7,7 +7,7 @@ import * as THREE from 'three'
 // import {ZineData} from '../zine/zine-format.js';
 
 import { getRandomString } from './util.js'
-import { App } from '@webaverse-studios/runtime'
+import { App } from './models/Game'
 // import physicsManager from './physics/physics-manager.js';
 // import metaversefile from 'metaversefile';
 // import * as coreModules from './core-modules.js';

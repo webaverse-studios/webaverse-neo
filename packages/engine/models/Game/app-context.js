@@ -1,7 +1,7 @@
 // import * as THREE from 'three';
-import physicsManager from '../engine/physics/physics-manager.js'
-import { AvatarManager } from '../engine/avatars/avatar-manager.js'
-import loaders from '../engine/loaders.js'
+import physicsManager from '../../physics/physics-manager.js'
+import { AvatarManager } from '../../avatars/avatar-manager.js'
+import loaders from '../../loaders.js'
 
 // const useTHREE = () => THREE;
 const useAvatarManager = (() => {

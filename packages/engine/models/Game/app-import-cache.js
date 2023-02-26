@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import physicsManager from '../engine/physics/physics-manager.js'
+import physicsManager from '../../physics/physics-manager.js'
 
 const globalImports = {
   '*': {

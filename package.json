@@ -4,14 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "runtime": "yarn workspace @webaverse-studios/runtime",
-    "dev": "concurrently \"yarn feathers dev\" \"yarn gun dev\"",
+    "dev": "concurrently \"yarn upstreet dev\"",
     "engine": "yarn workspace @webaverse-studios/engine",
     "feathers": "yarn workspace @webaverse-studios/backend-feathers",
     "gun": "yarn workspace @webaverse-studios/backend-gun",
     "lint": "eslint . --config ./.eslintrc.cjs --fix",
-    "start": "concurrently \"yarn feathers start\" \"yarn gun start\"",
-    "upstreet": "yarn workspace @webaverse-studios/upstreet"
+    "start": "concurrently \"yarn upstreet start\"",
+    "upstreet": "yarn workspace @webaverse-studios/upstreet",
+    "zine-aux": "yarn workspace @webaverse-studios/zine-aux",
+    "zjs": "yarn workspace @webaverse-studios/zjs"
   },
   "devDependencies": {
     "@feathersjs/cli": "=5.0.0",

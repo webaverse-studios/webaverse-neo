@@ -1,115 +1,114 @@
-import {makeId} from './util.js';
-import PhysxWorker from './physx-worker.js?worker';
+import { makeId } from './util.js'
+import PhysxWorker from './physx-worker.js'
+// import PhysxWorker from './physx-worker.js?worker';
 
-const defaultNumPhysicsWorkers = 2;
+const defaultNumPhysicsWorkers = 2
 
 class PhysicsWorkerManager {
-  constructor({
-    numWorkers = defaultNumPhysicsWorkers,
-  } = {}) {
-    this.numWorkers = numWorkers;
+  constructor ({ numWorkers = defaultNumPhysicsWorkers } = {}) {
+    this.numWorkers = numWorkers
 
-    this.workers = [];
-    this.nextWorker = 0;
-    this.loadPromise = null;
+    this.workers = []
+    this.nextWorker = 0
+    this.loadPromise = null
   }
 
-  waitForLoad() {
+  waitForLoad () {
     if (!this.loadPromise) {
       this.loadPromise = (async () => {
         // create workers
-        const workers = Array(this.numWorkers);
+        const workers = Array(this.numWorkers)
         for (let i = 0; i < this.numWorkers; i++) {
           /* const worker = new Worker('./physx-worker.js?import', {
             type: 'module',
           }); */
-          const worker = new PhysxWorker();
-          const cbs = new Map();
+          const worker = new PhysxWorker()
+          const cbs = new Map()
           worker.onmessage = e => {
-            const {requestId} = e.data;
-            const cb = cbs.get(requestId);
+            const { requestId } = e.data
+            const cb = cbs.get(requestId)
             if (cb) {
-              cbs.delete(requestId);
-              cb(e.data);
+              cbs.delete(requestId)
+              cb(e.data)
             } else {
-              console.warn('worker message without callback', e.data);
+              console.warn('worker message without callback', e.data)
             }
-          };
+          }
           worker.onerror = err => {
-            console.log('physx worker load error', err);
-          };
+            console.log('physx worker load error', err)
+          }
           worker.request = (method, args) => {
             return new Promise((resolve, reject) => {
-              const requestId = makeId(5);
+              const requestId = makeId(5)
               cbs.set(requestId, data => {
-                const {error, result} = data;
+                const { error, result } = data
                 if (error) {
-                  reject(error);
+                  reject(error)
                 } else {
-                  resolve(result);
+                  resolve(result)
                 }
-              });
+              })
               worker.postMessage({
                 method,
                 args,
-                requestId,
-              });
-            });
-          };
-          workers[i] = worker;
+                requestId
+              })
+            })
+          }
+          workers[i] = worker
         }
-        this.workers = workers;
-      })();
+        this.workers = workers
+      })()
     }
-    return this.loadPromise;
+    return this.loadPromise
   }
 
-  async cookGeometry(mesh) {
-    await this.waitForLoad();
+  async cookGeometry (mesh) {
+    await this.waitForLoad()
 
-    const {workers} = this;
-    const worker = workers[this.nextWorker];
-    this.nextWorker = (this.nextWorker + 1) % workers.length;
+    const { workers } = this
+    const worker = workers[this.nextWorker]
+    this.nextWorker = (this.nextWorker + 1) % workers.length
 
     const result = await worker.request('cookGeometry', {
       positions: mesh.geometry.attributes.position.array,
-      indices: mesh.geometry.index.array,
-    });
-    return result;
+      indices: mesh.geometry.index.array
+    })
+    return result
   }
 
-  async cookConvexGeometry(mesh) {
-    await this.waitForLoad();
-    
-    const {workers} = this;
-    const worker = workers[this.nextWorker];
-    this.nextWorker = (this.nextWorker + 1) % workers.length;
+  async cookConvexGeometry (mesh) {
+    await this.waitForLoad()
+
+    const { workers } = this
+    const worker = workers[this.nextWorker]
+    this.nextWorker = (this.nextWorker + 1) % workers.length
 
     const result = await worker.request('cookConvexGeometry', {
       positions: mesh.geometry.attributes.position.array,
-      indices: mesh.geometry.index.array,
-    });
-    return result;
+      indices: mesh.geometry.index.array
+    })
+    return result
   }
 
-  async cookHeightfieldGeometry(numRows, numColumns, heights) {
-    await this.waitForLoad();
+  async cookHeightfieldGeometry (numRows, numColumns, heights) {
+    await this.waitForLoad()
 
-    const {workers} = this;
-    const worker = workers[this.nextWorker];
-    this.nextWorker = (this.nextWorker + 1) % workers.length;
+    const { workers } = this
+    const worker = workers[this.nextWorker]
+    this.nextWorker = (this.nextWorker + 1) % workers.length
 
     const result = await worker.request('cookHeightfieldGeometry', {
       numRows,
       numColumns,
-      heights,
-    });
-    return result;
+      heights
+    })
+    return result
   }
 
   /* async meshoptSimplify(mesh, targetRatio, targetError) {
     await this.waitForLoad();
-    
+
     const {workers} = this;
     const worker = workers[this.nextWorker];
     this.nextWorker = (this.nextWorker + 1) % workers.length;
@@ -126,7 +125,7 @@ class PhysicsWorkerManager {
 
   async meshoptSimplifySloppy(mesh, targetRatio, targetError) {
     await this.waitForLoad();
-    
+
     const {workers} = this;
     const worker = workers[this.nextWorker];
     this.nextWorker = (this.nextWorker + 1) % workers.length;
@@ -141,5 +140,6 @@ class PhysicsWorkerManager {
     return result;
   } */
 }
-const physicsWorkerManager = new PhysicsWorkerManager();
-export default physicsWorkerManager;
+
+const physicsWorkerManager = new PhysicsWorkerManager()
+export default physicsWorkerManager
