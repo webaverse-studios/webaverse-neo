@@ -1,0 +1,10 @@
+{
+  "name": "@webaverse-studios/engine",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Webaverse Game Engine",
+  "main": "index.js",
+  "dependencies": {
+    "three": "^0.150.0"
+  }
+}

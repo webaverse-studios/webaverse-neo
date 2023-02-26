@@ -581,6 +581,23 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@webaverse-studios/engine@file:../engine::locator=%40webaverse-studios%2Fupstreet%40workspace%3Apackages%2Fupstreet":
+  version: 0.1.0
+  resolution: "@webaverse-studios/engine@file:../engine#../engine::hash=9683ea&locator=%40webaverse-studios%2Fupstreet%40workspace%3Apackages%2Fupstreet"
+  dependencies:
+    three: ^0.150.0
+  checksum: 247cef5e27b2df0abfd2af400fc6fe7dc906f56ed5ca887d89ee3ee5535a8334e81a67025462846d80179c7f1adecf55d80b7668d23d98f5c0bdd779d1e8551b
+  languageName: node
+  linkType: hard
+
+"@webaverse-studios/engine@workspace:packages/engine":
+  version: 0.0.0-use.local
+  resolution: "@webaverse-studios/engine@workspace:packages/engine"
+  dependencies:
+    three: ^0.150.0
+  languageName: unknown
+  linkType: soft
+
 "@webaverse-studios/eslint-config@npm:=1.0.0":
   version: 1.0.0
   resolution: "@webaverse-studios/eslint-config@npm:1.0.0::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40webaverse-studios%2Feslint-config%2F1.0.0%2F5d1a138ae899edf5f3ac81ef67bb21d2b7816eb6"
@@ -597,6 +614,7 @@ __metadata:
   resolution: "@webaverse-studios/upstreet@workspace:packages/upstreet"
   dependencies:
     "@soulofmischief/js-utils": =0.21.0
+    "@webaverse-studios/engine": "file:../engine"
     mithril: =2.2.2
     sass: =1.58.3
     vite: =4.1.0
@@ -2801,6 +2819,13 @@ __metadata:
   version: 0.2.0
   resolution: "text-table@npm:0.2.0"
   checksum: b6937a38c80c7f84d9c11dd75e49d5c44f71d95e810a3250bd1f1797fc7117c57698204adf676b71497acc205d769d65c16ae8fa10afad832ae1322630aef10a
+  languageName: node
+  linkType: hard
+
+"three@npm:^0.150.0":
+  version: 0.150.0
+  resolution: "three@npm:0.150.0"
+  checksum: 6177334162ce2b1fad8cdf15e33978d855d3724f6270d952667da1a64ea3a06c9369ddef12f4206b3fed5d98b7bc8be9a98f3ae705dfb3262ffb1234e7a9ea14
   languageName: node
   linkType: hard
 
