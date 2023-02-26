@@ -10,6 +10,8 @@ import { decorateAnimation } from './util.mjs'
 import { angleDifference } from '../util.js'
 import { VRMCurveMapper } from './VRMCurveMapper'
 
+// import animationSkeletonUrl from '../assets/animations/animations-skeleton.glb'
+
 let animations
 let animationStepIndices
 
@@ -132,14 +134,23 @@ async function loadAnimations () {
 }
 
 async function loadSkeleton () {
-  const srcUrl = '/animations/animations-skeleton.glb'
+  // const animationSkeletonUrl = import(
+  //   '../assets/animations/animations-skeleton.glb'
+  // )
+
+  // let animationSkeletonUrl = new URL(
+  //   '../assets/animations/animations-skeleton.glb',
+  //   import.meta.url
+  // )
+
+  // console.log('animationSkeletonUrl', animationSkeletonUrl)
 
   let o
   try {
     o = await new Promise((resolve, reject) => {
       const { gltfLoader } = loaders
       gltfLoader.load(
-        srcUrl,
+        'animations/animations-skeleton.glb',
         () => {
           resolve()
         },
@@ -150,6 +161,9 @@ async function loadSkeleton () {
   } catch (err) {
     console.warn(err)
   }
+
+  console.log(o)
+
   if (o) {
     // animationsBaseModel = o;
   }
