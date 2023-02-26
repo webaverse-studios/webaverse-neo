@@ -1,9 +1,9 @@
 import * as THREE from 'three'
-import { compilerBaseUrl } from '../engine/endpoints.js'
+import { compilerBaseUrl } from '@webaverse-studios/engine/endpoints.js'
 import { App } from './app.js'
 
 import { AppContext } from './app-context.js'
-import { componentTemplates } from '../engine/metaverse-components.js'
+import { componentTemplates } from '@webaverse-studios/engine/metaverse-components.js'
 
 let currentAppRender = null
 const importFn = new Function('u', 'return import(u)')

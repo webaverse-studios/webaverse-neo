@@ -1,0 +1,21 @@
+{
+  "name": "@webaverse-studios/zjs",
+  "version": "0.1.0",
+  "author": "",
+  "description": "",
+  "license": "MIT",
+  "main": "z.mjs",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webaverse-studios/webaverse-neo.git",
+    "directory": "packages/zjs"
+  },
+  "dependencies": {
+    "alea": "=1.0.1",
+    "mocha": "=9.1.3"
+  },
+  "scripts": {
+    "test": "mocha --timeout 60000"
+  }
+}

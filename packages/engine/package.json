@@ -6,9 +6,13 @@
   "main": "index.js",
   "dependencies": {
     "@pixiv/three-vrm": "=1.0.8",
-    "@webaverse-studios/runtime": "file:../runtime",
+    "@webaverse-studios/zine-aux": "file:../zine-aux",
+    "@webaverse-studios/zjs": "file:../zjs",
     "murmurhash": "=2.0.1",
     "three": "=0.150.0",
     "troika-three-text": "=0.47.1"
+  },
+  "engines": {
+    "node": "=19.0.0"
   }
 }

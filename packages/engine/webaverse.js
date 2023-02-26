@@ -11,7 +11,7 @@ import * as THREE from 'three'
 // import {
 //   App,
 // } from '../app-runtime/app.js';
-import { ImportManager } from '@webaverse-studios/runtime/import-manager.js'
+import { ImportManager } from './models/Game/import-manager.js'
 import { PlayersManager } from './players-manager.js'
 import { EnvironmentManager } from './environment/environment-manager.js'
 import { CameraManager } from './camera-manager.js'
@@ -87,7 +87,7 @@ import { HitManager } from './managers/interaction/hit-manager.js'
 //   LoadingManager,
 // } from './loading-manager';
 import { makeDefaultPerspectiveCamera } from './renderer-utils.js'
-import { MetaversefileCache } from '@webaverse-studios/runtime/app-import-cache.js'
+import { MetaversefileCache } from './models/Game/app-import-cache.js'
 import { ChatManager } from './chat-manager.js'
 import { TempManager } from './temp-manager.js'
 import { FrameTracker } from './frame-tracker.js'

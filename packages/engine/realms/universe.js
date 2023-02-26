@@ -5,7 +5,7 @@ responsibilities include loading the world on url change.
 
 import * as THREE from 'three'
 // import metaversefile from 'metaversefile';
-import { NetworkRealms } from '../../multiplayer/public/network-realms.mjs'
+// import { NetworkRealms } from '../../multiplayer/public/network-realms.mjs'
 // import WSRTC from 'wsrtc/wsrtc.js';
 // import * as Z from 'zjs';
 
@@ -37,7 +37,7 @@ import { scenesBaseUrl, defaultSceneName } from '../endpoints.js'
 // import {
 //   SceneManager,
 // } from '../scene-manager.js';
-import { App } from '@webaverse-studios/runtime'
+import { App } from '../models/Game'
 import { AppManager } from '../app-manager.js'
 // import {rootScene} from './renderer.js';
 // import physx from './physics/physx.js';
@@ -210,11 +210,11 @@ export class Universe extends THREE.Object3D {
 
     // Set up the network realms.
     const localPlayer = this.playersManager.getLocalPlayer()
-    this.realms = new NetworkRealms({
-      sceneId: room,
-      playerId: localPlayer.playerId,
-      audioContext: this.audioManager.audioContext
-    })
+    // this.realms = new NetworkRealms({
+    //   sceneId: room,
+    //   playerId: localPlayer.playerId,
+    //   audioContext: this.audioManager.audioContext
+    // })
     // await this.realms.initAudioContext();
 
     const virtualWorld = this.realms.getVirtualWorld()
