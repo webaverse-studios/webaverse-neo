@@ -3,9 +3,9 @@ this file contains the universe/meta-world/scenes/multiplayer code.
 responsibilities include loading the world on url change.
 */
 
-import * as THREE from 'three';
+import * as THREE from 'three'
 // import metaversefile from 'metaversefile';
-import {NetworkRealms} from '../../multiplayer/public/network-realms.mjs';
+import { NetworkRealms } from '../../multiplayer/public/network-realms.mjs'
 // import WSRTC from 'wsrtc/wsrtc.js';
 // import * as Z from 'zjs';
 
@@ -16,109 +16,103 @@ import {NetworkRealms} from '../../multiplayer/public/network-realms.mjs';
 import {
   playersMapName,
   appsMapName,
-  actionsMapName,
+  actionsMapName
   // partyMapName,
-} from '../network-schema/constants.js';
+} from '../network-schema/constants.js'
 // import {loadOverworld} from './overworld.js';
-import physicsManager from '../physics/physics-manager.js';
+import physicsManager from '../physics/physics-manager.js'
 // import physxWorkerManager from './physics/physx-worker-manager.js';
 // import {playersManager} from './players-manager.js';
 // import {
 //   PlayersManager,
 // } from './players-manager.js';
-import {makeId, parseQuery} from '../util.js';
-import {
-  getScnUrl,
-} from './realm-utils.js';
+import { makeId, parseQuery } from '../util.js'
+import { getScnUrl } from './realm-utils.js'
 // import voiceInput from './voice-input/voice-input.js';
 // import {world} from './world.js';
-import {scenesBaseUrl, defaultSceneName} from '../endpoints.js';
+import { scenesBaseUrl, defaultSceneName } from '../endpoints.js'
 // import {
 //   SpawnManager,
 // } from './spawn-manager.js';
 // import {
 //   SceneManager,
 // } from '../scene-manager.js';
-import {
-  App,
-} from '../../app-runtime/app.js';
-import {
-  AppManager,
-} from '../app-manager.js';
+import { App } from '@webaverse-studios/runtime'
+import { AppManager } from '../app-manager.js'
 // import {rootScene} from './renderer.js';
 // import physx from './physics/physx.js';
 
 //
 
-const actionsPrefix = 'actions.';
+const actionsPrefix = 'actions.'
 // const appsPrefix = 'apps.';
 // const worldAppsKey = 'worldApps';
 
 //
 
 const getAppJson = app => {
-  const transformAndTimestamp = new Float32Array(11);
-  app.position.toArray(transformAndTimestamp, 0);
-  app.quaternion.toArray(transformAndTimestamp, 3);
-  app.scale.toArray(transformAndTimestamp, 7);
-  transformAndTimestamp[10] = 0; // timestamp needs to be set by the caller
+  const transformAndTimestamp = new Float32Array(11)
+  app.position.toArray(transformAndTimestamp, 0)
+  app.quaternion.toArray(transformAndTimestamp, 3)
+  app.scale.toArray(transformAndTimestamp, 7)
+  transformAndTimestamp[10] = 0 // timestamp needs to be set by the caller
 
   return {
     instanceId: app.instanceId,
     contentId: app.contentId,
     transform: transformAndTimestamp,
-    components: structuredClone(app.components),
-  };
+    components: structuredClone(app.components)
+  }
 }
 
 //
 
 class ActionCache {
-  constructor() {
-    this.actions = [];
+  constructor () {
+    this.actions = []
   }
-  push(action) {
-    this.actions.push(action);
+  push (action) {
+    this.actions.push(action)
   }
-  flush() {
-    const actions = this.actions;
-    this.actions = [];
-    return actions;
+  flush () {
+    const actions = this.actions
+    this.actions = []
+    return actions
   }
 }
 
 //
 
 class AppEntityBinder {
-  #appToEntity = new Map();
-  #entityToApp = new Map();
+  #appToEntity = new Map()
+  #entityToApp = new Map()
 
-  getApp(entity) {
-    return this.#entityToApp.get(entity);
+  getApp (entity) {
+    return this.#entityToApp.get(entity)
   }
-  getEntity(app) {
-    return this.#appToEntity.get(app);
+  getEntity (app) {
+    return this.#appToEntity.get(app)
   }
 
-  bindAppEntity(app, entity) {
+  bindAppEntity (app, entity) {
     // console.log('bind', {
     //   app,
     //   entity,
     // });
-    this.#appToEntity.set(app, entity);
-    this.#entityToApp.set(entity, app);
+    this.#appToEntity.set(app, entity)
+    this.#entityToApp.set(entity, app)
   }
-  unbindAppEntity(app) {
-    const entity = this.#appToEntity.get(app);
+  unbindAppEntity (app) {
+    const entity = this.#appToEntity.get(app)
     // console.log('unbind', {
     //   app,
     //   entity,
     // });
     if (entity) {
-      this.#appToEntity.delete(app);
-      this.#entityToApp.delete(entity);
+      this.#appToEntity.delete(app)
+      this.#entityToApp.delete(entity)
     } else {
-      throw new Error('no entity for app');
+      throw new Error('no entity for app')
     }
   }
 }
@@ -126,193 +120,206 @@ class AppEntityBinder {
 //
 
 export class Universe extends THREE.Object3D {
-  constructor({
+  constructor ({
     playersManager,
     spawnManager,
     engine,
     characterSelectManager,
-    audioManager,
+    audioManager
   }) {
-    super();
+    super()
 
     // members
-    if (!playersManager || !spawnManager || !engine || !characterSelectManager || !audioManager) {
+    if (
+      !playersManager ||
+      !spawnManager ||
+      !engine ||
+      !characterSelectManager ||
+      !audioManager
+    ) {
       console.warn('invalid args', {
         playersManager,
         spawnManager,
         engine,
         characterSelectManager,
-        audioManager,
-      });
-      debugger;
+        audioManager
+      })
+      debugger
     }
-    this.playersManager = playersManager;
-    this.spawnManager = spawnManager;
-    this.engine = engine;
-    this.characterSelectManager = characterSelectManager;
-    this.audioManager = audioManager;
+    this.playersManager = playersManager
+    this.spawnManager = spawnManager
+    this.engine = engine
+    this.characterSelectManager = characterSelectManager
+    this.audioManager = audioManager
 
     // locals
     this.appManager = new AppManager({
-      engine,
-    });
-    this.add(this.appManager);
-    this.appManager.updateMatrixWorld();
+      engine
+    })
+    this.add(this.appManager)
+    this.appManager.updateMatrixWorld()
 
-    this.multiplayerEnabled = false;
-    this.multiplayerConnected = false;
-    this.realms = null;
+    this.multiplayerEnabled = false
+    this.multiplayerConnected = false
+    this.realms = null
   }
 
-  async setRealmSpec(realmSpec) {
+  async setRealmSpec (realmSpec) {
     if (this.multiplayerEnabled) {
-      console.warn('already in multiplayer');
-      debugger;
-      this.disconnectMultiplayer();
+      console.warn('already in multiplayer')
+      debugger
+      this.disconnectMultiplayer()
     }
-    const {room, src} = realmSpec;
+    const { room, src } = realmSpec
 
-    this.multiplayerEnabled = room !== undefined;
+    this.multiplayerEnabled = room !== undefined
     if (this.multiplayerEnabled) {
       await this.connectMultiplayer({
         room,
-        src,
-      });
+        src
+      })
     }
   }
 
   // Enter multiplayer for the current scene - "Create Room" button click.
-  async enterMultiplayer() {
-    let {src} = parseQuery(window.location.search);
+  async enterMultiplayer () {
+    let { src } = parseQuery(window.location.search)
     if (src === undefined) {
-      src = scenesBaseUrl + defaultSceneName;
+      src = scenesBaseUrl + defaultSceneName
     }
-    const sceneName = src.trim();
+    const sceneName = src.trim()
 
-    this.room = makeId(5);
-    const url = `/?src=${encodeURIComponent(sceneName)}&room=${this.room}`;
-    history.pushState({}, '', url);
-    globalThis.dispatchEvent(new MessageEvent('pushstate'));
+    this.room = makeId(5)
+    const url = `/?src=${encodeURIComponent(sceneName)}&room=${this.room}`
+    history.pushState({}, '', url)
+    globalThis.dispatchEvent(new MessageEvent('pushstate'))
 
-    await this.connectMultiplayer(this.room);
+    await this.connectMultiplayer(this.room)
   }
 
   // Called by enterWorld() when a player enables multi-player.
-  async connectMultiplayer({
-    room,
-    src,
-  }) {
+  async connectMultiplayer ({ room, src }) {
     // console.log('Connect multiplayer', {
     //   src,
     //   room,
     // });
     if (room === undefined) {
       console.error('Multiplayer room must be defined.')
-      return;
+      return
     }
 
     // Set up the network realms.
-    const localPlayer = this.playersManager.getLocalPlayer();
+    const localPlayer = this.playersManager.getLocalPlayer()
     this.realms = new NetworkRealms({
       sceneId: room,
       playerId: localPlayer.playerId,
-      audioContext: this.audioManager.audioContext,
-    });
+      audioContext: this.audioManager.audioContext
+    })
     // await this.realms.initAudioContext();
 
-    const virtualWorld = this.realms.getVirtualWorld();
-    const virtualPlayers = this.realms.getVirtualPlayers();
+    const virtualWorld = this.realms.getVirtualWorld()
+    const virtualPlayers = this.realms.getVirtualPlayers()
 
     // Initiate network realms connection.
     const onConnect = async () => {
-      const realmKey = room;
+      const realmKey = room
       // const virtualWorld = this.realms.getVirtualWorld();
       // console.log('got connection', this.realms);
-      
+
       // globalThis.realms = this.realms;
       // globalThis.virtualWorld = virtualWorld;
 
       globalThis.clearRemoteApps = () => {
-        this.realms.tx(() =>{
-          const existingApps = virtualWorld.worldApps.needledVirtualEntities;
+        this.realms.tx(() => {
+          const existingApps = virtualWorld.worldApps.needledVirtualEntities
           // globalThis.existingApps = existingApps;
           // virtualWorld.worldApps.removeEntityAt(collidedVirtualMap.entityMap.arrayIndexId);
-  
-          const arrayIndexIds = Array.from(existingApps.values())
-            .map(entity => entity.entityMap.arrayIndexId);
-          console.log('got existing apps', arrayIndexIds);
+
+          const arrayIndexIds = Array.from(existingApps.values()).map(
+            entity => entity.entityMap.arrayIndexId
+          )
+          console.log('got existing apps', arrayIndexIds)
           for (const arrayIndexId of arrayIndexIds) {
-            virtualWorld.worldApps.removeEntityAt(arrayIndexId);
+            virtualWorld.worldApps.removeEntityAt(arrayIndexId)
           }
-        });
-      };
+        })
+      }
 
       // const localPlayer = this.playersManager.getLocalPlayer();
       // const virtualWorld = this.realms.getVirtualWorld();
       // const {position} = localPlayer;
-      const {audioManager} = localPlayer.voiceInput;
-      const {audioContext} = audioManager;
-      
+      const { audioManager } = localPlayer.voiceInput
+      const { audioContext } = audioManager
+
       // microphone connection
-      const connectRealmsMic = async (mediaStream) => {
+      const connectRealmsMic = async mediaStream => {
         await this.realms.enableMic({
           mediaStream,
-          audioContext,
-        });
-      };
+          audioContext
+        })
+      }
       const disconnectRealmsMic = async () => {
-        this.realms.disableMic();
-      };
+        this.realms.disableMic()
+      }
 
       // Initialize network realms player.
       const _pushInitialPlayer = () => {
-        this.realms.localPlayer.initializePlayer({
-          realmKey,
-        }, {});
-        const transformAndTimestamp = new Float32Array(11);
-        localPlayer.position.toArray(transformAndTimestamp, 0);
-        localPlayer.quaternion.toArray(transformAndTimestamp, 3);
-        localPlayer.scale.toArray(transformAndTimestamp, 7);
-        const now = performance.now();
-        transformAndTimestamp[10] = now;
-        this.realms.localPlayer.setKeyValue('transform', transformAndTimestamp);
-        this.realms.localPlayer.setKeyValue('velocity', [0, 0, 0, 0]);
+        this.realms.localPlayer.initializePlayer(
+          {
+            realmKey
+          },
+          {}
+        )
+        const transformAndTimestamp = new Float32Array(11)
+        localPlayer.position.toArray(transformAndTimestamp, 0)
+        localPlayer.quaternion.toArray(transformAndTimestamp, 3)
+        localPlayer.scale.toArray(transformAndTimestamp, 7)
+        const now = performance.now()
+        transformAndTimestamp[10] = now
+        this.realms.localPlayer.setKeyValue('transform', transformAndTimestamp)
+        this.realms.localPlayer.setKeyValue('velocity', [0, 0, 0, 0])
         // this.realms.localPlayer.setKeyValue('voiceSpec', localPlayer.playerMap.get('voiceSpec'));
-      };
-      _pushInitialPlayer();
+      }
+      _pushInitialPlayer()
 
       const _connectLocalPlayerAppManager = () => {
         localPlayer.appManager.addEventListener('apptransplant', e => {
-          console.log('player app transplant', e);
-          const {
-            app,
-            oldAppManager,
-            newAppManager,
-          } = e.data;
+          console.log('player app transplant', e)
+          const { app, oldAppManager, newAppManager } = e.data
           if (newAppManager === this.appManager) {
-            const appJson = getAppJson(app);
+            const appJson = getAppJson(app)
 
-            const headRealm = this.realms.getClosestRealm(realmKey);
-            console.log('transplant B 1', appJson.instanceId, appJson.components, appJson);
+            const headRealm = this.realms.getClosestRealm(realmKey)
+            console.log(
+              'transplant B 1',
+              appJson.instanceId,
+              appJson.components,
+              appJson
+            )
             virtualWorld.worldApps.addEntityAt(
               appJson.instanceId,
               appJson,
               headRealm
-            );
-            console.log('transplant B 2');
-            this.realms.localPlayer.playerApps.removeEntityAt(appJson.instanceId);
-            console.log('transplant B 3');
+            )
+            console.log('transplant B 2')
+            this.realms.localPlayer.playerApps.removeEntityAt(
+              appJson.instanceId
+            )
+            console.log('transplant B 3')
           } else {
-            console.warn('transplanting from local player app manager to non-world app manager', {
-              app,
-              oldAppManager,
-              newAppManager,
-            });
-            debugger;
+            console.warn(
+              'transplanting from local player app manager to non-world app manager',
+              {
+                app,
+                oldAppManager,
+                newAppManager
+              }
+            )
+            debugger
           }
-        });
-      };
-      _connectLocalPlayerAppManager();
+        })
+      }
+      _connectLocalPlayerAppManager()
 
       // // Avatar model.
       // const apps = localPlayer.playerMap.get(appsMapName);
@@ -329,7 +336,7 @@ export class Universe extends THREE.Object3D {
       // Mic state.
       const _connectLocalPlayerMic = () => {
         if (localPlayer.voiceInput.micEnabled()) {
-          const {mediaStream} = localPlayer.voiceInput;
+          const { mediaStream } = localPlayer.voiceInput
 
           // localPlayer.voiceInput.dispatchEvent(new MessageEvent('speechchange', {
           //   data: {
@@ -337,24 +344,24 @@ export class Universe extends THREE.Object3D {
           //   },
           // }));
 
-          connectRealmsMic(mediaStream);
+          connectRealmsMic(mediaStream)
         }
         localPlayer.voiceInput.addEventListener('micchange', e => {
-          const {data} = e;
-          const {enabled} = data;
+          const { data } = e
+          const { enabled } = data
           if (enabled) {
-            const {mediaStream} = localPlayer.voiceInput;
+            const { mediaStream } = localPlayer.voiceInput
             // console.log('connect network mic', mediaStream);
-            connectRealmsMic(mediaStream);
+            connectRealmsMic(mediaStream)
           } else {
             // console.log('disconnect network mic');
-            disconnectRealmsMic();
+            disconnectRealmsMic()
           }
-        });
-      };
-      _connectLocalPlayerMic();
+        })
+      }
+      _connectLocalPlayerMic()
 
-      const appEntityBinder = new AppEntityBinder();
+      const appEntityBinder = new AppEntityBinder()
 
       /* // Load the scene.
       // First player loads scene from src.
@@ -365,148 +372,161 @@ export class Universe extends THREE.Object3D {
           start_url: src,
         });
       } */
-      const cleanupFns = [];
+      const cleanupFns = []
       const _trackLocalPlayer = () => {
-        const actionCache = new ActionCache();
+        const actionCache = new ActionCache()
 
         const _trackFrameLoop = () => {
           const _recurse = () => {
-            frame = requestAnimationFrame(_recurse);
-    
+            frame = requestAnimationFrame(_recurse)
+
             const _pushLocalPlayerUpdate = () => {
               // timestamp
-              const now = performance.now();
-              this.realms.localPlayer.setKeyValue('timestamp', now);
+              const now = performance.now()
+              this.realms.localPlayer.setKeyValue('timestamp', now)
 
               // transform
-              const {position, quaternion, scale} = localPlayer;
-              const transformAndTimestamp = new Float32Array(11);
-              position.toArray(transformAndTimestamp, 0);
-              quaternion.toArray(transformAndTimestamp, 3);
-              scale.toArray(transformAndTimestamp, 7);
-              transformAndTimestamp[10] = now;
-              this.realms.localPlayer.setKeyValue('transform', transformAndTimestamp);
-              
+              const { position, quaternion, scale } = localPlayer
+              const transformAndTimestamp = new Float32Array(11)
+              position.toArray(transformAndTimestamp, 0)
+              quaternion.toArray(transformAndTimestamp, 3)
+              scale.toArray(transformAndTimestamp, 7)
+              transformAndTimestamp[10] = now
+              this.realms.localPlayer.setKeyValue(
+                'transform',
+                transformAndTimestamp
+              )
+
               // velocity
-              const velocity = new Float32Array(4);
-              localPlayer.velocity.toArray(velocity);
-              velocity[3] = now;
-              this.realms.localPlayer.setKeyValue('velocity', velocity);
+              const velocity = new Float32Array(4)
+              localPlayer.velocity.toArray(velocity)
+              velocity[3] = now
+              this.realms.localPlayer.setKeyValue('velocity', velocity)
 
               // actions
-              const actionCacheSpecs = actionCache.flush();
+              const actionCacheSpecs = actionCache.flush()
               for (let i = 0; i < actionCacheSpecs.length; i++) {
-                const actionCacheSpec = actionCacheSpecs[i];
-                const {
-                  actionId,
-                  action,
-                } = actionCacheSpec;
+                const actionCacheSpec = actionCacheSpecs[i]
+                const { actionId, action } = actionCacheSpec
                 this.realms.localPlayer.setKeyValue(actionsPrefix + actionId, {
                   action,
-                  timestamp: now,
-                });
+                  timestamp: now
+                })
               }
-            };
-            _pushLocalPlayerUpdate();
-          };
-          let frame = requestAnimationFrame(_recurse);
+            }
+            _pushLocalPlayerUpdate()
+          }
+          let frame = requestAnimationFrame(_recurse)
           cleanupFns.push(() => {
-            cancelAnimationFrame(frame);
-          });
-        };
-        _trackFrameLoop();
+            cancelAnimationFrame(frame)
+          })
+        }
+        _trackFrameLoop()
 
         const _trackActionManager = () => {
           const actionadded = e => {
-            const {action} = e.data;
+            const { action } = e.data
             actionCache.push({
               actionId: action.actionId,
-              action,
-            });
-          };
-          localPlayer.actionManager.addEventListener('actionadded', actionadded);
+              action
+            })
+          }
+          localPlayer.actionManager.addEventListener('actionadded', actionadded)
           cleanupFns.push(() => {
-            localPlayer.actionManager.removeEventListener('actionadded', actionadded);
-          });
+            localPlayer.actionManager.removeEventListener(
+              'actionadded',
+              actionadded
+            )
+          })
           const actionremoved = e => {
-            const {action} = e.data;
+            const { action } = e.data
             actionCache.push({
               actionId: action.actionId,
-              action: null,
-            });
-          };
-          localPlayer.actionManager.addEventListener('actionremoved', actionremoved);
+              action: null
+            })
+          }
+          localPlayer.actionManager.addEventListener(
+            'actionremoved',
+            actionremoved
+          )
           cleanupFns.push(() => {
-            localPlayer.actionManager.removeEventListener('actionremoved', actionremoved);
-          });
-        };
-        _trackActionManager();
+            localPlayer.actionManager.removeEventListener(
+              'actionremoved',
+              actionremoved
+            )
+          })
+        }
+        _trackActionManager()
 
         const _pushInitialActions = () => {
-          const actionsArray = localPlayer.actionManager.getActionsArray();
-          const timestamp = performance.now();
+          const actionsArray = localPlayer.actionManager.getActionsArray()
+          const timestamp = performance.now()
           for (const action of actionsArray) {
-            this.realms.localPlayer.setKeyValue(actionsPrefix + action.actionId, {
-              action,
-              timestamp,
-            });
+            this.realms.localPlayer.setKeyValue(
+              actionsPrefix + action.actionId,
+              {
+                action,
+                timestamp
+              }
+            )
           }
-        };
-        _pushInitialActions();
-      };
-      _trackLocalPlayer();
+        }
+        _pushInitialActions()
+      }
+      _trackLocalPlayer()
 
       const _trackWorld = async () => {
         const _listenWorldEvents = () => {
           // Handle scene updates from network realms.
           const onWorldAppEntityAdd = e => {
-            console.log('world entity add', e.data);
+            console.log('world entity add', e.data)
             // XXX pause updates and add to the app manager
             // XXX then, bind the app
-            debugger;
-          };
-          this.realms.addEventListener('entityadd', onWorldAppEntityAdd);
+            debugger
+          }
+          this.realms.addEventListener('entityadd', onWorldAppEntityAdd)
           const onWorldAppEntityRemove = e => {
-            console.log('world entity remove', e.data);
+            console.log('world entity remove', e.data)
             // XXX unbind the app
-            debugger;
-          };
-          this.realms.addEventListener('entityremove', onWorldAppEntityRemove);
-          
-          this.appManager.addEventListener('apptransplant', e => {
-            console.log('world app transplant', e);
-            const {
-              app,
-              oldAppManager,
-              newAppManager,
-            } = e.data;
-            if (newAppManager === localPlayer.appManager) {
-              const appJson = getAppJson(app);
+            debugger
+          }
+          this.realms.addEventListener('entityremove', onWorldAppEntityRemove)
 
-              const headRealm = this.realms.getClosestRealm(realmKey);
-              console.log('transplant A 1', appJson.instanceId, appJson.components, appJson);
+          this.appManager.addEventListener('apptransplant', e => {
+            console.log('world app transplant', e)
+            const { app, oldAppManager, newAppManager } = e.data
+            if (newAppManager === localPlayer.appManager) {
+              const appJson = getAppJson(app)
+
+              const headRealm = this.realms.getClosestRealm(realmKey)
+              console.log(
+                'transplant A 1',
+                appJson.instanceId,
+                appJson.components,
+                appJson
+              )
               this.realms.localPlayer.playerApps.addEntityAt(
                 appJson.instanceId,
                 appJson,
                 headRealm
-              );
-              console.log('transplant A 2');
-              virtualWorld.worldApps.removeEntityAt(appJson.instanceId);
-              console.log('transplant A 3');
+              )
+              console.log('transplant A 2')
+              virtualWorld.worldApps.removeEntityAt(appJson.instanceId)
+              console.log('transplant A 3')
             } else {
               console.warn('transplanting from world to non-local player', {
                 app,
                 oldAppManager,
-                newAppManager,
-              });
-              debugger;
+                newAppManager
+              })
+              debugger
             }
-          });
-        };
-        _listenWorldEvents();
+          })
+        }
+        _listenWorldEvents()
 
         const _bindAppManager = () => {
-          this.appManager.onBeforeAppAdd = (e) => {
+          this.appManager.onBeforeAppAdd = e => {
             const {
               app,
               contentId,
@@ -514,84 +534,95 @@ export class Universe extends THREE.Object3D {
               quaternion,
               scale,
               components,
-              instanceId,
-            } = e;
+              instanceId
+            } = e
 
             // const app = apps[i];
             // const appJson = app.toJSON();
-            const transform = new Float32Array(11);
-            position.toArray(transform, 0);
-            quaternion.toArray(transform, 3);
-            scale.toArray(transform, 7);
-            const now = performance.now();
-            transform[10] = now;
+            const transform = new Float32Array(11)
+            position.toArray(transform, 0)
+            quaternion.toArray(transform, 3)
+            scale.toArray(transform, 7)
+            const now = performance.now()
+            transform[10] = now
             const appJson = {
               contentId,
               instanceId,
               transform,
-              components,
+              components
             }
             // console.log('add app json', appJson);
 
-            const headRealm = this.realms.getClosestRealm(realmKey);
-            let newRemoteApp;
+            const headRealm = this.realms.getClosestRealm(realmKey)
+            let newRemoteApp
             this.realms.tx(() => {
               newRemoteApp = virtualWorld.worldApps.addEntityAt(
                 appJson.instanceId,
                 appJson,
-                headRealm,
-              );
-            });
-            const newEntity = virtualWorld.worldApps.getMapEntity(newRemoteApp);
-            appEntityBinder.bindAppEntity(app, newEntity);
-          };
-          this.appManager.onBeforeAppRemove = (e) => {
+                headRealm
+              )
+            })
+            const newEntity = virtualWorld.worldApps.getMapEntity(newRemoteApp)
+            appEntityBinder.bindAppEntity(app, newEntity)
+          }
+          this.appManager.onBeforeAppRemove = e => {
             // console.log('app manager remove', e);
-            const {app} = e;
-            const entity = appEntityBinder.getEntity(app);
+            const { app } = e
+            const entity = appEntityBinder.getEntity(app)
             if (!entity) {
-              debugger;
+              debugger
             }
-            console.log('before app remove', {e, app, entity, arrayIndexId: entity?.arrayIndexId});
-            
+            console.log('before app remove', {
+              e,
+              app,
+              entity,
+              arrayIndexId: entity?.arrayIndexId
+            })
+
             this.realms.tx(() => {
-              virtualWorld.worldApps.removeEntityAt(entity.arrayIndexId);
-            });
-            
-            appEntityBinder.unbindAppEntity(app);
-          };
-        };
-        _bindAppManager();
+              virtualWorld.worldApps.removeEntityAt(entity.arrayIndexId)
+            })
+
+            appEntityBinder.unbindAppEntity(app)
+          }
+        }
+        _bindAppManager()
 
         const _loadApps = async () => {
-          const existingApps = virtualWorld.worldApps.needledVirtualEntities;
+          const existingApps = virtualWorld.worldApps.needledVirtualEntities
           if (existingApps.size === 0) {
-            console.log('no world apps so initializing app manager', existingApps, virtualWorld);
-            const scnUrl = getScnUrl(src);
-            await this.appManager.loadScnFromUrl(scnUrl);
+            console.log(
+              'no world apps so initializing app manager',
+              existingApps,
+              virtualWorld
+            )
+            const scnUrl = getScnUrl(src)
+            await this.appManager.loadScnFromUrl(scnUrl)
           } else {
-            console.log('had world apps so not initializing app manager', existingApps, virtualWorld);
+            console.log(
+              'had world apps so not initializing app manager',
+              existingApps,
+              virtualWorld
+            )
 
-            const appLoadPromises = [];
+            const appLoadPromises = []
             this.appManager.tx(() => {
-              const existingNeedledEntities = Array.from(existingApps.values());
+              const existingNeedledEntities = Array.from(existingApps.values())
               for (const needledEntity of existingNeedledEntities) {
-                const object = needledEntity.toObject();
-                const {
-                  contentId,
-                  instanceId,
-                  transform,
-                  components,
-                } = object;
-                
-                const app = new App();
-                appEntityBinder.bindAppEntity(app, needledEntity);
+                const object = needledEntity.toObject()
+                const { contentId, instanceId, transform, components } = object
+
+                const app = new App()
+                appEntityBinder.bindAppEntity(app, needledEntity)
 
                 const _loadLocalApp = async () => {
-                  const position = new THREE.Vector3().fromArray(transform, 0);
-                  const quaternion = new THREE.Quaternion().fromArray(transform, 3);
-                  const scale = new THREE.Vector3().fromArray(transform, 7);
-                  const timestamp = transform[10];
+                  const position = new THREE.Vector3().fromArray(transform, 0)
+                  const quaternion = new THREE.Quaternion().fromArray(
+                    transform,
+                    3
+                  )
+                  const scale = new THREE.Vector3().fromArray(transform, 7)
+                  const timestamp = transform[10]
 
                   await this.appManager.addAppAsync({
                     contentId,
@@ -600,125 +631,129 @@ export class Universe extends THREE.Object3D {
                     position,
                     quaternion,
                     scale,
-                    components,
+                    components
                     // position = new THREE.Vector3(),
                     // quaternion = new THREE.Quaternion(),
                     // scale = new THREE.Vector3(1, 1, 1),
                     // components = [],
                     // instanceId = getRandomString(),
-                  });
-                };
-                const p = _loadLocalApp();
-                appLoadPromises.push(p);
+                  })
+                }
+                const p = _loadLocalApp()
+                appLoadPromises.push(p)
               }
-            });
-            await Promise.all(appLoadPromises);
+            })
+            await Promise.all(appLoadPromises)
           }
-        };
-        await _loadApps();
-      };
-      await _trackWorld();
-    };
+        }
+        await _loadApps()
+      }
+      await _trackWorld()
+    }
     const _trackRemotePlayers = () => {
-      const playersMap = new Map();
+      const playersMap = new Map()
 
       virtualPlayers.addEventListener('join', async e => {
-        const {playerId, player} = e.data;
-        console.log('Player joined:', playerId, player);
+        const { playerId, player } = e.data
+        console.log('Player joined:', playerId, player)
 
         const remotePlayer = this.playersManager.addRemotePlayer({
-          playerId,
-        });
-        playersMap.set(playerId, remotePlayer);
+          playerId
+        })
+        playersMap.set(playerId, remotePlayer)
 
         // Handle remote player updates.
         player.addEventListener('update', e => {
-          const {key, val} = e.data;
+          const { key, val } = e.data
 
           if (key === 'timestamp') {
-            const remoteTimestamp = val;
-            const localTimestamp = performance.now();
-            remotePlayer.setRemoteTimestampBias(localTimestamp, remoteTimestamp);
+            const remoteTimestamp = val
+            const localTimestamp = performance.now()
+            remotePlayer.setRemoteTimestampBias(localTimestamp, remoteTimestamp)
           } else if (key === 'transform') {
             // playersArray.doc.transact(() => {
-              // playerMap.set('transform', val);
-              remotePlayer.setRemoteTransform(val);
+            // playerMap.set('transform', val);
+            remotePlayer.setRemoteTransform(val)
             // });
           } else if (key === 'velocity') {
             // playersArray.doc.transact(() => {
-              // playerMap.set('velocity', val);
-              remotePlayer.setRemoteVelocity(val);
+            // playerMap.set('velocity', val);
+            remotePlayer.setRemoteVelocity(val)
             // });
           } else if (key === 'avatar') {
             // Set new avatar instanceId.
             // playersArray.doc.transact(() => {
-              console.log('got val', val);
-              // playerMap.set('avatar', val);
+            console.log('got val', val)
+            // playerMap.set('avatar', val);
             // });
           } else if (key.startsWith(actionsPrefix)) {
-            const actionId = key.slice(actionsPrefix.length);
-            const {
-              action,
-              timestamp: remoteTimestamp,
-            } = val;
-            const localToRemoteTimestampBias = remotePlayer.getLocalToRemoteTimestampBias();
-            const timestamp = remoteTimestamp - localToRemoteTimestampBias;
+            const actionId = key.slice(actionsPrefix.length)
+            const { action, timestamp: remoteTimestamp } = val
+            const localToRemoteTimestampBias =
+              remotePlayer.getLocalToRemoteTimestampBias()
+            const timestamp = remoteTimestamp - localToRemoteTimestampBias
 
             // console.log('got action update', actionId, val);
 
             if (action !== null) {
-              remotePlayer.actionInterpolant.pushAction({
-                actionId,
-                action,
-              }, timestamp);
+              remotePlayer.actionInterpolant.pushAction(
+                {
+                  actionId,
+                  action
+                },
+                timestamp
+              )
             } else {
-              remotePlayer.actionInterpolant.pushAction({
-                actionId,
-                action: null,
-              }, timestamp);
+              remotePlayer.actionInterpolant.pushAction(
+                {
+                  actionId,
+                  action: null
+                },
+                timestamp
+              )
             }
           } /* else if (key === 'voiceSpec') {
             // playersArray.doc.transact(() => {
               playerMap.set('voiceSpec', val);
             // });
           } */
-        });
+        })
 
         const _initializeRemotePlayerActions = () => {
-          const keys = player.getKeys();
+          const keys = player.getKeys()
           for (const key of keys) {
             if (key.startsWith(actionsPrefix)) {
-              const actionSpec = player.getKeyValue(key);
-              const {action} = actionSpec;
+              const actionSpec = player.getKeyValue(key)
+              const { action } = actionSpec
               if (action) {
                 // const type = key.slice(actionsPrefix.length);
                 // console.log('got initial action', {
                 //   type,
                 // });
 
-                remotePlayer.actionManager.addAction(action);
+                remotePlayer.actionManager.addAction(action)
               }
             }
           }
-        };
-        _initializeRemotePlayerActions();
+        }
+        _initializeRemotePlayerActions()
 
         const _loadRemotePlayerAvatar = async () => {
-          const spec = await this.characterSelectManager.getDefaultSpecAsync();
-          await remotePlayer.setPlayerSpec(spec);
-        };
-        await _loadRemotePlayerAvatar();
-      });
+          const spec = await this.characterSelectManager.getDefaultSpecAsync()
+          await remotePlayer.setPlayerSpec(spec)
+        }
+        await _loadRemotePlayerAvatar()
+      })
       virtualPlayers.addEventListener('leave', e => {
-        const {playerId} = e.data;
+        const { playerId } = e.data
         // console.log('Player left:', playerId);
-        const remotePlayer = playersMap.get(playerId);
+        const remotePlayer = playersMap.get(playerId)
         if (remotePlayer) {
-          this.playersManager.removeRemotePlayer(remotePlayer);
-          playersMap.delete(playerId);
+          this.playersManager.removeRemotePlayer(remotePlayer)
+          playersMap.delete(playerId)
         } else {
-          console.warn('remote player not found', playerId);
-          debugger;
+          console.warn('remote player not found', playerId)
+          debugger
         }
 
         /* const playersArray = this.state.getArray(playersMapName);
@@ -729,22 +764,22 @@ export class Universe extends THREE.Object3D {
             break;
           }
         } */
-      });
+      })
 
       // Handle audio routes.
       virtualPlayers.addEventListener('audiostreamstart', e => {
         // console.log('audio stream start', e.data);
-        const {playerId, stream} = e.data;
+        const { playerId, stream } = e.data
 
-        const remotePlayer = playersMap.get(playerId);
+        const remotePlayer = playersMap.get(playerId)
         // console.log('got remote player', remotePlayer);
         if (remotePlayer) {
           remotePlayer.avatar.setAudioEnabled({
-            audioContext: this.audioManager.audioContext,
-          });
-          const audioInput = remotePlayer.avatar.getAudioInput();
+            audioContext: this.audioManager.audioContext
+          })
+          const audioInput = remotePlayer.avatar.getAudioInput()
           // console.log('audio input connect', [stream.outputNode, audioInput]);
-          stream.outputNode.connect(audioInput);
+          stream.outputNode.connect(audioInput)
           // stream.outputNode.connect(this.audioManager.audioContext.destination);
           /* const {playerId, stream} = e.data;
           const remotePlayer = playersMap.get(playerId);
@@ -755,18 +790,18 @@ export class Universe extends THREE.Object3D {
             debugger;
           } */
         } else {
-          console.warn('remote player not found', {playerId, playersMap});
-          debugger;
+          console.warn('remote player not found', { playerId, playersMap })
+          debugger
         }
-      });
+      })
       virtualPlayers.addEventListener('audiostreamend', e => {
-        console.log('audio stream end', e.data);
-      });
-    };
-    _trackRemotePlayers();
+        console.log('audio stream end', e.data)
+      })
+    }
+    _trackRemotePlayers()
     await this.realms.updateRealmsKeys([room], {
-      onConnect,
-    });
+      onConnect
+    })
 
     /* // Handle remote players joining and leaving the set of realms.
     // These events are received both upon starting and during multiplayer.
@@ -1085,13 +1120,13 @@ export class Universe extends THREE.Object3D {
   }
 
   // Called by enterWorld() to ensure we aren't connected to multi-player.
-  disconnectMultiplayer() {
+  disconnectMultiplayer () {
     if (!this.multiplayerConnected) {
-      throw new Error('not connected to multiplayer');
-      return;
+      throw new Error('not connected to multiplayer')
+      return
     }
 
-    this.multiplayerConnected = false;
+    this.multiplayerConnected = false
 
     // for (const cleanupFn of this.playerCleanupFns) {
     //   cleanupFn();
@@ -1099,11 +1134,11 @@ export class Universe extends THREE.Object3D {
     // this.playerCleanupFns = [];
 
     if (this.realms) {
-      this.realms.disconnect();
-      this.realms = null;
+      this.realms.disconnect()
+      this.realms = null
     }
 
-    console.log('Multiplayer disconnected');
+    console.log('Multiplayer disconnected')
   }
 }
 // const universe = new Universe();

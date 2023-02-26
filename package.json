@@ -1,15 +1,17 @@
 {
-  "name": "@webaverse-studios/backend",
-  "description": "Social file annotation system",
+  "name": "@webaverse-studios/webaverse-neo",
+  "description": "game",
   "private": true,
   "type": "module",
   "scripts": {
-    "upstreet": "yarn workspace @webaverse-studios/upstreet",
+    "runtime": "yarn workspace @webaverse-studios/runtime",
     "dev": "concurrently \"yarn feathers dev\" \"yarn gun dev\"",
+    "engine": "yarn workspace @webaverse-studios/engine",
     "feathers": "yarn workspace @webaverse-studios/backend-feathers",
     "gun": "yarn workspace @webaverse-studios/backend-gun",
     "lint": "eslint . --config ./.eslintrc.cjs --fix",
-    "start": "concurrently \"yarn feathers start\" \"yarn gun start\""
+    "start": "concurrently \"yarn feathers start\" \"yarn gun start\"",
+    "upstreet": "yarn workspace @webaverse-studios/upstreet"
   },
   "devDependencies": {
     "@feathersjs/cli": "=5.0.0",
