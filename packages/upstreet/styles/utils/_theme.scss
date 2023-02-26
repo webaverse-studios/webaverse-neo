@@ -1,0 +1,19 @@
+
+// Using the descendant combinator too much can result in bad performance.
+// Module CSS splitting is used to mitigate this slightly, but be judicious
+// in the use of these mixins.
+
+// TODO: Create specific combinations of each mixin to cut down on redundant
+//  operators.
+
+// Black
+@mixin black {[data-theme="black"] & { @content }}
+
+// Dark
+@mixin dark {[data-theme="dark"] & { @content }}
+
+// Dark/Black
+@mixin darkBlack {
+  [data-theme="black"] & { @content }
+  [data-theme="dark"] & { @content }
+}

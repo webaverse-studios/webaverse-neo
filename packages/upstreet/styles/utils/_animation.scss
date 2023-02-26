@@ -1,0 +1,55 @@
+
+@keyframes :global(Expand) {
+  0%   {
+    max-height: 0;
+    opacity: 0;
+  }
+  100% {
+    max-height: 50vh;
+    opacity: 1;
+  }
+}
+
+@keyframes FadeIn {
+  0%   { opacity: 0 }
+  100% { opacity: 1 }
+}
+
+@keyframes FadeOut {
+  0%   { opacity: 1 }
+  100% { opacity: 0 }
+}
+
+/*
+ * Slide in from the left using translateX.
+ */
+@keyframes SlideFromLeft {
+  0% { transform: translateX( -100% )}
+  100% { transform: translateX( 0 )}
+}
+
+/*
+ * Slide in from the bottom using translateY.
+ */
+@keyframes SlideFromBottom {
+  0% { transform: translateY( 100% )}
+  100% { transform: translateY( 0 )}
+}
+
+
+@keyframes :global(Shrink) {
+  0% {
+    max-height: 50vh;
+    opacity: 1;
+  }
+
+  // Curve opacity for more pleasing results.
+  50% {
+    opacity: 0.25;
+  }
+
+  100% {
+    max-height: 0;
+    opacity: 0;
+  }
+}

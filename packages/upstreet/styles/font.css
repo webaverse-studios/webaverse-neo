@@ -1,0 +1,16 @@
+
+@font-face {
+  font-family: 'Outfit';
+  src: url('../fonts/Outfit/Outfit-Variable.ttf') format('truetype');
+  font-display: swap;
+  font-style: normal;
+  font-weight: 1 999;
+}
+
+@font-face {
+  font-family: 'Outfit';
+  src: url('../fonts/Work Sans/WorkSans-Variable.ttf') format('truetype');
+  font-display: swap;
+  font-style: normal;
+  font-weight: 1 999;
+}

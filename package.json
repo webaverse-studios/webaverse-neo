@@ -1,0 +1,26 @@
+{
+  "name": "@webaverse-studios/backend",
+  "description": "Social file annotation system",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "upstreet": "yarn workspace @webaverse-studios/upstreet",
+    "dev": "concurrently \"yarn feathers dev\" \"yarn gun dev\"",
+    "feathers": "yarn workspace @webaverse-studios/backend-feathers",
+    "gun": "yarn workspace @webaverse-studios/backend-gun",
+    "lint": "eslint . --config ./.eslintrc.cjs --fix",
+    "start": "concurrently \"yarn feathers start\" \"yarn gun start\""
+  },
+  "devDependencies": {
+    "@feathersjs/cli": "=5.0.0",
+    "@webaverse-studios/eslint-config": "=1.0.0",
+    "concurrently": "=7.6.0",
+    "eslint": "=8.34.0",
+    "eslint-plugin-jsdoc": "=40.0.0",
+    "eslint-plugin-promise": "=6.1.1",
+    "process": "=0.11.10"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}

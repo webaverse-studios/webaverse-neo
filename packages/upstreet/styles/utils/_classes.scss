@@ -1,0 +1,12 @@
+
+.horizontal {
+  align-items: center;
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.horizontal-wrap {
+  align-items: center;
+  display: flex;
+  flex-flow: row wrap;
+}

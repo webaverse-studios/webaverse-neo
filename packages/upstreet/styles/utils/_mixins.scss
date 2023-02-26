@@ -1,0 +1,55 @@
+
+// Make an element or pseudoelement the full size of its parent.
+@mixin absoluteFull {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
+@mixin center {
+  top: 50%;
+  left: 50%;
+  transform: translate( -50%, -50% );
+}
+
+@mixin hideScrollbar {
+  // Firefox
+  scrollbar-width: none;
+
+  // Safari and Chrome
+  &::-webkit-scrollbar { display: none }
+}
+
+// Hover
+@mixin hover  { &:not([disabled]):hover { @content }}
+@mixin hover2 { &:not([disabled]):not([data-active]):hover { @content }}
+
+@mixin outline( $color: #000 ) {
+  box-shadow: -1px -1px 0 $color,
+  1px -1px 0 $color,
+  -1px 1px 0 $color,
+  1px 1px 0 $color;
+}
+
+@mixin outlineBottom( $color, $size: 1px ) {
+  box-shadow: 0 $size 0 $color
+}
+
+@mixin outlineTop( $color, $size: 1px ) {
+  box-shadow: 0 ($size * -1) 0 $color
+}
+
+@mixin shade {
+  background-image: linear-gradient( transparent, rgba(0,0,0,0.1));
+}
+
+@mixin shadeDark {
+  background-image: linear-gradient( transparent, rgba(0,0,0,0.2));
+}
+
+@mixin shadeLight {
+  background-image: linear-gradient( transparent, rgba(0,0,0,0.025));
+}

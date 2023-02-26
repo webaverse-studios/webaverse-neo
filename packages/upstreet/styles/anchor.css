@@ -1,0 +1,15 @@
+
+a {
+  color: var(--linkColor);
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a:hover {
+  /*opacity: 0.75;*/
+  color: var(--linkHoverColor) !important;
+}
+
+a:link,
+a:visited { color: var(--linkColor)}

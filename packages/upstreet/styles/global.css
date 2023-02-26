@@ -1,0 +1,79 @@
+
+/* Used for overlays, etc. */
+.blur { filter: blur( 8px ) saturate( 0.75 )}
+
+.close {
+  /* Animation */
+  transition-duration: var(--transition);
+  transition-property: background-color, outline-color;
+
+  /* Display */
+  background: none;
+  border: none;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+
+  /* Position */
+  margin-left: auto;
+
+  /* Size */
+  aspect-ratio: 1;
+  min-width: unset;
+  width: max-content;
+
+  /* Text */
+  color: var(--text);
+
+  /* UX */
+  cursor: pointer;
+  user-select: none;
+}
+
+.close:focus-visible {
+  outline: 1px dotted var(--primary);
+}
+
+.close:hover {
+  background: var(--overlay2) !important;
+}
+
+.close:active {
+  color: var(--primaryTextColor) !important;
+}
+
+.close::after { content: '✖' }
+
+.contents {
+  display: contents;
+}
+
+.line {
+  white-space: pre;
+}
+
+.logo-lettermark {
+  /* Size */
+  aspect-ratio: 230/100;
+  width: 100px;
+
+  fill: var(--text);
+}
+
+.logo-lettermark-beta {
+  /* Size */
+  aspect-ratio: 285/100;
+  width: 100px;
+
+  /* SVG */
+  fill: var(--text)
+}
+
+.overlay  { background: var(--overlay2)}
+.overlay2 { background: var(--overlay3)}
+.overlay3 { background: var(--overlay4)}
+
+.overscroll-contain { overscroll-behavior: contain }
+.overscroll-none    { overscroll-behavior: none }
