@@ -1,0 +1,15 @@
+
+.body {
+  /* Display */
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  grid-area: main;
+  overflow: hidden;
+}
+
+.canvas {
+  /* Size */
+  width: 100%;
+  height: 100%;
+}

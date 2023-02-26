@@ -1,0 +1,19 @@
+
+html, body { margin: 0 }
+
+body {
+  /* Display */
+  background: var(--background);
+  /* x-overflow is bad app design. */
+  overflow-x: hidden;
+
+  /* Position */
+  margin: 0;
+
+  /* Size */
+  min-width: 350px;
+
+  /* Text */
+  color: var(--text);
+  font-family: 'Work Sans', sans-serif;
+}

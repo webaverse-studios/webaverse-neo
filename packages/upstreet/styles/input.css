@@ -1,0 +1,51 @@
+
+input,
+textarea {
+  /* Display */
+  background: rgba( var(--textRGB), 0.1 );
+  border: none;
+  border-radius: 0.325rem;
+  padding: 14px 16px;
+
+  /* Position */
+  margin-bottom: 0.5rem;
+
+  /* Text */
+  color: var(--text);
+  font-size: 1em;
+}
+
+input, textarea {
+  /* Display */
+  padding: 0.75rem;
+}
+
+
+input { vertical-align: middle }
+
+input[type=text],
+input[type=number],
+textarea {
+  /* Size */
+  width: 100%;
+}
+
+input[type=number] {
+  font-weight: bold;
+}
+
+input::placeholder,
+textarea::placeholder {
+  opacity: 0.4;
+}
+
+label {
+  align-items: baseline;
+  display: flex;
+  /*margin-bottom: 0.75rem;*/
+}
+
+textarea {
+  font-family: inherit;
+  resize: vertical
+}
