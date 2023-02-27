@@ -1,26 +1,29 @@
-import path from 'path';
-import fs from 'fs';
-import express from 'express';
-import encoding from 'encoding-japanese';
+import path from 'path'
+import fs from 'fs'
+import express from 'express'
+import encoding from 'encoding-japanese'
 
-import * as THREE from 'three';
-import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader.js';
-import {MMDLoader} from 'three/examples/jsm/loaders/MMDLoader.js';
-import {CharsetEncoder} from 'three/examples/jsm/libs/mmdparser.module.js';
+import * as THREE from 'three'
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
+import { MMDLoader } from 'three/examples/jsm/loaders/MMDLoader.js'
+import { CharsetEncoder } from 'three/examples/jsm/libs/mmdparser.module.js'
 
-import {getAvatarHeight, getModelBones, modelBoneToAnimationBone} from './avatars/util.mjs';
-import {zbencode, zbdecode} from '../zjs/encoding.mjs';
+import {
+  getAvatarHeight,
+  getModelBones,
+  modelBoneToAnimationBone
+} from './avatars/util.mjs'
+import { zbencode, zbdecode } from '../zjs/encoding.mjs'
 
 class ProgressEvent {
-  constructor(type, options) {
-    this.type = type;
-    this.options = options;
+  constructor (type, options) {
+    this.type = type
+    this.options = options
   }
 }
-globalThis.ProgressEvent = ProgressEvent;
-
-(async () => {
-  const idleAnimationName = 'idle.fbx';
+globalThis.ProgressEvent = ProgressEvent
+;(async () => {
+  const idleAnimationName = 'idle.fbx'
   const reversibleAnimationNames = [
     'left strafe walking.fbx',
     'left strafe.fbx',
@@ -28,40 +31,40 @@ globalThis.ProgressEvent = ProgressEvent;
     'right strafe.fbx',
     'Sneaking Forward.fbx',
     'Crouched Sneaking Left.fbx',
-    'Crouched Sneaking Right.fbx',
-  ];
+    'Crouched Sneaking Right.fbx'
+  ]
   const findFilesWithExtension = (baseDir, subDir, ext) => {
-    const files = [];
-    const dotExt = `.${ext}`;
+    const files = []
+    const dotExt = `.${ext}`
     const _recurse = p => {
-      const entries = fs.readdirSync(p);
+      const entries = fs.readdirSync(p)
       for (const entry of entries) {
-        const fullPath = `${p}/${entry}`;
+        const fullPath = `${p}/${entry}`
         if (fs.statSync(fullPath).isDirectory()) {
-          _recurse(fullPath);
+          _recurse(fullPath)
         } else if (entry.endsWith(dotExt)) {
-          files.push(fullPath.slice(baseDir.length + 1));
+          files.push(fullPath.slice(baseDir.length + 1))
         }
       }
-    };
-    _recurse(path.join(baseDir, subDir));
-    return files;
-  };
+    }
+    _recurse(path.join(baseDir, subDir))
+    return files
+  }
   // let mmdAnimation = null;
   // const charsetEncoder = new CharsetEncoder();
   const _makeFakeBone = name => {
     return {
-    // name,
+      // name,
       translation: [0, 0, 0],
-      quaternion: [0, 0, 0, 1],
-    };
-  };
+      quaternion: [0, 0, 0, 1]
+    }
+  }
   const _parseVpd = o => {
     const _getBone = name => {
-      return o.bones.find(b => b.name === name) ?? _makeFakeBone();
-    };
+      return o.bones.find(b => b.name === name) ?? _makeFakeBone()
+    }
     const mmdModelBones = {
-    // Root: _getBone('センター'), // deliberately excluded
+      // Root: _getBone('センター'), // deliberately excluded
 
       Hips: _getBone('下半身'),
       Spine: _makeFakeBone(), // not present in mmd
@@ -118,50 +121,101 @@ globalThis.ProgressEvent = ProgressEvent;
       Right_knee: _getBone('右ひざ'),
       Right_ankle: _getBone('右足首'),
       Left_toe: _getBone('左つま先'),
-      Right_toe: _getBone('右つま先'),
-    };
+      Right_toe: _getBone('右つま先')
+    }
     /* for (const k in mmdModelBones) {
     if (!mmdModelBones[k]) {
       console.warn('no bone', k);
     }
   } */
 
-    const mmdAnimation = {};
+    const mmdAnimation = {}
     for (const key in mmdModelBones) {
-      const key2 = modelBoneToAnimationBone[key];
+      const key2 = modelBoneToAnimationBone[key]
       /* if (key2 === undefined) {
       throw new Error('fail: ' + key);
     } */
-      mmdAnimation[key2] = mmdModelBones[key];
+      mmdAnimation[key2] = mmdModelBones[key]
     }
-    return mmdAnimation;
-  };
+    return mmdAnimation
+  }
 
-  const trackNames = ['mixamorigHips.position', 'mixamorigHips.quaternion', 'mixamorigSpine.quaternion', 'mixamorigSpine1.quaternion', 'mixamorigSpine2.quaternion', 'mixamorigNeck.quaternion', 'mixamorigHead.quaternion', 'mixamorigLeftShoulder.quaternion', 'mixamorigLeftArm.quaternion', 'mixamorigLeftForeArm.quaternion', 'mixamorigLeftHand.quaternion', 'mixamorigLeftHandMiddle1.quaternion', 'mixamorigLeftHandMiddle2.quaternion', 'mixamorigLeftHandMiddle3.quaternion', 'mixamorigLeftHandThumb1.quaternion', 'mixamorigLeftHandThumb2.quaternion', 'mixamorigLeftHandThumb3.quaternion', 'mixamorigLeftHandIndex1.quaternion', 'mixamorigLeftHandIndex2.quaternion', 'mixamorigLeftHandIndex3.quaternion', 'mixamorigLeftHandRing1.quaternion', 'mixamorigLeftHandRing2.quaternion', 'mixamorigLeftHandRing3.quaternion', 'mixamorigLeftHandPinky1.quaternion', 'mixamorigLeftHandPinky2.quaternion', 'mixamorigLeftHandPinky3.quaternion', 'mixamorigRightShoulder.quaternion', 'mixamorigRightArm.quaternion', 'mixamorigRightForeArm.quaternion', 'mixamorigRightHand.quaternion', 'mixamorigRightHandMiddle1.quaternion', 'mixamorigRightHandMiddle2.quaternion', 'mixamorigRightHandMiddle3.quaternion', 'mixamorigRightHandThumb1.quaternion', 'mixamorigRightHandThumb2.quaternion', 'mixamorigRightHandThumb3.quaternion', 'mixamorigRightHandIndex1.quaternion', 'mixamorigRightHandIndex2.quaternion', 'mixamorigRightHandIndex3.quaternion', 'mixamorigRightHandRing1.quaternion', 'mixamorigRightHandRing2.quaternion', 'mixamorigRightHandRing3.quaternion', 'mixamorigRightHandPinky1.quaternion', 'mixamorigRightHandPinky2.quaternion', 'mixamorigRightHandPinky3.quaternion', 'mixamorigRightUpLeg.quaternion', 'mixamorigRightLeg.quaternion', 'mixamorigRightFoot.quaternion', 'mixamorigRightToeBase.quaternion', 'mixamorigLeftUpLeg.quaternion', 'mixamorigLeftLeg.quaternion', 'mixamorigLeftFoot.quaternion', 'mixamorigLeftToeBase.quaternion']
+  const trackNames = [
+    'mixamorigHips.position',
+    'mixamorigHips.quaternion',
+    'mixamorigSpine.quaternion',
+    'mixamorigSpine1.quaternion',
+    'mixamorigSpine2.quaternion',
+    'mixamorigNeck.quaternion',
+    'mixamorigHead.quaternion',
+    'mixamorigLeftShoulder.quaternion',
+    'mixamorigLeftArm.quaternion',
+    'mixamorigLeftForeArm.quaternion',
+    'mixamorigLeftHand.quaternion',
+    'mixamorigLeftHandMiddle1.quaternion',
+    'mixamorigLeftHandMiddle2.quaternion',
+    'mixamorigLeftHandMiddle3.quaternion',
+    'mixamorigLeftHandThumb1.quaternion',
+    'mixamorigLeftHandThumb2.quaternion',
+    'mixamorigLeftHandThumb3.quaternion',
+    'mixamorigLeftHandIndex1.quaternion',
+    'mixamorigLeftHandIndex2.quaternion',
+    'mixamorigLeftHandIndex3.quaternion',
+    'mixamorigLeftHandRing1.quaternion',
+    'mixamorigLeftHandRing2.quaternion',
+    'mixamorigLeftHandRing3.quaternion',
+    'mixamorigLeftHandPinky1.quaternion',
+    'mixamorigLeftHandPinky2.quaternion',
+    'mixamorigLeftHandPinky3.quaternion',
+    'mixamorigRightShoulder.quaternion',
+    'mixamorigRightArm.quaternion',
+    'mixamorigRightForeArm.quaternion',
+    'mixamorigRightHand.quaternion',
+    'mixamorigRightHandMiddle1.quaternion',
+    'mixamorigRightHandMiddle2.quaternion',
+    'mixamorigRightHandMiddle3.quaternion',
+    'mixamorigRightHandThumb1.quaternion',
+    'mixamorigRightHandThumb2.quaternion',
+    'mixamorigRightHandThumb3.quaternion',
+    'mixamorigRightHandIndex1.quaternion',
+    'mixamorigRightHandIndex2.quaternion',
+    'mixamorigRightHandIndex3.quaternion',
+    'mixamorigRightHandRing1.quaternion',
+    'mixamorigRightHandRing2.quaternion',
+    'mixamorigRightHandRing3.quaternion',
+    'mixamorigRightHandPinky1.quaternion',
+    'mixamorigRightHandPinky2.quaternion',
+    'mixamorigRightHandPinky3.quaternion',
+    'mixamorigRightUpLeg.quaternion',
+    'mixamorigRightLeg.quaternion',
+    'mixamorigRightFoot.quaternion',
+    'mixamorigRightToeBase.quaternion',
+    'mixamorigLeftUpLeg.quaternion',
+    'mixamorigLeftLeg.quaternion',
+    'mixamorigLeftFoot.quaternion',
+    'mixamorigLeftToeBase.quaternion'
+  ]
 
   const baker = async (uriPath = '', fbxFileNames, vpdFileNames, outFile) => {
-    const animations = [];
+    const animations = []
 
     // mmd
-    const mmdLoader = new MMDLoader();
-    const charsetEncoder = new CharsetEncoder();
-    const mmdPoses = [];
+    const mmdLoader = new MMDLoader()
+    const charsetEncoder = new CharsetEncoder()
+    const mmdPoses = []
     for (const name of vpdFileNames) {
-      // console.log('try', name);
-
-      let o;
+      let o
 
       /* const content = fs.readFileSync('packages/client/public/' + name);
       const text = charsetEncoder.s2u(content);
-      // console.log('got text', text);
       const parser = mmdLoader._getParser();
       o = parser.parseVpd(text, true); */
 
-      const content = fs.readFileSync('packages/client/public/' + name);
-      var sjisArray = encoding.convert(content, 'UTF8');
-      const text = new TextDecoder().decode(Uint8Array.from(sjisArray));
-      const parser = mmdLoader._getParser();
-      o = parser.parseVpd(text, true);
+      const content = fs.readFileSync('packages/client/public/' + name)
+      var sjisArray = encoding.convert(content, 'UTF8')
+      const text = new TextDecoder().decode(Uint8Array.from(sjisArray))
+      const parser = mmdLoader._getParser()
+      o = parser.parseVpd(text, true)
 
       /* const u = uriPath + name;
       o = await new Promise((accept, reject) => {
@@ -171,124 +225,136 @@ globalThis.ProgressEvent = ProgressEvent;
           }, function progress() {}, reject);
       }); */
 
-      const poses = _parseVpd(o);
+      const poses = _parseVpd(o)
       mmdPoses.push({
         name: name.slice('poses/'.length),
-        poses,
-      });
+        poses
+      })
     }
-    const mmdAnimationsJson = [];
+    const mmdAnimationsJson = []
     for (const mmdPose of mmdPoses) {
-      const {name} = mmdPose;
-      const tracks = [];
+      const { name } = mmdPose
+      const tracks = []
       for (const boneName in mmdPose.poses) {
-        const bone = mmdPose.poses[boneName];
-        const isHips = /hips/i.test(boneName);
+        const bone = mmdPose.poses[boneName]
+        const isHips = /hips/i.test(boneName)
         if (isHips) {
           tracks.push({
             name: boneName + '.position',
             type: 'vector',
             times: Float32Array.from([0]),
-            values: Float32Array.from(bone.translation),
-          });
+            values: Float32Array.from(bone.translation)
+          })
         }
         tracks.push({
           name: boneName + '.quaternion',
           type: 'quaternion',
           times: Float32Array.from([0]),
-          values: Float32Array.from(bone.quaternion),
-        });
+          values: Float32Array.from(bone.quaternion)
+        })
       }
       const mmdAnimation = {
         uuid: name,
         name,
         duration: 1,
-        tracks,
-      };
-      mmdAnimationsJson.push(mmdAnimation);
+        tracks
+      }
+      mmdAnimationsJson.push(mmdAnimation)
     }
 
     // fbx
-    const fbxLoader = new FBXLoader();
+    const fbxLoader = new FBXLoader()
     const height = await (async () => {
-      let o;
-      const u = uriPath + 'animations/' + idleAnimationName;
+      let o
+      const u = uriPath + 'animations/' + idleAnimationName
       o = await new Promise((accept, reject) => {
-        fbxLoader.load(u, o => {
-          o.scene = o;
-          accept(o);
-        }, function progress() { }, reject);
-      });
-      // console.log('got height', height);
+        fbxLoader.load(
+          u,
+          o => {
+            o.scene = o
+            accept(o)
+          },
+          function progress () {},
+          reject
+        )
+      })
       // const animation = o.animations[0];
-      const modelBones = getModelBones(o);
-      return getAvatarHeight(modelBones);
-    })();
-    // console.log('got height', height);
+      const modelBones = getModelBones(o)
+      return getAvatarHeight(modelBones)
+    })()
     for (const name of fbxFileNames) {
-      const u = uriPath + name;
-      console.log('processing', name);
-      let o;
+      const u = uriPath + name
+      console.log('processing', name)
+      let o
       o = await new Promise((accept, reject) => {
-        fbxLoader.load(u, o => {
-          o.scene = o;
-          accept(o);
-        }, function progress() { }, reject);
-      });
-      // console.log('got height', height);
-      const animation = o.animations[0];
-      animation.name = name.slice('animations/'.length);
-      animation.object = o;
+        fbxLoader.load(
+          u,
+          o => {
+            o.scene = o
+            accept(o)
+          },
+          function progress () {},
+          reject
+        )
+      })
+      const animation = o.animations[0]
+      animation.name = name.slice('animations/'.length)
+      animation.object = o
 
-      animation.tracks = animation.tracks.filter(track => trackNames.includes(track.name)); // Filter out unused tracks, required by indices based wasm animation system.
+      animation.tracks = animation.tracks.filter(track =>
+        trackNames.includes(track.name)
+      ) // Filter out unused tracks, required by indices based wasm animation system.
 
       // scale position tracks by height
       for (const track of animation.tracks) {
         if (/\.position/.test(track.name)) {
-          const values2 = new track.values.constructor(track.values.length);
-          const valueSize = track.getValueSize();
-          const numValues = track.values.length / valueSize;
+          const values2 = new track.values.constructor(track.values.length)
+          const valueSize = track.getValueSize()
+          const numValues = track.values.length / valueSize
           for (let i = 0; i < numValues; i++) {
-            const index = i;
+            const index = i
             for (let j = 0; j < valueSize; j++) {
-              values2[index * valueSize + j] = track.values[index * valueSize + j] / height;
+              values2[index * valueSize + j] =
+                track.values[index * valueSize + j] / height
             }
           }
-          track.values = values2;
+          track.values = values2
         }
       }
 
-      animations.push(animation);
+      animations.push(animation)
     }
     const _reverseAnimation = animation => {
-      animation = animation.clone();
+      animation = animation.clone()
       for (const track of animation.tracks) {
-        const times2 = new track.times.constructor(track.times.length);
+        const times2 = new track.times.constructor(track.times.length)
         for (let i = 0; i < track.times.length; i++) {
-          times2[i] = animation.duration - track.times[track.times.length - 1 - i];
+          times2[i] =
+            animation.duration - track.times[track.times.length - 1 - i]
         }
-        track.times = times2;
+        track.times = times2
 
-        const values2 = new track.values.constructor(track.values.length);
-        const valueSize = track.getValueSize();
-        const numValues = track.values.length / valueSize;
+        const values2 = new track.values.constructor(track.values.length)
+        const valueSize = track.getValueSize()
+        const numValues = track.values.length / valueSize
         for (let i = 0; i < numValues; i++) {
-          const aIndex = i;
-          const bIndex = numValues - 1 - i;
+          const aIndex = i
+          const bIndex = numValues - 1 - i
           for (let j = 0; j < valueSize; j++) {
-            values2[aIndex * valueSize + j] = track.values[bIndex * valueSize + j];
+            values2[aIndex * valueSize + j] =
+              track.values[bIndex * valueSize + j]
           }
         }
-        track.values = values2;
+        track.values = values2
       }
-      return animation;
-    };
+      return animation
+    }
     for (const name of reversibleAnimationNames) {
-      const animation = animations.find(a => a.name === name);
-      const reverseAnimation = _reverseAnimation(animation);
-      reverseAnimation.name = animation.name.replace(/\.fbx$/, ' reverse.fbx');
-      reverseAnimation.object = animation.object;
-      animations.push(reverseAnimation);
+      const animation = animations.find(a => a.name === name)
+      const reverseAnimation = _reverseAnimation(animation)
+      reverseAnimation.name = animation.name.replace(/\.fbx$/, ' reverse.fbx')
+      reverseAnimation.object = animation.object
+      animations.push(reverseAnimation)
     }
 
     const walkAnimationNames = [
@@ -310,130 +376,156 @@ globalThis.ProgressEvent = ProgressEvent;
       'Sneaking Forward reverse.fbx',
       'Crouched Sneaking Left reverse.fbx',
       'Crouched Sneaking Right reverse.fbx',
-      'naruto run.fbx',
-    ];
+      'naruto run.fbx'
+    ]
     const animationStepIndices = walkAnimationNames.map(walkAnimationName => {
-      const animation = animations.find(a => a.name === walkAnimationName);
-      const {tracks, object} = animation;
-      // console.log('got interpolants', object, animation.name);
-      const bones = [];
+      const animation = animations.find(a => a.name === walkAnimationName)
+      const { tracks, object } = animation
+      const bones = []
       object.traverse(o => {
         if (o.isBone) {
-          const bone = o;
-          bone.initialPosition = bone.position.clone();
-          bone.initialQuaternion = bone.quaternion.clone();
-          bones.push(bone);
+          const bone = o
+          bone.initialPosition = bone.position.clone()
+          bone.initialQuaternion = bone.quaternion.clone()
+          bones.push(bone)
         }
-      });
-      // console.log('got bones', bones.map(b => b.name));
-      const rootBone = object; // not really a bone
-      const leftFootBone = bones.find(b => b.name === 'mixamorigLeftFoot');
-      const rightFootBone = bones.find(b => b.name === 'mixamorigRightFoot');
-      const epsilon = 0.001;
-      const allOnesEpsilon = arr => arr.every(v => Math.abs(1 - v) < epsilon);
+      })
+      const rootBone = object // not really a bone
+      const leftFootBone = bones.find(b => b.name === 'mixamorigLeftFoot')
+      const rightFootBone = bones.find(b => b.name === 'mixamorigRightFoot')
+      const epsilon = 0.001
+      const allOnesEpsilon = arr => arr.every(v => Math.abs(1 - v) < epsilon)
 
-      const bonePositionInterpolants = {};
-      const boneQuaternionInterpolants = {};
-      const tracksToRemove = [];
+      const bonePositionInterpolants = {}
+      const boneQuaternionInterpolants = {}
+      const tracksToRemove = []
       for (const track of tracks) {
         if (/\.position$/.test(track.name)) {
-          const boneName = track.name.replace(/\.position$/, '');
+          const boneName = track.name.replace(/\.position$/, '')
           // const bone = bones.find(b => b.name === boneName);
-          const boneInterpolant = new THREE.LinearInterpolant(track.times, track.values, track.getValueSize());
-          bonePositionInterpolants[boneName] = boneInterpolant;
+          const boneInterpolant = new THREE.LinearInterpolant(
+            track.times,
+            track.values,
+            track.getValueSize()
+          )
+          bonePositionInterpolants[boneName] = boneInterpolant
         } else if (/\.quaternion$/.test(track.name)) {
-          const boneName = track.name.replace(/\.quaternion$/, '');
+          const boneName = track.name.replace(/\.quaternion$/, '')
           // const bone = bones.find(b => b.name === boneName);
-          const boneInterpolant = new THREE.QuaternionLinearInterpolant(track.times, track.values, track.getValueSize());
-          boneQuaternionInterpolants[boneName] = boneInterpolant;
+          const boneInterpolant = new THREE.QuaternionLinearInterpolant(
+            track.times,
+            track.values,
+            track.getValueSize()
+          )
+          boneQuaternionInterpolants[boneName] = boneInterpolant
         } else if (/\.scale$/.test(track.name)) {
           if (allOnesEpsilon(track.values)) {
-            const index = tracks.indexOf(track);
-            tracksToRemove.push(index);
+            const index = tracks.indexOf(track)
+            tracksToRemove.push(index)
           } else {
-            throw new Error(`This track has invalid values.  All scale transforms must be set to 1. Aborting.\n Animation: ${animation.name}, Track: ${track.name}, values: \n ${track.values}`);
+            throw new Error(
+              `This track has invalid values.  All scale transforms must be set to 1. Aborting.\n Animation: ${animation.name}, Track: ${track.name}, values: \n ${track.values}`
+            )
           }
         } else {
-          console.warn('unknown track name', animation.name, track);
+          console.warn('unknown track name', animation.name, track)
         }
       }
       // remove scale transform tracks as they won't be used;
-      let i = tracksToRemove.length;
+      let i = tracksToRemove.length
       while (i--) {
-        tracks.splice(tracksToRemove[i], 1);
+        tracks.splice(tracksToRemove[i], 1)
       }
 
-      const walkBufferSize = 256;
-      const leftFootYDeltas = new Float32Array(walkBufferSize);
-      const rightFootYDeltas = new Float32Array(walkBufferSize);
+      const walkBufferSize = 256
+      const leftFootYDeltas = new Float32Array(walkBufferSize)
+      const rightFootYDeltas = new Float32Array(walkBufferSize)
       for (let i = 0; i < walkBufferSize; i++) {
-        const f = i / (walkBufferSize - 1);
+        const f = i / (walkBufferSize - 1)
         for (const bone of bones) {
-          const positionInterpolant = bonePositionInterpolants[bone.name];
-          const quaternionInterpolant = boneQuaternionInterpolants[bone.name];
+          const positionInterpolant = bonePositionInterpolants[bone.name]
+          const quaternionInterpolant = boneQuaternionInterpolants[bone.name]
           if (positionInterpolant) {
-            const pv = positionInterpolant.evaluate(f * animation.duration);
-            bone.position.fromArray(pv);
+            const pv = positionInterpolant.evaluate(f * animation.duration)
+            bone.position.fromArray(pv)
           } else {
-            bone.position.copy(bone.initialPosition);
+            bone.position.copy(bone.initialPosition)
           }
           if (quaternionInterpolant) {
-            const qv = quaternionInterpolant.evaluate(f * animation.duration);
-            bone.quaternion.fromArray(qv);
+            const qv = quaternionInterpolant.evaluate(f * animation.duration)
+            bone.quaternion.fromArray(qv)
           } else {
-            bone.quaternion.copy(bone.initialQuaternion);
+            bone.quaternion.copy(bone.initialQuaternion)
           }
         }
-        rootBone.updateMatrixWorld(true);
+        rootBone.updateMatrixWorld(true)
 
-        const fbxScale = 100;
-        const rootY = new THREE.Vector3().setFromMatrixPosition(rootBone.matrixWorld).divideScalar(fbxScale).y;
-        const leftFootY = new THREE.Vector3().setFromMatrixPosition(leftFootBone.matrixWorld).divideScalar(fbxScale).y;
-        const rightFootY = new THREE.Vector3().setFromMatrixPosition(rightFootBone.matrixWorld).divideScalar(fbxScale).y;
+        const fbxScale = 100
+        const rootY = new THREE.Vector3()
+          .setFromMatrixPosition(rootBone.matrixWorld)
+          .divideScalar(fbxScale).y
+        const leftFootY = new THREE.Vector3()
+          .setFromMatrixPosition(leftFootBone.matrixWorld)
+          .divideScalar(fbxScale).y
+        const rightFootY = new THREE.Vector3()
+          .setFromMatrixPosition(rightFootBone.matrixWorld)
+          .divideScalar(fbxScale).y
 
-        const leftFootYDelta = leftFootY - rootY;
-        const rightFootYDelta = rightFootY - rootY;
+        const leftFootYDelta = leftFootY - rootY
+        const rightFootYDelta = rightFootY - rootY
 
-        leftFootYDeltas[i] = leftFootYDelta;
-        rightFootYDeltas[i] = rightFootYDelta;
+        leftFootYDeltas[i] = leftFootYDelta
+        rightFootYDeltas[i] = rightFootYDelta
       }
 
-      const range = /sneak/i.test(walkAnimationName) ? 0.3 : 0.06;
+      const range = /sneak/i.test(walkAnimationName) ? 0.3 : 0.06
 
-      let leftMin = Infinity;
-      let leftMax = -Infinity;
+      let leftMin = Infinity
+      let leftMax = -Infinity
       for (let i = 0; i < leftFootYDeltas.length; i++) {
-        const leftFootYDelta = leftFootYDeltas[i];
-        leftMin = Math.min(leftMin, leftFootYDelta);
-        leftMax = Math.max(leftMax, leftFootYDelta);
+        const leftFootYDelta = leftFootYDeltas[i]
+        leftMin = Math.min(leftMin, leftFootYDelta)
+        leftMax = Math.max(leftMax, leftFootYDelta)
       }
-      const leftYLimit = leftMin + range * (leftMax - leftMin);
-      let rightMin = Infinity;
-      let rightMax = -Infinity;
+      const leftYLimit = leftMin + range * (leftMax - leftMin)
+      let rightMin = Infinity
+      let rightMax = -Infinity
       for (let i = 0; i < rightFootYDeltas.length; i++) {
-        const rightFootYDelta = rightFootYDeltas[i];
-        rightMin = Math.min(rightMin, rightFootYDelta);
-        rightMax = Math.max(rightMax, rightFootYDelta);
+        const rightFootYDelta = rightFootYDeltas[i]
+        rightMin = Math.min(rightMin, rightFootYDelta)
+        rightMax = Math.max(rightMax, rightFootYDelta)
       }
-      const rightYLimit = rightMin + range * (rightMax - rightMin);
+      const rightYLimit = rightMin + range * (rightMax - rightMin)
 
-      const leftStepIndices = new Uint8Array(walkBufferSize);
-      const rightStepIndices = new Uint8Array(walkBufferSize);
-      let numLeft = 0;
-      let numRight = 0;
-      const _isFootYStepping = (y, stepYLimit) => y <= stepYLimit;
+      const leftStepIndices = new Uint8Array(walkBufferSize)
+      const rightStepIndices = new Uint8Array(walkBufferSize)
+      let numLeft = 0
+      let numRight = 0
+      const _isFootYStepping = (y, stepYLimit) => y <= stepYLimit
       for (let i = 0; i < leftFootYDeltas.length; i++) {
-        const lastLeftFootStepping = _isFootYStepping(leftFootYDeltas[i === 0 ? (leftFootYDeltas.length - 1) : (i - 1)], leftYLimit);
-        const leftFootStepping = _isFootYStepping(leftFootYDeltas[i], leftYLimit);
-        const newLeftStep = leftFootStepping && !lastLeftFootStepping;
-        leftStepIndices[i] = newLeftStep ? 1 : 0;
-        numLeft += +newLeftStep;
+        const lastLeftFootStepping = _isFootYStepping(
+          leftFootYDeltas[i === 0 ? leftFootYDeltas.length - 1 : i - 1],
+          leftYLimit
+        )
+        const leftFootStepping = _isFootYStepping(
+          leftFootYDeltas[i],
+          leftYLimit
+        )
+        const newLeftStep = leftFootStepping && !lastLeftFootStepping
+        leftStepIndices[i] = newLeftStep ? 1 : 0
+        numLeft += +newLeftStep
 
-        const lastRightFootStepping = _isFootYStepping(rightFootYDeltas[i === 0 ? (rightFootYDeltas.length - 1) : (i - 1)], leftYLimit);
-        const rightFootStepping = _isFootYStepping(rightFootYDeltas[i], leftYLimit);
-        const newRightStep = rightFootStepping && !lastRightFootStepping;
-        rightStepIndices[i] = newRightStep ? 1 : 0;
-        numRight += +newRightStep;
+        const lastRightFootStepping = _isFootYStepping(
+          rightFootYDeltas[i === 0 ? rightFootYDeltas.length - 1 : i - 1],
+          leftYLimit
+        )
+        const rightFootStepping = _isFootYStepping(
+          rightFootYDeltas[i],
+          leftYLimit
+        )
+        const newRightStep = rightFootStepping && !lastRightFootStepping
+        rightStepIndices[i] = newRightStep ? 1 : 0
+        numRight += +newRightStep
       }
       console.log(
         'got deltas',
@@ -445,8 +537,8 @@ globalThis.ProgressEvent = ProgressEvent;
         rightMax,
         rightYLimit,
         numLeft,
-        numRight,
-      );
+        numRight
+      )
       /* if (numLeft === 2) {
         for (let i = leftStepIndices.length - 1; i >= 0; i--) {
           if (leftStepIndices[i]) {
@@ -465,7 +557,6 @@ globalThis.ProgressEvent = ProgressEvent;
       } */
       /* if (_isFootYStepping(leftFootYDeltas[0], leftYLimit) === _isFootYStepping(leftFootYDeltas[leftFootYDeltas.length - 1], leftYLimit)) {
         const endIndex = leftStepIndices[leftStepIndices.length - 1];
-        // console.log('end index', endIndex, leftStepIndices[0], leftStepIndices[leftStepIndices.length - 1]);
         for (let i = leftStepIndices.length - 1; i >= 0 && leftStepIndices[i] === endIndex; i--) {
           leftStepIndices[i] = leftStepIndices[0];
         }
@@ -476,24 +567,14 @@ globalThis.ProgressEvent = ProgressEvent;
           rightStepIndices[i] = rightStepIndices[0];
         }
       } */
-      /* console.log(
-        'got deltas',
-        animation.name, leftStepIndex, rightStepIndex,
-        _isFootYStepping(rightFootYDeltas[0], rightYLimit),
-        _isFootYStepping(rightFootYDeltas[rightFootYDeltas.length - 1], rightYLimit),
-        _isFootYStepping(rightFootYDeltas[rightFootYDeltas.length - 2], rightYLimit),
-        _isFootYStepping(leftFootYDeltas[0], leftYLimit),
-        _isFootYStepping(leftFootYDeltas[leftFootYDeltas.length - 1], leftYLimit),
-        _isFootYStepping(leftFootYDeltas[leftFootYDeltas.length - 2], leftYLimit),
-      ); */
 
       return {
         leftFootYDeltas,
         rightFootYDeltas,
         name: animation.name,
         leftStepIndices,
-        rightStepIndices,
-      };
+        rightStepIndices
+      }
 
       /* if (
         _isFootYStepping(leftFootYDeltas[0], leftYLimit) === _isFootYStepping(leftFootYDeltas[leftFootYDeltas.length-1], leftYLimit)
@@ -531,47 +612,58 @@ globalThis.ProgressEvent = ProgressEvent;
             createInterpolant: [Function: InterpolantFactoryMethodLinear]
           },
       */
-    });
-    // console.log('got animations', animations);
+    })
 
     // format
-    const animationsJson = animations.map(a => a.toJSON())
-      .concat(mmdAnimationsJson);
+    const animationsJson = animations
+      .map(a => a.toJSON())
+      .concat(mmdAnimationsJson)
     for (const animation of animationsJson) {
       for (const track of animation.tracks) {
-        track.times = Float32Array.from(track.times);
-        track.values = Float32Array.from(track.values);
+        track.times = Float32Array.from(track.times)
+        track.values = Float32Array.from(track.values)
       }
     }
-    // console.log('got animations json', animationsJson[0], mmdAnimationsJson[0]);
     const animationsUint8Array = zbencode({
       animations: animationsJson,
-      animationStepIndices,
-    });
-    zbdecode(animationsUint8Array);
-    console.log('exporting animations');
-    fs.writeFileSync(outFile, Buffer.from(animationsUint8Array));
-    console.log('exported animations at', outFile);
-  };
+      animationStepIndices
+    })
+    zbdecode(animationsUint8Array)
+    console.log('exporting animations')
+    fs.writeFileSync(outFile, Buffer.from(animationsUint8Array))
+    console.log('exported animations at', outFile)
+  }
 
-  (async () => {
-    const app = express();
+  ;(async () => {
+    const app = express()
     /* app.all('*', (req, res, next) => {
-      // console.log('got url 1', req.url);
       req.url = decodeURI(req.url);
       req.originalUrl = decodeURI(req.url);
-      // console.log('got url 2', req.url);
       next();
     }); */
-    app.use(express.static('packages/client/public'));
-    app.listen(9999);
-    const animationFileNames = fs.readdirSync('packages/client/public/animations');
-    const fbxFileNames = animationFileNames.filter(name => /\.fbx$/.test(name)).map(name => 'animations/' + name);
-    const vpdFileNames = findFilesWithExtension('packages/client/public', 'poses', 'vpd');
-    const animationsResultFileName = 'packages/client/public/animations/animations.z';
-    await baker('http://localhost:9999/', fbxFileNames, vpdFileNames, animationsResultFileName).catch(e => {
-      console.warn('bake error', e);
-    });
-    process.exit();
-  })();
-})();
+    app.use(express.static('packages/client/public'))
+    app.listen(9999)
+    const animationFileNames = fs.readdirSync(
+      'packages/client/public/animations'
+    )
+    const fbxFileNames = animationFileNames
+      .filter(name => /\.fbx$/.test(name))
+      .map(name => 'animations/' + name)
+    const vpdFileNames = findFilesWithExtension(
+      'packages/client/public',
+      'poses',
+      'vpd'
+    )
+    const animationsResultFileName =
+      'packages/client/public/animations/animations.z'
+    await baker(
+      'http://localhost:9999/',
+      fbxFileNames,
+      vpdFileNames,
+      animationsResultFileName
+    ).catch(e => {
+      console.warn('bake error', e)
+    })
+    process.exit()
+  })()
+})()

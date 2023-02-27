@@ -2,10 +2,12 @@
 //   AudioManager,
 // } from './audio-manager.js';
 
-import {loadAudioBuffer} from './util.js';
-import soundFileSpecs from './sound-files.json';
+import { loadAudioBuffer } from './util.js'
+import soundFileSpecs from './sound-files.json'
 
-const _getSoundFiles = regex => soundFileSpecs.filter(f => regex.test(f.name));
+import soundUrl from './sounds/sounds.mp3'
+
+const _getSoundFiles = regex => soundFileSpecs.filter(f => regex.test(f.name))
 const soundFiles = {
   walk: _getSoundFiles(/^walk\//),
   run: _getSoundFiles(/^run\//),
@@ -22,18 +24,18 @@ const soundFiles = {
   menuOpen: _getSoundFiles(/ff7_save/),
   // menuOpen: _getSoundFiles(/PauseMenu_Open/),
   // menuOpen: _getSoundFiles(/ff8_save/),
-  
+
   // mobs sounds todo: implement sound bank package in app
   worm_bloaterattack: _getSoundFiles(/worm_bloaterattack/),
   worm_slasherattack: _getSoundFiles(/worm_slasherattack/),
-  worm_runnerattack:  _getSoundFiles(/worm_runnerattack/),
-  worm_attack:  _getSoundFiles(/worm_attack/),
+  worm_runnerattack: _getSoundFiles(/worm_runnerattack/),
+  worm_attack: _getSoundFiles(/worm_attack/),
   worm_bloaterdie: _getSoundFiles(/worm_bloaterdie/),
   worm_slasherdie: _getSoundFiles(/worm_slasherdie/),
-  worm_runnerdie:  _getSoundFiles(/worm_runnerdie/),
-  worm_die:  _getSoundFiles(/worm_die/),
+  worm_runnerdie: _getSoundFiles(/worm_runnerdie/),
+  worm_die: _getSoundFiles(/worm_die/),
   // end mob sounds
-  
+
   // menuOpen: _getSoundFiles(/ff8_menu_open\.wav/),
   // menuClose: _getSoundFiles(/PauseMenu_Close/),
   menuClose: _getSoundFiles(/ff8_menu_back/),
@@ -77,61 +79,60 @@ const soundFiles = {
   menuSweepIn: _getSoundFiles(/pd_sweep1/),
   menuSweepOut: _getSoundFiles(/pd_sweep2/),
 
-  water: _getSoundFiles(/^water\//),
-};
+  water: _getSoundFiles(/^water\//)
+}
 
 // move to a class
 export class Sounds {
-  #soundFileAudioBuffer;
-  
-  constructor({
-    audioManager,
-  }) {
+  #soundFileAudioBuffer
+
+  constructor ({ audioManager }) {
     if (!audioManager) {
       console.warn('no audioManager', {
-        audioManager,
-      });
-      debugger;
+        audioManager
+      })
+      debugger
     }
-    this.audioManager = audioManager;
+    this.audioManager = audioManager
 
     this.loadPromise = (async () => {
-      const {audioContext} = this.audioManager;
+      const { audioContext } = this.audioManager
       this.#soundFileAudioBuffer = await loadAudioBuffer(
         audioContext,
-        '/sounds/sounds.mp3'
-      );
-    })();
+        soundUrl
+        // '/sounds/sounds.mp3'
+      )
+    })()
   }
 
-  getSoundFiles() {
-    return soundFiles;
+  getSoundFiles () {
+    return soundFiles
   }
-  getSoundFileAudioBuffer() {
-    return this.#soundFileAudioBuffer;
+  getSoundFileAudioBuffer () {
+    return this.#soundFileAudioBuffer
   }
-  playSound(audioSpec) {
-    const {offset, duration} = audioSpec;
-    const {audioContext} = this.audioManager;
-    const audioBufferSourceNode = audioContext.createBufferSource();
-    audioBufferSourceNode.buffer = this.#soundFileAudioBuffer;
-    audioBufferSourceNode.connect(audioContext.gain);
-    audioBufferSourceNode.start(0, offset, duration);
-    return audioBufferSourceNode;
+  playSound (audioSpec) {
+    const { offset, duration } = audioSpec
+    const { audioContext } = this.audioManager
+    const audioBufferSourceNode = audioContext.createBufferSource()
+    audioBufferSourceNode.buffer = this.#soundFileAudioBuffer
+    audioBufferSourceNode.connect(audioContext.gain)
+    audioBufferSourceNode.start(0, offset, duration)
+    return audioBufferSourceNode
   }
-  playSoundName(name) {
-    const snds = soundFiles[name];
+  playSoundName (name) {
+    const snds = soundFiles[name]
     if (snds) {
-      const sound = snds[Math.floor(Math.random() * snds.length)];
-      this.playSound(sound);
-      return true;
+      const sound = snds[Math.floor(Math.random() * snds.length)]
+      this.playSound(sound)
+      return true
     } else {
-      debugger;
-      return false;
+      debugger
+      return false
     }
   }
 
-  async waitForLoad() {
-    await this.loadPromise;
+  async waitForLoad () {
+    await this.loadPromise
   }
 }

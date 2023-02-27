@@ -1,33 +1,33 @@
-import * as THREE from 'three';
-import {getRenderer, camera} from './renderer.js';
-import {WebaverseShaderMaterial} from './materials.js';
-import renderSettingsManager from './rendersettings-manager.js';
-import {snapshotMapChunk} from './scene-cruncher.js';
+import * as THREE from 'three'
+import { getRenderer, camera } from './renderer.js'
+import { WebaverseShaderMaterial } from './materials.js'
+import renderSettingsManager from './rendersettings-manager.js'
+import { snapshotMapChunk } from './scene-cruncher.js'
 // import metaversefile from 'metaversefile';
 
-const resolution = 2048;
-const worldSize = 10000;
-const near = 0.1;
+const resolution = 2048
+const worldSize = 10000
+const near = 0.1
 
-const localVector = new THREE.Vector3();
-const localVector2 = new THREE.Vector3();
-const localVector3 = new THREE.Vector3();
-const localQuaternion = new THREE.Quaternion();
-const localMatrix = new THREE.Matrix4();
-const localMatrix2 = new THREE.Matrix4();
-const localPlane = new THREE.Plane();
-const zeroVector = new THREE.Vector3(0, 0, 0);
-const upVector = new THREE.Vector3(0, 1, 0);
+const localVector = new THREE.Vector3()
+const localVector2 = new THREE.Vector3()
+const localVector3 = new THREE.Vector3()
+const localQuaternion = new THREE.Quaternion()
+const localMatrix = new THREE.Matrix4()
+const localMatrix2 = new THREE.Matrix4()
+const localPlane = new THREE.Plane()
+const zeroVector = new THREE.Vector3(0, 0, 0)
+const upVector = new THREE.Vector3(0, 1, 0)
 
 const _planeToVector4 = (plane, target) => {
-  target.copy(plane.normal);
-  target.w = plane.constant;
-};
+  target.copy(plane.normal)
+  target.w = plane.constant
+}
 
 const vertexShader = `
   varying vec3 vNormal;
   varying vec3 vWorldPosition;
-  
+
   void main() {
     vec3 objectNormal = vec3(normal);
     vec3 transformedNormal = objectNormal;
@@ -40,7 +40,7 @@ const vertexShader = `
 
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
   }
-`;
+`
 const fragmentShader = `\
   vec3 inverseTransformDirection( in vec3 dir, in mat4 matrix ) {
     // dir can be either a direction vector or a normal vector
@@ -71,7 +71,7 @@ const fragmentShader = `\
 
     // Transforming Normal Vectors with the Inverse Transformation
     vec3 worldNormal = inverseTransformDirection( normal, viewMatrix );
-    
+
     vec3 reflectVec = refract( cameraToFrag, worldNormal, refractionRatio );
 
     vec4 envColor = textureCube( envMap, vec3( flipEnvMap * reflectVec.x, reflectVec.yz ) );
@@ -83,57 +83,56 @@ const fragmentShader = `\
       discard;
     }
   }
-`;
+`
 
 class ScenePreviewer extends THREE.Object3D {
-  constructor({
+  constructor ({
     size = new THREE.Vector3(100, 100, 100),
-    enterNormals = [],
+    enterNormals = []
   } = {}) {
-    super();
+    super()
 
-    this.size = size;
-    this.enterNormals = enterNormals;
+    this.size = size
+    this.enterNormals = enterNormals
 
-    const previewScene = new THREE.Scene();
-    previewScene.name = 'previewScene';
-    previewScene.autoUpdate = false;
-    this.previewScene = previewScene;
+    const previewScene = new THREE.Scene()
+    previewScene.name = 'previewScene'
+    previewScene.matrixWorldAutoUpdate = false
+    this.previewScene = previewScene
 
-    const previewContainer = new THREE.Object3D();
-    previewContainer.name = 'previewContainer';
-    this.previewContainer = previewContainer;
-    this.previewScene.add(previewContainer);
+    const previewContainer = new THREE.Object3D()
+    previewContainer.name = 'previewContainer'
+    this.previewContainer = previewContainer
+    this.previewScene.add(previewContainer)
 
-    const cubeRenderTarget = new THREE.WebGLCubeRenderTarget(
-      resolution,
-      {
-        generateMipmaps: true,
-        minFilter: THREE.LinearMipmapLinearFilter,
-        // magFilter: THREE.LinearMipmapLinearFilter,
-      },
-    );
-    cubeRenderTarget.texture.mapping = THREE.CubeRefractionMapping;
-    this.cubeRenderTarget = cubeRenderTarget;
-    const cubeCamera = new THREE.CubeCamera(near, camera.far, cubeRenderTarget);
-    this.cubeCamera = cubeCamera;
+    const cubeRenderTarget = new THREE.WebGLCubeRenderTarget(resolution, {
+      generateMipmaps: true,
+      minFilter: THREE.LinearMipmapLinearFilter
+      // magFilter: THREE.LinearMipmapLinearFilter,
+    })
+    cubeRenderTarget.texture.mapping = THREE.CubeRefractionMapping
+    this.cubeRenderTarget = cubeRenderTarget
+    const cubeCamera = new THREE.CubeCamera(near, camera.far, cubeRenderTarget)
+    this.cubeCamera = cubeCamera
 
-    this.lodMesh = this.#makeLodMesh();
-    this.skyboxMeshes = this.#makeSkyboxMeshes(size, enterNormals);
-    this.sceneObject = new THREE.Object3D();
+    this.lodMesh = this.#makeLodMesh()
+    this.skyboxMeshes = this.#makeSkyboxMeshes(size, enterNormals)
+    this.sceneObject = new THREE.Object3D()
 
-    this.scene = null;
-    this.renderedScene = null;
-    this.focused = false;
-    this.rendered = false;
+    this.scene = null
+    this.renderedScene = null
+    this.focused = false
+    this.rendered = false
   }
 
-  async loadScene(sceneUrl) {
+  async loadScene (sceneUrl) {
     /* if (this.scene) {
       this.detachScene();
     } */
 
-    const popPreviewContainerTransform = !this.focused ? this.#pushPreviewContainerTransform() : null;
+    const popPreviewContainerTransform = !this.focused
+      ? this.#pushPreviewContainerTransform()
+      : null
     this.scene = await metaversefile.createAppAsync({
       start_url: sceneUrl,
       components: {
@@ -142,15 +141,15 @@ class ScenePreviewer extends THREE.Object3D {
         objectComponents: [
           {
             key: 'physics',
-            value: true,
-          },
-        ],
+            value: true
+          }
+        ]
       },
-      parent: this.previewContainer,
-    });
-    popPreviewContainerTransform && popPreviewContainerTransform();
+      parent: this.previewContainer
+    })
+    popPreviewContainerTransform && popPreviewContainerTransform()
     if (this.#canRender()) {
-      this.render();
+      this.render()
     }
   }
 
@@ -170,176 +169,175 @@ class ScenePreviewer extends THREE.Object3D {
     }
     return oldScene;
   } */
-  setFocus(focus) {
-    this.focused = focus;
+  setFocus (focus) {
+    this.focused = focus
 
     if (this.focused) {
-      this.sceneObject.add(this.previewContainer);
+      this.sceneObject.add(this.previewContainer)
     } else {
-      this.previewScene.add(this.previewContainer);
+      this.previewScene.add(this.previewContainer)
     }
 
-    const previewVisible = !this.focused;
-    this.lodMesh.visible = previewVisible;
+    const previewVisible = !this.focused
+    this.lodMesh.visible = previewVisible
     for (const skyboxMesh of this.skyboxMeshes) {
-      skyboxMesh.visible = previewVisible;
+      skyboxMesh.visible = previewVisible
     }
 
     if (this.scene) {
-      this.scene.setComponent('paused', !this.focused);
+      this.scene.setComponent('paused', !this.focused)
     }
 
     if (this.#canRender()) {
-      this.render();
+      this.render()
     }
   }
 
-  #makeLodMesh() {
-    const mesh = new THREE.Mesh();
-    mesh.visible = false;
-    return mesh;
+  #makeLodMesh () {
+    const mesh = new THREE.Mesh()
+    mesh.visible = false
+    return mesh
   }
 
-  #makeSkyboxMeshes(size, normals) {
-
+  #makeSkyboxMeshes (size, normals) {
     const _makeSkyboxMesh = () => {
-      const skyboxGeometry = new THREE.SphereGeometry(worldSize, 64, 32, 0, Math.PI);
+      const skyboxGeometry = new THREE.SphereGeometry(
+        worldSize,
+        64,
+        32,
+        0,
+        Math.PI
+      )
       const skyboxMaterial = new WebaverseShaderMaterial({
         uniforms: {
           envMap: {
             value: this.cubeRenderTarget.texture,
-            needsUpdate: true,
+            needsUpdate: true
           },
           plane: {
             value: new THREE.Vector4(0, 0, 0, 0),
-            needsUpdate: false,
-          },
+            needsUpdate: false
+          }
         },
         vertexShader,
         fragmentShader,
         side: THREE.BackSide,
-        transparent: true,
-      });
-      const skyboxMesh = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
+        transparent: true
+      })
+      const skyboxMesh = new THREE.Mesh(skyboxGeometry, skyboxMaterial)
       skyboxMesh.onBeforeRender = () => {
-        const position = localVector;
-        const quaternion = localQuaternion;
-        const scale = localVector2;
-        skyboxMesh.matrixWorld.decompose(position, quaternion, scale);
+        const position = localVector
+        const quaternion = localQuaternion
+        const scale = localVector2
+        skyboxMesh.matrixWorld.decompose(position, quaternion, scale)
 
-        const normal = localVector3.set(0, 0, -1)
-          .applyQuaternion(quaternion);
-        localPlane.setFromNormalAndCoplanarPoint(normal, position);
+        const normal = localVector3.set(0, 0, -1).applyQuaternion(quaternion)
+        localPlane.setFromNormalAndCoplanarPoint(normal, position)
 
-        _planeToVector4(localPlane, skyboxMesh.material.uniforms.plane.value);
-        skyboxMesh.material.uniforms.plane.needsUpdate = true;
-      };
-      return skyboxMesh;
-    };
-
-    const result = [];
-    for (const normal of normals) {
-      const skyboxMesh = _makeSkyboxMesh();
-      skyboxMesh.position.copy(this.position)
-        .add(
-          localVector.copy(normal)
-            .multiplyScalar(size)
-        );
-      skyboxMesh.quaternion.setFromRotationMatrix(
-        localMatrix.lookAt(
-          normal,
-          zeroVector,
-          upVector
-        )
-      );
-      skyboxMesh.updateMatrixWorld();
+        _planeToVector4(localPlane, skyboxMesh.material.uniforms.plane.value)
+        skyboxMesh.material.uniforms.plane.needsUpdate = true
+      }
+      return skyboxMesh
     }
-    return result;
+
+    const result = []
+    for (const normal of normals) {
+      const skyboxMesh = _makeSkyboxMesh()
+      skyboxMesh.position
+        .copy(this.position)
+        .add(localVector.copy(normal).multiplyScalar(size))
+      skyboxMesh.quaternion.setFromRotationMatrix(
+        localMatrix.lookAt(normal, zeroVector, upVector)
+      )
+      skyboxMesh.updateMatrixWorld()
+    }
+    return result
   }
 
-  #pushPreviewContainerTransform() {
-    const oldPosition = localVector.copy(this.position);
-    const oldQuaternion = localQuaternion.copy(this.quaternion);
-    const oldScale = localVector2.copy(this.scale);
-    const oldMatrix = localMatrix.copy(this.matrix);
-    const oldMatrixWorld = localMatrix2.copy(this.matrixWorld);
+  #pushPreviewContainerTransform () {
+    const oldPosition = localVector.copy(this.position)
+    const oldQuaternion = localQuaternion.copy(this.quaternion)
+    const oldScale = localVector2.copy(this.scale)
+    const oldMatrix = localMatrix.copy(this.matrix)
+    const oldMatrixWorld = localMatrix2.copy(this.matrixWorld)
 
     // set transforms
-    this.previewContainer.position.copy(this.position);
-    this.previewContainer.quaternion.copy(this.quaternion);
-    this.previewContainer.scale.copy(this.scale);
-    this.previewContainer.matrix.copy(this.matrix);
-    this.previewContainer.matrixWorld.copy(this.matrixWorld);
+    this.previewContainer.position.copy(this.position)
+    this.previewContainer.quaternion.copy(this.quaternion)
+    this.previewContainer.scale.copy(this.scale)
+    this.previewContainer.matrix.copy(this.matrix)
+    this.previewContainer.matrixWorld.copy(this.matrixWorld)
 
     return () => {
-      this.previewContainer.position.copy(oldPosition);
-      this.previewContainer.quaternion.copy(oldQuaternion);
-      this.previewContainer.scale.copy(oldScale);
-      this.previewContainer.matrix.copy(oldMatrix);
-      this.previewContainer.matrixWorld.copy(oldMatrixWorld);
-    };
+      this.previewContainer.position.copy(oldPosition)
+      this.previewContainer.quaternion.copy(oldQuaternion)
+      this.previewContainer.scale.copy(oldScale)
+      this.previewContainer.matrix.copy(oldMatrix)
+      this.previewContainer.matrixWorld.copy(oldMatrixWorld)
+    }
   }
 
-  #canRender() {
-    return !!this.scene && !this.rendered;
+  #canRender () {
+    return !!this.scene && !this.rendered
   }
 
-  render() {
+  render () {
     {
-      const renderer = getRenderer();
+      const renderer = getRenderer()
 
       // push old state
-      const popPreviewContainerTransform = this.#pushPreviewContainerTransform();
-      const popRenderSettings = renderSettingsManager.push(this.scene, this.previewScene);
+      const popPreviewContainerTransform = this.#pushPreviewContainerTransform()
+      const popRenderSettings = renderSettingsManager.push(
+        this.scene,
+        this.previewScene
+      )
 
       for (const skyboxMesh of this.skyboxMeshes) {
-        this.cubeCamera.position.setFromMatrixPosition(skyboxMesh.matrixWorld);
-        this.cubeCamera.updateMatrixWorld();
+        this.cubeCamera.position.setFromMatrixPosition(skyboxMesh.matrixWorld)
+        this.cubeCamera.updateMatrixWorld()
 
         // render
-        this.cubeRenderTarget.clear(renderer, true, true, true);
-        this.cubeCamera.update(renderer, this.previewScene);
+        this.cubeRenderTarget.clear(renderer, true, true, true)
+        this.cubeCamera.update(renderer, this.previewScene)
       }
 
       // pop old state
-      popPreviewContainerTransform();
-      popRenderSettings();
+      popPreviewContainerTransform()
+      popRenderSettings()
     }
 
     {
-      const worldResolution = new THREE.Vector2(2048, 2048);
-      const worldDepthResolution = new THREE.Vector2(128, 128);
-      const oldPreviewContainerParent = this.previewContainer.parent;
+      const worldResolution = new THREE.Vector2(2048, 2048)
+      const worldDepthResolution = new THREE.Vector2(128, 128)
+      const oldPreviewContainerParent = this.previewContainer.parent
 
-      this.previewScene.add(this.previewContainer);
-      const popPreviewContainerTransform = this.#pushPreviewContainerTransform();
+      this.previewScene.add(this.previewContainer)
+      const popPreviewContainerTransform = this.#pushPreviewContainerTransform()
       const lodMesh = snapshotMapChunk(
         this.previewScene,
         this.position,
         this.size,
         worldResolution,
         worldDepthResolution
-      );
-      popPreviewContainerTransform();
-      oldPreviewContainerParent.add(this.previewContainer);
+      )
+      popPreviewContainerTransform()
+      oldPreviewContainerParent.add(this.previewContainer)
 
       {
-        const oldParent = this.lodMesh.parent;
-        const oldVisible = this.lodMesh.visible;
+        const oldParent = this.lodMesh.parent
+        const oldVisible = this.lodMesh.visible
 
         if (oldParent) {
-          oldParent.remove(this.lodMesh);
-          oldParent.add(lodMesh);
-          lodMesh.updateMatrixWorld();
+          oldParent.remove(this.lodMesh)
+          oldParent.add(lodMesh)
+          lodMesh.updateMatrixWorld()
         }
-        lodMesh.visible = oldVisible;
+        lodMesh.visible = oldVisible
       }
-      this.lodMesh = lodMesh;
+      this.lodMesh = lodMesh
     }
 
-    this.rendered = true;
+    this.rendered = true
   }
-};
-export {
-  ScenePreviewer,
-};
+}
+export { ScenePreviewer }

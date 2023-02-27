@@ -45,15 +45,17 @@ const _bindDefaultComponents = ctx => {
 export class ImportManager {
   constructor () {}
   async importUrl (s) {
-    if (/^[a-zA-Z0-9]+:/.test(s)) {
-      s = `${compilerBaseUrl}${s
-        .replace(compilerBaseUrl, '')
-        .replace(/^([a-zA-Z0-9]+:\/)\//, '$1')}`
-    } else {
-      s = new URL(s, compilerBaseUrl).href
-    }
+    // if (/^[a-zA-Z0-9]+:/.test(s)) {
+    //   s = `${compilerBaseUrl}${s
+    //     .replace(compilerBaseUrl, '')
+    //     .replace(/^([a-zA-Z0-9]+:\/)\//, '$1')}`
+    // } else {
+    //   s = new URL(s, compilerBaseUrl).href
+    // }
 
-    // console.log('metaversefile import', {s});
+    s = `../../${s}`
+
+    console.log('metaversefile import', { s })
 
     try {
       // const m = await import(s);
@@ -213,7 +215,7 @@ export class ImportManager {
   async addModuleFromEngine (app, engine, m) {
     if (!app || !engine || !m) {
       console.warn('addModuleFromEngine missing args', { app, engine, m })
-      debugger
+      // debugger
     }
 
     // wait to make sure module initialization happens in a clean tick loop,

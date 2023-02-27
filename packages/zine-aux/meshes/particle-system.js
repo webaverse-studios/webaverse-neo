@@ -1,33 +1,39 @@
-import * as THREE from 'three';
-import {
-  loadKtx2zTexture,
-} from '../utils/ktx2-utils.js';
+import * as THREE from 'three'
+import { loadKtx2zTexture } from '../utils/ktx2-utils.js'
 
-const defaultMaxParticles = 256;
+const defaultMaxParticles = 256
 // const canvasSize = 4096;
 // const frameSize = 512;
 // const rowSize = Math.floor(canvasSize/frameSize);
 
 const _makePlaneGeometry = () => {
-  const planeGeometryNonInstanced = new THREE.PlaneBufferGeometry(1, 1);
-  const planeGeometry = new THREE.InstancedBufferGeometry();
+  const planeGeometryNonInstanced = new THREE.PlaneGeometry(1, 1)
+  const planeGeometry = new THREE.InstancedBufferGeometry()
   for (const k in planeGeometryNonInstanced.attributes) {
-    planeGeometry.setAttribute(k, planeGeometryNonInstanced.attributes[k]);
+    planeGeometry.setAttribute(k, planeGeometryNonInstanced.attributes[k])
   }
-  planeGeometry.index = planeGeometryNonInstanced.index;
-  return planeGeometry;
-};
-const planeGeometry = _makePlaneGeometry();
+  planeGeometry.index = planeGeometryNonInstanced.index
+  return planeGeometry
+}
+const planeGeometry = _makePlaneGeometry()
 
 const _makeGeometry = (size, maxParticles) => {
-  const geometry = planeGeometry.clone()
-    .scale(size, size, 1);
-  geometry.setAttribute('p', new THREE.InstancedBufferAttribute(new Float32Array(maxParticles * 3), 3));
+  const geometry = planeGeometry.clone().scale(size, size, 1)
+  geometry.setAttribute(
+    'p',
+    new THREE.InstancedBufferAttribute(new Float32Array(maxParticles * 3), 3)
+  )
   // geometry.setAttribute('q', new THREE.InstancedBufferAttribute(new Float32Array(maxParticles * 4), 4));
-  geometry.setAttribute('t', new THREE.InstancedBufferAttribute(new Float32Array(maxParticles * 3), 3));
-  geometry.setAttribute('textureIndex', new THREE.InstancedBufferAttribute(new Int32Array(maxParticles), 1));
-  return geometry;
-};
+  geometry.setAttribute(
+    't',
+    new THREE.InstancedBufferAttribute(new Float32Array(maxParticles * 3), 3)
+  )
+  geometry.setAttribute(
+    'textureIndex',
+    new THREE.InstancedBufferAttribute(new Int32Array(maxParticles), 1)
+  )
+  return geometry
+}
 
 const vertexShader = `\
 precision highp float;
@@ -45,7 +51,7 @@ varying float vTimeDiff;
 in int textureIndex;
 flat out int vTextureIndex;
 
-vec4 quat_from_axis_angle(vec3 axis, float angle) { 
+vec4 quat_from_axis_angle(vec3 axis, float angle) {
   vec4 qr;
   float half_angle = (angle * 0.5) * PI;
   qr.x = axis.x * sin(half_angle);
@@ -58,7 +64,7 @@ vec3 rotateVecQuat(vec3 position, vec4 q) {
   vec3 v = position.xyz;
   return v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v);
 }
-/* vec3 rotate_vertex_position(vec3 position, vec3 axis, float angle) { 
+/* vec3 rotate_vertex_position(vec3 position, vec3 axis, float angle) {
   vec4 q = quat_from_axis_angle(axis, angle);
   return rotateVecQuat(position, q);
 } */
@@ -85,7 +91,7 @@ void main() {
 
   vTextureIndex = textureIndex;
 }
-`;
+`
 const fragmentShader = `\
 precision highp float;
 precision highp int;
@@ -145,7 +151,7 @@ vec2 getUv(float numFrames, float numFramesPerX, float numFramesPerY) {
   float x = mod(frame, numFramesPerX);
   float y = floor(frame / numFramesPerX);
   uv += vec2(x, y) / vec2(numFramesPerX, numFramesPerY);
-  
+
   return uv;
 }
 
@@ -185,27 +191,27 @@ void main() {
     // gl_FragColor = vec4(vTimeDiff, 0., 0., 1.);
   }
 }
-`;
-const _makeMaterial = maxNumTextures => {  
+`
+const _makeMaterial = maxNumTextures => {
   const uniforms = {
     uTime: {
       value: 0,
-      needsUpdate: true,
+      needsUpdate: true
     },
     cameraBillboardQuaternion: {
       value: new THREE.Quaternion(),
-      needsUpdate: true,
-    },
-  };
+      needsUpdate: true
+    }
+  }
   for (let i = 1; i <= maxNumTextures; i++) {
     uniforms['uTex' + i] = {
       value: null,
-      needsUpdate: false,
-    };
+      needsUpdate: false
+    }
     uniforms['uNumFrames' + i] = {
       value: new THREE.Vector4(),
-      needsUpdate: true,
-    };
+      needsUpdate: true
+    }
     // uniforms['uDurations' + i] = {
     //   value: 0,
     //   needsUpdate: true,
@@ -220,18 +226,18 @@ const _makeMaterial = maxNumTextures => {
     vertexShader,
     fragmentShader,
     side: THREE.DoubleSide,
-    transparent: true,
+    transparent: true
     // alphaTest: 0.9,
-  });
+  })
   material.setTextures = newTextures => {
     // update the uniforms
     for (let i = 0; i < newTextures.length; i++) {
-      const newTexture = newTextures[i];
-      const index = i + 1;
-      
-      const uTexUniform = material.uniforms['uTex' + index];
-      uTexUniform.value = newTexture;
-      uTexUniform.needsUpdate = true;
+      const newTexture = newTextures[i]
+      const index = i + 1
+
+      const uTexUniform = material.uniforms['uTex' + index]
+      uTexUniform.value = newTexture
+      uTexUniform.needsUpdate = true
 
       const {
         numFrames,
@@ -239,242 +245,230 @@ const _makeMaterial = maxNumTextures => {
         height,
         numFramesPerX,
         numFramesPerY,
-        duration,
-      } = newTexture;
+        duration
+      } = newTexture
 
-      const uNumFramesUniform = material.uniforms['uNumFrames' + index];
-      const aspect = width / height;
+      const uNumFramesUniform = material.uniforms['uNumFrames' + index]
+      const aspect = width / height
       uNumFramesUniform.value.set(
         aspect,
         numFrames,
         numFramesPerX,
-        numFramesPerY,
-      );
-      uNumFramesUniform.needsUpdate = true;
+        numFramesPerY
+      )
+      uNumFramesUniform.needsUpdate = true
 
       // const uNumDurationsUniform = material.uniforms['uDurations' + index];
       // uNumDurationsUniform.value = duration;
       // uNumFramesUniform.needsUpdate = true;
     }
-  };
-  return material;
+  }
+  return material
 }
 
 //
 
 export class ParticleEmitter2 extends THREE.Object3D {
-  constructor(particleSystem, {
-    range = 1,
-  } = {}) {
-    super();
+  constructor (particleSystem, { range = 1 } = {}) {
+    super()
 
-    this.particleSystem = particleSystem;
-    this.range = range;
+    this.particleSystem = particleSystem
+    this.range = range
 
-    this.timeout = null;
+    this.timeout = null
     const now = performance.now()
-    this.resetNextUpdate(now);
-    this.particles = [];
+    this.resetNextUpdate(now)
+    this.particles = []
   }
 
-  resetNextUpdate(now) {
-    this.lastParticleTimestamp = now;
-    this.nextParticleDelay = Math.random() * 100;
+  resetNextUpdate (now) {
+    this.lastParticleTimestamp = now
+    this.nextParticleDelay = Math.random() * 100
   }
 
-  update({
-    timestamp,
-    localPlayer,
-  }) {
-    const now = timestamp;
-    const timeDiff = now - this.lastParticleTimestamp;
-    const duration = 1000;
+  update ({ timestamp, localPlayer }) {
+    const now = timestamp
+    const timeDiff = now - this.lastParticleTimestamp
+    const duration = 1000
 
     const _removeParticles = () => {
       this.particles = this.particles.filter(particle => {
-        const timeDiff = now - particle.startTime;
+        const timeDiff = now - particle.startTime
         if (timeDiff < duration) {
-          return true;
+          return true
         } else {
-          particle.destroy();
-          return false;
+          particle.destroy()
+          return false
         }
-      });
-    };
-    _removeParticles();
+      })
+    }
+    _removeParticles()
 
     const _addParticles = () => {
       if (timeDiff >= this.nextParticleDelay) {
-        const texture = this.particleSystem.pack.textures[Math.floor(Math.random() * this.particleSystem.pack.textures.length)];
+        const texture =
+          this.particleSystem.pack.textures[
+            Math.floor(Math.random() * this.particleSystem.pack.textures.length)
+          ]
         const particle = this.particleSystem.addParticle(texture, {
-          duration,
-        });
+          duration
+        })
         particle.offset = new THREE.Vector3(
           (-0.5 + Math.random()) * 2 * this.range,
           (-0.5 + Math.random()) * 2 * this.range,
           (-0.5 + Math.random()) * 2 * this.range
-        );
-        this.particles.push(particle);
+        )
+        this.particles.push(particle)
 
-        this.resetNextUpdate(timestamp);
+        this.resetNextUpdate(timestamp)
       }
-    };
-    _addParticles();
+    }
+    _addParticles()
     const _updateParticles = () => {
       if (this.particles.length > 0) {
         for (const particle of this.particles) {
           // particle.position.copy(localPlayer.position)
           //   .add(particle.offset);
-          particle.position.copy(particle.offset);
-          particle.update();
+          particle.position.copy(particle.offset)
+          particle.update()
         }
       }
-    };
-    _updateParticles();
+    }
+    _updateParticles()
   }
 }
 
 //
 
 class Particle extends THREE.Object3D {
-  constructor(index, textureIndex, startTime, endTime, loop, parent) {
-    super();
+  constructor (index, textureIndex, startTime, endTime, loop, parent) {
+    super()
 
-    this.index = index;
-    this.textureIndex = textureIndex;
-    this.startTime = startTime;
-    this.endTime = endTime;
-    this.loop = loop;
-    this.parent = parent;
+    this.index = index
+    this.textureIndex = textureIndex
+    this.startTime = startTime
+    this.endTime = endTime
+    this.loop = loop
+    this.parent = parent
   }
 
-  update() {
-    this.parent.needsUpdate = true;
+  update () {
+    this.parent.needsUpdate = true
   }
 
-  destroy() {
-    this.parent.removeParticle(this);
+  destroy () {
+    this.parent.removeParticle(this)
   }
 }
 class ParticleSystemPack {
-  constructor({
-    textures,
-  }) {
-    this.textures = textures;
+  constructor ({ textures }) {
+    this.textures = textures
   }
 }
 export class ParticleSystemMesh extends THREE.InstancedMesh {
-  static async loadPack(files) {
-    const textures = await Promise.all(files.map(async file => {
-      const texture = await loadKtx2zTexture(file);
-      return texture;
-    }));
+  static async loadPack (files) {
+    const textures = await Promise.all(
+      files.map(async file => {
+        const texture = await loadKtx2zTexture(file)
+        return texture
+      })
+    )
     const psPack = new ParticleSystemPack({
-      textures,
-    });
-    return psPack;
+      textures
+    })
+    return psPack
   }
-  constructor({
-    pack,
-    size = 1,
-    maxParticles = defaultMaxParticles,
-  }) {
-    const geometry = _makeGeometry(size, maxParticles);
-    const material = _makeMaterial(pack.textures.length);
-    super(geometry, material, maxParticles);
+  constructor ({ pack, size = 1, maxParticles = defaultMaxParticles }) {
+    const geometry = _makeGeometry(size, maxParticles)
+    const material = _makeMaterial(pack.textures.length)
+    super(geometry, material, maxParticles)
 
-    this.frustumCulled = false;
+    this.frustumCulled = false
 
-    this.pack = pack;
-    this.needsUpdate = false;
+    this.pack = pack
+    this.needsUpdate = false
 
-    this.material.setTextures(this.pack.textures);
+    this.material.setTextures(this.pack.textures)
 
-    this.particles = Array(maxParticles).fill(null);
-    this.count = 0;
+    this.particles = Array(maxParticles).fill(null)
+    this.count = 0
   }
 
-  addParticle(texture, {
-    offsetTime = 0,
-    loop = false,
-  } = {}) {
-    const {
-      duration,
-    } = texture;
-    const now = performance.now();
-    const startTime = now + offsetTime;
-    const endTime = startTime + duration * 1000;
+  addParticle (texture, { offsetTime = 0, loop = false } = {}) {
+    const { duration } = texture
+    const now = performance.now()
+    const startTime = now + offsetTime
+    const endTime = startTime + duration * 1000
 
     for (let i = 0; i < this.particles.length; i++) {
-      let particle = this.particles[i];
+      let particle = this.particles[i]
       if (particle === null) {
-        const textureIndex = this.pack.textures.indexOf(texture);
-        particle = new Particle(i, textureIndex, startTime, endTime, loop, this);
-        this.particles[i] = particle;
-        this.needsUpdate = true;
-        return particle;
+        const textureIndex = this.pack.textures.indexOf(texture)
+        particle = new Particle(i, textureIndex, startTime, endTime, loop, this)
+        this.particles[i] = particle
+        this.needsUpdate = true
+        return particle
       }
     }
-    console.warn('particles overflow');
-    return null;
+    console.warn('particles overflow')
+    return null
   }
 
-  removeParticle(particle) {
-    this.particles[particle.index] = null;
-    this.needsUpdate = true;
+  removeParticle (particle) {
+    this.particles[particle.index] = null
+    this.needsUpdate = true
   }
 
-  update({
-    timestamp,
-    timeDiff,
-    camera,
-  }) {
+  update ({ timestamp, timeDiff, camera }) {
     if (this.needsUpdate) {
-      this.needsUpdate = false;
+      this.needsUpdate = false
 
-      this.updateGeometry();
+      this.updateGeometry()
     }
 
-    this.material.uniforms.uTime.value = timestamp;
-    this.material.uniforms.uTime.needsUpdate = true;
-    this.material.uniforms.cameraBillboardQuaternion.value.copy(camera.quaternion);
+    this.material.uniforms.uTime.value = timestamp
+    this.material.uniforms.uTime.needsUpdate = true
+    this.material.uniforms.cameraBillboardQuaternion.value.copy(
+      camera.quaternion
+    )
   }
 
-  updateGeometry() {
-    let index = 0;
+  updateGeometry () {
+    let index = 0
     for (const particle of this.particles) {
       if (particle !== null) {
-        this.geometry.attributes.p.array[index*3 + 0] = particle.position.x;
-        this.geometry.attributes.p.array[index*3 + 1] = particle.position.y;
-        this.geometry.attributes.p.array[index*3 + 2] = particle.position.z;
+        this.geometry.attributes.p.array[index * 3 + 0] = particle.position.x
+        this.geometry.attributes.p.array[index * 3 + 1] = particle.position.y
+        this.geometry.attributes.p.array[index * 3 + 2] = particle.position.z
 
-        this.geometry.attributes.t.array[index*3 + 0] = particle.startTime;
-        this.geometry.attributes.t.array[index*3 + 1] = particle.endTime;
-        this.geometry.attributes.t.array[index*3 + 2] = particle.loop ? 1 : 0;
+        this.geometry.attributes.t.array[index * 3 + 0] = particle.startTime
+        this.geometry.attributes.t.array[index * 3 + 1] = particle.endTime
+        this.geometry.attributes.t.array[index * 3 + 2] = particle.loop ? 1 : 0
 
-        this.geometry.attributes.textureIndex.array[index] = particle.textureIndex;
+        this.geometry.attributes.textureIndex.array[index] =
+          particle.textureIndex
 
-        index++;
+        index++
       }
     }
 
-    this.geometry.attributes.p.updateRange.count = index * 3;
-    this.geometry.attributes.p.needsUpdate = true;
-    
-    this.geometry.attributes.t.updateRange.count = index * 3;
-    this.geometry.attributes.t.needsUpdate = true;
-    
-    this.geometry.attributes.textureIndex.updateRange.count = index;
-    this.geometry.attributes.textureIndex.needsUpdate = true;
-    
-    this.count = index;
+    this.geometry.attributes.p.updateRange.count = index * 3
+    this.geometry.attributes.p.needsUpdate = true
+
+    this.geometry.attributes.t.updateRange.count = index * 3
+    this.geometry.attributes.t.needsUpdate = true
+
+    this.geometry.attributes.textureIndex.updateRange.count = index
+    this.geometry.attributes.textureIndex.needsUpdate = true
+
+    this.count = index
   }
 
-  waitForLoad() {
-    return this.loadPromise;
+  waitForLoad () {
+    return this.loadPromise
   }
 
-  destroy() {
+  destroy () {
     // nothing
   }
 }

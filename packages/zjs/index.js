@@ -239,12 +239,10 @@ const _parentWasSet = (
         historyOffsets,
         i
       )
-      // console.log('check key path', [textDecoder.decode(historyKeyPathBuffer), textDecoder.decode(event.getKeyPathBuffer())]);
       if (
         // if this is a parent
         _isKeyPathPrefix(historyKeyPathBuffer, event.getKeyPathBuffer())
       ) {
-        // console.log('check prefix yes', historyMethod, [textDecoder.decode(historyKeyPathBuffer), textDecoder.decode(event.getKeyPathBuffer())]);
         if (
           // if this is an overwrite type
           historyMethod === ZMapSetEvent.METHOD ||
@@ -371,7 +369,6 @@ class TransactionCache {
             historyOffsets
           )
         ) {
-          // console.log('torpedo self due to parent conflict');
           this.events[i] = nullEvent
         } else if (
           _getConflicts(
@@ -391,13 +388,10 @@ class TransactionCache {
           }; */
 
           if (conflictSpec.weAreHighestPriority) {
-            // console.log('survive due to high prio');
           } else {
-            // console.log('torpedo self due to low prio');
             this.events[i] = nullEvent
           }
         } else {
-          // console.log('no conflicts');
         }
       } else if (event.isZArrayPushEvent) {
         if (
@@ -411,7 +405,6 @@ class TransactionCache {
         ) {
           this.events[i] = nullEvent
         } else {
-          // console.log('no conflicts');
         }
       } else if (event.isZArrayDeleteEvent) {
         if (
@@ -430,13 +423,10 @@ class TransactionCache {
             historyOffsets
           )
         ) {
-          // console.log('torpedo self due to parent conflict');
           this.events[i] = nullEvent
         } else {
-          // console.log('no conflicts');
         }
       } else if (event.isZNullEvent) {
-        // console.log('skip null event');
       } else {
         console.warn('unknown event type', event)
       }
@@ -597,7 +587,6 @@ class ZDoc extends ZEventEmitter {
     let byteOffset =
       this.historyOffsets[this.clock % this.historyOffsets.length]
     if (byteOffset >= this.historyData.byteLength / 2) {
-      // console.log('truncate history');
       byteOffset = 0
     }
     const eventTargetBuffer = new Uint8Array(
@@ -926,7 +915,6 @@ class ZDoc extends ZEventEmitter {
   clone () {
     const oldState = this.state
     const newState = zbclone(this.state)
-    // console.log('old history', this.state, this.history.length, this.history[0]);
     const newDoc = new ZDoc(
       newState,
       this.clock,
@@ -1918,7 +1906,6 @@ class ZArrayPushEvent extends ZArrayEvent {
       impl = new Type(binding, this.impl.doc)
       bindingsMap.set(binding, impl)
       bindingParentsMap.set(binding, this.impl.binding)
-      // console.log('forge array value during apply', binding, impl);
     }
   }
   getConstructorArgs () {
@@ -1934,7 +1921,6 @@ class ZArrayPushEvent extends ZArrayEvent {
       impl = new Type(binding, this.impl.doc)
       bindingsMap.set(binding, impl)
       bindingParentsMap.set(binding, this.impl.binding)
-      // console.log('forge array value during change event emit', binding, impl);
     }
 
     return {
@@ -2166,7 +2152,6 @@ function applyUpdate (doc, uint8Array, transactionOrigin, playerId) {
     doc.setClockState(clock, state)
 
     if (doc.mirror) {
-      // console.log('mirror yes');
       doc.dispatchEvent('update', encodedData, transactionOrigin, this, null)
     } /* else {
       console.log('mirror no');
@@ -2199,7 +2184,6 @@ function applyUpdate (doc, uint8Array, transactionOrigin, playerId) {
     }
 
     if (doc.mirror) {
-      // console.log('mirror yes');
       transactionCache.resolvePriority = doc.resolvePriority
       const uint8Array = transactionCache.serializeUpdate()
       doc.dispatchEvent('update', uint8Array, transactionOrigin, this, null)

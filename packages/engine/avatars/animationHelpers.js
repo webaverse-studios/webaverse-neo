@@ -10,8 +10,6 @@ import { decorateAnimation } from './util.mjs'
 import { angleDifference } from '../util.js'
 import { VRMCurveMapper } from './VRMCurveMapper'
 
-// import animationSkeletonUrl from '../assets/animations/animations-skeleton.glb'
-
 let animations
 let animationStepIndices
 
@@ -116,7 +114,12 @@ const _normalizeAnimationDurations = (
 }
 
 async function loadAnimations () {
-  const res = await fetch('/animations/animations.z')
+  // const res = await import('../animations/animations.z')
+
+  const url = (await import('../assets/animations/animations.z')).default
+  const res = await fetch(url)
+  console.log('res', res)
+
   const arrayBuffer = await res.arrayBuffer()
   const uint8Array = new Uint8Array(arrayBuffer)
   const animationsJson = zbdecode(uint8Array)
@@ -134,23 +137,16 @@ async function loadAnimations () {
 }
 
 async function loadSkeleton () {
-  // const animationSkeletonUrl = import(
-  //   '../assets/animations/animations-skeleton.glb'
-  // )
-
-  // let animationSkeletonUrl = new URL(
-  //   '../assets/animations/animations-skeleton.glb',
-  //   import.meta.url
-  // )
-
-  // console.log('animationSkeletonUrl', animationSkeletonUrl)
+  const animationSkeletonUrl = await import(
+    '../assets/animations/animations-skeleton.glb'
+  )
 
   let o
   try {
     o = await new Promise((resolve, reject) => {
       const { gltfLoader } = loaders
       gltfLoader.load(
-        'animations/animations-skeleton.glb',
+        animationSkeletonUrl,
         () => {
           resolve()
         },

@@ -1,31 +1,31 @@
-import * as THREE from 'three';
-import metaversefileApi from './metaversefile-api.js';
-import {parseQuery, fitCameraToBoundingBox} from './util.js';
-import Avatar from './avatars/avatars.js';
-import GIF from './gif.js';
-import * as WebMWriter from 'webm-writer';
-const defaultWidth = 512;
-const defaultHeight = 512;
-const FPS = 60;
+import * as THREE from 'three'
+import metaversefileApi from './metaversefile-api.js'
+import { parseQuery, fitCameraToBoundingBox } from './util.js'
+import Avatar from './avatars/avatars.js'
+import GIF from './gif.js'
+import * as WebMWriter from 'webm-writer'
+const defaultWidth = 512
+const defaultHeight = 512
+const FPS = 60
 
-const localVector = new THREE.Vector3();
+const localVector = new THREE.Vector3()
 
 const _makeRenderer = (width, height) => {
   const renderer = new THREE.WebGLRenderer({
     alpha: true,
-    antialias: true,
-  });
-  renderer.setSize(width, height);
+    antialias: true
+  })
+  renderer.setSize(width, height)
 
-  const scene = new THREE.Scene();
-  scene.autoUpdate = false;
+  const scene = new THREE.Scene()
+  scene.matrixWorldAutoUpdate = false
 
-  /* const cubeMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(1, 1, 1), new THREE.MeshBasicMaterial({
+  /* const cubeMesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({
     color: 0x0000FF,
   }));
   scene.add(cubeMesh); */
 
-  const camera = new THREE.PerspectiveCamera(60, width/height, 0.1, 100);
+  const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 100)
   // camera.position.copy(cameraPosition);
   // camera.lookAt(cameraTarget);
   // camera.quaternion.copy(cameraQuaternion);
@@ -39,15 +39,15 @@ const _makeRenderer = (width, height) => {
 
   /* const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.1);
   scene.add(ambientLight); */
-  const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1);
-  directionalLight.position.set(2, 2, -2);
-  scene.add(directionalLight);
-  const directionalLight2 = new THREE.DirectionalLight(0xFFFFFF, 1);
-  directionalLight2.position.set(-2, 2, 2);
-  scene.add(directionalLight2);
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1)
+  directionalLight.position.set(2, 2, -2)
+  scene.add(directionalLight)
+  const directionalLight2 = new THREE.DirectionalLight(0xffffff, 1)
+  directionalLight2.position.set(-2, 2, 2)
+  scene.add(directionalLight2)
 
-  return {renderer, scene, camera};
-};
+  return { renderer, scene, camera }
+}
 
 /* const _makeUiRenderer = () => {
   const uiSize = 2048;
@@ -224,160 +224,167 @@ const _makeRenderer = (width, height) => {
   }
 }; */
 
-(async () => {
-  await Avatar.waitForLoad();
+;(async () => {
+  await Avatar.waitForLoad()
 
-  const animations = metaversefileApi.useAvatarAnimations();
+  const animations = metaversefileApi.useAvatarAnimations()
   // const walkAnimation = animations.find(a => a.name === 'walking.fbx');
   // const runAnimation = animations.find(a => a.name === 'Fast Run.fbx');
   // const runAnimationDuration = runAnimation.duration * 1.5;
-  const idleAnimation = animations.find(a => a.name === 'idle.fbx');
-  const idleAnimationDuration = idleAnimation.duration;
+  const idleAnimation = animations.find(a => a.name === 'idle.fbx')
+  const idleAnimationDuration = idleAnimation.duration
 
   // toggleElements(false);
-  const screenshotResult = document.getElementById('screenshot-result');
+  const screenshotResult = document.getElementById('screenshot-result')
 
-  let {url, type, width, height, dst} = parseQuery(decodeURIComponent(window.location.search));
-  width = parseInt(width, 10);
+  let { url, type, width, height, dst } = parseQuery(
+    decodeURIComponent(window.location.search)
+  )
+  width = parseInt(width, 10)
   if (isNaN(width)) {
-    width = defaultWidth;
+    width = defaultWidth
   }
-  height = parseInt(height, 10);
+  height = parseInt(height, 10)
   if (isNaN(height)) {
-    height = defaultHeight;
+    height = defaultHeight
   }
 
-  let o;
+  let o
   try {
-    const app = await metaversefileApi.load(url);
+    const app = await metaversefileApi.load(url)
     if (app.appType === 'vrm') {
-      await app.setSkinning(true);
+      await app.setSkinning(true)
       const avatar = new Avatar(app.skinnedVrm, {
         fingers: true,
         hair: true,
         visemes: true,
-        debug: false,
-      });
-      app.avatar = avatar;
+        debug: false
+      })
+      app.avatar = avatar
     }
-    o = app;
+    o = app
   } catch (err) {
-    console.warn(err);
+    console.warn(err)
   }
-  const appType = o ? o.appType : '';
-  const isVrm = appType === 'vrm';
-  const isImage = ['png', 'jpg'].includes(appType);
-  const isVideo = type === 'webm';
+  const appType = o ? o.appType : ''
+  const isVrm = appType === 'vrm'
+  const isImage = ['png', 'jpg'].includes(appType)
+  const isVideo = type === 'webm'
 
   const _initializeAnimation = () => {
     if (appType === 'vrm') {
-      o.avatar.setTopEnabled(false);
-      o.avatar.setHandEnabled(0, false);
-      o.avatar.setHandEnabled(1, false);
-      o.avatar.setBottomEnabled(false);
-      o.avatar.inputs.hmd.position.y = o.avatar.height;
-      o.avatar.inputs.hmd.quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
-      o.avatar.inputs.hmd.updateMatrixWorld();
-      o.avatar.update(1000);
+      o.avatar.setTopEnabled(false)
+      o.avatar.setHandEnabled(0, false)
+      o.avatar.setHandEnabled(1, false)
+      o.avatar.setBottomEnabled(false)
+      o.avatar.inputs.hmd.position.y = o.avatar.height
+      o.avatar.inputs.hmd.quaternion.setFromAxisAngle(
+        new THREE.Vector3(0, 1, 0),
+        Math.PI
+      )
+      o.avatar.inputs.hmd.updateMatrixWorld()
+      o.avatar.update(1000)
     }
-  };
+  }
   const _animate = timeDiff => {
     if (appType === 'vrm') {
-      o.avatar.update(timeDiff);
+      o.avatar.update(timeDiff)
     }
-  };
+  }
   const _lookAt = (camera, boundingBox) => {
-    boundingBox.getCenter(camera.position);
-    const size = boundingBox.getSize(localVector);
+    boundingBox.getCenter(camera.position)
+    const size = boundingBox.getSize(localVector)
 
-    camera.position.y = size.y;
+    camera.position.y = size.y
     if (appType === 'vrm') {
-      camera.position.z -= 1;
+      camera.position.z -= 1
     } else {
-      camera.position.z += 1;
+      camera.position.z += 1
     }
 
-    fitCameraToBoundingBox(camera, boundingBox);
-  };
+    fitCameraToBoundingBox(camera, boundingBox)
+  }
 
   try {
     if (type === 'png' || type === 'jpg' || type === 'jpeg') {
       const canvas = await (async () => {
         if (['glb', 'vrm', 'vox'].includes(appType)) {
-          const {renderer, scene, camera} = _makeRenderer(width, height);
+          const { renderer, scene, camera } = _makeRenderer(width, height)
 
           if (o) {
-            scene.add(o);
+            scene.add(o)
 
-            const boundingBox = new THREE.Box3().setFromObject(o);
+            const boundingBox = new THREE.Box3().setFromObject(o)
 
-            _initializeAnimation();
-            _lookAt(camera, boundingBox);
+            _initializeAnimation()
+            _lookAt(camera, boundingBox)
 
-            renderer.compile(scene, camera);
+            renderer.compile(scene, camera)
 
             if (type === 'jpg' || type === 'jpeg') {
-              renderer.setClearColor(0xFFFFFF, 1);
+              renderer.setClearColor(0xffffff, 1)
             }
-            renderer.render(scene, camera);
-            return renderer.domElement;
+            renderer.render(scene, camera)
+            return renderer.domElement
           } else {
-            return null;
+            return null
           }
         } else if (['gif', 'image'].includes(appType)) {
           const img = await new Promise((accept, reject) => {
-            const img = new Image();
+            const img = new Image()
             img.onload = () => {
-              accept(img);
-            };
-            img.onerror = reject;
-            img.crossOrigin = 'Anonymous';
-            img.src = url;
-          });
-          const canvas = document.createElement('canvas');
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          if (img.width > img.height) { // vertical padding needed
-            const scaleFactor = img.width/width;
-            const dstWidth = img.width/scaleFactor;
-            const dstHeight = img.height/scaleFactor;
+              accept(img)
+            }
+            img.onerror = reject
+            img.crossOrigin = 'Anonymous'
+            img.src = url
+          })
+          const canvas = document.createElement('canvas')
+          canvas.width = width
+          canvas.height = height
+          const ctx = canvas.getContext('2d')
+          if (img.width > img.height) {
+            // vertical padding needed
+            const scaleFactor = img.width / width
+            const dstWidth = img.width / scaleFactor
+            const dstHeight = img.height / scaleFactor
 
-            const pixelsToAdd = dstWidth - dstHeight;
-            const pixelsToAddD2 = pixelsToAdd/2;
+            const pixelsToAdd = dstWidth - dstHeight
+            const pixelsToAddD2 = pixelsToAdd / 2
 
-            ctx.drawImage(img, 0, pixelsToAddD2, dstWidth, dstHeight);
-          } else { // horizontal padding needed
-            const scaleFactor = img.height/height;
-            const dstWidth = img.width/scaleFactor;
-            const dstHeight = img.height/scaleFactor;
+            ctx.drawImage(img, 0, pixelsToAddD2, dstWidth, dstHeight)
+          } else {
+            // horizontal padding needed
+            const scaleFactor = img.height / height
+            const dstWidth = img.width / scaleFactor
+            const dstHeight = img.height / scaleFactor
 
-            const pixelsToAdd = dstHeight - dstWidth;
-            const pixelsToAddD2 = pixelsToAdd/2;
+            const pixelsToAdd = dstHeight - dstWidth
+            const pixelsToAddD2 = pixelsToAdd / 2
 
-            ctx.drawImage(img, pixelsToAddD2, 0, dstWidth, dstHeight);
+            ctx.drawImage(img, pixelsToAddD2, 0, dstWidth, dstHeight)
           }
-          return canvas;
+          return canvas
         } else {
-          return null;
+          return null
         }
-      })();
+      })()
 
-      const mimeType = `image/${type === 'png' ? 'png' : 'jpeg'}`;
+      const mimeType = `image/${type === 'png' ? 'png' : 'jpeg'}`
       const blob = await new Promise((accept, reject) => {
-        canvas.toBlob(accept, mimeType);
-      });
-      const img = new Image();
+        canvas.toBlob(accept, mimeType)
+      })
+      const img = new Image()
       await new Promise((accept, reject) => {
-        img.onload = accept;
-        img.onerror = reject;
-        img.src = URL.createObjectURL(blob);
-      });
-      img.style.width = `${img.width/window.devicePixelRatio}px`;
-      img.style.height = `${img.height/window.devicePixelRatio}px`;
-      screenshotResult.appendChild(img);
+        img.onload = accept
+        img.onerror = reject
+        img.src = URL.createObjectURL(blob)
+      })
+      img.style.width = `${img.width / window.devicePixelRatio}px`
+      img.style.height = `${img.height / window.devicePixelRatio}px`
+      screenshotResult.appendChild(img)
 
-      const arrayBuffer = await blob.arrayBuffer();
+      const arrayBuffer = await blob.arrayBuffer()
 
       // console.log('png blob arrayBuffer', blob.size, arrayBuffer.byteLength);
 
@@ -385,123 +392,135 @@ const _makeRenderer = (width, height) => {
         fetch(dst, {
           method: 'POST',
           headers: {
-            'Content-Type': mimeType,
+            'Content-Type': mimeType
           },
-          body: arrayBuffer,
-        }).then(res => res.blob());
+          body: arrayBuffer
+        }).then(res => res.blob())
       }
 
-      window.parent.postMessage({
-        method: 'result',
-        result: arrayBuffer,
-      }, '*', [arrayBuffer]);
+      window.parent.postMessage(
+        {
+          method: 'result',
+          result: arrayBuffer
+        },
+        '*',
+        [arrayBuffer]
+      )
     } else if (type === 'gif' && appType !== 'gif') {
-      const {renderer, scene, camera} = _makeRenderer(width, height);
+      const { renderer, scene, camera } = _makeRenderer(width, height)
 
-      scene.add(o);
+      scene.add(o)
 
-      const boundingBox = new THREE.Box3().setFromObject(o);
-      const center = boundingBox.getCenter(new THREE.Vector3());
-      const size = boundingBox.getSize(new THREE.Vector3());
+      const boundingBox = new THREE.Box3().setFromObject(o)
+      const center = boundingBox.getCenter(new THREE.Vector3())
+      const size = boundingBox.getSize(new THREE.Vector3())
 
-      renderer.setClearColor(0xFFFFFF, 1);
+      renderer.setClearColor(0xffffff, 1)
 
       const gif = new GIF({
         workers: 4,
-        quality: 10,
-      });
+        quality: 10
+      })
       for (let i = 0; i < Math.PI * 2; i += Math.PI * 0.05) {
-        camera.position.copy(center)
+        camera.position
+          .copy(center)
           // .add(new THREE.Vector3(0, size.y/2, 0))
           .add(
-            new THREE.Vector3(Math.cos(i + Math.PI/2), 0, Math.sin(i + Math.PI/2))
-              .multiplyScalar(Math.max(size.x/2, size.z/2) * 2.2),
-          );
-        camera.lookAt(center);
-        camera.updateMatrixWorld();
-        renderer.render(scene, camera);
+            new THREE.Vector3(
+              Math.cos(i + Math.PI / 2),
+              0,
+              Math.sin(i + Math.PI / 2)
+            ).multiplyScalar(Math.max(size.x / 2, size.z / 2) * 2.2)
+          )
+        camera.lookAt(center)
+        camera.updateMatrixWorld()
+        renderer.render(scene, camera)
 
         // read
-        const writeCanvas = document.createElement('canvas');
-        writeCanvas.width = width;
-        writeCanvas.height = height;
+        const writeCanvas = document.createElement('canvas')
+        writeCanvas.width = width
+        writeCanvas.height = height
         // draw
-        const writeCtx = writeCanvas.getContext('2d');
-        writeCtx.drawImage(renderer.domElement, 0, 0);
+        const writeCtx = writeCanvas.getContext('2d')
+        writeCtx.drawImage(renderer.domElement, 0, 0)
         /* // flip
         writeCtx.globalCompositeOperation = 'copy';
         writeCtx.scale(1, -1);
         writeCtx.translate(0, -writeCanvas.height);
         writeCtx.drawImage(writeCanvas, 0, 0); */
 
-        gif.addFrame(writeCanvas, {delay: 50});
+        gif.addFrame(writeCanvas, { delay: 50 })
       }
-      gif.render();
+      gif.render()
 
       const blob = await new Promise((resolve, reject) => {
-        gif.on('finished', resolve);
-      });
+        gif.on('finished', resolve)
+      })
 
-      const img = new Image();
+      const img = new Image()
       await new Promise((accept, reject) => {
-        img.onload = accept;
-        img.onerror = reject;
-        img.src = URL.createObjectURL(blob);
-      });
-      img.style.width = `${width}px`;
-      img.style.height = `${height}px`;
-      screenshotResult.appendChild(img);
+        img.onload = accept
+        img.onerror = reject
+        img.src = URL.createObjectURL(blob)
+      })
+      img.style.width = `${width}px`
+      img.style.height = `${height}px`
+      screenshotResult.appendChild(img)
 
-      const arrayBuffer = await blob.arrayBuffer();
+      const arrayBuffer = await blob.arrayBuffer()
 
       if (dst) {
         fetch(dst, {
           method: 'POST',
           headers: {
-            'Content-Type': 'image/gif',
+            'Content-Type': 'image/gif'
           },
-          body: arrayBuffer,
-        }).then(res => res.blob());
+          body: arrayBuffer
+        }).then(res => res.blob())
       }
 
-      window.parent.postMessage({
-        method: 'result',
-        result: arrayBuffer,
-      }, '*', [arrayBuffer]);
+      window.parent.postMessage(
+        {
+          method: 'result',
+          result: arrayBuffer
+        },
+        '*',
+        [arrayBuffer]
+      )
     } else if (type === 'webm') {
-      const {renderer, scene, camera} = _makeRenderer(width, height);
+      const { renderer, scene, camera } = _makeRenderer(width, height)
 
-      scene.add(o);
-      o.updateMatrixWorld();
+      scene.add(o)
+      o.updateMatrixWorld()
 
       if (o) {
-        const boundingBox = new THREE.Box3().setFromObject(o);
-        const center = boundingBox.getCenter(new THREE.Vector3());
-        const size = boundingBox.getSize(new THREE.Vector3());
+        const boundingBox = new THREE.Box3().setFromObject(o)
+        const center = boundingBox.getCenter(new THREE.Vector3())
+        const size = boundingBox.getSize(new THREE.Vector3())
 
         const videoWriter = new WebMWriter({
           quality: 1,
           fileWriter: null,
           fd: null,
           frameDuration: null,
-          frameRate: FPS,
-        });
+          frameRate: FPS
+        })
 
-        _initializeAnimation();
-        _lookAt(camera, boundingBox);
+        _initializeAnimation()
+        _lookAt(camera, boundingBox)
 
-        renderer.setClearColor(0xFFFFFF, 1);
+        renderer.setClearColor(0xffffff, 1)
 
-        const writeCanvas = document.createElement('canvas');
-        writeCanvas.width = width;
-        writeCanvas.height = height;
-        const writeCtx = writeCanvas.getContext('2d');
+        const writeCanvas = document.createElement('canvas')
+        writeCanvas.width = width
+        writeCanvas.height = height
+        const writeCtx = writeCanvas.getContext('2d')
 
         const _pushFrame = () => {
           // draw
-          writeCtx.drawImage(renderer.domElement, 0, 0);
-          videoWriter.addFrame(writeCanvas);
-        };
+          writeCtx.drawImage(renderer.domElement, 0, 0)
+          videoWriter.addFrame(writeCanvas)
+        }
 
         if (isVrm && isVideo) {
           /* const timeDiff = 1/FPS;
@@ -515,25 +534,27 @@ const _makeRenderer = (width, height) => {
             _pushFrame();
           } */
 
-          let now = 0;
-          const timeDiff = 1000/FPS;
-          while (now < idleAnimationDuration*1000) {
-            o.avatar.update(timeDiff);
+          let now = 0
+          const timeDiff = 1000 / FPS
+          while (now < idleAnimationDuration * 1000) {
+            o.avatar.update(timeDiff)
 
-            _lookAt(camera, boundingBox);
+            _lookAt(camera, boundingBox)
 
-            renderer.render(scene, camera);
+            renderer.render(scene, camera)
 
-            _pushFrame();
-            now += timeDiff;
+            _pushFrame()
+            now += timeDiff
           }
         } else if (isImage && isVideo) {
           for (let i = 0; i < Math.PI * 2; i += Math.PI * 0.02) {
             // o.position.y = Math.sin(i + Math.PI/2) * 0.05;
-            o.quaternion
-              .premultiply(
-                new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.sin((i + Math.PI/2) * 1) * 0.005)
-              );
+            o.quaternion.premultiply(
+              new THREE.Quaternion().setFromAxisAngle(
+                new THREE.Vector3(1, 0, 0),
+                Math.sin((i + Math.PI / 2) * 1) * 0.005
+              )
+            )
             /* camera.position.copy(center)
               .add(
                 new THREE.Vector3(
@@ -544,16 +565,15 @@ const _makeRenderer = (width, height) => {
               );
             camera.lookAt(center);
             camera.updateMatrixWorld(); */
-            _lookAt(camera, boundingBox);
-            renderer.render(scene, camera);
+            _lookAt(camera, boundingBox)
+            renderer.render(scene, camera)
 
-            _pushFrame();
+            _pushFrame()
           }
         } else {
           for (let i = 0; i < Math.PI * 2; i += Math.PI * 0.02) {
             // o.position.copy(center).multiplyScalar(-1);
-            o.quaternion
-              .setFromAxisAngle(new THREE.Vector3(0, 1, 0), i);
+            o.quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), i)
 
             /* camera.position.copy(center)
               .add(
@@ -562,84 +582,92 @@ const _makeRenderer = (width, height) => {
               );
             camera.lookAt(center);
             camera.updateMatrixWorld(); */
-            _lookAt(camera, boundingBox);
+            _lookAt(camera, boundingBox)
             // console.log(camera.position.toArray(), camera.quaternion.toArray());
-            renderer.render(scene, camera);
+            renderer.render(scene, camera)
 
-            _pushFrame();
+            _pushFrame()
           }
         }
 
-        const blob = await videoWriter.complete();
-        console.log('got video blob', blob);
+        const blob = await videoWriter.complete()
+        console.log('got video blob', blob)
 
-        const video = document.createElement('video');
-        video.muted = true;
-        video.autoplay = true;
+        const video = document.createElement('video')
+        video.muted = true
+        video.autoplay = true
         await new Promise((accept, reject) => {
-          video.oncanplaythrough = accept;
-          video.onerror = reject;
-          video.src = URL.createObjectURL(blob);
-        });
-        video.style.width = `${width/window.devicePixelRatio}px`;
-        video.style.height = `${height/window.devicePixelRatio}px`;
-        video.loop = true;
-        screenshotResult.appendChild(video);
+          video.oncanplaythrough = accept
+          video.onerror = reject
+          video.src = URL.createObjectURL(blob)
+        })
+        video.style.width = `${width / window.devicePixelRatio}px`
+        video.style.height = `${height / window.devicePixelRatio}px`
+        video.loop = true
+        screenshotResult.appendChild(video)
 
-        const arrayBuffer = await blob.arrayBuffer();
+        const arrayBuffer = await blob.arrayBuffer()
 
         if (dst) {
           fetch(dst, {
             method: 'POST',
             headers: {
-              'Content-Type': 'video/webm',
+              'Content-Type': 'video/webm'
             },
-            body: arrayBuffer,
-          }).then(res => res.blob());
+            body: arrayBuffer
+          }).then(res => res.blob())
         }
 
-        window.parent.postMessage({
-          method: 'result',
-          result: arrayBuffer,
-        }, '*', [arrayBuffer]);
+        window.parent.postMessage(
+          {
+            method: 'result',
+            result: arrayBuffer
+          },
+          '*',
+          [arrayBuffer]
+        )
       } else {
-        throw new Error('cannot capture video of type: ' + appType);
+        throw new Error('cannot capture video of type: ' + appType)
       }
     } else if (type === 'gif' && appType === 'gif') {
-      const blob = await fetch(url);
-      const img = new Image();
+      const blob = await fetch(url)
+      const img = new Image()
       await new Promise((accept, reject) => {
-        img.onload = accept;
-        img.onerror = reject;
-        img.src = url;
-      });
-      img.style.width = `${width}px`;
-      img.style.height = `${height}px`;
-      screenshotResult.appendChild(img);
+        img.onload = accept
+        img.onerror = reject
+        img.src = url
+      })
+      img.style.width = `${width}px`
+      img.style.height = `${height}px`
+      screenshotResult.appendChild(img)
 
-      const arrayBuffer = await blob.arrayBuffer();
+      const arrayBuffer = await blob.arrayBuffer()
 
       if (dst) {
         fetch(dst, {
           method: 'POST',
           headers: {
-            'Content-Type': 'image/gif',
+            'Content-Type': 'image/gif'
           },
-          body: arrayBuffer,
-        }).then(res => res.blob());
+          body: arrayBuffer
+        }).then(res => res.blob())
       }
 
-      window.parent.postMessage({
-        method: 'result',
-        result: arrayBuffer,
-      }, '*', [arrayBuffer]);
+      window.parent.postMessage(
+        {
+          method: 'result',
+          result: arrayBuffer
+        },
+        '*',
+        [arrayBuffer]
+      )
     } else {
-      throw new Error('unknown output format: ' + type + ' ' + appType);
+      throw new Error('unknown output format: ' + type + ' ' + appType)
     }
 
     // toggleElements(true);
   } catch (err) {
-    console.warn(err.stack);
+    console.warn(err.stack)
 
     // toggleElements(null, err);
 
@@ -647,15 +675,18 @@ const _makeRenderer = (width, height) => {
       fetch(dst, {
         method: 'DELETE',
         headers: {
-          'Content-Type': 'text/plain',
+          'Content-Type': 'text/plain'
         },
-        body: err.stack,
-      }).then(res => res.blob());
+        body: err.stack
+      }).then(res => res.blob())
     }
 
-    window.parent.postMessage({
-      method: 'error',
-      error: err.stack,
-    }, '*');
+    window.parent.postMessage(
+      {
+        method: 'error',
+        error: err.stack
+      },
+      '*'
+    )
   }
-})();
+})()

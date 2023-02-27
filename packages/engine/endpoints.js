@@ -1,30 +1,28 @@
-import {isProd} from './env.js';
+import { isProd } from './env.js'
 
-export const compilerBaseUrl = isProd ?
-  `https://compiler-two.webaverse.com/`
-:
-  `https://local-compiler.webaverse.com/`;
+export const compilerBaseUrl = isProd
+  ? `https://compiler-two.webaverse.com/`
+  : `https://local-compiler.webaverse.com/`
 
 // scenes
-export const scenesBaseUrl = `/scenes/`;
-export const defaultSceneName = 'block.scn';
+export const scenesBaseUrl = `/scenes/`
+export const defaultSceneName = 'block.scn'
 
 // characters
-export const charactersBaseUrl = `/characters/`;
-export const defaultCharacterName = 'scillia.npc';
+export const defaultCharacterName = 'scillia.json'
 
 // voice packs
-export const voicePacksUrl = `https://webaverse.github.io/voicepacks/all_packs.json`;
+export const voicePacksUrl = `https://webaverse.github.io/voicepacks/all_packs.json`
 
 // voice endpoints
-export const voiceEndpointBaseUrl = `https://voice-cw.webaverse.com/tts`;
-export const voiceEndpointsUrl = `https://raw.githubusercontent.com/webaverse/tiktalknet/main/model_lists/all_models.json`;
+export const voiceEndpointBaseUrl = `https://voice-cw.webaverse.com/tts`
+export const voiceEndpointsUrl = `https://raw.githubusercontent.com/webaverse/tiktalknet/main/model_lists/all_models.json`
 
 // image generation
-export const imageAIEndpointUrl = `https://stable-diffusion.webaverse.com`;
+export const imageAIEndpointUrl = `https://stable-diffusion.webaverse.com`
 
 // image captioning
-export const imageCaptionAIEndpointUrl = `https://clip.webaverse.com`;
+export const imageCaptionAIEndpointUrl = `https://clip.webaverse.com`
 
 // sfx generation
-export const audioAIEndpointUrl = `https://diffsound.webaverse.com`;
+export const audioAIEndpointUrl = `https://diffsound.webaverse.com`

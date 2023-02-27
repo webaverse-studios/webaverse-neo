@@ -41,6 +41,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/android-arm@npm:0.15.18":
+  version: 0.15.18
+  resolution: "@esbuild/android-arm@npm:0.15.18"
+  conditions: os=android & cpu=arm
+  languageName: node
+  linkType: hard
+
 "@esbuild/android-arm@npm:0.16.17":
   version: 0.16.17
   resolution: "@esbuild/android-arm@npm:0.16.17"
@@ -101,6 +108,13 @@ __metadata:
   version: 0.16.17
   resolution: "@esbuild/linux-ia32@npm:0.16.17"
   conditions: os=linux & cpu=ia32
+  languageName: node
+  linkType: hard
+
+"@esbuild/linux-loong64@npm:0.15.18":
+  version: 0.15.18
+  resolution: "@esbuild/linux-loong64@npm:0.15.18"
+  conditions: os=linux & cpu=loong64
   languageName: node
   linkType: hard
 
@@ -771,21 +785,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@webaverse-studios/engine@file:../engine::locator=%40webaverse-studios%2Fupstreet%40workspace%3Apackages%2Fupstreet":
-  version: 0.1.0
-  resolution: "@webaverse-studios/engine@file:../engine#../engine::hash=2e63a7&locator=%40webaverse-studios%2Fupstreet%40workspace%3Apackages%2Fupstreet"
-  dependencies:
-    "@pixiv/three-vrm": =1.0.8
-    "@webaverse-studios/zine-aux": "file:../zine-aux"
-    "@webaverse-studios/zjs": "file:../zjs"
-    murmurhash: =2.0.1
-    three: =0.150.0
-    troika-three-text: =0.47.1
-  checksum: 299eb70454305f51de59a3aba3d649e21c1def3d92425f1f25766001752a44ef2cf7244180c9bcdc1a64c3c5eacef136f2e2078ece28838d0790187e5e886571
-  languageName: node
-  linkType: hard
-
-"@webaverse-studios/engine@workspace:packages/engine":
+"@webaverse-studios/engine@workspace:*, @webaverse-studios/engine@workspace:packages/engine":
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/engine@workspace:packages/engine"
   dependencies:
@@ -793,7 +793,7 @@ __metadata:
     "@webaverse-studios/zine-aux": "file:../zine-aux"
     "@webaverse-studios/zjs": "file:../zjs"
     murmurhash: =2.0.1
-    three: =0.150.0
+    three: ^0.150.0
     troika-three-text: =0.47.1
   languageName: unknown
   linkType: soft
@@ -823,6 +823,7 @@ __metadata:
     sass: =1.58.3
     vite: =4.1.0
     vite-plugin-gltf: ^3.1.0
+    vite-plugin-wasm: ^3.2.1
   languageName: unknown
   linkType: soft
 
@@ -840,21 +841,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webaverse-studios/zine-aux@file:../zine-aux::locator=%40webaverse-studios%2Fengine%40file%3A..%2Fengine%23..%2Fengine%3A%3Ahash%3D2e63a7%26locator%3D%2540webaverse-studios%252Fupstreet%2540workspace%253Apackages%252Fupstreet":
-  version: 0.1.0
-  resolution: "@webaverse-studios/zine-aux@file:../zine-aux#../zine-aux::hash=3213fb&locator=%40webaverse-studios%2Fengine%40file%3A..%2Fengine%23..%2Fengine%3A%3Ahash%3D2e63a7%26locator%3D%2540webaverse-studios%252Fupstreet%2540workspace%253Apackages%252Fupstreet"
-  dependencies:
-    three: ^0.150.0
-  checksum: 21849f1cbeae2937bc0d092e1f33d95379c389e2eef372ffc2ec67ba7c93029c4fdd59b8a8e126da15fa7fcc22a008044cf67b8db655993f190ada4b0eceb07c
-  languageName: node
-  linkType: hard
-
 "@webaverse-studios/zine-aux@file:../zine-aux::locator=%40webaverse-studios%2Fengine%40workspace%3Apackages%2Fengine":
   version: 0.1.0
-  resolution: "@webaverse-studios/zine-aux@file:../zine-aux#../zine-aux::hash=3213fb&locator=%40webaverse-studios%2Fengine%40workspace%3Apackages%2Fengine"
+  resolution: "@webaverse-studios/zine-aux@file:../zine-aux#../zine-aux::hash=908962&locator=%40webaverse-studios%2Fengine%40workspace%3Apackages%2Fengine"
   dependencies:
     three: ^0.150.0
-  checksum: 21849f1cbeae2937bc0d092e1f33d95379c389e2eef372ffc2ec67ba7c93029c4fdd59b8a8e126da15fa7fcc22a008044cf67b8db655993f190ada4b0eceb07c
+  checksum: 3d058417ac94b4485c7dfcd38dc06ee7d53c23eb88c0ce41ce6d33265d82a8c1d5ae12e0eae7013743a3611b9feb50e7b5599327a110daa61afb8ccfe2bbee05
   languageName: node
   linkType: hard
 
@@ -866,23 +858,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webaverse-studios/zjs@file:../zjs::locator=%40webaverse-studios%2Fengine%40file%3A..%2Fengine%23..%2Fengine%3A%3Ahash%3D2e63a7%26locator%3D%2540webaverse-studios%252Fupstreet%2540workspace%253Apackages%252Fupstreet":
-  version: 0.1.0
-  resolution: "@webaverse-studios/zjs@file:../zjs#../zjs::hash=f9d8ad&locator=%40webaverse-studios%2Fengine%40file%3A..%2Fengine%23..%2Fengine%3A%3Ahash%3D2e63a7%26locator%3D%2540webaverse-studios%252Fupstreet%2540workspace%253Apackages%252Fupstreet"
-  dependencies:
-    alea: =1.0.1
-    mocha: =9.1.3
-  checksum: 14cac623f242aad2479d218c587340893aa899b95fb7d402bae23ae59b01c796b6abb84957f07f459fbdaa6df8513eb7486bb576f509c800c291741dfbefbc81
-  languageName: node
-  linkType: hard
-
 "@webaverse-studios/zjs@file:../zjs::locator=%40webaverse-studios%2Fengine%40workspace%3Apackages%2Fengine":
   version: 0.1.0
-  resolution: "@webaverse-studios/zjs@file:../zjs#../zjs::hash=f9d8ad&locator=%40webaverse-studios%2Fengine%40workspace%3Apackages%2Fengine"
+  resolution: "@webaverse-studios/zjs@file:../zjs#../zjs::hash=6b7725&locator=%40webaverse-studios%2Fengine%40workspace%3Apackages%2Fengine"
   dependencies:
     alea: =1.0.1
     mocha: =9.1.3
-  checksum: 14cac623f242aad2479d218c587340893aa899b95fb7d402bae23ae59b01c796b6abb84957f07f459fbdaa6df8513eb7486bb576f509c800c291741dfbefbc81
+  checksum: ba9d019a3bc865edb24d07d9f398889da076160c49c45892b33beab00c7424930424608794ab78dcbfea1ca481297800d797a15224b9286094469b0e60ab3eb6
   languageName: node
   linkType: hard
 
@@ -1639,6 +1621,223 @@ __metadata:
   version: 2.0.3
   resolution: "err-code@npm:2.0.3"
   checksum: 8b7b1be20d2de12d2255c0bc2ca638b7af5171142693299416e6a9339bd7d88fc8d7707d913d78e0993176005405a236b066b45666b27b797252c771156ace54
+  languageName: node
+  linkType: hard
+
+"esbuild-android-64@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-android-64@npm:0.15.18"
+  conditions: os=android & cpu=x64
+  languageName: node
+  linkType: hard
+
+"esbuild-android-arm64@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-android-arm64@npm:0.15.18"
+  conditions: os=android & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"esbuild-darwin-64@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-darwin-64@npm:0.15.18"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"esbuild-darwin-arm64@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-darwin-arm64@npm:0.15.18"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"esbuild-freebsd-64@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-freebsd-64@npm:0.15.18"
+  conditions: os=freebsd & cpu=x64
+  languageName: node
+  linkType: hard
+
+"esbuild-freebsd-arm64@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-freebsd-arm64@npm:0.15.18"
+  conditions: os=freebsd & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"esbuild-linux-32@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-linux-32@npm:0.15.18"
+  conditions: os=linux & cpu=ia32
+  languageName: node
+  linkType: hard
+
+"esbuild-linux-64@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-linux-64@npm:0.15.18"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
+"esbuild-linux-arm64@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-linux-arm64@npm:0.15.18"
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"esbuild-linux-arm@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-linux-arm@npm:0.15.18"
+  conditions: os=linux & cpu=arm
+  languageName: node
+  linkType: hard
+
+"esbuild-linux-mips64le@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-linux-mips64le@npm:0.15.18"
+  conditions: os=linux & cpu=mips64el
+  languageName: node
+  linkType: hard
+
+"esbuild-linux-ppc64le@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-linux-ppc64le@npm:0.15.18"
+  conditions: os=linux & cpu=ppc64
+  languageName: node
+  linkType: hard
+
+"esbuild-linux-riscv64@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-linux-riscv64@npm:0.15.18"
+  conditions: os=linux & cpu=riscv64
+  languageName: node
+  linkType: hard
+
+"esbuild-linux-s390x@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-linux-s390x@npm:0.15.18"
+  conditions: os=linux & cpu=s390x
+  languageName: node
+  linkType: hard
+
+"esbuild-netbsd-64@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-netbsd-64@npm:0.15.18"
+  conditions: os=netbsd & cpu=x64
+  languageName: node
+  linkType: hard
+
+"esbuild-openbsd-64@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-openbsd-64@npm:0.15.18"
+  conditions: os=openbsd & cpu=x64
+  languageName: node
+  linkType: hard
+
+"esbuild-sunos-64@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-sunos-64@npm:0.15.18"
+  conditions: os=sunos & cpu=x64
+  languageName: node
+  linkType: hard
+
+"esbuild-windows-32@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-windows-32@npm:0.15.18"
+  conditions: os=win32 & cpu=ia32
+  languageName: node
+  linkType: hard
+
+"esbuild-windows-64@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-windows-64@npm:0.15.18"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"esbuild-windows-arm64@npm:0.15.18":
+  version: 0.15.18
+  resolution: "esbuild-windows-arm64@npm:0.15.18"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"esbuild@npm:^0.15.9":
+  version: 0.15.18
+  resolution: "esbuild@npm:0.15.18"
+  dependencies:
+    "@esbuild/android-arm": 0.15.18
+    "@esbuild/linux-loong64": 0.15.18
+    esbuild-android-64: 0.15.18
+    esbuild-android-arm64: 0.15.18
+    esbuild-darwin-64: 0.15.18
+    esbuild-darwin-arm64: 0.15.18
+    esbuild-freebsd-64: 0.15.18
+    esbuild-freebsd-arm64: 0.15.18
+    esbuild-linux-32: 0.15.18
+    esbuild-linux-64: 0.15.18
+    esbuild-linux-arm: 0.15.18
+    esbuild-linux-arm64: 0.15.18
+    esbuild-linux-mips64le: 0.15.18
+    esbuild-linux-ppc64le: 0.15.18
+    esbuild-linux-riscv64: 0.15.18
+    esbuild-linux-s390x: 0.15.18
+    esbuild-netbsd-64: 0.15.18
+    esbuild-openbsd-64: 0.15.18
+    esbuild-sunos-64: 0.15.18
+    esbuild-windows-32: 0.15.18
+    esbuild-windows-64: 0.15.18
+    esbuild-windows-arm64: 0.15.18
+  dependenciesMeta:
+    "@esbuild/android-arm":
+      optional: true
+    "@esbuild/linux-loong64":
+      optional: true
+    esbuild-android-64:
+      optional: true
+    esbuild-android-arm64:
+      optional: true
+    esbuild-darwin-64:
+      optional: true
+    esbuild-darwin-arm64:
+      optional: true
+    esbuild-freebsd-64:
+      optional: true
+    esbuild-freebsd-arm64:
+      optional: true
+    esbuild-linux-32:
+      optional: true
+    esbuild-linux-64:
+      optional: true
+    esbuild-linux-arm:
+      optional: true
+    esbuild-linux-arm64:
+      optional: true
+    esbuild-linux-mips64le:
+      optional: true
+    esbuild-linux-ppc64le:
+      optional: true
+    esbuild-linux-riscv64:
+      optional: true
+    esbuild-linux-s390x:
+      optional: true
+    esbuild-netbsd-64:
+      optional: true
+    esbuild-openbsd-64:
+      optional: true
+    esbuild-sunos-64:
+      optional: true
+    esbuild-windows-32:
+      optional: true
+    esbuild-windows-64:
+      optional: true
+    esbuild-windows-arm64:
+      optional: true
+  bin:
+    esbuild: bin/esbuild
+  checksum: ec12682b2cb2d4f0669d0e555028b87a9284ca7f6a1b26e35e69a8697165b35cc682ad598abc70f0bbcfdc12ca84ef888caf5ceee389237862e8f8c17da85f89
   languageName: node
   linkType: hard
 
@@ -3303,7 +3502,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.4.21":
+"postcss@npm:^8.4.18, postcss@npm:^8.4.21":
   version: 8.4.21
   resolution: "postcss@npm:8.4.21"
   dependencies:
@@ -3578,6 +3777,20 @@ __metadata:
     "@gltf-transform/extensions": 2.x
     "@gltf-transform/functions": 2.x
   checksum: aa85a3bca78cbe7d359971dfa642816bac9611a504dc16e295c28376be85569a75de1394fd8a71c9f1e42e784144109384396edd7c92245d6d3f8cc1ce2739ad
+  languageName: node
+  linkType: hard
+
+"rollup@npm:^2.79.1":
+  version: 2.79.1
+  resolution: "rollup@npm:2.79.1"
+  dependencies:
+    fsevents: ~2.3.2
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  bin:
+    rollup: dist/bin/rollup
+  checksum: 6a2bf167b3587d4df709b37d149ad0300692cc5deb510f89ac7bdc77c8738c9546ae3de9322b0968e1ed2b0e984571f5f55aae28fa7de4cfcb1bc5402a4e2be6
   languageName: node
   linkType: hard
 
@@ -3904,7 +4117,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"three@npm:=0.150.0, three@npm:^0.150.0":
+"three@npm:^0.150.0":
   version: 0.150.0
   resolution: "three@npm:0.150.0"
   checksum: 6177334162ce2b1fad8cdf15e33978d855d3724f6270d952667da1a64ea3a06c9369ddef12f4206b3fed5d98b7bc8be9a98f3ae705dfb3262ffb1234e7a9ea14
@@ -4172,6 +4385,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"vite-plugin-wasm@npm:^3.2.1":
+  version: 3.2.1
+  resolution: "vite-plugin-wasm@npm:3.2.1"
+  dependencies:
+    vite: ^3
+  checksum: f3a17d7c58c2e9060fbb1bbd9efeed48ca7b6125d6304d8337b93891d6cf1fd4d895b892e1d16763e1dd6c0b9b7ec680a1a6020c8e95893cf801b8562a6c995f
+  languageName: node
+  linkType: hard
+
 "vite@npm:=4.1.0":
   version: 4.1.0
   resolution: "vite@npm:4.1.0"
@@ -4207,6 +4429,44 @@ __metadata:
   bin:
     vite: bin/vite.js
   checksum: 00443893c922a41539d4e990eb0ee58e2774c6254a442640b339e0ab200813e3010b463ab0487e5b487918add7935320464054e6f3473d84a6ea01d0799ec286
+  languageName: node
+  linkType: hard
+
+"vite@npm:^3":
+  version: 3.2.5
+  resolution: "vite@npm:3.2.5"
+  dependencies:
+    esbuild: ^0.15.9
+    fsevents: ~2.3.2
+    postcss: ^8.4.18
+    resolve: ^1.22.1
+    rollup: ^2.79.1
+  peerDependencies:
+    "@types/node": ">= 14"
+    less: "*"
+    sass: "*"
+    stylus: "*"
+    sugarss: "*"
+    terser: ^5.4.0
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  peerDependenciesMeta:
+    "@types/node":
+      optional: true
+    less:
+      optional: true
+    sass:
+      optional: true
+    stylus:
+      optional: true
+    sugarss:
+      optional: true
+    terser:
+      optional: true
+  bin:
+    vite: bin/vite.js
+  checksum: ad35b7008c2b62a167d1d1a82f0a0c60fa457733f1969e9eedf0b0077f67a7ac74b4c9477e75a397895150f09b6551f0c17841c5b05c34d9fe302bb0b5dc28a8
   languageName: node
   linkType: hard
 
