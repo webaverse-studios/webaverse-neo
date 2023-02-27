@@ -6,7 +6,7 @@ export class PunchoutMesh extends THREE.Mesh {
     const scaleFactor = DomRenderEngine.getScaleFactor(width, height)
     const worldWidth = width * scaleFactor
     const worldHeight = height * scaleFactor
-    const geometry = new THREE.PlaneBufferGeometry(worldWidth, worldHeight)
+    const geometry = new THREE.PlaneGeometry(worldWidth, worldHeight)
     const material = new THREE.ShaderMaterial({
       // color: 0xFFFFFF,
       // side: THREE.DoubleSide,

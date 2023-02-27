@@ -132,6 +132,7 @@ const _handleMessage = async e => {
     queue.push(e)
   }
 }
+
 if (typeof self !== 'undefined') {
   self.onmessage = e => {
     if (loaded) {

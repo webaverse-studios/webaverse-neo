@@ -1,66 +1,66 @@
-import * as THREE from 'three';
+import * as THREE from 'three'
 // import {getRenderer} from '../renderer.js';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import {Text} from 'troika-three-text';
-import {fullscreenGeometry} from '../background-fx/common.js';
-import {OutlineBgFxMesh} from '../background-fx/OutlineBgFx.js';
-import {NoiseBgFxMesh} from '../background-fx/NoiseBgFx.js';
-import {PoisonBgFxMesh} from '../background-fx/PoisonBgFx.js';
-import {SmokeBgFxMesh} from '../background-fx/SmokeBgFx.js';
-import {GlyphBgFxMesh} from '../background-fx/GlyphBgFx.js';
-import {DotsBgFxMesh} from '../background-fx/DotsBgFx.js';
-import {LightningBgFxMesh} from '../background-fx/LightningBgFx.js';
-import {RadialBgFxMesh} from '../background-fx/RadialBgFx.js';
-import {GrassBgFxMesh} from '../background-fx/GrassBgFx.js';
-import {WebaverseScene} from '../webaverse-scene.js';
+import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js'
+import { Text } from 'troika-three-text'
+import { fullscreenGeometry } from '../background-fx/common.js'
+import { OutlineBgFxMesh } from '../background-fx/OutlineBgFx.js'
+import { NoiseBgFxMesh } from '../background-fx/NoiseBgFx.js'
+import { PoisonBgFxMesh } from '../background-fx/PoisonBgFx.js'
+import { SmokeBgFxMesh } from '../background-fx/SmokeBgFx.js'
+import { GlyphBgFxMesh } from '../background-fx/GlyphBgFx.js'
+import { DotsBgFxMesh } from '../background-fx/DotsBgFx.js'
+import { LightningBgFxMesh } from '../background-fx/LightningBgFx.js'
+import { RadialBgFxMesh } from '../background-fx/RadialBgFx.js'
+import { GrassBgFxMesh } from '../background-fx/GrassBgFx.js'
+import { WebaverseScene } from '../webaverse-scene.js'
 // import {lightsManager} from '../managers/lights/lights-manager.js';
 // import {DioramaRenderer} from './diorama-renderer.js';
-import {SpeedHistogram} from './speed-histogram.js';
+import { SpeedHistogram } from './speed-histogram.js'
 
 //
 
-const localVector = new THREE.Vector3();
-const localVector2 = new THREE.Vector3();
-const localVector3 = new THREE.Vector3();
-const localVector2D = new THREE.Vector2();
-const localVector4D = new THREE.Vector4();
-const localQuaternion = new THREE.Quaternion();
-const localMatrix = new THREE.Matrix4();
-const localColor = new THREE.Color();
+const localVector = new THREE.Vector3()
+const localVector2 = new THREE.Vector3()
+const localVector3 = new THREE.Vector3()
+const localVector2D = new THREE.Vector2()
+const localVector4D = new THREE.Vector4()
+const localQuaternion = new THREE.Quaternion()
+const localMatrix = new THREE.Matrix4()
+const localColor = new THREE.Color()
 
 //
 
-const _makeSideScene = ({
-  webaverseRenderer,
-}) => {
+const _makeSideScene = ({ webaverseRenderer }) => {
   const meshOpts = {
-    webaverseRenderer,
-  };
-  const lightningMesh = new LightningBgFxMesh(meshOpts);
-  const radialMesh = new RadialBgFxMesh(meshOpts);
-  const grassMesh = new GrassBgFxMesh(meshOpts);
-  const poisonMesh = new PoisonBgFxMesh(meshOpts);
-  const noiseMesh = new NoiseBgFxMesh(meshOpts);
-  const smokeMesh = new SmokeBgFxMesh(meshOpts);
-  const glyphMesh = new GlyphBgFxMesh(meshOpts);
-  const dotsMesh = new DotsBgFxMesh(meshOpts);
-  const outlineMesh = new OutlineBgFxMesh(meshOpts);
+    webaverseRenderer
+  }
+  const lightningMesh = new LightningBgFxMesh(meshOpts)
+  const radialMesh = new RadialBgFxMesh(meshOpts)
+  const grassMesh = new GrassBgFxMesh(meshOpts)
+  const poisonMesh = new PoisonBgFxMesh(meshOpts)
+  const noiseMesh = new NoiseBgFxMesh(meshOpts)
+  const smokeMesh = new SmokeBgFxMesh(meshOpts)
+  const glyphMesh = new GlyphBgFxMesh(meshOpts)
+  const dotsMesh = new DotsBgFxMesh(meshOpts)
+  const outlineMesh = new OutlineBgFxMesh(meshOpts)
 
   const histogram = new SpeedHistogram()
     .fromArray([
-      {speed: 10, duration: 100},
-      {speed: 0.05, duration: 2000},
-      {speed: 10, duration: 100},
+      { speed: 10, duration: 100 },
+      { speed: 0.05, duration: 2000 },
+      { speed: 10, duration: 100 }
     ])
-    .toArray(60);
-  const labelAnimationRate = 3;
+    .toArray(60)
+  const labelAnimationRate = 3
   const labelVertexShader = `\
     uniform float iTime;
     attribute vec3 color;
     varying vec2 tex_coords;
     varying vec3 vColor;
 
-    float frames[${histogram.length}] = float[${histogram.length}](${histogram.map(v => v.toFixed(8)).join(', ')});
+    float frames[${histogram.length}] = float[${histogram.length}](${histogram
+    .map(v => v.toFixed(8))
+    .join(', ')});
     float mapTime(float t) {
       t /= ${labelAnimationRate.toFixed(8)};
       t = mod(t, 1.);
@@ -87,17 +87,17 @@ const _makeSideScene = ({
       float t = mapTime(iTime);
       gl_Position = vec4(position.xy + vec2(-2. + t * 4., 0.) * position.z, -1., 1.);
     }
-  `;
+  `
   const labelFragmentShader = `\
     varying vec2 tex_coords;
     varying vec3 vColor;
 
-    vec2 rotateCCW(vec2 pos, float angle) { 
+    vec2 rotateCCW(vec2 pos, float angle) {
       float ca = cos(angle),  sa = sin(angle);
-      return pos * mat2(ca, sa, -sa, ca);  
+      return pos * mat2(ca, sa, -sa, ca);
     }
 
-    vec2 rotateCCW(vec2 pos, vec2 around, float angle) { 
+    vec2 rotateCCW(vec2 pos, vec2 around, float angle) {
       pos -= around;
       pos = rotateCCW(pos, angle);
       pos += around;
@@ -107,7 +107,7 @@ const _makeSideScene = ({
     // return 1 if v inside the box, return 0 otherwise
     bool insideAABB(vec2 v, vec2 bottomLeft, vec2 topRight) {
         vec2 s = step(bottomLeft, v) - step(topRight, v);
-        return s.x * s.y > 0.;   
+        return s.x * s.y > 0.;
     }
 
     bool isPointInTriangle(vec2 point, vec2 a, vec2 b, vec2 c) {
@@ -141,7 +141,7 @@ const _makeSideScene = ({
       }
       gl_FragColor = vec4(c, 1.0);
     }
-  `;
+  `
   const textVertexShader = `\
     uniform float uTroikaOutlineOpacity;
     // attribute vec3 color;
@@ -150,7 +150,9 @@ const _makeSideScene = ({
     varying vec2 tex_coords;
     // varying vec3 vColor;
 
-    float frames[${histogram.length}] = float[${histogram.length}](${histogram.map(v => v.toFixed(8)).join(', ')});
+    float frames[${histogram.length}] = float[${histogram.length}](${histogram
+    .map(v => v.toFixed(8))
+    .join(', ')});
     float mapTime(float t) {
       t /= ${labelAnimationRate.toFixed(8)};
       t = mod(t, 1.);
@@ -179,13 +181,13 @@ const _makeSideScene = ({
       float t = mapTime(iTime);
       gl_Position = vec4(offset.xy + position.xy * scale + vec2(-2. + t * 4., 0.) * position.z, -1., 1.);
     }
-  `;
+  `
   const textFragmentShader = `\
     void main() {
       gl_FragColor = vec4(vec3(1.), 1.);
     }
-  `;
-  async function makeTextMesh(
+  `
+  async function makeTextMesh (
     text = '',
     material = null,
     font = '/fonts/Bangers-Regular.ttf',
@@ -193,85 +195,66 @@ const _makeSideScene = ({
     letterSpacing = 0,
     anchorX = 'left',
     anchorY = 'middle',
-    color = 0x000000,
+    color = 0x000000
   ) {
-    const textMesh = new Text();
-    textMesh.text = text;
+    const textMesh = new Text()
+    textMesh.text = text
     if (material !== null) {
-      textMesh.material = material;
+      textMesh.material = material
     }
-    textMesh.font = font;
-    textMesh.fontSize = fontSize;
-    textMesh.letterSpacing = letterSpacing;
-    textMesh.color = color;
-    textMesh.anchorX = anchorX;
-    textMesh.anchorY = anchorY;
-    textMesh.frustumCulled = false;
+    textMesh.font = font
+    textMesh.fontSize = fontSize
+    textMesh.letterSpacing = letterSpacing
+    textMesh.color = color
+    textMesh.anchorX = anchorX
+    textMesh.anchorY = anchorY
+    textMesh.frustumCulled = false
     await new Promise(accept => {
-      textMesh.sync(accept);
-    });
-    return textMesh;
+      textMesh.sync(accept)
+    })
+    return textMesh
   }
 
-  const s1 = 0.4;
-  const sk1 = 0.2;
-  const speed1 = 1;
-  const aspectRatio1 = 0.3;
-  const p1 = new THREE.Vector3(0.45, -0.65, 0);
-  const s2 = 0.5;
-  const sk2 = 0.1;
-  const speed2 = 1.5;
-  const aspectRatio2 = 0.15;
-  const p2 = new THREE.Vector3(0.35, -0.825, 0);
+  const s1 = 0.4
+  const sk1 = 0.2
+  const speed1 = 1
+  const aspectRatio1 = 0.3
+  const p1 = new THREE.Vector3(0.45, -0.65, 0)
+  const s2 = 0.5
+  const sk2 = 0.1
+  const speed2 = 1.5
+  const aspectRatio2 = 0.15
+  const p2 = new THREE.Vector3(0.35, -0.825, 0)
   const labelMesh = (() => {
     const _decorateGeometry = (g, color, z) => {
-      const colors = new Float32Array(g.attributes.position.count * 3);
+      const colors = new Float32Array(g.attributes.position.count * 3)
       for (let i = 0; i < colors.length; i += 3) {
-        color.toArray(colors, i);
-        g.attributes.position.array[i + 2] = z;
+        color.toArray(colors, i)
+        g.attributes.position.array[i + 2] = z
       }
-      g.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-    };
-    const g1 = fullscreenGeometry.clone()
-      .applyMatrix4(
-        new THREE.Matrix4()
-          .makeShear(0, 0, sk1, 0, 0, 0)
-      )
-      .applyMatrix4(
-        new THREE.Matrix4()
-          .makeScale(s1, s1 * aspectRatio1, 1)
-      )
-      .applyMatrix4(
-        new THREE.Matrix4()
-          .makeTranslation(p1.x, p1.y, p1.z)
-      );
-    _decorateGeometry(g1, new THREE.Color(0xFFFFFF), speed1);
-    const g2 = fullscreenGeometry.clone()
-      .applyMatrix4(
-        new THREE.Matrix4()
-          .makeShear(0, 0, sk2, 0, 0, 0)
-      )
-      .applyMatrix4(
-        new THREE.Matrix4()
-          .makeScale(s2, s2 * aspectRatio2, 1)
-      )
-      .applyMatrix4(
-        new THREE.Matrix4()
-          .makeTranslation(p2.x, p2.y, p2.z)
-      );
-    _decorateGeometry(g2, new THREE.Color(0x000000), speed2);
-    const geometry = BufferGeometryUtils.mergeBufferGeometries([
-      g2,
-      g1,
-    ]);
+      g.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+    }
+    const g1 = fullscreenGeometry
+      .clone()
+      .applyMatrix4(new THREE.Matrix4().makeShear(0, 0, sk1, 0, 0, 0))
+      .applyMatrix4(new THREE.Matrix4().makeScale(s1, s1 * aspectRatio1, 1))
+      .applyMatrix4(new THREE.Matrix4().makeTranslation(p1.x, p1.y, p1.z))
+    _decorateGeometry(g1, new THREE.Color(0xffffff), speed1)
+    const g2 = fullscreenGeometry
+      .clone()
+      .applyMatrix4(new THREE.Matrix4().makeShear(0, 0, sk2, 0, 0, 0))
+      .applyMatrix4(new THREE.Matrix4().makeScale(s2, s2 * aspectRatio2, 1))
+      .applyMatrix4(new THREE.Matrix4().makeTranslation(p2.x, p2.y, p2.z))
+    _decorateGeometry(g2, new THREE.Color(0x000000), speed2)
+    const geometry = BufferGeometryUtils.mergeBufferGeometries([g2, g1])
     const quad = new THREE.Mesh(
       geometry,
       new THREE.ShaderMaterial({
         uniforms: {
           iTime: {
             value: 0,
-            needsUpdate: false,
-          },
+            needsUpdate: false
+          }
           /* outline_thickness: {
             value: 0.02,
             needsUpdate: true,
@@ -286,32 +269,32 @@ const _makeSideScene = ({
           }, */
         },
         vertexShader: labelVertexShader,
-        fragmentShader: labelFragmentShader,
+        fragmentShader: labelFragmentShader
       })
-    );
-    quad.frustumCulled = false;
-    return quad;
-  })();
+    )
+    quad.frustumCulled = false
+    return quad
+  })()
 
   const textObject = (() => {
-    const o = new THREE.Object3D();
-    
+    const o = new THREE.Object3D()
+
     const _decorateGeometry = (g, offset, z, scale) => {
-      const offsets = new Float32Array(g.attributes.position.array.length);
-      const scales = new Float32Array(g.attributes.position.count);
+      const offsets = new Float32Array(g.attributes.position.array.length)
+      const scales = new Float32Array(g.attributes.position.count)
       for (let i = 0; i < g.attributes.position.array.length; i += 3) {
-        offset.toArray(offsets, i);
-        g.attributes.position.array[i + 2] = z;
-        scales[i / 3] = scale;
+        offset.toArray(offsets, i)
+        g.attributes.position.array[i + 2] = z
+        scales[i / 3] = scale
       }
-      g.setAttribute('offset', new THREE.BufferAttribute(offsets, 3));
-      g.setAttribute('scale', new THREE.BufferAttribute(scales, 1));
-    };
+      g.setAttribute('offset', new THREE.BufferAttribute(offsets, 3))
+      g.setAttribute('scale', new THREE.BufferAttribute(scales, 1))
+    }
     const textMaterial = new THREE.ShaderMaterial({
       vertexShader: textVertexShader,
-      fragmentShader: textFragmentShader,
-    });
-    (async () => {
+      fragmentShader: textFragmentShader
+    })
+    ;(async () => {
       const nameMesh = await makeTextMesh(
         'Scillia',
         textMaterial,
@@ -320,12 +303,12 @@ const _makeSideScene = ({
         0.05,
         'center',
         'middle',
-        0xFFFFFF,
-      );
-      _decorateGeometry(nameMesh.geometry, p1, speed1, s1 * aspectRatio1);
-      o.add(nameMesh);
-    })();
-    (async () => {
+        0xffffff
+      )
+      _decorateGeometry(nameMesh.geometry, p1, speed1, s1 * aspectRatio1)
+      o.add(nameMesh)
+    })()
+    ;(async () => {
       const labelMesh = await makeTextMesh(
         'pledged to the lisk',
         textMaterial,
@@ -334,28 +317,28 @@ const _makeSideScene = ({
         0.02,
         'center',
         'middle',
-        0xFFFFFF,
-      );
-      _decorateGeometry(labelMesh.geometry, p2, speed2, s2 * aspectRatio2);
-      o.add(labelMesh);
-    })();
-    return o;
-  })();
+        0xffffff
+      )
+      _decorateGeometry(labelMesh.geometry, p2, speed2, s2 * aspectRatio2)
+      o.add(labelMesh)
+    })()
+    return o
+  })()
 
-  const sideScene = new WebaverseScene();
-  sideScene.name = 'sideScene';
-  sideScene.autoUpdate = false;
-  sideScene.add(lightningMesh);
-  sideScene.add(radialMesh);
-  sideScene.add(grassMesh);
-  sideScene.add(poisonMesh);
-  sideScene.add(noiseMesh);
-  sideScene.add(smokeMesh);
-  sideScene.add(glyphMesh);
-  sideScene.add(dotsMesh);
-  sideScene.add(outlineMesh);
-  sideScene.add(labelMesh);
-  sideScene.add(textObject);
+  const sideScene = new WebaverseScene()
+  sideScene.name = 'sideScene'
+  sideScene.matrixWorldAutoUpdate = false
+  sideScene.add(lightningMesh)
+  sideScene.add(radialMesh)
+  sideScene.add(grassMesh)
+  sideScene.add(poisonMesh)
+  sideScene.add(noiseMesh)
+  sideScene.add(smokeMesh)
+  sideScene.add(glyphMesh)
+  sideScene.add(dotsMesh)
+  sideScene.add(outlineMesh)
+  sideScene.add(labelMesh)
+  sideScene.add(textObject)
 
   return {
     lightningMesh,
@@ -369,22 +352,19 @@ const _makeSideScene = ({
     outlineMesh,
     labelMesh,
     textObject,
-    sideScene,
-  };
-};
+    sideScene
+  }
+}
 
 //
 
 class DioramaRenderer {
-  constructor({
-    webaverseRenderer,
-    lightsManager,
-  }) {
-    this.webaverseRenderer = webaverseRenderer;
-    this.lightsManager = lightsManager;
+  constructor ({ webaverseRenderer, lightsManager }) {
+    this.webaverseRenderer = webaverseRenderer
+    this.lightsManager = lightsManager
 
-    const sideCamera = new THREE.PerspectiveCamera();
-    this.sideCamera = sideCamera;
+    const sideCamera = new THREE.PerspectiveCamera()
+    this.sideCamera = sideCamera
 
     const {
       lightningMesh,
@@ -398,36 +378,38 @@ class DioramaRenderer {
       outlineMesh,
       labelMesh,
       textObject,
-      sideScene,
+      sideScene
     } = _makeSideScene({
-      webaverseRenderer,
-    });
+      webaverseRenderer
+    })
 
-    this.lightningMesh = lightningMesh;
-    this.radialMesh = radialMesh;
-    this.outlineMesh = outlineMesh;
+    this.lightningMesh = lightningMesh
+    this.radialMesh = radialMesh
+    this.outlineMesh = outlineMesh
 
-    this.labelMesh = labelMesh;
-    this.grassMesh = grassMesh;
-    this.poisonMesh = poisonMesh;
-    this.noiseMesh = noiseMesh;
-    this.smokeMesh = smokeMesh;
-    this.glyphMesh = glyphMesh;
-    this.dotsMesh = dotsMesh;
-    this.textObject = textObject;
+    this.labelMesh = labelMesh
+    this.grassMesh = grassMesh
+    this.poisonMesh = poisonMesh
+    this.noiseMesh = noiseMesh
+    this.smokeMesh = smokeMesh
+    this.glyphMesh = glyphMesh
+    this.dotsMesh = dotsMesh
+    this.textObject = textObject
     const skinnedRedMaterial = (() => {
-      let wVertex = THREE.ShaderLib.standard.vertexShader;
-      let wFragment = THREE.ShaderLib.standard.fragmentShader;
-      let wUniforms = THREE.UniformsUtils.clone(THREE.ShaderLib.standard.uniforms);
+      let wVertex = THREE.ShaderLib.standard.vertexShader
+      let wFragment = THREE.ShaderLib.standard.fragmentShader
+      let wUniforms = THREE.UniformsUtils.clone(
+        THREE.ShaderLib.standard.uniforms
+      )
       wUniforms.iTime = {
         value: 0,
-        needsUpdate: false,
-      };
+        needsUpdate: false
+      }
       wFragment = `\
         void main() {
           gl_FragColor = vec4(1., 0., 0., 1.);
         }
-      `;
+      `
       const material = new THREE.ShaderMaterial({
         uniforms: wUniforms,
         vertexShader: wVertex,
@@ -437,51 +419,57 @@ class DioramaRenderer {
         // name: "detail-material",
         // fog: true,
         extensions: {
-          derivatives: true,
+          derivatives: true
         },
-        side: THREE.BackSide,
-      });
-      return material;
-    })();
-    
-    //
-    
-    const outlineRenderScene = new THREE.Scene();
-    outlineRenderScene.name = 'outlineRenderScene';
-    outlineRenderScene.autoUpdate = false;
-    outlineRenderScene.overrideMaterial = skinnedRedMaterial;
-    this.outlineRenderScene = outlineRenderScene;
-    
+        side: THREE.BackSide
+      })
+      return material
+    })()
+
     //
 
-    this.sideScene = sideScene;
+    const outlineRenderScene = new THREE.Scene()
+    outlineRenderScene.name = 'outlineRenderScene'
+    outlineRenderScene.matrixWorldAutoUpdate = false
+    outlineRenderScene.overrideMaterial = skinnedRedMaterial
+    this.outlineRenderScene = outlineRenderScene
+
+    //
+
+    this.sideScene = sideScene
 
     this.autoLights = (() => {
-      const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-    
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
-      directionalLight.position.set(1, 2, 3);
-      directionalLight.updateMatrixWorld();
-    
-      return [
-        ambientLight,
-        directionalLight,
-      ];
-    })();
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1)
 
-    this.outlineRenderTarget = null;
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 3)
+      directionalLight.position.set(1, 2, 3)
+      directionalLight.updateMatrixWorld()
 
+      return [ambientLight, directionalLight]
+    })()
+
+    this.outlineRenderTarget = null
   }
 
-  #makeOutlineRenderTarget(w, h) {
+  #makeOutlineRenderTarget (w, h) {
     return new THREE.WebGLRenderTarget(w, h, {
       minFilter: THREE.LinearFilter,
       magFilter: THREE.LinearFilter,
-      format: THREE.RGBAFormat,
-    });
+      format: THREE.RGBAFormat
+    })
   }
 
-  render(timeOffset, timeDiff, width, height, objects, target, cameraOffset, canvases, opts) {
+  render (
+    timeOffset,
+    timeDiff,
+    width,
+    height,
+    objects,
+    target,
+    cameraOffset,
+    canvases,
+    opts
+  ) {
     const {
       // objects = [],
       // target = new THREE.Object3D(),
@@ -500,257 +488,270 @@ class DioramaRenderer {
       glyphBackground = false,
       dotsBackground = false,
       autoCamera = true,
-      detached = false,
-    } = opts;
-    const {devicePixelRatio: pixelRatio} = globalThis;
+      detached = false
+    } = opts
+    const { devicePixelRatio: pixelRatio } = globalThis
 
-    const renderer = getRenderer();
-    const size = renderer.getSize(localVector2D);
+    const renderer = getRenderer()
+    const size = renderer.getSize(localVector2D)
     if (size.x < width || size.y < height) {
-      console.warn('renderer is too small');
-      return;
+      console.warn('renderer is too small')
+      return
     }
 
-    if (!this.outlineRenderTarget || (this.outlineRenderTarget.width !== width * pixelRatio) || (this.outlineRenderTarget.height !== height * pixelRatio)) {
-      this.outlineRenderTarget = this.#makeOutlineRenderTarget(width * 1, height * pixelRatio);
+    if (
+      !this.outlineRenderTarget ||
+      this.outlineRenderTarget.width !== width * pixelRatio ||
+      this.outlineRenderTarget.height !== height * pixelRatio
+    ) {
+      this.outlineRenderTarget = this.#makeOutlineRenderTarget(
+        width * 1,
+        height * pixelRatio
+      )
     }
 
     const _addObjectsToScene = scene => {
       for (const object of objects) {
-        scene.add(object);
+        scene.add(object)
       }
-    };
+    }
 
     const _addAutoLightsToScene = scene => {
       if (lights) {
         for (const autoLight of this.autoLights) {
-          scene.add(autoLight);
+          scene.add(autoLight)
         }
       }
-    };
+    }
 
     const _addRootLightsToScene = scene => {
-      const restoreFn = [];
+      const restoreFn = []
       for (const light of this.lightsManager.lights) {
-        const oldParent = light.parent;
+        const oldParent = light.parent
         restoreFn.push(() => {
-          oldParent.add(light);
-        });
-        scene.add(light);
+          oldParent.add(light)
+        })
+        scene.add(light)
       }
       return () => {
         for (const fn of restoreFn) {
-          fn();
+          fn()
         }
-      };
-    };
+      }
+    }
 
-    let oldRenderTarget = null;
-    let oldViewport = null;
-    let oldClearColor = null;
-    let oldClearAlpha = null;
+    let oldRenderTarget = null
+    let oldViewport = null
+    let oldClearColor = null
+    let oldClearAlpha = null
     const _pushState = () => {
       const oldParents = (() => {
-        const parents = new WeakMap();
+        const parents = new WeakMap()
         for (const object of objects) {
-          parents.set(object, object.parent);
+          parents.set(object, object.parent)
         }
-        return parents;
-      })();
+        return parents
+      })()
       const _restoreParents = () => {
         for (const object of objects) {
-          const parent = oldParents.get(object);
+          const parent = oldParents.get(object)
           if (parent) {
-            parent.add(object);
+            parent.add(object)
           } else {
             if (object.parent) {
-              object.parent.remove(object);
+              object.parent.remove(object)
             }
           }
         }
         if (lights) {
           for (const autoLight of this.autoLights) {
-            autoLight.parent.remove(autoLight);
+            autoLight.parent.remove(autoLight)
           }
         }
-      };
-      oldRenderTarget = renderer.getRenderTarget();
-      oldViewport = renderer.getViewport(localVector4D);
-      oldClearColor = renderer.getClearColor(localColor);
-      oldClearAlpha = renderer.getClearAlpha();
+      }
+      oldRenderTarget = renderer.getRenderTarget()
+      oldViewport = renderer.getViewport(localVector4D)
+      oldClearColor = renderer.getClearColor(localColor)
+      oldClearAlpha = renderer.getClearAlpha()
 
       return () => {
-        _restoreParents();
-        renderer.setRenderTarget(oldRenderTarget);
-        renderer.setViewport(oldViewport);
-        renderer.setClearColor(oldClearColor, oldClearAlpha);
-      };
-    };
-    const _popState = _pushState();
+        _restoreParents()
+        renderer.setRenderTarget(oldRenderTarget)
+        renderer.setViewport(oldViewport)
+        renderer.setClearColor(oldClearColor, oldClearAlpha)
+      }
+    }
+    const _popState = _pushState()
 
     const _render = () => {
       if (autoCamera) {
         // set up side camera
-        target.matrixWorld.decompose(localVector, localQuaternion, localVector2);
-        const targetPosition = localVector;
-        const targetQuaternion = localQuaternion;
+        target.matrixWorld.decompose(localVector, localQuaternion, localVector2)
+        const targetPosition = localVector
+        const targetQuaternion = localQuaternion
 
-        this.sideCamera.position.copy(targetPosition)
+        this.sideCamera.position
+          .copy(targetPosition)
           .add(
-            localVector2.set(cameraOffset.x, 0, cameraOffset.z)
+            localVector2
+              .set(cameraOffset.x, 0, cameraOffset.z)
               .applyQuaternion(targetQuaternion)
-          );
-          this.sideCamera.quaternion.setFromRotationMatrix(
+          )
+        this.sideCamera.quaternion.setFromRotationMatrix(
           localMatrix.lookAt(
             this.sideCamera.position,
             targetPosition,
             localVector3.set(0, 1, 0)
           )
-        );
+        )
         this.sideCamera.position.add(
-          localVector2.set(0, cameraOffset.y, 0)
+          localVector2
+            .set(0, cameraOffset.y, 0)
             .applyQuaternion(targetQuaternion)
-        );
-        this.sideCamera.updateMatrixWorld();
+        )
+        this.sideCamera.updateMatrixWorld()
       }
 
       // set up side avatar scene
-      _addObjectsToScene(this.outlineRenderScene);
-      _addAutoLightsToScene(this.outlineRenderScene);
+      _addObjectsToScene(this.outlineRenderScene)
+      _addAutoLightsToScene(this.outlineRenderScene)
       // this.outlineRenderScene.add(world.lights);
       // render side avatar scene
-      renderer.setRenderTarget(this.outlineRenderTarget);
-      renderer.setClearColor(0x000000, 0);
-      renderer.clear();
+      renderer.setRenderTarget(this.outlineRenderTarget)
+      renderer.setClearColor(0x000000, 0)
+      renderer.clear()
       if (outline) {
-        renderer.render(this.outlineRenderScene, this.sideCamera);
+        renderer.render(this.outlineRenderScene, this.sideCamera)
       }
-      
+
       // set up side scene
-      _addObjectsToScene(this.sideScene);
-      const restoreRootLightsFn = _addRootLightsToScene(this.sideScene);
+      _addObjectsToScene(this.sideScene)
+      const restoreRootLightsFn = _addRootLightsToScene(this.sideScene)
       // sideScene.add(world.lights);
 
       const _setupBackground = () => {
         const _renderGrass = () => {
           if (grassBackground) {
-            this.grassMesh.update(timeOffset, timeDiff, width, height);
-            this.grassMesh.visible = true;
+            this.grassMesh.update(timeOffset, timeDiff, width, height)
+            this.grassMesh.visible = true
           } else {
-            this.grassMesh.visible = false;
+            this.grassMesh.visible = false
           }
-        };
-        _renderGrass();
+        }
+        _renderGrass()
         const _renderPoison = () => {
           if (poisonBackground) {
-            this.poisonMesh.update(timeOffset, timeDiff, width, height);
-            this.poisonMesh.visible = true;
+            this.poisonMesh.update(timeOffset, timeDiff, width, height)
+            this.poisonMesh.visible = true
           } else {
-            this.poisonMesh.visible = false;
+            this.poisonMesh.visible = false
           }
-        };
-        _renderPoison();
+        }
+        _renderPoison()
         const _renderNoise = () => {
           if (noiseBackground) {
-            this.noiseMesh.update(timeOffset, timeDiff, width, height);
-            this.noiseMesh.visible = true;
+            this.noiseMesh.update(timeOffset, timeDiff, width, height)
+            this.noiseMesh.visible = true
           } else {
-            this.noiseMesh.visible = false;
+            this.noiseMesh.visible = false
           }
-        };
-        _renderNoise();
+        }
+        _renderNoise()
         const _renderSmoke = () => {
           if (smokeBackground) {
-            this.smokeMesh.update(timeOffset, timeDiff, width, height);
-            this.smokeMesh.visible = true;
+            this.smokeMesh.update(timeOffset, timeDiff, width, height)
+            this.smokeMesh.visible = true
           } else {
-            this.smokeMesh.visible = false;
+            this.smokeMesh.visible = false
           }
-        };
-        _renderSmoke();
+        }
+        _renderSmoke()
         const _renderLightning = () => {
           if (lightningBackground) {
-            this.lightningMesh.update(timeOffset, timeDiff, width, height);
-            this.lightningMesh.visible = true;
+            this.lightningMesh.update(timeOffset, timeDiff, width, height)
+            this.lightningMesh.visible = true
           } else {
-            this.lightningMesh.visible = false;
+            this.lightningMesh.visible = false
           }
-        };
-        _renderLightning();
+        }
+        _renderLightning()
         const _renderRadial = () => {
           if (radialBackground) {
-            this.radialMesh.update(timeOffset, timeDiff, width, height);
-            this.radialMesh.visible = true;
+            this.radialMesh.update(timeOffset, timeDiff, width, height)
+            this.radialMesh.visible = true
           } else {
-            this.radialMesh.visible = false;
+            this.radialMesh.visible = false
           }
-        };
-        _renderRadial();
+        }
+        _renderRadial()
         const _renderGlyph = () => {
           if (glyphBackground) {
-            this.glyphMesh.update(timeOffset, timeDiff, width, height);
-            this.glyphMesh.visible = true;
+            this.glyphMesh.update(timeOffset, timeDiff, width, height)
+            this.glyphMesh.visible = true
           } else {
-            this.glyphMesh.visible = false;
+            this.glyphMesh.visible = false
           }
-        };
-        _renderGlyph();
+        }
+        _renderGlyph()
         const _renderDots = () => {
           if (dotsBackground) {
-            this.dotsMesh.update(timeOffset, timeDiff, width, height);
-            this.dotsMesh.visible = true;
+            this.dotsMesh.update(timeOffset, timeDiff, width, height)
+            this.dotsMesh.visible = true
           } else {
-            this.dotsMesh.visible = false;
+            this.dotsMesh.visible = false
           }
-        };
-        _renderDots();
+        }
+        _renderDots()
         const _renderOutline = () => {
           if (outline) {
-            this.outlineMesh.update(timeOffset, timeDiff, width, height, this.outlineRenderTarget.texture);
-            this.outlineMesh.visible = true;
+            this.outlineMesh.update(
+              timeOffset,
+              timeDiff,
+              width,
+              height,
+              this.outlineRenderTarget.texture
+            )
+            this.outlineMesh.visible = true
           } else {
-            this.outlineMesh.visible = false;
+            this.outlineMesh.visible = false
           }
-        };
-        _renderOutline();
+        }
+        _renderOutline()
         const _renderLabel = () => {
           if (label) {
-            this.labelMesh.material.uniforms.iTime.value = timeOffset / 1000;
-            this.labelMesh.material.uniforms.iTime.needsUpdate = true;
-            this.labelMesh.visible = true;
+            this.labelMesh.material.uniforms.iTime.value = timeOffset / 1000
+            this.labelMesh.material.uniforms.iTime.needsUpdate = true
+            this.labelMesh.visible = true
             for (const child of this.textObject.children) {
-              child.material.uniforms.uTroikaOutlineOpacity.value = timeOffset / 1000;
-              child.material.uniforms.uTroikaOutlineOpacity.needsUpdate = true;
+              child.material.uniforms.uTroikaOutlineOpacity.value =
+                timeOffset / 1000
+              child.material.uniforms.uTroikaOutlineOpacity.needsUpdate = true
             }
-            this.textObject.visible = true;
+            this.textObject.visible = true
           } else {
-            this.labelMesh.visible = false;
-            this.textObject.visible = false;
+            this.labelMesh.visible = false
+            this.textObject.visible = false
           }
-        };
-        _renderLabel();
-      };
-      _setupBackground();
-      
-      const _renderSceneCamera = () => {
-        renderer.setRenderTarget(oldRenderTarget);
-        renderer.setViewport(0, 0, width, height);
-        if (clearColor !== null) {
-          renderer.setClearColor(clearColor, clearAlpha);
         }
-        renderer.clear();
-        renderer.render(this.sideScene, this.sideCamera);
-      };
-      _renderSceneCamera();
+        _renderLabel()
+      }
+      _setupBackground()
+
+      const _renderSceneCamera = () => {
+        renderer.setRenderTarget(oldRenderTarget)
+        renderer.setViewport(0, 0, width, height)
+        if (clearColor !== null) {
+          renderer.setClearColor(clearColor, clearAlpha)
+        }
+        renderer.clear()
+        renderer.render(this.sideScene, this.sideCamera)
+      }
+      _renderSceneCamera()
 
       const _copyFrame = () => {
         for (const canvas of canvases) {
-          const {
-            width: canvasWidth,
-            height: canvasHeight,
-            ctx,
-          } = canvas;
-          ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+          const { width: canvasWidth, height: canvasHeight, ctx } = canvas
+          ctx.clearRect(0, 0, canvasWidth, canvasHeight)
           // ctx.filter = 'brightness(1.25)';
           ctx.drawImage(
             renderer.domElement,
@@ -762,104 +763,102 @@ class DioramaRenderer {
             0,
             canvasWidth,
             canvasHeight
-          );
+          )
         }
-      };
-      _copyFrame();
+      }
+      _copyFrame()
 
-      restoreRootLightsFn();
-    };
-    _render();
+      restoreRootLightsFn()
+    }
+    _render()
 
-    _popState();
+    _popState()
   }
 
-  async waitForLoad() {
-
-  }
+  async waitForLoad () {}
 }
 
 //
 
-let dioramaRenderer = null;
-const dioramas = [];
+let dioramaRenderer = null
+const dioramas = []
 export class DioramaManager {
-  #sideSceneCompiled = false;
+  #sideSceneCompiled = false
 
   // constructor() {
   // }
-  ensureSideSceneCompiled() {
+  ensureSideSceneCompiled () {
     if (!this.#sideSceneCompiled) {
-      const renderer = getRenderer();
-      const camera = new THREE.PerspectiveCamera();
-      renderer.compile(sideScene, camera);
-      this.#sideSceneCompiled = true;
+      const renderer = getRenderer()
+      const camera = new THREE.PerspectiveCamera()
+      renderer.compile(sideScene, camera)
+      this.#sideSceneCompiled = true
     }
   }
-  createPlayerDiorama(opts = {}) {
-    this.ensureSideSceneCompiled();
-  
+  createPlayerDiorama (opts = {}) {
+    this.ensureSideSceneCompiled()
+
     let {
       objects = [],
       target = new THREE.Object3D(),
       cameraOffset = new THREE.Vector3(0.3, 0, -0.5),
-      detached = false,
-    } = opts;
-  
-    const canvases = [];
-    let lastDisabledTime = 0;
-    const dioramaRenderer = new DioramaRenderer();
-  
+      detached = false
+    } = opts
+
+    const canvases = []
+    let lastDisabledTime = 0
+    const dioramaRenderer = new DioramaRenderer()
+
     const diorama = {
       width: 0,
       height: 0,
       camera: dioramaRenderer.sideCamera,
       dioramaRenderer,
       // loaded: false,
-      setTarget(newTarget) {
-        target = newTarget;
+      setTarget (newTarget) {
+        target = newTarget
       },
-      setObjects(newObjects) {
-        objects = newObjects;
+      setObjects (newObjects) {
+        objects = newObjects
       },
-      getCanvases() {
-        return canvases;
+      getCanvases () {
+        return canvases
       },
-      resetCanvases() {
-        canvases.length = 0;
+      resetCanvases () {
+        canvases.length = 0
       },
-      addCanvas(canvas) {
-        const {width, height} = canvas;
-        this.width = Math.max(this.width, width);
-        this.height = Math.max(this.height, height);
-  
-        const ctx = canvas.getContext('2d');
-        canvas.ctx = ctx;
-  
-        canvases.push(canvas);
-  
-        this.updateAspect();
+      addCanvas (canvas) {
+        const { width, height } = canvas
+        this.width = Math.max(this.width, width)
+        this.height = Math.max(this.height, height)
+
+        const ctx = canvas.getContext('2d')
+        canvas.ctx = ctx
+
+        canvases.push(canvas)
+
+        this.updateAspect()
       },
-      setSize(width, height) {
-        this.width = width;
-        this.height = height;
-  
-        this.updateAspect();
+      setSize (width, height) {
+        this.width = width
+        this.height = height
+
+        this.updateAspect()
       },
-      updateAspect() {
-        const newAspect = this.width / this.height;
+      updateAspect () {
+        const newAspect = this.width / this.height
         if (dioramaRenderer.sideCamera.aspect !== newAspect) {
-          dioramaRenderer.sideCamera.aspect = newAspect;
-          dioramaRenderer.sideCamera.updateProjectionMatrix();
+          dioramaRenderer.sideCamera.aspect = newAspect
+          dioramaRenderer.sideCamera.updateProjectionMatrix()
         }
       },
-      removeCanvas(canvas) {
-        const index = canvases.indexOf(canvas);
+      removeCanvas (canvas) {
+        const index = canvases.indexOf(canvas)
         if (index !== -1) {
-          canvases.splice(index, 1);
+          canvases.splice(index, 1)
         }
       },
-      toggleShader() {
+      toggleShader () {
         const oldValues = {
           grassBackground: opts.grassBackground,
           poisonBackground: opts.poisonBackground,
@@ -868,72 +867,82 @@ export class DioramaManager {
           lightningBackground: opts.lightningBackground,
           radialBackground: opts.radialBackground,
           glyphBackground: opts.glyphBackground,
-          dotsBackground: opts.dotsBackground,
-        };
-        opts.grassBackground = false;
-        opts.poisonBackground = false;
-        opts.noiseBackground = false;
-        opts.smokeBackground = false;
-        opts.lightningBackground = false;
-        opts.radialBackground = false;
-        opts.glyphBackground = false;
-        opts.dotsBackground = false;
+          dotsBackground: opts.dotsBackground
+        }
+        opts.grassBackground = false
+        opts.poisonBackground = false
+        opts.noiseBackground = false
+        opts.smokeBackground = false
+        opts.lightningBackground = false
+        opts.radialBackground = false
+        opts.glyphBackground = false
+        opts.dotsBackground = false
         if (oldValues.grassBackground) {
-          opts.poisonBackground = true;
+          opts.poisonBackground = true
         } else if (oldValues.poisonBackground) {
-          opts.noiseBackground = true;
+          opts.noiseBackground = true
         } else if (oldValues.noiseBackground) {
-          opts.smokeBackground = true;
+          opts.smokeBackground = true
         } else if (oldValues.smokeBackground) {
-          opts.lightningBackground = true;
+          opts.lightningBackground = true
         } else if (oldValues.lightningBackground) {
-          opts.radialBackground = true;
+          opts.radialBackground = true
         } else if (oldValues.radialBackground) {
-          opts.glyphBackground = true;
+          opts.glyphBackground = true
         } else if (oldValues.glyphBackground) {
-          opts.grassBackground = true;
+          opts.grassBackground = true
         }
       },
-      setCameraOffset(newCameraOffset) {
-        cameraOffset.copy(newCameraOffset);
+      setCameraOffset (newCameraOffset) {
+        cameraOffset.copy(newCameraOffset)
       },
-      setClearColor(newClearColor, newClearAlpha) {
-        opts.clearColor = newClearColor;
-        opts.clearAlpha = newClearAlpha;
+      setClearColor (newClearColor, newClearAlpha) {
+        opts.clearColor = newClearColor
+        opts.clearAlpha = newClearAlpha
       },
-      update(timestamp, timeDiff) {
+      update (timestamp, timeDiff) {
         if (canvases.length === 0) {
-          lastDisabledTime = timestamp;
-          return;
+          lastDisabledTime = timestamp
+          return
         }
-        const timeOffset = timestamp - lastDisabledTime;
-  
+        const timeOffset = timestamp - lastDisabledTime
+
         // console.log('render', {
         //   timeOffset, timeDiff, width: this.width, height: this.height, objects, target, cameraOffset, canvases,
         // });
-        dioramaRenderer.render(timeOffset, timeDiff, this.width, this.height, objects, target, cameraOffset, canvases, opts);
+        dioramaRenderer.render(
+          timeOffset,
+          timeDiff,
+          this.width,
+          this.height,
+          objects,
+          target,
+          cameraOffset,
+          canvases,
+          opts
+        )
       },
-      destroy() {
-        const index = dioramas.indexOf(diorama);
+      destroy () {
+        const index = dioramas.indexOf(diorama)
         if (index !== -1) {
-          dioramas.splice(index, 1);
+          dioramas.splice(index, 1)
         }
-      },
-    };
-  
+      }
+    }
+
     if (!detached) {
-      dioramas.push(diorama);
+      dioramas.push(diorama)
     }
-    return diorama;
+    return diorama
   }
-  update(timestamp, timeDiff) {
+  update (timestamp, timeDiff) {
     for (const diorama of dioramas) {
-      diorama.update(timestamp, timeDiff);
+      diorama.update(timestamp, timeDiff)
     }
   }
-  waitForLoad() {
-    dioramaRenderer = new DioramaRenderer();
-    return dioramaRenderer.waitForLoad();
+  waitForLoad () {
+    dioramaRenderer = new DioramaRenderer()
+    return dioramaRenderer.waitForLoad()
   }
 }
 // export default dioramaManager;

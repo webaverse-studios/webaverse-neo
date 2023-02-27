@@ -1,69 +1,75 @@
-import * as THREE from 'three';
+import * as THREE from 'three'
 // import {getRenderer} from './renderer.js';
-import {copyScenePlaneGeometry, copySceneVertexShader, copyScene, copySceneCamera} from './shaders.js';
+import {
+  copyScenePlaneGeometry,
+  copySceneVertexShader,
+  copyScene,
+  copySceneCamera
+} from './shaders.js'
 
 /* const size = 1024;
 const worldSize = 2;
 const hackShaderName = 'anime radial'; */
 
-const _makeRenderTarget = (width, height) => new THREE.WebGLRenderTarget(width, height, {
-  // format: THREE.RGBAFormat,
-  // type: THREE.FloatType,
-  // encoding: THREE.sRGBEncoding,
-});
+const _makeRenderTarget = (width, height) =>
+  new THREE.WebGLRenderTarget(width, height, {
+    // format: THREE.RGBAFormat,
+    // type: THREE.FloatType,
+    // encoding: THREE.sRGBEncoding,
+  })
 class ShaderToyPass {
-  constructor({
-    type,
-    is,
-    code,
-    os,
-    renderTarget,
-    webaverseRenderer,
-  }, parent) {
-    this.type = type;
-    this.is = is;
-    this.code = code;
-    this.os = os;
-    this.renderTarget = renderTarget;
-    this.parent = parent;
+  constructor ({ type, is, code, os, renderTarget, webaverseRenderer }, parent) {
+    this.type = type
+    this.is = is
+    this.code = code
+    this.os = os
+    this.renderTarget = renderTarget
+    this.parent = parent
 
     const uniforms = {
       modelViewMatrix: {
-        value: new THREE.Matrix4().multiplyMatrices(copySceneCamera.matrixWorldInverse, copySceneCamera.matrixWorld),
+        value: new THREE.Matrix4().multiplyMatrices(
+          copySceneCamera.matrixWorldInverse,
+          copySceneCamera.matrixWorld
+        )
       },
       projectionMatrix: {
-        value: copySceneCamera.projectionMatrix,
+        value: copySceneCamera.projectionMatrix
       },
       iResolution: {
-        value: new THREE.Vector3(renderTarget.width, renderTarget.height, 1),
+        value: new THREE.Vector3(renderTarget.width, renderTarget.height, 1)
       },
       iTime: {
-        value: parent.getITime(),
+        value: parent.getITime()
       },
       iFrame: {
-        value: parent.getIFrame(),
+        value: parent.getIFrame()
       },
       iMouse: {
-        value: new THREE.Vector4(0, 0, 0, 0),
+        value: new THREE.Vector4(0, 0, 0, 0)
       },
       iSampleRate: {
-        value: 44100,
-      },
-    };
+        value: 44100
+      }
+    }
     for (const input of is) {
-      let {channel, buffer} = input;
+      let { channel, buffer } = input
       if (!buffer.isTexture) {
-        buffer = buffer.texture;
+        buffer = buffer.texture
       }
       uniforms['iChannel' + channel] = {
-        value: buffer,
-      };
+        value: buffer
+      }
       if (!uniforms.iChannelResolution) {
         uniforms.iChannelResolution = {
-          value: [],
-        };
+          value: []
+        }
       }
-      uniforms.iChannelResolution.value[channel] = new THREE.Vector3(buffer.image.width, buffer.image.height, 1);
+      uniforms.iChannelResolution.value[channel] = new THREE.Vector3(
+        buffer.image.width,
+        buffer.image.height,
+        1
+      )
     }
     this.mesh = new THREE.Mesh(
       copyScenePlaneGeometry,
@@ -88,7 +94,7 @@ class ShaderToyPass {
           uniform float     iSampleRate;           // sound sample rate (i.e., 44100)
           in vec2 vUv;
           out vec4 fragColor;
-          
+
           ${this.code}
 
           vec4 sRGBToLinear( in vec4 value ) {
@@ -105,75 +111,78 @@ class ShaderToyPass {
           }
         `,
         depthWrite: false,
-        depthTest: false,
+        depthTest: false
       })
-    );
-    this.scene = new THREE.Scene();
-    this.scene.autoUpdate = false;
-    this.scene.add(this.mesh);
-    
-    this._copyBuffer = _makeRenderTarget(renderTarget.width, renderTarget.height);
+    )
+    this.scene = new THREE.Scene()
+    this.scene.matrixWorldAutoUpdate = false
+    this.scene.add(this.mesh)
+
+    this._copyBuffer = _makeRenderTarget(
+      renderTarget.width,
+      renderTarget.height
+    )
 
     if (!webaverseRenderer) {
-      debugger;
+      debugger
     }
-    this.webaverseRenderer = webaverseRenderer;
+    this.webaverseRenderer = webaverseRenderer
   }
 
-  update() {
-    this.mesh.material.uniforms.iTime.value = this.parent.getITime();
-    this.mesh.material.uniforms.iFrame.value = this.parent.getIFrame();
-    
-    // const renderer = getRenderer();
-    const {renderer} = this.webaverseRenderer;
-    {
-      const [{buffer} = {}] = this.os;
-      if (buffer) {
-        const oldRenderTarget = renderer.getRenderTarget();
-        if (this.is.some(input => input.buffer === buffer)) {
-          renderer.setRenderTarget(this._copyBuffer);
-          renderer.clear();
-          renderer.render(this.scene, copySceneCamera);
+  update () {
+    this.mesh.material.uniforms.iTime.value = this.parent.getITime()
+    this.mesh.material.uniforms.iFrame.value = this.parent.getIFrame()
 
-          copyScene.mesh.material.uniforms.tex.value = this._copyBuffer.texture;
-          renderer.setRenderTarget(buffer);
-          renderer.clear();
-          renderer.render(copyScene, copySceneCamera);
+    // const renderer = getRenderer();
+    const { renderer } = this.webaverseRenderer
+    {
+      const [{ buffer } = {}] = this.os
+      if (buffer) {
+        const oldRenderTarget = renderer.getRenderTarget()
+        if (this.is.some(input => input.buffer === buffer)) {
+          renderer.setRenderTarget(this._copyBuffer)
+          renderer.clear()
+          renderer.render(this.scene, copySceneCamera)
+
+          copyScene.mesh.material.uniforms.tex.value = this._copyBuffer.texture
+          renderer.setRenderTarget(buffer)
+          renderer.clear()
+          renderer.render(copyScene, copySceneCamera)
         } else {
-          renderer.setRenderTarget(buffer);
-          renderer.clear();
-          renderer.render(this.scene, copySceneCamera);
+          renderer.setRenderTarget(buffer)
+          renderer.clear()
+          renderer.render(this.scene, copySceneCamera)
         }
-        
-        renderer.setRenderTarget(oldRenderTarget);
+
+        renderer.setRenderTarget(oldRenderTarget)
       }
     }
 
     if (this.type === 'buffer') {
       // do nothing
     } else if (this.type === 'image') {
-      const oldRenderTarget = renderer.getRenderTarget();
+      const oldRenderTarget = renderer.getRenderTarget()
 
-      renderer.setRenderTarget(this.renderTarget);
-      renderer.clear();
-      renderer.render(this.scene, copySceneCamera);
+      renderer.setRenderTarget(this.renderTarget)
+      renderer.clear()
+      renderer.render(this.scene, copySceneCamera)
 
-      renderer.setRenderTarget(oldRenderTarget);
+      renderer.setRenderTarget(oldRenderTarget)
     } else {
-      throw new Error('unknown pass type: ' + this.type);
+      throw new Error('unknown pass type: ' + this.type)
     }
   }
 }
 const _makeRenderTargetMesh = (renderTarget, worldWidth, worldHeight) => {
-  const geometry = new THREE.PlaneBufferGeometry(worldWidth, worldHeight);
+  const geometry = new THREE.PlaneGeometry(worldWidth, worldHeight)
   const material = new THREE.MeshBasicMaterial({
     // color: 0xFF0000,
     map: renderTarget.texture,
-    side: THREE.DoubleSide,
-  });
-  const mesh = new THREE.Mesh(geometry, material);
-  return mesh;
-};
+    side: THREE.DoubleSide
+  })
+  const mesh = new THREE.Mesh(geometry, material)
+  return mesh
+}
 /* let numRenderTargetMeshes = 0;
 const _addDebugRenderTargetMesh = renderTarget => {
   const mesh = _makeRenderTargetMesh(renderTarget);
@@ -182,142 +191,144 @@ const _addDebugRenderTargetMesh = renderTarget => {
   numRenderTargetMeshes++;
 }; */
 class ShadertoyRenderer {
-  constructor(shader, {size = 1024, worldSize = 1}) {
+  constructor (shader, { size = 1024, worldSize = 1 }) {
     // this.shader = shader;
 
-    this.renderTarget = _makeRenderTarget(size, size);
-    this.textures = {};
-    this.buffers = {};
-    this.currentTime = 0;
-    this.frame = 0;
+    this.renderTarget = _makeRenderTarget(size, size)
+    this.textures = {}
+    this.buffers = {}
+    this.currentTime = 0
+    this.frame = 0
 
     const _ensureInput = input => {
-      const {id, type, filepath, sampler} = input;
+      const { id, type, filepath, sampler } = input
       if (type === 'texture') {
         if (!this.textures[id]) {
-          const img = new Image();
-          img.crossOrigin = 'Anonymous';
+          const img = new Image()
+          img.crossOrigin = 'Anonymous'
           const promise = new Promise((accept, reject) => {
             img.addEventListener('load', () => {
-              texture.image = img;
-              texture.needsUpdate = true;
-              accept();
-            });
-            img.addEventListener('error', reject);
-          });
-          promises.push(promise);
-          img.src = `https://https-shadertoy-com.proxy.exokit.org${filepath}`;
-          const texture = new THREE.Texture();
-          this.textures[id] = texture;
+              texture.image = img
+              texture.needsUpdate = true
+              accept()
+            })
+            img.addEventListener('error', reject)
+          })
+          promises.push(promise)
+          img.src = `https://https-shadertoy-com.proxy.exokit.org${filepath}`
+          const texture = new THREE.Texture()
+          this.textures[id] = texture
         }
-        return this.textures[id];
+        return this.textures[id]
       } else if (type === 'buffer') {
         if (!this.buffers[id]) {
-          this.buffers[id] = _makeRenderTarget(size, size);
+          this.buffers[id] = _makeRenderTarget(size, size)
         }
-        return this.buffers[id];
+        return this.buffers[id]
       } else {
-        throw new Error('unknown input type: ' + type);
+        throw new Error('unknown input type: ' + type)
       }
-    };
+    }
 
-    const promises = [];
-    this.renderPasses = [];
-    let renderPassIos = [];
+    const promises = []
+    this.renderPasses = []
+    let renderPassIos = []
     const _initRenderPassIos = () => {
       renderPassIos = shader.renderpass.map(rp => {
-        const {inputs, outputs} = rp;
+        const { inputs, outputs } = rp
 
-        const is = [];
+        const is = []
         for (const input of inputs) {
-          const {channel} = input;
-          const buffer = _ensureInput(input);
+          const { channel } = input
+          const buffer = _ensureInput(input)
           const i = {
             channel,
-            buffer,
-          };
-          is.push(i);
+            buffer
+          }
+          is.push(i)
         }
-        
-        const os = [];
+
+        const os = []
         for (const output of outputs) {
-          const {id, channel} = output;
+          const { id, channel } = output
           const buffer = _ensureInput({
             id,
-            type: 'buffer',
-          });
+            type: 'buffer'
+          })
           const o = {
             channel,
-            buffer,
-          };
-          os.push(o);
+            buffer
+          }
+          os.push(o)
         }
-        
+
         return {
           is,
-          os,
-        };
-      });
-    };
-    _initRenderPassIos();
+          os
+        }
+      })
+    }
+    _initRenderPassIos()
 
     /* // debugging
     for (const id in this.buffers) {
       _addDebugRenderTargetMesh(this.buffers[id]);
     }
     _addDebugRenderTargetMesh(this.renderTarget); */
-    
+
     const _initRenderPasses = async () => {
       // wait for images to load
-      await Promise.all(promises);
-      
+      await Promise.all(promises)
+
       for (let i = 0; i < shader.renderpass.length; i++) {
-        const {type, code} = shader.renderpass[i];
-        const {is, os} = renderPassIos[i];
-        const renderPass = new ShaderToyPass({
-          type,
-          is,
-          code,
-          os,
-          renderTarget: this.renderTarget,
-        }, this);
-        this.renderPasses.push(renderPass);
+        const { type, code } = shader.renderpass[i]
+        const { is, os } = renderPassIos[i]
+        const renderPass = new ShaderToyPass(
+          {
+            type,
+            is,
+            code,
+            os,
+            renderTarget: this.renderTarget
+          },
+          this
+        )
+        this.renderPasses.push(renderPass)
       }
-    };
-    _initRenderPasses();
-    
-    this.mesh = _makeRenderTargetMesh(this.renderTarget, worldSize, worldSize);
+    }
+    _initRenderPasses()
 
-    this.loaded = false;
-    this.loadPromise = Promise.all(promises)
-      .then(() => {
-        this.loaded = true;
-      });
+    this.mesh = _makeRenderTargetMesh(this.renderTarget, worldSize, worldSize)
+
+    this.loaded = false
+    this.loadPromise = Promise.all(promises).then(() => {
+      this.loaded = true
+    })
   }
 
-  setCurrentTime(currentTime) {
-    this.currentTime = currentTime;
+  setCurrentTime (currentTime) {
+    this.currentTime = currentTime
   }
 
-  getITime() {
-    return this.currentTime;
+  getITime () {
+    return this.currentTime
   }
 
-  getIFrame() {
-    return this.frame;
-  }
- 
-  waitForLoad() {
-    return this.loadPromise;
+  getIFrame () {
+    return this.frame
   }
 
-  update(timeDiff) {
-    this.currentTime += timeDiff;
-    this.frame++;
+  waitForLoad () {
+    return this.loadPromise
+  }
+
+  update (timeDiff) {
+    this.currentTime += timeDiff
+    this.frame++
 
     if (this.loaded) {
       for (const renderPass of this.renderPasses) {
-        renderPass.update();
+        renderPass.update()
       }
     }
   }
@@ -334,23 +345,17 @@ class ShadertoyRenderer {
 })(); */
 
 class ShadertoyLoader {
-  async load(u, {size = 1024, worldSize = 2} = {}) {
-    const res = await fetch(u);
-    const shader = await res.json();
+  async load (u, { size = 1024, worldSize = 2 } = {}) {
+    const res = await fetch(u)
+    const shader = await res.json()
 
-    const shadertoyRenderer = new ShadertoyRenderer(
-      shader,
-      {
-        size,
-        worldSize,
-      }
-    );
-    await shadertoyRenderer.waitForLoad();
-    return shadertoyRenderer;
+    const shadertoyRenderer = new ShadertoyRenderer(shader, {
+      size,
+      worldSize
+    })
+    await shadertoyRenderer.waitForLoad()
+    return shadertoyRenderer
   }
 }
 
-export {
-  ShadertoyRenderer,
-  ShadertoyLoader,
-};
+export { ShadertoyRenderer, ShadertoyLoader }

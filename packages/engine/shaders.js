@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three'
 
 /* const _makeHeightfieldShader = land => ({
   uniforms: {
@@ -506,8 +506,8 @@ const makeDrawMaterial = (color1, color2, numPoints) => new THREE.ShaderMaterial
   `,
   side: THREE.DoubleSide,
 }); */
-const offsetDepthSmall = 0.000075;
-const offsetDepthLarge = 0.00035;
+const offsetDepthSmall = 0.000075
+const offsetDepthLarge = 0.00035
 
 const highlightVertexShader = `
     precision highp float;
@@ -529,10 +529,10 @@ const highlightVertexShader = `
       vPos = position;
       vNormal = normal;
     }
-  `;
+  `
 
 const highlightGridFragmentShader = `
-    
+
   uniform vec3 uColor;
   uniform float uTime;
 
@@ -581,7 +581,7 @@ const highlightGridFragmentShader = `
     #include <tonemapping_fragment>
     #include <encodings_fragment>
   }
-`;
+`
 
 const selectFragmentShader = `\
   precision highp float;
@@ -621,7 +621,7 @@ const selectFragmentShader = `\
     #include <tonemapping_fragment>
     #include <encodings_fragment>
   }
-`;
+`
 
 const damageFragmentShader = `\
   precision highp float;
@@ -663,7 +663,9 @@ const damageFragmentShader = `\
   }
 
   void main() {
-    vec3 diffuseColor2 = vec3(${new THREE.Color(0xef5350).toArray().join(', ')});
+    vec3 diffuseColor2 = vec3(${new THREE.Color(0xef5350)
+      .toArray()
+      .join(', ')});
     float normalRepeat = 1.0;
 
     vec3 blending = getTriPlanarBlend(vNormal);
@@ -680,197 +682,197 @@ const damageFragmentShader = `\
     #include <tonemapping_fragment>
     #include <encodings_fragment>
   }
-`;
+`
 
 const buildMaterial = new THREE.ShaderMaterial({
   uniforms: {
     uColor: {
       type: 'c',
       value: new THREE.Color(0x64b5f6),
-      needsUpdate: true,
+      needsUpdate: true
     },
     uTime: {
       type: 'f',
       value: 0,
-      needsUpdate: true,
+      needsUpdate: true
     },
     uVertexOffset: {
       type: 'f',
-      value: offsetDepthSmall,
-    },
+      value: offsetDepthSmall
+    }
   },
   vertexShader: highlightVertexShader,
   fragmentShader: highlightGridFragmentShader,
   transparent: true,
   polygonOffset: true,
-  polygonOffsetFactor: -1,
-});
+  polygonOffsetFactor: -1
+})
 
 const highlightMaterial = new THREE.ShaderMaterial({
   uniforms: {
     uColor: {
       type: 'c',
       value: new THREE.Color(0xcccccc),
-      needsUpdate: true,
+      needsUpdate: true
     },
     uTime: {
       type: 'f',
       value: 0,
-      needsUpdate: true,
+      needsUpdate: true
     },
     uVertexOffset: {
       type: 'f',
-      value: offsetDepthSmall,
-    },
+      value: offsetDepthSmall
+    }
   },
   vertexShader: highlightVertexShader,
   fragmentShader: selectFragmentShader,
   transparent: true,
   depthWrite: false,
   polygonOffset: true,
-  polygonOffsetFactor: -2,
+  polygonOffsetFactor: -2
   // polygonOffsetUnits: 1,
-});
+})
 
 const selectMaterial = new THREE.ShaderMaterial({
   uniforms: {
     uColor: {
       type: 'c',
       value: new THREE.Color(0xcccccc),
-      needsUpdate: true,
+      needsUpdate: true
     },
     uTime: {
       type: 'f',
       value: 0,
-      needsUpdate: true,
+      needsUpdate: true
     },
     uVertexOffset: {
       type: 'f',
-      value: offsetDepthSmall,
-    },
+      value: offsetDepthSmall
+    }
   },
   vertexShader: highlightVertexShader,
   fragmentShader: selectFragmentShader,
   transparent: true,
   depthWrite: false,
   polygonOffset: true,
-  polygonOffsetFactor: -2,
+  polygonOffsetFactor: -2
   // polygonOffsetUnits: 1,
-});
+})
 
 const hoverMaterial = new THREE.ShaderMaterial({
   uniforms: {
     uColor: {
       type: 'c',
       value: new THREE.Color(0x9ccc65),
-      needsUpdate: true,
+      needsUpdate: true
     },
     uTime: {
       type: 'f',
       value: 0,
-      needsUpdate: true,
+      needsUpdate: true
     },
     uVertexOffset: {
       type: 'f',
-      value: offsetDepthSmall,
-    },
+      value: offsetDepthSmall
+    }
   },
   vertexShader: highlightVertexShader,
   fragmentShader: highlightGridFragmentShader,
   transparent: true,
   depthWrite: false,
   polygonOffset: true,
-  polygonOffsetFactor: -2,
+  polygonOffsetFactor: -2
   // polygonOffsetUnits: 1,
-});
+})
 
 const hoverEquipmentMaterial = new THREE.ShaderMaterial({
   uniforms: {
     uColor: {
       type: 'c',
       value: new THREE.Color(0x7e57c2),
-      needsUpdate: true,
+      needsUpdate: true
     },
     uTime: {
       type: 'f',
       value: 0,
-      needsUpdate: true,
+      needsUpdate: true
     },
     uVertexOffset: {
       type: 'f',
-      value: offsetDepthLarge,
-    },
+      value: offsetDepthLarge
+    }
   },
   vertexShader: highlightVertexShader,
   fragmentShader: selectFragmentShader,
   transparent: true,
   depthWrite: false,
   polygonOffset: true,
-  polygonOffsetFactor: -2,
+  polygonOffsetFactor: -2
   // polygonOffsetUnits: 1,
-});
+})
 
 const damageMaterial = new THREE.ShaderMaterial({
   uniforms: {
     uTime: {
       type: 'f',
       value: 0,
-      needsUpdate: true,
+      needsUpdate: true
     },
     uVertexOffset: {
       type: 'f',
-      value: offsetDepthSmall,
-    },
+      value: offsetDepthSmall
+    }
   },
   vertexShader: highlightVertexShader,
   fragmentShader: damageFragmentShader,
   transparent: true,
   polygonOffset: true,
-  polygonOffsetFactor: -1,
+  polygonOffsetFactor: -1
   // polygonOffsetUnits: 1,
-});
+})
 
 const activateMaterial = new THREE.ShaderMaterial({
   uniforms: {
     uTime: {
       type: 'f',
       value: 0,
-      needsUpdate: true,
+      needsUpdate: true
     },
     uVertexOffset: {
       type: 'f',
-      value: offsetDepthSmall,
-    },
+      value: offsetDepthSmall
+    }
   },
   vertexShader: highlightVertexShader,
   fragmentShader: selectFragmentShader,
   transparent: true,
   polygonOffset: true,
-  polygonOffsetFactor: -1,
+  polygonOffsetFactor: -1
   // polygonOffsetUnits: 1,
-});
+})
 
 const portalMaterial = new THREE.ShaderMaterial({
   uniforms: {
     uColor: {
       type: 'c',
-      value: new THREE.Color(0xffa726),
+      value: new THREE.Color(0xffa726)
     },
     uTime: {
       type: 'f',
-      value: 0,
+      value: 0
       // needsUpdate: true,
     },
     uDistance: {
       type: 'f',
-      value: 0,
+      value: 0
       // needsUpdate: true,
     },
     uUserPosition: {
       type: 'v3',
-      value: new THREE.Vector3(),
+      value: new THREE.Vector3()
       // needsUpdate: true,
-    },
+    }
   },
   vertexShader: `\
     precision highp float;
@@ -1028,7 +1030,9 @@ const portalMaterial = new THREE.ShaderMaterial({
     }
 
     void main() {
-      // vec3 diffuseColor2 = vec3(${new THREE.Color(0xffa726).toArray().join(', ')});
+      // vec3 diffuseColor2 = vec3(${new THREE.Color(0xffa726)
+        .toArray()
+        .join(', ')});
       float normalRepeat = 1.0;
 
       vec3 blending = getTriPlanarBlend(vNormal);
@@ -1070,11 +1074,11 @@ const portalMaterial = new THREE.ShaderMaterial({
       #include <encodings_fragment>
     }
   `,
-  transparent: true,
+  transparent: true
   // polygonOffset: true,
   // polygonOffsetFactor: -1,
   // polygonOffsetUnits: 1,
-});
+})
 
 /* const loadVsh = `
   #define M_PI 3.1415926535897932384626433832795
@@ -1158,13 +1162,13 @@ const _ensureLoadMesh = p => {
   const panelGeometries = [];
   for (let x = -1 / 2; x <= 1 / 2; x++) {
     panelGeometries.push(
-      new THREE.BoxBufferGeometry(0.01, 1, 0.01)
+      new THREE.BoxGeometry(0.01, 1, 0.01)
         .applyMatrix4(new THREE.Matrix4().makeTranslation(x, 0, -1/2)),
     );
   }
   for (let h = 0; h <= 1; h++) {
     panelGeometries.push(
-      new THREE.BoxBufferGeometry(1, 0.01, 0.01)
+      new THREE.BoxGeometry(1, 0.01, 0.01)
         .applyMatrix4(new THREE.Matrix4().makeTranslation(0, h -1/2, -1/2)),
     );
   }
@@ -1362,11 +1366,11 @@ const addItem = async (position, quaternion) => {
 }; */
 
 const arrowGeometry = (() => {
-  const shape = new THREE.Shape();
-  shape.moveTo(-0.75, 0);
-  shape.lineTo(0, -2);
-  shape.lineTo(0.75, 0);
-  shape.lineTo(0, -0.5);
+  const shape = new THREE.Shape()
+  shape.moveTo(-0.75, 0)
+  shape.lineTo(0, -2)
+  shape.lineTo(0.75, 0)
+  shape.lineTo(0, -0.5)
   // shape.lineTo( -1, 0 );
   const extrudeSettings = {
     steps: 2,
@@ -1376,12 +1380,14 @@ const arrowGeometry = (() => {
     bevelThickness: 0,
     bevelSize: 0,
     bevelOffset: 0,
-    bevelSegments: 1,
-  };
-  const geometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings)
-    .applyMatrix4(new THREE.Matrix4().makeTranslation(0, 0.5, -0.1 / 2));
-  return geometry;
-})();
+    bevelSegments: 1
+  }
+  const geometry = new THREE.ExtrudeGeometry(
+    shape,
+    extrudeSettings
+  ).applyMatrix4(new THREE.Matrix4().makeTranslation(0, 0.5, -0.1 / 2))
+  return geometry
+})()
 const arrowVsh = `
   #define PI 3.1415926535897932384626433832795
 
@@ -1393,7 +1399,7 @@ const arrowVsh = `
       float s = sin(angle);
       float c = cos(angle);
       float oc = 1.0 - c;
-      
+
       return mat4(oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,  0.0,
                   oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,  0.0,
                   oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0.0,
@@ -1405,55 +1411,55 @@ const arrowVsh = `
   void main() {
     gl_Position = projectionMatrix * modelViewMatrix * rotationMatrix(vec3(0, 1, 0), -uTime * PI * 2.0) * vec4(position + vec3(0., 1., 0.) * (0.5 + sin(uTime * PI * 2.0)*0.5), 1.);
   }
-`;
+`
 const arrowFsh = `
   #define PI 3.1415926535897932384626433832795
-  
+
   // uniform sampler2D uTex;
   uniform vec3 uColor;
   uniform float uTime;
   // varying float vDepth;
-  
+
   vec3 grey = vec3(0.5);
 
   void main() {
     gl_FragColor = vec4(mix(grey, uColor, 1.0 - (0.5 + sin(uTime * PI * 2.0)*0.5)), 1.0);
-    
+
     #include <tonemapping_fragment>
     #include <encodings_fragment>
   }
-`;
+`
 const arrowMaterial = new THREE.ShaderMaterial({
   uniforms: {
     uColor: {
       type: 'c',
       value: new THREE.Color(0xef5350),
-      needsUpdate: true,
+      needsUpdate: true
     },
     uTime: {
       type: 'f',
       value: 0,
-      needsUpdate: true,
-    },
+      needsUpdate: true
+    }
   },
   vertexShader: arrowVsh,
   fragmentShader: arrowFsh,
-  side: THREE.DoubleSide,
+  side: THREE.DoubleSide
   // transparent: true,
-});
+})
 
 const glowMaterial = new THREE.ShaderMaterial({
   uniforms: {
     uTime: {
       type: 'f',
       value: 0,
-      needsUpdate: true,
-    },
+      needsUpdate: true
+    }
   },
   vertexShader: `\
     precision highp float;
     precision highp int;
-    
+
     attribute vec3 color;
 
     varying vec2 vUv;
@@ -1485,14 +1491,14 @@ const glowMaterial = new THREE.ShaderMaterial({
   `,
   transparent: true,
   polygonOffset: true,
-  polygonOffsetFactor: -1,
+  polygonOffsetFactor: -1
   // polygonOffsetUnits: 1,
-});
+})
 
-const copyScenePlaneGeometry = new THREE.PlaneGeometry(2, 2);
+const copyScenePlaneGeometry = new THREE.PlaneGeometry(2, 2)
 const copySceneVertexShader = `#version 300 es
   precision highp float;
-  
+
   in vec3 position;
   in vec2 uv;
   uniform mat4 modelViewMatrix;
@@ -1503,16 +1509,16 @@ const copySceneVertexShader = `#version 300 es
     vUv = uv;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
   }
-`;
+`
 const copyScene = (() => {
   const mesh = new THREE.Mesh(
     copyScenePlaneGeometry,
     new THREE.RawShaderMaterial({
       uniforms: {
         tex: {
-          value: null,
+          value: null
           // needsUpdate: false,
-        },
+        }
       },
       vertexShader: copySceneVertexShader,
       fragmentShader: `#version 300 es
@@ -1527,16 +1533,16 @@ const copyScene = (() => {
         }
       `,
       depthWrite: false,
-      depthTest: false,
-    }),
-  );
-  const scene = new THREE.Scene();
-  scene.autoUpdate = false;
-  scene.add(mesh);
-  scene.mesh = mesh;
-  return scene;
-})();
-const copySceneCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+      depthTest: false
+    })
+  )
+  const scene = new THREE.Scene()
+  scene.matrixWorldAutoUpdate = false
+  scene.add(mesh)
+  scene.mesh = mesh
+  return scene
+})()
+const copySceneCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
 
 export {
   /* LAND_SHADER,
@@ -1558,5 +1564,5 @@ export {
   copyScenePlaneGeometry,
   copySceneVertexShader,
   copyScene,
-  copySceneCamera,
-};
+  copySceneCamera
+}

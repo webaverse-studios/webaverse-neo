@@ -1,101 +1,80 @@
-import * as THREE from 'three';
-import {
-  loadKtx2zTexture,
-} from '../utils/ktx2-utils.js';
+import * as THREE from 'three'
+import { loadKtx2zTexture } from '../utils/ktx2-utils.js'
 
 //
 
 class VideoPack {
-  constructor({
-    textures,
-  }) {
-    this.textures = textures;
+  constructor ({ textures }) {
+    this.textures = textures
   }
 }
 
 //
 
 export class VideoMesh extends THREE.Mesh {
-  static async loadPack(files) {
-    const textures = await Promise.all(files.map(async file => {
-      const texture = await loadKtx2zTexture(file);
-      return texture;
-    }));
+  static async loadPack (files) {
+    const textures = await Promise.all(
+      files.map(async file => {
+        const texture = await loadKtx2zTexture(file)
+        return texture
+      })
+    )
     const videoPack = new VideoPack({
-      textures,
-    });
-    return videoPack;
+      textures
+    })
+    return videoPack
   }
-  constructor({
-    pack,
-  }) {
+  constructor ({ pack }) {
     // full screen video mesh
-    const geometry = new THREE.PlaneGeometry(2, 2, 1, 1);
+    const geometry = new THREE.PlaneGeometry(2, 2, 1, 1)
 
-    const {
-      textures,
-    } = pack;
-    const [texture] = textures;
-    const {
-      numFrames,
-      width,
-      height,
-      numFramesPerX,
-      numFramesPerY,
-      duration,
-    } = texture;
-
-    /* console.log('got texture', {
-      numFrames,
-      width,
-      height,
-      numFramesPerX,
-      numFramesPerY,
-      duration,
-    }); */
+    const { textures } = pack
+    const [texture] = textures
+    const { numFrames, width, height, numFramesPerX, numFramesPerY, duration } =
+      texture
 
     const videoMaterial = new THREE.ShaderMaterial({
       uniforms: {
         texture0: {
           value: texture,
-          needsUpdate: true,
+          needsUpdate: true
         },
         numFrames: {
           value: numFrames,
-          needsUpdate: true,
+          needsUpdate: true
         },
         numFramesPerX: {
           value: numFramesPerX,
-          needsUpdate: true,
+          needsUpdate: true
         },
         numFramesPerY: {
           value: numFramesPerY,
-          needsUpdate: true,
+          needsUpdate: true
         },
         duration: {
           value: duration,
-          needsUpdate: true,
+          needsUpdate: true
         },
         screenResolution: {
           value: new THREE.Vector2(1024, 1024),
-          needsUpdate: true,
+          needsUpdate: true
         },
         videoResolution: {
           value: new THREE.Vector2(width, height),
-          needsUpdate: true,
+          needsUpdate: true
         },
         offset: {
           value: new THREE.Vector2(0, -0.3),
-          needsUpdate: true,
+          needsUpdate: true
         },
         uTime: {
           value: 0,
-          needsUpdate: true,
+          needsUpdate: true
         },
         uOpacity: {
           value: 1,
-          needsUpdate: true,
-        },
+          needsUpdate: true
+        }
       },
       vertexShader: `\
         uniform float uOpacity;
@@ -115,7 +94,7 @@ export class VideoMesh extends THREE.Mesh {
         uniform vec2 screenResolution;
         uniform vec2 videoResolution;
         uniform vec2 offset;
-        
+
         uniform float numFrames;
         uniform float numFramesPerX;
         uniform float numFramesPerY;
@@ -127,7 +106,10 @@ export class VideoMesh extends THREE.Mesh {
         varying vec2 vUv;
 
         const vec3 baseColor = vec3(${
-          new THREE.Color(0xa4a4a4).toArray().map(n => n.toFixed(8)).join(', ')
+          new THREE.Color(0xa4a4a4)
+            .toArray()
+            .map(n => n.toFixed(8))
+            .join(', ')
           // new THREE.Color(0xd3d3d3).toArray().map(n => n.toFixed(8)).join(', ')
         });
         const float scaleFactor = 0.7;
@@ -187,24 +169,20 @@ export class VideoMesh extends THREE.Mesh {
       `,
       // side: THREE.DoubleSide,
       transparent: true,
-      alphaToCoverage: true,
+      alphaToCoverage: true
       // alphaTest: 0.1,
-    });
+    })
 
-    super(geometry, videoMaterial);
+    super(geometry, videoMaterial)
   }
-  update({
-    timestamp,
-    opacity,
-    resolution,
-  }) {
-    this.material.uniforms.uTime.value = timestamp / 1000;
-    this.material.uniforms.uTime.needsUpdate = true;
+  update ({ timestamp, opacity, resolution }) {
+    this.material.uniforms.uTime.value = timestamp / 1000
+    this.material.uniforms.uTime.needsUpdate = true
 
-    this.material.uniforms.uOpacity.value = opacity;
-    this.material.uniforms.uOpacity.needsUpdate = true;
+    this.material.uniforms.uOpacity.value = opacity
+    this.material.uniforms.uOpacity.needsUpdate = true
 
-    this.material.uniforms.screenResolution.value.copy(resolution);
-    this.material.uniforms.screenResolution.needsUpdate = true;
+    this.material.uniforms.screenResolution.value.copy(resolution)
+    this.material.uniforms.screenResolution.needsUpdate = true
   }
 }

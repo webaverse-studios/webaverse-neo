@@ -1,11 +1,14 @@
-import * as THREE from 'three';
-import {alea} from './procgen/procgen.js';
-import {getRenderer} from './renderer.js';
-import {fullscreenGeometry, fullscreenVertexShader} from './background-fx/common.js';
+import * as THREE from 'three'
+import { alea } from './procgen/procgen.js'
+import { getRenderer } from './renderer.js'
+import {
+  fullscreenGeometry,
+  fullscreenVertexShader
+} from './background-fx/common.js'
 
-const localVector2D = new THREE.Vector2();
-const localVector4D = new THREE.Vector4();
-const localColor = new THREE.Color();
+const localVector2D = new THREE.Vector2()
+const localVector4D = new THREE.Vector4()
+const localColor = new THREE.Color()
 
 const glyphFragmentShader = `\
 uniform float iTime;
@@ -19,7 +22,7 @@ varying vec2 tex_coords;
 
 #define PI 3.1415926535
 
-float random2d(vec2 n) { 
+float random2d(vec2 n) {
     return fract(sin(dot(n, vec2(129.9898, 4.1414))) * 2398.5453);
 }
 
@@ -49,7 +52,7 @@ float letter(vec2 coord, float size)
 
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
-    vec2 uv = fragCoord; // .xy / iResolution.xy;    
+    vec2 uv = fragCoord; // .xy / iResolution.xy;
     //correct aspect ratio
     // uv.x *= iResolution.x/iResolution.y;
 
@@ -57,27 +60,27 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     float scrollSpeed = 0.3;
     float dims = 0.5;
     int maxSubdivisions = 0;
-    
+
     // uv = rotate2D(uv,PI/12.0);
     uv.y -= floor(iTime * scrollSpeed * 4.);
-    
+
     float cellRand;
     vec2 ij;
-    
-   	for(int i = 0; i <= maxSubdivisions; i++) { 
+
+   	for(int i = 0; i <= maxSubdivisions; i++) {
         ij = getCellIJ(uv, dims);
         cellRand = random2d(ij);
         dims *= 2.0;
         //decide whether to subdivide cells again
         float cellRand2 = random2d(ij + 454.4543);
         if (cellRand2 > 0.3){
-        	break; 
+        	break;
         }
     }
-   
+
     //draw letters
     float b = letter(uv, 1.0 / (dims));
-    
+
     fragColor = vec4(vec3(1.-b), b);
     if (b < 0.5) {
       discard;
@@ -87,57 +90,57 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 void main() {
   mainImage(gl_FragColor, tex_coords);
 }
-`;
+`
 
-const glyphSize = 7;
+const glyphSize = 7
 
 const glyphMaterial = new THREE.ShaderMaterial({
   uniforms: {
     iTime: {
       value: 0,
-      needsUpdate: true,
-    },
+      needsUpdate: true
+    }
   },
   vertexShader: fullscreenVertexShader,
-  fragmentShader: glyphFragmentShader,
-});
-const glyphMesh = new THREE.Mesh(fullscreenGeometry, glyphMaterial);
-glyphMesh.frustumCulled = false;
+  fragmentShader: glyphFragmentShader
+})
+const glyphMesh = new THREE.Mesh(fullscreenGeometry, glyphMaterial)
+glyphMesh.frustumCulled = false
 
-const glyphScene = new THREE.Scene();
-glyphScene.name = 'glyphScene';
-glyphScene.autoUpdate = false;
+const glyphScene = new THREE.Scene()
+glyphScene.name = 'glyphScene'
+glyphScene.matrixWorldAutoUpdate = false
 
-glyphScene.add(glyphMesh);
+glyphScene.add(glyphMesh)
 
-const glyphCamera = new THREE.OrthographicCamera();
+const glyphCamera = new THREE.OrthographicCamera()
 
 export const generateGlyph = seed => {
-  const canvas = document.createElement('canvas');
-  canvas.width = glyphSize;
-  canvas.height = glyphSize;
-  const ctx = canvas.getContext('2d');
-  ctx.imageSmoothingEnabled = false;
+  const canvas = document.createElement('canvas')
+  canvas.width = glyphSize
+  canvas.height = glyphSize
+  const ctx = canvas.getContext('2d')
+  ctx.imageSmoothingEnabled = false
 
-  const renderer = getRenderer();
-  const size = renderer.getSize(localVector2D);
-  const pixelRatio = renderer.getPixelRatio();
-  const rng = alea(seed);
-  glyphMaterial.uniforms.iTime.value = rng();
-  glyphMaterial.uniforms.iTime.needsUpdate = true;
+  const renderer = getRenderer()
+  const size = renderer.getSize(localVector2D)
+  const pixelRatio = renderer.getPixelRatio()
+  const rng = alea(seed)
+  glyphMaterial.uniforms.iTime.value = rng()
+  glyphMaterial.uniforms.iTime.needsUpdate = true
 
   {
     // push old state
     // const oldRenderTarget = renderer.getRenderTarget();
-    const oldViewport = renderer.getViewport(localVector4D);
-    const oldClearColor = renderer.getClearColor(localColor);
-    const oldClearAlpha = renderer.getClearAlpha();
+    const oldViewport = renderer.getViewport(localVector4D)
+    const oldClearColor = renderer.getClearColor(localColor)
+    const oldClearAlpha = renderer.getClearAlpha()
 
     // render
-    renderer.setViewport(0, 0, glyphSize, glyphSize);
-    renderer.setClearColor(0x000000, 0);
-    renderer.clear();
-    renderer.render(glyphScene, glyphCamera);
+    renderer.setViewport(0, 0, glyphSize, glyphSize)
+    renderer.setClearColor(0x000000, 0)
+    renderer.clear()
+    renderer.render(glyphScene, glyphCamera)
 
     // copy to canvas
     ctx.drawImage(
@@ -150,13 +153,13 @@ export const generateGlyph = seed => {
       0,
       glyphSize,
       glyphSize
-    );
+    )
 
     // pop old state
     // renderer.setRenderTarget(oldRenderTarget);
-    renderer.setViewport(oldViewport);
-    renderer.setClearColor(oldClearColor, oldClearAlpha);
+    renderer.setViewport(oldViewport)
+    renderer.setClearColor(oldClearColor, oldClearAlpha)
   }
 
-  return canvas;
-};
+  return canvas
+}

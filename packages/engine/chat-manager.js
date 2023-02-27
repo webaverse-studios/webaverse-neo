@@ -1,147 +1,148 @@
-import {makeId, makePromise} from './util.js';
+import { makeId, makePromise } from './util.js'
 // import metaversefileApi from 'metaversefile';
 
 const _getEmotion = text => {
-  let match;
-  if (match = text.match(/(😃|😊|😁|😄|😆|(?:^|\s)lol(?:$|\s))/)) {
-    match.emotion = 'joy';
-    return match;
-  } else if (match = text.match(/(😉|😜|😂|😍|😎|😏|😇|❤️|💗|💕|💞|💖|👽)/)) {
-    match.emotion = 'fun';
-    return match;
-  } else if (match = text.match(/(😞|😖|😒|😱|😨|😰|😫)/)) {
-    match.emotion = 'sorrow';
-    return match;
-  } else if (match = text.match(/(😠|😡|👿|💥|💢)/)) {
-    match.emotion = 'angry';
-    return match;
-  } else if (match = text.match(/(😐|😲|😶)/)) {
-    match.emotion = 'neutral';
-    return match;
+  let match
+  if ((match = text.match(/(😃|😊|😁|😄|😆|(?:^|\s)lol(?:$|\s))/))) {
+    match.emotion = 'joy'
+    return match
+  } else if ((match = text.match(/(😉|😜|😂|😍|😎|😏|😇|❤️|💗|💕|💞|💖|👽)/))) {
+    match.emotion = 'fun'
+    return match
+  } else if ((match = text.match(/(😞|😖|😒|😱|😨|😰|😫)/))) {
+    match.emotion = 'sorrow'
+    return match
+  } else if ((match = text.match(/(😠|😡|👿|💥|💢)/))) {
+    match.emotion = 'angry'
+    return match
+  } else if ((match = text.match(/(😐|😲|😶)/))) {
+    match.emotion = 'neutral'
+    return match
   } else {
-    return null;
+    return null
   }
-};
+}
 
 export class ChatManager extends EventTarget {
-  constructor() {
-    super();
+  constructor () {
+    super()
 
-    this.voiceRunning = false;
-    this.voiceQueue = [];
+    this.voiceRunning = false
+    this.voiceQueue = []
   }
 
-  addPlayerMessage(player, m, {timeout = 3000} = {}) {
-    const match = _getEmotion(m.message);
-    const emotion = match ? match.emotion : null;
-    const value = emotion ? 1 : 0;
-    player.addAction(m);
-    
+  addPlayerMessage (player, m, { timeout = 3000 } = {}) {
+    const match = _getEmotion(m.message)
+    const emotion = match ? match.emotion : null
+    const value = emotion ? 1 : 0
+    player.addAction(m)
+
     const _addFacePose = () => {
       if (emotion) {
         player.addAction({
           type: 'facepose',
           emotion,
-          value: 1,
-        });
+          value: 1
+        })
       }
-    };
-    _addFacePose();
+    }
+    _addFacePose()
     const _removeFacePose = () => {
       if (emotion) {
-        const facePoseActionIndex = player.findActionIndex(action => action.type === 'facepose' && action.value === value);
+        const facePoseActionIndex = player.findActionIndex(
+          action => action.type === 'facepose' && action.value === value
+        )
         if (facePoseActionIndex !== -1) {
-          player.removeActionIndex(facePoseActionIndex);
+          player.removeActionIndex(facePoseActionIndex)
         }
       }
-    };
-    
-    this.dispatchEvent(new MessageEvent('messageadd', {
-      data: {
-        player,
-        message: m,
-      },
-    }));
-    
+    }
+
+    this.dispatchEvent(
+      new MessageEvent('messageadd', {
+        data: {
+          player,
+          message: m
+        }
+      })
+    )
+
     const localTimeout = setTimeout(() => {
-      this.removePlayerMessage(player, m);
-      
-      _removeFacePose();
-    }, timeout);
+      this.removePlayerMessage(player, m)
+
+      _removeFacePose()
+    }, timeout)
     m.cleanup = () => {
-      clearTimeout(localTimeout);
-    };
-    
-    return m;
+      clearTimeout(localTimeout)
+    }
+
+    return m
   }
 
-  addMessage(message, opts) {
-    const chatId = makeId(5);
-    const localPlayer = metaversefileApi.useLocalPlayer();
+  addMessage (message, opts) {
+    const chatId = makeId(5)
+    const localPlayer = metaversefileApi.useLocalPlayer()
     const m = {
       type: 'chat',
       chatId,
       playerId: localPlayer.playerId,
       playerName: localPlayer.name,
-      message,
-    };
-
-    return this.addPlayerMessage(localPlayer, m, opts);
-  }
-
-  removePlayerMessage(player, m) {
-    m.cleanup();
-    
-    const actionIndex = player.findActionIndex(action => action.chatId === m.chatId);
-    if (actionIndex !== -1) {
-      player.removeActionIndex(actionIndex);
-    } else {
-      console.warn('remove unknown message action 2', m);
+      message
     }
-    
-    this.dispatchEvent(new MessageEvent('messageremove', {
-      data: {
-        player,
-        message: m,
-      },
-    }));
+
+    return this.addPlayerMessage(localPlayer, m, opts)
   }
 
-  removeMessage(m) {
-    const localPlayer = metaversefileApi.useLocalPlayer();
-    this.removePlayerMessage(localPlayer, m);
+  removePlayerMessage (player, m) {
+    m.cleanup()
+
+    const actionIndex = player.findActionIndex(
+      action => action.chatId === m.chatId
+    )
+    if (actionIndex !== -1) {
+      player.removeActionIndex(actionIndex)
+    } else {
+      console.warn('remove unknown message action 2', m)
+    }
+
+    this.dispatchEvent(
+      new MessageEvent('messageremove', {
+        data: {
+          player,
+          message: m
+        }
+      })
+    )
   }
 
-  async waitForVoiceTurn(fn) {
-    // console.log('wait for voice queue', this.voiceRunning, this.voiceQueue.length);
-    
+  removeMessage (m) {
+    const localPlayer = metaversefileApi.useLocalPlayer()
+    this.removePlayerMessage(localPlayer, m)
+  }
+
+  async waitForVoiceTurn (fn) {
     if (!this.voiceRunning) {
-      this.voiceRunning = true;
-      // console.log('wait 0');
-      const p = fn();
-      // console.log('wait 1');
-      const result = await p;
-      // console.log('wait 2');
+      this.voiceRunning = true
+      const p = fn()
+      const result = await p
 
-      this.voiceRunning = false;
+      this.voiceRunning = false
       if (this.voiceQueue.length > 0) {
-        const fn2 = this.voiceQueue.shift();
-        this.waitForVoiceTurn(fn2);
+        const fn2 = this.voiceQueue.shift()
+        this.waitForVoiceTurn(fn2)
       }
 
-      return result;
+      return result
     } else {
-      const p = makePromise();
+      const p = makePromise()
       this.voiceQueue.push(async () => {
-        const p2 = fn();
-        // console.log('wait 3');
-        const result = await p2;
-        // console.log('wait 4');
-        p.resolve(result);
-        return result;
-      });
-      const result = await p;
-      return result;
+        const p2 = fn()
+        const result = await p2
+        p.resolve(result)
+        return result
+      })
+      const result = await p
+      return result
     }
   }
 }

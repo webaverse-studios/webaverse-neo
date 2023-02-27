@@ -1,20 +1,20 @@
-import * as THREE from 'three';
-import metaversefile from './metaversefile-api.js';
-import Avatar from './avatars/avatars.js';
-import npcManager from './npc-manager.js';
-import dioramaManager from './diorama.js';
+import * as THREE from 'three'
+import metaversefile from './metaversefile-api.js'
+import Avatar from './avatars/avatars.js'
+import npcManager from './npc-manager.js'
+import dioramaManager from './diorama.js'
 
-import * as WebMWriter from 'webm-writer';
+import * as WebMWriter from 'webm-writer'
 
-const FPS = 60;
+const FPS = 60
 
-const videoQuality = 0.95;
-const narutoRunSpeed = 59;
+const videoQuality = 0.95
+const narutoRunSpeed = 59
 
-const localVector = new THREE.Vector3();
-const localVector2 = new THREE.Vector3();
+const localVector = new THREE.Vector3()
+const localVector2 = new THREE.Vector3()
 // const localVector3 = new THREE.Vector3();
-const localQuaternion = new THREE.Quaternion();
+const localQuaternion = new THREE.Quaternion()
 // const localEuler = new THREE.Euler();
 // const localMatrix = new THREE.Matrix4();
 
@@ -45,7 +45,7 @@ function angleDifference(angle1, angle2) {
   // renderer.setSize(width, height);
 
   const scene = new THREE.Scene();
-  scene.autoUpdate = false;
+  scene.matrixWorldAutoUpdate = false;
 
   const camera = new THREE.PerspectiveCamera(60, width/height, 0.1, 100);
 
@@ -63,29 +63,23 @@ const _makeLights = () => {
   // directionalLight.position.set(1, 1.5, -2);
   // directionalLight.updateMatrixWorld();
 
-  const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 5);
-  directionalLight.position.set(1, 1.5, -2);
-  directionalLight.updateMatrixWorld();
-  
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 5)
+  directionalLight.position.set(1, 1.5, -2)
+  directionalLight.updateMatrixWorld()
+
   /* const directionalLight2 = new THREE.DirectionalLight(0xFFFFFF, 1.5);
   directionalLight2.position.set(-1, 1.5, -2);
   directionalLight2.updateMatrixWorld(); */
 
   return [
     // ambientLight,
-    directionalLight,
+    directionalLight
     // directionalLight2,
-  ];
-};
+  ]
+}
 
-export const genPic = async ({
-  url,
-  width,
-  height,
-  canvas,
-  video,
-}) => {
-  await Avatar.waitForLoad();
+export const genPic = async ({ url, width, height, canvas, video }) => {
+  await Avatar.waitForLoad()
 
   /* console.log('gen pic', {
     url,
@@ -95,58 +89,62 @@ export const genPic = async ({
     video,
   }); */
 
-  const animations = metaversefile.useAvatarAnimations();
-  const idleAnimation = animations.find(a => a.name === 'idle.fbx');
-  const idleAnimationDuration = idleAnimation.duration;
-  const narutoRunAnimation = animations.find(a => a.isNarutoRun);
-  const narutoRunAnimationDuration = narutoRunAnimation.duration;
+  const animations = metaversefile.useAvatarAnimations()
+  const idleAnimation = animations.find(a => a.name === 'idle.fbx')
+  const idleAnimationDuration = idleAnimation.duration
+  const narutoRunAnimation = animations.find(a => a.isNarutoRun)
+  const narutoRunAnimationDuration = narutoRunAnimation.duration
 
   // load app
   const app = await metaversefile.createAppAsync({
-    start_url: url,
-  });
+    start_url: url
+  })
 
-  const position = new THREE.Vector3(0, 1.5, 0);
-  const quaternion = new THREE.Quaternion();
-  const scale = new THREE.Vector3(1, 1, 1);
+  const position = new THREE.Vector3(0, 1.5, 0)
+  const quaternion = new THREE.Quaternion()
+  const scale = new THREE.Vector3(1, 1, 1)
   const player = npcManager.createNpc({
     name: 'npc',
     avatarApp: app,
     position,
     quaternion,
-    scale,
-  });
+    scale
+  })
 
   const _setTransform = () => {
-    player.position.y = player.avatar.height;
-    player.updateMatrixWorld();
-  };
-  _setTransform();
+    player.position.y = player.avatar.height
+    player.updateMatrixWorld()
+  }
+  _setTransform()
 
   const _initializeAnimation = () => {
-    player.avatar.setTopEnabled(false);
-    player.avatar.setHandEnabled(0, false);
-    player.avatar.setHandEnabled(1, false);
-    player.avatar.setBottomEnabled(false);
-    player.avatar.inputs.hmd.position.y = player.avatar.height;
-    player.avatar.inputs.hmd.quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
-    player.avatar.inputs.hmd.updateMatrixWorld();
+    player.avatar.setTopEnabled(false)
+    player.avatar.setHandEnabled(0, false)
+    player.avatar.setHandEnabled(1, false)
+    player.avatar.setBottomEnabled(false)
+    player.avatar.inputs.hmd.position.y = player.avatar.height
+    player.avatar.inputs.hmd.quaternion.setFromAxisAngle(
+      new THREE.Vector3(0, 1, 0),
+      Math.PI
+    )
+    player.avatar.inputs.hmd.updateMatrixWorld()
     player.addAction({
       type: 'facepose',
-      emotion: 'angry',
-    });
-  };
+      emotion: 'angry'
+    })
+  }
   const _updateTarget = (timestamp, timeDiff) => {
-    target.matrixWorld.copy(player.avatar.modelBones.Head.matrixWorld)
-      .decompose(target.position, target.quaternion, target.scale);
-    target.position.set(player.position.x, target.position.y, player.position.z);
-    target.quaternion.copy(player.quaternion);
-    target.matrixWorld.compose(target.position, target.quaternion, target.scale);
-  };
+    target.matrixWorld
+      .copy(player.avatar.modelBones.Head.matrixWorld)
+      .decompose(target.position, target.quaternion, target.scale)
+    target.position.set(player.position.x, target.position.y, player.position.z)
+    target.quaternion.copy(player.quaternion)
+    target.matrixWorld.compose(target.position, target.quaternion, target.scale)
+  }
   const _animate = (timestamp, timeDiff) => {
     // console.log('got position', player.position.y);
-    player.updateAvatar(timestamp, timeDiff);
-  };
+    player.updateAvatar(timestamp, timeDiff)
+  }
   /* const _lookAt = (camera, boundingBox) => {
     camera.position.copy(player.position)
       .add(localVector.set(0.3, 0, -0.5).applyQuaternion(player.quaternion));
@@ -161,49 +159,47 @@ export const genPic = async ({
   }; */
 
   // rendering
-  const localLights = _makeLights();
-  const objects = localLights.concat([
-    player.avatar.model,
-  ]);
+  const localLights = _makeLights()
+  const objects = localLights.concat([player.avatar.model])
   // console.log('got model bones', player.avatar.modelBones);
   // debugger;
-  const target = new THREE.Object3D();
+  const target = new THREE.Object3D()
   const diorama = dioramaManager.createPlayerDiorama({
     // target: player,
     target,
     objects,
-    lights: false,
+    lights: false
     // label: true,
     // outline: true,
     // grassBackground: true,
     // glyphBackground: true,
-  });
-  diorama.addCanvas(canvas);
-  diorama.setClearColor(0xFFFFFF, 1);
+  })
+  diorama.addCanvas(canvas)
+  diorama.setClearColor(0xffffff, 1)
 
   const videoWriter = new WebMWriter({
     quality: 1,
     fileWriter: null,
     fd: null,
     frameDuration: null,
-    frameRate: FPS,
-  });
-  const writeCanvas = canvas;
-  writeCanvas.width = width;
-  writeCanvas.height = height;
-  writeCanvas.style.width = `${width/window.devicePixelRatio}px`;
-  writeCanvas.style.height = `${height/window.devicePixelRatio}px`;
-  const writeCtx = writeCanvas.getContext('2d');
+    frameRate: FPS
+  })
+  const writeCanvas = canvas
+  writeCanvas.width = width
+  writeCanvas.height = height
+  writeCanvas.style.width = `${width / window.devicePixelRatio}px`
+  writeCanvas.style.height = `${height / window.devicePixelRatio}px`
+  const writeCtx = writeCanvas.getContext('2d')
 
-  const mode = 'idle';
+  const mode = 'idle'
   // const mode = 'narutoRun';
-  let update;
-  let totalDuration;
+  let update
+  let totalDuration
   switch (mode) {
     case 'idle': {
-      update = () => {};
-      totalDuration = idleAnimationDuration*1000;
-      break;
+      update = () => {}
+      totalDuration = idleAnimationDuration * 1000
+      break
     }
     case 'narutoRun': {
       /* localEuler.setFromRotationMatrix(
@@ -221,23 +217,23 @@ export const genPic = async ({
       const spriteSpec = {
         name: 'naruto run',
         duration: narutoRunAnimationDuration,
-        init({player}) {
-          let positionOffset = 0;
+        init ({ player }) {
+          let positionOffset = 0
           // let narutoRunTime = 0;
           // const narutoRunIncrementSpeed = 1000 * 4;
 
           const newNarutoRunAction = {
-            type: 'narutoRun',
+            type: 'narutoRun'
             // time: 0,
-          };
-          player.actionsManager.tryAddAction(newNarutoRunAction, true);
+          }
+          player.actionsManager.tryAddAction(newNarutoRunAction, true)
 
           return {
-            update(timestamp, timeDiff) {
-              const timeDiffMs = timeDiff/1000;
-              const angle = -Math.PI/2;
-              positionOffset -= narutoRunSpeed/1000 * timeDiffMs;
-              
+            update (timestamp, timeDiff) {
+              const timeDiffMs = timeDiff / 1000
+              const angle = -Math.PI / 2
+              positionOffset -= (narutoRunSpeed / 1000) * timeDiffMs
+
               /* const euler = new THREE.Euler(0, angle, 0, 'YXZ');
               camera.position.set(0, avatar.height*cameraHeightFactor, positionOffset)
                 .add(new THREE.Vector3(0, 0, -distance).applyEuler(euler));
@@ -245,9 +241,15 @@ export const genPic = async ({
               camera.updateMatrixWorld(); */
 
               diorama.setCameraOffset(
-                localVector.set(0, 0, 2)
-                  .applyQuaternion(localQuaternion.setFromAxisAngle(localVector2.set(0, 1, 0), -angle))
-              );
+                localVector
+                  .set(0, 0, 2)
+                  .applyQuaternion(
+                    localQuaternion.setFromAxisAngle(
+                      localVector2.set(0, 1, 0),
+                      -angle
+                    )
+                  )
+              )
               // player.avatar.modelBones.Root.updateMatrixWorld();
 
               // player.position.set(0, avatar.height, positionOffset);
@@ -259,99 +261,103 @@ export const genPic = async ({
               // narutoRunTime += timeDiffMs * narutoRunIncrementSpeed;
 
               // avatar.update(timestamp, timeDiffMs);
-            },
+            }
             /* cleanup() {
               avatar.narutoRunState = false;
-            }, */            
-          };
-        },
-      };
+            }, */
+          }
+        }
+      }
       const spriteSpecInstance = spriteSpec.init({
-        player,
-      });
+        player
+      })
 
       update = (timestamp, timeDiff) => {
-        spriteSpecInstance.update(timestamp, timeDiff);
-      };
-      totalDuration = narutoRunAnimationDuration * 2 * 1000;
-      break;
+        spriteSpecInstance.update(timestamp, timeDiff)
+      }
+      totalDuration = narutoRunAnimationDuration * 2 * 1000
+      break
     }
     default: {
-      throw new Error('unknown mode');
+      throw new Error('unknown mode')
     }
   }
 
-  const framePromises = [];
+  const framePromises = []
   const _pushFrame = async () => {
-    writeCtx.drawImage(canvas, 0, 0);
+    writeCtx.drawImage(canvas, 0, 0)
 
     const p = new Promise((resolve, reject) => {
-      writeCanvas.toBlob(blob => {
-        const reader = new FileReader();
-        reader.readAsDataURL(blob); 
-        reader.onloadend = function() {
-          const dataUrl = reader.result;                
-          resolve(dataUrl);
-        };
-      }, 'image/webp', videoQuality);
-    });
-    framePromises.push(p);
-  };
+      writeCanvas.toBlob(
+        blob => {
+          const reader = new FileReader()
+          reader.readAsDataURL(blob)
+          reader.onloadend = function () {
+            const dataUrl = reader.result
+            resolve(dataUrl)
+          }
+        },
+        'image/webp',
+        videoQuality
+      )
+    })
+    framePromises.push(p)
+  }
   const _render = async () => {
-    _initializeAnimation();
+    _initializeAnimation()
 
     const _renderFrames = async () => {
-      let now = 0;
-      const timeDiff = 1000/FPS;
-      for (let i = 0; i < FPS*2; i++) {
-        _animate(now, timeDiff);
+      let now = 0
+      const timeDiff = 1000 / FPS
+      for (let i = 0; i < FPS * 2; i++) {
+        _animate(now, timeDiff)
       }
 
-      let index = 0;
-      const framesPerFrame = FPS;
+      let index = 0
+      const framesPerFrame = FPS
       while (now < totalDuration) {
-        update(now, timeDiff);
-        _updateTarget(now, timeDiff);
-        _animate(now, timeDiff);
+        update(now, timeDiff)
+        _updateTarget(now, timeDiff)
+        _animate(now, timeDiff)
 
-        diorama.update(now, timeDiff);
+        diorama.update(now, timeDiff)
 
-        _pushFrame();
-        now += timeDiff;
+        _pushFrame()
+        now += timeDiff
 
-        if ((index % framesPerFrame) === framesPerFrame-1) {
+        if (index % framesPerFrame === framesPerFrame - 1) {
           await new Promise((accept, reject) => {
             requestAnimationFrame(() => {
-              accept();
-            });
-          });
+              accept()
+            })
+          })
         }
-        index++;
+        index++
       }
 
-      const frameDataUrls = await Promise.all(framePromises);
-      framePromises.length = 0;
-      let dataUrl;
+      const frameDataUrls = await Promise.all(framePromises)
+      framePromises.length = 0
+      let dataUrl
       while ((dataUrl = frameDataUrls.shift()) !== undefined) {
         videoWriter.addFrame({
-          toDataURL() {
-            return dataUrl;
-          },
-        });
+          toDataURL () {
+            return dataUrl
+          }
+        })
       }
-    };
-    await _renderFrames();
-  };
-  await _render();
+    }
+    await _renderFrames()
+  }
+  await _render()
 
-  const blob = await videoWriter.complete();
+  const blob = await videoWriter.complete()
   await new Promise((accept, reject) => {
-    video.oncanplaythrough = accept;
-    video.onerror = reject;
-    video.src = URL.createObjectURL(blob);
-  });
-  video.style.width = `${width/window.devicePixelRatio}px`;
-  video.style.height = `${height/window.devicePixelRatio}px`;
-  video.controls = true;
-  video.loop = true;
-};
+    video.oncanplaythrough = accept
+    video.onerror = reject
+    video.src = URL.createObjectURL(blob)
+  })
+  video.style.width = `${width / window.devicePixelRatio}px`
+  video.style.height = `${height / window.devicePixelRatio}px`
+  video.controls = true
+  video.loop = true
+}

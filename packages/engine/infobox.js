@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three'
 // import {getRenderer} from './renderer.js';
 
 const fullscreenVertexShader = `\
@@ -8,7 +8,7 @@ const fullscreenVertexShader = `\
     vUv = uv;
     gl_Position = vec4(position.xy, 1.0, 1.0);
   }
-`;
+`
 const fullscreenFragmentShader = `\
   uniform sampler2D uTex;
   uniform float uTexEnabled;
@@ -23,7 +23,7 @@ const fullscreenFragmentShader = `\
   #define PI 3.1415926535897932384626433832795
 
   //---------------------------------------------------------------------------
-  //1D Perlin noise implementation 
+  //1D Perlin noise implementation
   //---------------------------------------------------------------------------
   #define HASHSCALE 0.1031
   float hash(float p) {
@@ -50,18 +50,18 @@ const fullscreenFragmentShader = `\
     }
     return total / maxValue;
   }
-  
+
   struct Tri {
     vec2 a;
     vec2 b;
     vec2 c;
   };
 
-  vec2 rotateCCW(vec2 pos, float angle) { 
+  vec2 rotateCCW(vec2 pos, float angle) {
     float ca = cos(angle),  sa = sin(angle);
-    return pos * mat2(ca, sa, -sa, ca);  
+    return pos * mat2(ca, sa, -sa, ca);
   }
-  vec2 rotateCCW(vec2 pos, vec2 around, float angle) { 
+  vec2 rotateCCW(vec2 pos, vec2 around, float angle) {
     pos -= around;
     pos = rotateCCW(pos, angle);
     pos += around;
@@ -167,7 +167,7 @@ const fullscreenFragmentShader = `\
         s.a = 1.;
       }
     }
-    
+
     gl_FragColor = s;
 
     /* vec3 c = vec3(0.1);
@@ -175,124 +175,114 @@ const fullscreenFragmentShader = `\
 
     float backgroundAlpha = (1. - vUv.y * 2.) * 0.7;
     float a = max(backgroundAlpha, s.a);
-    
+
     // result
     gl_FragColor.rgb = c;
     gl_FragColor.a = backgroundAlpha; */
   }
-`;
-const localVector2D = new THREE.Vector2();
-const localVector4D = new THREE.Vector4();
+`
+const localVector2D = new THREE.Vector2()
+const localVector4D = new THREE.Vector4()
 
 const _makeInfoboxRendererScene = () => {
-  const scene = new THREE.Scene();
+  const scene = new THREE.Scene()
 
   const fullScreenQuadMesh = new THREE.Mesh(
-    new THREE.PlaneBufferGeometry(2, 2),
+    new THREE.PlaneGeometry(2, 2),
     new THREE.ShaderMaterial({
       uniforms: {
         uTex: {
           value: null,
-          needsUpdate: false,
+          needsUpdate: false
         },
         uTexEnabled: {
           value: 0,
-          needsUpdate: true,
+          needsUpdate: true
         },
         uTime: {
           value: 0,
-          needsUpdate: true,
+          needsUpdate: true
         },
         numFrames: {
           value: 0,
-          needsUpdate: true,
+          needsUpdate: true
         },
         numFramesPerRow: {
           value: 0,
-          needsUpdate: true,
+          needsUpdate: true
         },
         outline_thickness: {
           value: 0.02,
-          needsUpdate: true,
-        },
+          needsUpdate: true
+        }
       },
       vertexShader: fullscreenVertexShader,
       fragmentShader: fullscreenFragmentShader,
       depthTest: false,
-      transparent: true,
-    }),
-  );
-  fullScreenQuadMesh.frustumCulled = false;
-  scene.add(fullScreenQuadMesh);
-  scene.fullScreenQuadMesh = fullScreenQuadMesh;
+      transparent: true
+    })
+  )
+  fullScreenQuadMesh.frustumCulled = false
+  scene.add(fullScreenQuadMesh)
+  scene.fullScreenQuadMesh = fullScreenQuadMesh
 
-  return scene;
-};
+  return scene
+}
 
 class InfoboxRenderer {
-  constructor({
-    width,
-    height,
-    selected,
-    webaverseRenderer,
-  }) {
-    this.width = width;
-    this.height = height;
+  constructor ({ width, height, selected, webaverseRenderer }) {
+    this.width = width
+    this.height = height
 
     if (!webaverseRenderer) {
-      debugger;
+      debugger
     }
-    this.webaverseRenderer = webaverseRenderer;
+    this.webaverseRenderer = webaverseRenderer
 
-    this.scene = _makeInfoboxRendererScene();
-    this.camera = new THREE.OrthographicCamera(
-      -1,
-      1,
-      1,
-      -1,
-      0,
-      1000
-    );
-    this.canvases = [];
-    this.selected = selected;
-    this.selectFactor = +selected;
-    this.needsUpdate = false;
+    this.scene = _makeInfoboxRendererScene()
+    this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1000)
+    this.canvases = []
+    this.selected = selected
+    this.selectFactor = +selected
+    this.needsUpdate = false
   }
 
-  addCanvas(canvas) {
-    const ctx = canvas.getContext('2d');
-    canvas.ctx = ctx;
+  addCanvas (canvas) {
+    const ctx = canvas.getContext('2d')
+    canvas.ctx = ctx
 
-    this.canvases.push(canvas);
-    this.needsUpdate = true;
+    this.canvases.push(canvas)
+    this.needsUpdate = true
   }
 
-  removeCanvas(canvas) {
-    this.canvases.splice(this.canvases.indexOf(canvas), 1);
-    this.needsUpdate = true;
+  removeCanvas (canvas) {
+    this.canvases.splice(this.canvases.indexOf(canvas), 1)
+    this.needsUpdate = true
   }
 
-  setSpritesheet(spritesheet) {
+  setSpritesheet (spritesheet) {
     if (spritesheet) {
       const {
         result,
         numFrames,
         // frameSize,
-        numFramesPerRow,
-      } = spritesheet;
-      this.scene.fullScreenQuadMesh.material.uniforms.uTex.value = result;
-      this.scene.fullScreenQuadMesh.material.uniforms.uTex.needsUpdate = true;
-      this.scene.fullScreenQuadMesh.material.uniforms.uTexEnabled.value = 1;
-      this.scene.fullScreenQuadMesh.material.uniforms.uTexEnabled.needsUpdate = true;
-      this.scene.fullScreenQuadMesh.material.uniforms.numFrames.value = numFrames;
-      this.scene.fullScreenQuadMesh.material.uniforms.numFrames.needsUpdate = true;
-      this.scene.fullScreenQuadMesh.material.uniforms.numFramesPerRow.value = numFramesPerRow;
-      this.scene.fullScreenQuadMesh.material.uniforms.numFramesPerRow.needsUpdate = true;
+        numFramesPerRow
+      } = spritesheet
+      this.scene.fullScreenQuadMesh.material.uniforms.uTex.value = result
+      this.scene.fullScreenQuadMesh.material.uniforms.uTex.needsUpdate = true
+      this.scene.fullScreenQuadMesh.material.uniforms.uTexEnabled.value = 1
+      this.scene.fullScreenQuadMesh.material.uniforms.uTexEnabled.needsUpdate = true
+      this.scene.fullScreenQuadMesh.material.uniforms.numFrames.value =
+        numFrames
+      this.scene.fullScreenQuadMesh.material.uniforms.numFrames.needsUpdate = true
+      this.scene.fullScreenQuadMesh.material.uniforms.numFramesPerRow.value =
+        numFramesPerRow
+      this.scene.fullScreenQuadMesh.material.uniforms.numFramesPerRow.needsUpdate = true
     } else {
       /* this.scene.fullScreenQuadMesh.material.uniforms.uTex.value = null;
       this.scene.fullScreenQuadMesh.material.uniforms.uTex.needsUpdate = true; */
-      this.scene.fullScreenQuadMesh.material.uniforms.uTexEnabled.value = 0;
-      this.scene.fullScreenQuadMesh.material.uniforms.uTexEnabled.needsUpdate = true;
+      this.scene.fullScreenQuadMesh.material.uniforms.uTexEnabled.value = 0
+      this.scene.fullScreenQuadMesh.material.uniforms.uTexEnabled.needsUpdate = true
       /* this.scene.fullScreenQuadMesh.material.uniforms.numFrames.value = numFrames;
       this.scene.fullScreenQuadMesh.material.uniforms.numFrames.needsUpdate = true;
       this.scene.fullScreenQuadMesh.material.uniforms.numFramesPerRow.value = numFramesPerRow;
@@ -300,16 +290,16 @@ class InfoboxRenderer {
     }
   }
 
-  update(timestamp, timeDiff) {
+  update (timestamp, timeDiff) {
     // const renderer = getRenderer();
-    const {renderer} = this.webaverseRenderer;
-    const size = renderer.getSize(localVector2D);
-    const pixelRatio = renderer.getPixelRatio();
+    const { renderer } = this.webaverseRenderer
+    const size = renderer.getSize(localVector2D)
+    const pixelRatio = renderer.getPixelRatio()
 
     const _render = () => {
       // push old state
       // const oldRenderTarget = renderer.getRenderTarget();
-      const oldViewport = renderer.getViewport(localVector4D);
+      const oldViewport = renderer.getViewport(localVector4D)
 
       {
         // const smoothedSelectFactor = this.selected ? cubicBezier(this.selectFactor) : 1 - cubicBezier(1 - this.selectFactor);
@@ -318,28 +308,24 @@ class InfoboxRenderer {
         this.scene.fullScreenQuadMesh.material.uniforms.uSelected.needsUpdate = true;
         this.scene.fullScreenQuadMesh.material.uniforms.uSelectFactor.value = smoothedSelectFactor;
         this.scene.fullScreenQuadMesh.material.uniforms.uSelectFactor.needsUpdate = true; */
-        this.scene.fullScreenQuadMesh.material.uniforms.uTime.value = timestamp;
-        this.scene.fullScreenQuadMesh.material.uniforms.uTime.needsUpdate = true;
+        this.scene.fullScreenQuadMesh.material.uniforms.uTime.value = timestamp
+        this.scene.fullScreenQuadMesh.material.uniforms.uTime.needsUpdate = true
 
-        renderer.setViewport(0, 0, this.width, this.height);
-        renderer.clear();
-        renderer.render(this.scene, this.camera);
+        renderer.setViewport(0, 0, this.width, this.height)
+        renderer.clear()
+        renderer.render(this.scene, this.camera)
       }
 
       // pop old state
       // renderer.setRenderTarget(oldRenderTarget);
-      renderer.setViewport(oldViewport);
-    };
-    _render();
+      renderer.setViewport(oldViewport)
+    }
+    _render()
 
     const _copyToCanvases = () => {
       for (const canvas of this.canvases) {
-        const {
-          width,
-          height,
-          ctx
-        } = canvas;
-        ctx.clearRect(0, 0, width, height);
+        const { width, height, ctx } = canvas
+        ctx.clearRect(0, 0, width, height)
         ctx.drawImage(
           renderer.domElement,
           0,
@@ -350,13 +336,11 @@ class InfoboxRenderer {
           0,
           width,
           height
-        );
+        )
       }
-    };
-    _copyToCanvases();
+    }
+    _copyToCanvases()
   }
 }
 
-export {
-  InfoboxRenderer,
-};
+export { InfoboxRenderer }
