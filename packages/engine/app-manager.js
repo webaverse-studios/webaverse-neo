@@ -113,9 +113,14 @@ class AppManager extends THREE.Object3D {
   }
 
   async loadScnFromUrl (srcUrl) {
-    const res = await fetch(srcUrl)
-    const j = await res.json()
+    /**
+     * TODO: FIX. This is a hack to get the scene to load.
+     */
+    srcUrl = `./assets/${srcUrl}.json`
+    const j = (await import(srcUrl)).default
     const { objects } = j
+
+    console.log('scene loading:', srcUrl, objects)
 
     const promises = []
     for (let i = 0; i < objects.length; i++) {
@@ -130,22 +135,22 @@ class AppManager extends THREE.Object3D {
           scale = [1, 1, 1],
           components = []
         } = object
-        // if (!start_url) {
-        //   throw new Error('no start_url');
-        // }
+
+        scale = new THREE.Vector3().fromArray(scale)
         position = new THREE.Vector3().fromArray(position)
         quaternion = new THREE.Quaternion().fromArray(quaternion)
-        scale = new THREE.Vector3().fromArray(scale)
 
-        const baseUrl = import.meta.url
-        const contentId = this.engine.importManager.getObjectUrl(
-          {
-            contentId: start_url,
-            type,
-            content
-          },
-          baseUrl
-        )
+        // const baseUrl = import.meta.url
+        // const contentId = this.engine.importManager.getObjectUrl(
+        //   {
+        //     contentId: start_url,
+        //     type,
+        //     content
+        //   },
+        //   baseUrl
+        // )
+
+        let contentId = start_url
         // await loadApp(url, position, quaternion, scale, components);
 
         const p = this.addAppAsync({

@@ -1,12 +1,14 @@
 import * as THREE from 'three'
-import { compilerBaseUrl } from '@webaverse-studios/engine/endpoints.js'
+import { zbdecode } from '@webaverse-studios/zjs/encoding.js'
+
 import { App } from './app.js'
 
 import { AppContext } from './app-context.js'
 import { componentTemplates } from '@webaverse-studios/engine/metaverse-components.js'
 
+import loaders from '../../loaders.js'
+
 let currentAppRender = null
-const importFn = new Function('u', 'return import(u)')
 
 const _bindDefaultComponents = ctx => {
   const app = ctx.useApp()
@@ -20,6 +22,7 @@ const _bindDefaultComponents = ctx => {
       componentHandlers[key] = componentHandlerTemplate(ctx, value)
     }
   }
+
   app.addEventListener('componentupdate', e => {
     const { key, value } = e
 
@@ -44,7 +47,7 @@ const _bindDefaultComponents = ctx => {
 
 export class ImportManager {
   constructor () {}
-  async importUrl (s) {
+  async importUrl (url) {
     // if (/^[a-zA-Z0-9]+:/.test(s)) {
     //   s = `${compilerBaseUrl}${s
     //     .replace(compilerBaseUrl, '')
@@ -53,30 +56,57 @@ export class ImportManager {
     //   s = new URL(s, compilerBaseUrl).href
     // }
 
-    s = `../../${s}`
+    /**
+     * All loaded assets will default to the assets folder of the engine package.
+     * Imports should be relative to the assets folder.
+     *
+     * Example:
+     *
+     * "avatarUrl": "avatars/scilly_drophunter_v31.9_Guilty.vrm" -> Will load from `assets/avatars/scilly_drophunter_v31.9_Guilty.vrm`
+     */
+    url = `../../assets/${url}`
 
-    console.log('metaversefile import', { s })
+    console.log('metaversefile import', { url })
 
     try {
-      // const m = await import(s);
-      // console.log('s', s);
-      // if (/object/.test(s)) {
-      //   debugger;
-      // }
+      const assetUrl = (await import(/* @vite-ignore */ url)).default
 
-      const m = await importFn(s)
-      // console.log('m', m);
-      // if (!m) {
-      //   debugger;
-      // }
-      return m
+      let module = await new Promise((resolve, reject) => {
+        const { gltfLoader } = loaders
+
+        gltfLoader.load(
+          // url to load
+          assetUrl,
+
+          // called when the resource is loaded
+          gltf => resolve(gltf),
+
+          // called while loading is progressing
+          progress =>
+            console.log(
+              'Loading model...',
+              100.0 * (progress.loaded / progress.total),
+              '%'
+            ),
+
+          // called when loading has errors
+          error => {
+            console.error(error)
+            reject(error)
+          }
+        )
+      })
+
+      console.log('Import Manager: [module]: ', module)
+      return module
     } catch (err) {
       // console.warn('error loading', JSON.stringify(s), err.stack);
       // Todo: need to output as an error for automated tests
-      console.error(err)
+      console.error('Import Manager: [Import m error]:', err)
       return null
     }
   }
+
   createAppInternalFromEngine (
     appSpec = {},
     { engine, onWaitPromise = null } = {}
@@ -167,7 +197,7 @@ export class ImportManager {
     // load
     const u = this.getObjectUrl(appSpec)
 
-    // console.log('got app spec', {u, appSpec});
+    console.log('got app spec', { u, appSpec })
     // if (typeof appSpec.contentId !== 'string') {
     //   debugger;
     // }
@@ -180,7 +210,7 @@ export class ImportManager {
         } else {
           m = module
         }
-        // console.log('load module', {u, m});
+        console.log('load module', { u, m })
         await this.addModuleFromEngine(app, engine, m)
       })()
       if (onWaitPromise) {
@@ -190,6 +220,7 @@ export class ImportManager {
 
     return app
   }
+
   async createAppAsyncFromEngine (spec, engine) {
     let p = null
     const app = this.createAppInternalFromEngine(spec, {
@@ -203,6 +234,7 @@ export class ImportManager {
     }
     return app
   }
+
   /* export function createAppPair(spec) {
     let promise = null;
     const app = createAppInternal(spec, {
@@ -212,6 +244,7 @@ export class ImportManager {
     });
     return [app, promise];
   } */
+
   async addModuleFromEngine (app, engine, m) {
     if (!app || !engine || !m) {
       console.warn('addModuleFromEngine missing args', { app, engine, m })
@@ -228,9 +261,11 @@ export class ImportManager {
     } catch (error) {
       console.error(error)
     }
+
     app.description = m.description ?? ''
-    app.appType = m.type ?? ''
+    app.appType = m.type ?? 'vrm'
     app.contentId = m.contentId ?? ''
+
     if (Array.isArray(m.components)) {
       for (const { key, value } of m.components) {
         if (!app.hasComponent(key)) {
@@ -238,6 +273,7 @@ export class ImportManager {
         }
       }
     }
+
     app.modules.push(m)
     // app.updateModulesHash();
 
@@ -248,20 +284,20 @@ export class ImportManager {
       currentAppRender = app
 
       try {
-        const fn = m.default
-        if (typeof fn === 'function') {
-          appContext = new AppContext({
-            engine,
-            app,
-            waitUntil (p) {
-              waitUntilPromise = p
-            }
-          })
-          renderSpec = fn(appContext)
-        } else {
-          console.warn('module default export is not a function', m)
-          return null
-        }
+        //     const fn = m.default
+        //     if (typeof fn === 'function') {
+        appContext = new AppContext({
+          engine,
+          app,
+          waitUntil (p) {
+            waitUntilPromise = p
+          }
+        })
+        //       renderSpec = fn(appContext)
+        //     } else {
+        //       console.warn('module default export is not a function', m)
+        //       return null
+        //     }
       } catch (err) {
         console.warn(err)
         return null
@@ -271,9 +307,9 @@ export class ImportManager {
     }
     _initModule()
 
-    if (waitUntilPromise) {
-      await waitUntilPromise
-    }
+    // if (waitUntilPromise) {
+    //   await waitUntilPromise
+    // }
 
     if (renderSpec instanceof THREE.Object3D) {
       const o = renderSpec
@@ -301,6 +337,7 @@ export class ImportManager {
       throw new Error('unknown renderSpec')
     }
   }
+
   getObjectUrl (object, baseUrl = '') {
     const { contentId, type, content } = object
 

@@ -665,6 +665,7 @@ export class GameManager extends EventTarget {
     const rootRealm = this.realmManager.getRootRealm()
     rootRealm.appManager.clear()
   }
+
   async worldOpen () {
     const rootRealm = this.realmManager.getRootRealm()
     rootRealm.appManager.clear()

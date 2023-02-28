@@ -1,8 +1,7 @@
 import { makeId } from './util.js'
-// import PhysxWorker from './physx-worker.js?sharedworker'
+import PhysxWorker from './physx-worker.js?worker'
 
-const defaultNumPhysicsWorkers = 1
-// const defaultNumPhysicsWorkers = 2
+const defaultNumPhysicsWorkers = 2
 
 class PhysicsWorkerManager {
   constructor ({ numWorkers = defaultNumPhysicsWorkers } = {}) {
@@ -16,27 +15,10 @@ class PhysicsWorkerManager {
   waitForLoad () {
     if (!this.loadPromise) {
       this.loadPromise = (async () => {
-        console.log(this.loadPromise)
-
         // create workers
         const workers = Array(this.numWorkers)
         for (let i = 0; i < this.numWorkers; i++) {
-          // const worker = new Worker('./physx-worker.js?import', {
-
-          // NO MODULE
-          // const worker = new Worker(
-          //   new URL('./physx-worker.js', import.meta.url)
-          // )
-
-          // MODULE
-          const worker = new Worker(
-            new URL('./physx-worker.js', import.meta.url),
-            {
-              type: 'module'
-            }
-          )
-
-          // const worker = new PhysxWorker()
+          const worker = new PhysxWorker()
 
           const cbs = new Map()
 
