@@ -114,11 +114,12 @@ const _normalizeAnimationDurations = (
 }
 
 async function loadAnimations () {
-  // const res = await import('../animations/animations.z')
-
-  const url = (await import('../assets/animations/animations.z')).default
-  const res = await fetch(url)
-  console.log('res', res)
+  // Load animation.z
+  const res = await fetch(
+    (
+      await import('../assets/animations/animations.z')
+    ).default
+  )
 
   const arrayBuffer = await res.arrayBuffer()
   const uint8Array = new Uint8Array(arrayBuffer)
@@ -141,27 +142,21 @@ async function loadSkeleton () {
     '../assets/animations/animations-skeleton.glb'
   )
 
-  let o
   try {
-    o = await new Promise((resolve, reject) => {
+    const loadedSkeleton = await new Promise((resolve, reject) => {
       const { gltfLoader } = loaders
       gltfLoader.load(
-        animationSkeletonUrl,
-        () => {
-          resolve()
-        },
+        animationSkeletonUrl.default,
+        resolve,
         function onprogress () {},
         reject
       )
     })
+
+    console.log('loadedSkeleton: ', loadedSkeleton)
+    // animationsBaseModel = o;
   } catch (err) {
     console.warn(err)
-  }
-
-  console.log(o)
-
-  if (o) {
-    // animationsBaseModel = o;
   }
 }
 

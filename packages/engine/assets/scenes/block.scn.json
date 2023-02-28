@@ -1,0 +1,14 @@
+{
+  "objects": [
+    {
+      "position": [0, 0, 0],
+      "start_url": "models/grid/grid.glb",
+      "dynamic": false
+    },
+    {
+      "position": [0, 1, -2],
+      "quaternion": [0, 0, 0, 1],
+      "start_url": "models/sword/sword.glb"
+    }
+  ]
+}

@@ -1162,8 +1162,14 @@ class AvatarCharacter extends StateCharacter {
     const instanceId = this.getAvatarInstanceId()
     const avatarApp = this.appManager.getAppByInstanceId(instanceId)
     if (!avatarApp) {
-      debugger
+      console.error(`no avatar app: instanceId =${instanceId}`)
     }
+
+    console.log('CHARACTER_CONTROLLER: [syncAvatar]: ', {
+      instanceId,
+      avatarApp
+    })
+
     // const _setNextAvatarApp = (app) => {
     const avatar = makeAvatar(avatarApp, this.environmentManager)
     this.avatar = avatar

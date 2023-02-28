@@ -3,16 +3,13 @@ this file contains the universe/meta-world/scenes/multiplayer code.
 responsibilities include loading the world on url change.
 */
 
-import * as THREE from 'three';
+import * as THREE from 'three'
 // import metaversefile from 'metaversefile';
 // import {NetworkRealms} from '../multiplayer/public/network-realms.mjs';
 // import WSRTC from 'wsrtc/wsrtc.js';
 // import * as Z from 'zjs';
 
-import {
-  initialPosY,
-  realmSize,
-} from '../constants.js';
+import { initialPosY, realmSize } from '../constants.js'
 // import {
 //   playersMapName,
 //   appsMapName,
@@ -26,22 +23,16 @@ import {
 // import {
 //   PlayersManager,
 // } from './players-manager.js';
-import {makeId, parseQuery} from '../util.js';
+import { makeId, parseQuery } from '../util.js'
 // import voiceInput from './voice-input/voice-input.js';
 // import {world} from './world.js';
-import {scenesBaseUrl, defaultSceneName} from '../endpoints.js';
+import { scenesBaseUrl, defaultSceneName } from '../endpoints.js'
 // import {
 //   SpawnManager,
 // } from '../spawn-manager.js';
-import {
-  SceneManager,
-} from '../scene-manager.js';
-import {
-  World,
-} from './world.js';
-import {
-  Universe,
-} from './universe.js';
+import { SceneManager } from '../scene-manager.js'
+import { World } from './world.js'
+import { Universe } from './universe.js'
 // import {
 //   loadScene,
 // } from './realm-utils.js';
@@ -56,33 +47,39 @@ import {
 //
 
 export class RealmManager extends THREE.Object3D {
-  #rootRealm = null;
+  #rootRealm = null
 
-  constructor({
+  constructor ({
     playersManager,
     spawnManager,
     engine,
     characterSelectManager,
-    audioManager,
+    audioManager
   }) {
-    super();
+    super()
 
     // members
-    if (!playersManager || !spawnManager || !engine || !characterSelectManager || !audioManager) {
+    if (
+      !playersManager ||
+      !spawnManager ||
+      !engine ||
+      !characterSelectManager ||
+      !audioManager
+    ) {
       console.warn('invalid args', {
         playersManager,
         spawnManager,
         engine,
         characterSelectManager,
-        audioManager,
-      });
-      debugger;
+        audioManager
+      })
+      debugger
     }
-    this.playersManager = playersManager;
-    this.spawnManager = spawnManager;
-    this.engine = engine;
-    this.characterSelectManager = characterSelectManager;
-    this.audioManager = audioManager;
+    this.playersManager = playersManager
+    this.spawnManager = spawnManager
+    this.engine = engine
+    this.characterSelectManager = characterSelectManager
+    this.audioManager = audioManager
 
     // locals
     // this.multiplayerEnabled = false;
@@ -96,62 +93,64 @@ export class RealmManager extends THREE.Object3D {
       ((window.location.port ? parseInt(window.location.port, 10) : (window.location.protocol === 'https:' ? 443 : 80)) + 1) + '/worlds/';
   } */
 
-  getRootRealm() {
-    const rootRealm = this.#rootRealm;
+  getRootRealm () {
+    const rootRealm = this.#rootRealm
     if (!rootRealm) {
-      debugger;
+      debugger
     }
-    return rootRealm;
+    return rootRealm
   }
 
-  async setRealmSpec(realmSpec) {
+  async setRealmSpec (realmSpec) {
     if (this.#rootRealm) {
-      console.warn('already had a root realm');
-      debugger;
-      throw new Error('already had a root realm');
+      console.warn('already had a root realm')
+      debugger
+      throw new Error('already had a root realm')
     }
 
     // console.log('set realm spec 1', realmSpec);
-    const {/*src, */room} = realmSpec;
+    const { /*src, */ room } = realmSpec
 
-    if (!room) { // singleplayer
+    if (!room) {
+      // singleplayer
       this.#rootRealm = new World({
-        engine: this.engine,
-      });
-    } else { // multiplayer
+        engine: this.engine
+      })
+    } else {
+      // multiplayer
       this.#rootRealm = new Universe({
         playersManager: this.playersManager,
         spawnManager: this.spawnManager,
         engine: this.engine,
         characterSelectManager: this.characterSelectManager,
-        audioManager: this.audioManager,
-      });
+        audioManager: this.audioManager
+      })
     }
-    this.add(this.#rootRealm);
-    this.#rootRealm.updateMatrixWorld();
-    await this.#rootRealm.setRealmSpec(realmSpec);
-    
-    const localPlayer = this.playersManager.getLocalPlayer();
-    localPlayer.position.set(0, initialPosY, 0);
-    localPlayer.updateMatrixWorld();
+    this.add(this.#rootRealm)
+    this.#rootRealm.updateMatrixWorld()
+    await this.#rootRealm.setRealmSpec(realmSpec)
 
-    localPlayer.characterPhysics.setPosition(localPlayer.position);
-    localPlayer.characterPhysics.reset();
+    const localPlayer = this.playersManager.getLocalPlayer()
+    localPlayer.position.set(0, initialPosY, 0)
+    localPlayer.updateMatrixWorld()
+
+    localPlayer.characterPhysics.setPosition(localPlayer.position)
+    localPlayer.characterPhysics.reset()
     // localPlayer.updatePhysics(0, 0);
 
-    await this.spawnManager.spawn();
+    await this.spawnManager.spawn()
 
     // console.log('set realm spec 2', realmSpec);
   }
 
-  async pushUrl(u) {
-    history.pushState({}, '', u);
-    globalThis.dispatchEvent(new MessageEvent('pushstate'));
-    await this.handleUrlUpdate();
+  async pushUrl (u) {
+    history.pushState({}, '', u)
+    globalThis.dispatchEvent(new MessageEvent('pushstate'))
+    await this.handleUrlUpdate()
   }
 
-  async handleUrlUpdate() {
-    const q = parseQuery(location.search);
-    await this.setRealmSpec(q);
+  async handleUrlUpdate () {
+    const q = parseQuery(location.search)
+    await this.setRealmSpec(q)
   }
 }

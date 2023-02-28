@@ -711,7 +711,8 @@ export function copyPQS (dst, src) {
 export async function loadJson (url) {
   // const res = await fetch(u)
   // return await res.json()
-  return await import(url)
+  console.log('load json', url)
+  return await import(/* @vite-ignore */ url) // TODO: FIX THIS https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#limitations
 }
 
 export async function loadImageBitmap (u) {

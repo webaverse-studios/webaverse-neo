@@ -103,7 +103,7 @@ export class World extends THREE.Object3D {
     const {src} = realmSpec;
     const scnUrl = getScnUrl(src);
     await this.appManager.loadScnFromUrl(scnUrl);
-    
+
     // await loadScene({
     //   engine: this.engine,
     //   src,

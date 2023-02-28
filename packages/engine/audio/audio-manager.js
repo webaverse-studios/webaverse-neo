@@ -1,7 +1,7 @@
 // import {getAudioContext} from 'wsrtc/ws-audio-context.js';
-// import microphoneWorkletUrl from './microphone-worklet.js?url'
-// import wsInputWorkletUrl from './ws-input-worklet.js?url'
-// import wsOutputWorkletUrl from './ws-output-worklet.js?url'
+import microphoneWorkletUrl from './microphone-worklet.js?url'
+import wsInputWorkletUrl from './ws-input-worklet.js?url'
+import wsOutputWorkletUrl from './ws-output-worklet.js?url'
 
 export class AudioManager {
   constructor ({ audioContext }) {
@@ -10,9 +10,9 @@ export class AudioManager {
     this.audioContext.gain.connect(this.audioContext.destination)
 
     this.loadPromise = Promise.all([
-      this.audioContext.audioWorklet.addModule('./microphone-worklet.js'),
-      this.audioContext.audioWorklet.addModule('./ws-input-worklet.js'),
-      this.audioContext.audioWorklet.addModule('./ws-output-worklet.js')
+      this.audioContext.audioWorklet.addModule(microphoneWorkletUrl),
+      this.audioContext.audioWorklet.addModule(wsInputWorkletUrl),
+      this.audioContext.audioWorklet.addModule(wsOutputWorkletUrl)
     ]).then(() => {})
     // await Promise.all([
     //   audioCtx.audioWorklet.addModule(`${import.meta.url.replace(/(\/)[^\/]*$/, '$1')}ws-input-worklet.js`),
