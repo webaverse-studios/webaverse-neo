@@ -7,5 +7,5 @@ export const handleLoad = () => {
   setViewHeight()
 
   // Route app.
-  router( document.querySelector( '#mithril-root' ))
+  router( document.querySelector( '#root' ))
 }

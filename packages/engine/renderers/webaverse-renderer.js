@@ -87,6 +87,8 @@ export class WebaverseRenderer {
 
     // offscreen canvas
     this.offscreenCanvas = new OffscreenCanvas(defaultSize, defaultSize)
+    this.offscreenCanvas.oncontextlost = e => {console.log('context lost', e)}
+    this.offscreenCanvas.oncontextrestored = e => {console.log('context restored', e)}
 
     // renderer
     this.renderer = new THREE.WebGLRenderer({
@@ -129,6 +131,7 @@ export class WebaverseRenderer {
     const pixelRatio = 1
     this.setCameraSize(defaultSize, defaultSize, pixelRatio)
   }
+
   bindCanvasEvents (canvas) {
     // resize observer
     const resizeObserver = new ResizeObserver(entries => {
@@ -141,6 +144,7 @@ export class WebaverseRenderer {
 
     this.setSizes(canvas)
   }
+
   setSizes (canvas) {
     const rect = canvas.getBoundingClientRect()
     const { width, height } = rect
@@ -151,6 +155,7 @@ export class WebaverseRenderer {
     this.setComposerSize(width, height, pixelRatio)
     this.setCameraSize(width, height, pixelRatio)
   }
+
   setRendererSize (width, height, pixelRatio) {
     // const renderer = getRenderer();
     const { renderer } = this
@@ -184,11 +189,12 @@ export class WebaverseRenderer {
     this.camera.aspect = aspect
     this.camera.updateProjectionMatrix()
   }
+
   transferToCanvas (dstCanvas) {
     // call transferimagebitmap to move the contents of offscreencanvas to canvas
     const context = dstCanvas.getContext('bitmaprenderer')
     const imageBitmap = this.offscreenCanvas.transferToImageBitmap()
-    // console.log('transfer', imageBitmap);
+    console.log('transfer', imageBitmap);
     context.transferFromImageBitmap(imageBitmap)
   }
   /* waitForLoad() {
