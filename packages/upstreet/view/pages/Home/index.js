@@ -2,43 +2,41 @@ import m from 'mithril'
 import { WebaverseEngine } from '@webaverse-studios/engine'
 //import { throttle } from '@soulofmischief/js-utils'
 //import { Game } from '#Models/Game'
-import { body, canvas as _canvas } from './style.module.scss'
+import { canvas as _canvas } from './style.module.scss'
 
-
-const _Home = `.${body}`
-
+// const _Home = `.${body}`
 
 export default () => {
-  let canvas, resizeListener
+  let resizeListener
 
   return {
-    async oncreate({ dom }) {
+    async oncreate ({ dom }) {
       // Create and configure the canvas element.
       // We append a canvas element so that mithril does not overwrite it.
-      canvas = document.createElement( 'canvas' )
-      canvas.classList.add( _canvas )
+      // canvas = document.createElement( 'canvas' )
+      // canvas.classList.add( _canvas )
 
       // Append the canvas element to the dom.
-      dom.appendChild( canvas )
+      // dom.appendChild( canvas )
+
 
       // Add resize listener.
       //resizeListener = throttle(() => Game.resize(), 250 )
       addEventListener( 'resize', resizeListener )
 
       // Start the engine.
-
-      /*const { WebaverseEngine } = await import(
-        '@webaverse-studios/engine'
-      )*/
-
-      const engine = new WebaverseEngine({ dstCanvas: canvas })
+      new WebaverseEngine({ canvas:dom })
 
       //await Game.reset()
       //await Game.start( canvas )
     },
 
-    onremove() { removeEventListener( 'resize', resizeListener )},
+    onremove () {
+      removeEventListener( 'resize', resizeListener )
+    },
 
-    view() { return m( _Home )}
+    view () {
+      return m( 'canvas', {class: `.${_canvas}`})
+    }
   }
 }

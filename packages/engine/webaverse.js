@@ -281,13 +281,9 @@ export class WebaverseEngine extends EventTarget {
    */
   constructor ({ canvas }) {
     super()
+    console.log ("Webaverse Engine constructor: ", canvas)
 
     this.dstCanvas = canvas
-
-    // if (++numWebaverseEngines > 1) {
-    //   debugger;
-    //   throw new Error('only one engine allowed');
-    // }
 
     const _connectObjects = () => {
       const { scene } = this.webaverseRenderer
@@ -323,31 +319,6 @@ export class WebaverseEngine extends EventTarget {
     // story.listenHack();
 
     this.loadPromise = (async () => {
-      // let index = 0;
-      // const totalWaitForLoadFunctions = 14;
-      // let loadProgressPercentage = 0;
-
-      /* const _updateLoadProgress = () => {
-        loadProgressPercentage = Math.round((index++) / totalWaitForLoadFunctions * 100);
-
-        this.dispatchEvent(new MessageEvent('loadProgress', {
-          data: {
-            loadProgressPercentage,
-          },
-        }));
-        // console.log('loadProgressPercentage', loadProgressPercentage);
-      } */
-
-      // console.log('physx loading...')
-      // physx needs to be loaded first, before everything else, otherwise we have a race condition
-      // await physx.waitForLoad();
-      // _updateLoadProgress();
-
-      // console.log('metaversefileApi loading...')
-
-      // console.log('game init...')
-      // game.load();
-
       // call the waitForLoad functions and update the loading progress
       // we need to load them simultaneously
       await Promise.all([
@@ -359,6 +330,7 @@ export class WebaverseEngine extends EventTarget {
         // this.backgroundFx.waitForLoad(),
         // this.musicManager.waitForLoad(),
       ])
+
 
       const _initializePlayer = async () => {
         await this.partyManager.initDefaultPlayer()
@@ -373,25 +345,10 @@ export class WebaverseEngine extends EventTarget {
       await _initializeRealm()
 
       this.startLoop()
-
       this.setContentLoaded()
     })()
-    this.contentLoaded = false
-    // const self = this
 
-    /* // Todo: global variable for e2e automatic tests
-    window.globalWebaverse = {
-      metaversefileApi,
-      playersManager,
-      npcManager,
-      physicsManager,
-      cameraManager,
-      hpManager,
-      universe,
-      webaverse: self,
-      world,
-      game,
-    }; */
+    this.contentLoaded = false
   }
 
   /* connectCanvas(canvas) {
@@ -405,28 +362,29 @@ export class WebaverseEngine extends EventTarget {
   /* newApp() {
     return new App();
   } */
+
   async createAppAsync (spec) {
     return await this.importManager.createAppAsyncFromEngine(spec, this)
   }
 
-  async waitForLoad () {
-    if (!this.loadPromise) {
-      this.loadPromise = async () => {
-        await physx.waitForLoad()
-        await Promise.all([
-          Avatar.waitForLoad(),
-          physxWorkerManager.waitForLoad(),
-          sounds.waitForLoad(),
-          // particleSystemManager.waitForLoad(),
-          // transformControls.waitForLoad(),
-          backgroundFx.waitForLoad(),
-          voices.waitForLoad(),
-          musicManager.waitForLoad()
-        ])
-      }
-    }
-    await this.loadPromise()
-  }
+  // async waitForLoad () {
+  //   if (!this.loadPromise) {
+  //     this.loadPromise = async () => {
+  //       await physx.waitForLoad()
+  //       await Promise.all([
+  //         Avatar.waitForLoad(),
+  //         physxWorkerManager.waitForLoad(),
+  //         sounds.waitForLoad(),
+  //         // particleSystemManager.waitForLoad(),
+  //         // transformControls.waitForLoad(),
+  //         backgroundFx.waitForLoad(),
+  //         voices.waitForLoad(),
+  //         musicManager.waitForLoad()
+  //       ])
+  //     }
+  //   }
+  //   await this.loadPromise()
+  // }
 
   /* getRenderer() {
     return getRenderer();
@@ -512,6 +470,8 @@ export class WebaverseEngine extends EventTarget {
   }
 
   startLoop () {
+    console.log('STARTING GAME LOOP')
+
     // const renderer = getRenderer();
     const { renderer, camera } = this.webaverseRenderer
     if (!renderer || !camera) {
