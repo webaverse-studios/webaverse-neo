@@ -1,42 +1,34 @@
 import m from 'mithril'
-import { WebaverseEngine } from '@webaverse-studios/engine'
-//import { throttle } from '@soulofmischief/js-utils'
-//import { Game } from '#Models/Game'
+import { NyxEngine } from '@webaverse-studios/engine'
+import { throttle } from '@soulofmischief/js-utils'
+import { Test } from '../../../scenes/index.js'
 import { canvas as _canvas } from './style.module.scss'
 
+
 // const _Home = `.${body}`
+const Canvas = `canvas.${_canvas}`
+
 
 export default () => {
   let resizeListener
 
   return {
     async oncreate ({ dom }) {
-      // Create and configure the canvas element.
-      // We append a canvas element so that mithril does not overwrite it.
-      // canvas = document.createElement( 'canvas' )
-      // canvas.classList.add( _canvas )
-
-      // Append the canvas element to the dom.
-      // dom.appendChild( canvas )
-
-
       // Add resize listener.
-      //resizeListener = throttle(() => Game.resize(), 250 )
+      resizeListener = throttle(() => engine.resize(), 250 )
       addEventListener( 'resize', resizeListener )
 
-      // Start the engine.
-      new WebaverseEngine({ canvas:dom })
-
-      //await Game.reset()
-      //await Game.start( canvas )
+      // Start the engine. VROOM
+      const engine = new NyxEngine({ canvas: dom })
+      engine.start()
+      engine.load( Test )
     },
 
+    // Remove resize listener.
     onremove () {
       removeEventListener( 'resize', resizeListener )
     },
 
-    view () {
-      return m( 'canvas', {class: `.${_canvas}`})
-    }
+    view () { return m( Canvas )}
   }
 }

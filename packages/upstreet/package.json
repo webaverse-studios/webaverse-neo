@@ -26,6 +26,7 @@
     "@gltf-transform/functions": "^3.0.4",
     "@soulofmischief/js-utils": "=0.21.0",
     "@webaverse-studios/engine": "file:../engine",
-    "mithril": "=2.2.2"
+    "mithril": "=2.2.2",
+    "three": "^0.150.1"
   }
 }
