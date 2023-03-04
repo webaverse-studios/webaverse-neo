@@ -21,7 +21,7 @@ export default () => {
     },
 
     view() {
-      return m( '', [
+      return m( '', { style: { margin: '8px' }}, [
         /* Heading */
         m( 'h1', 'SEA Example' ),
 
