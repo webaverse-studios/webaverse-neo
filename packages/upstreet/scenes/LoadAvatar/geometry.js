@@ -1,4 +1,3 @@
-import { BoxGeometry, Mesh, MeshBasicMaterial } from 'three'
 import avatarURL from './assets/Scilly.vrm'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { VRMLoaderPlugin } from '@pixiv/three-vrm'
