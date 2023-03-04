@@ -1,9 +1,17 @@
+import Stats from 'stats.js'
+
 
 export class Engine {
-  canvas = null
+  #stats = new Stats()
 
-  constructor({ canvas, height, width }) {
+  canvas = null
+  isPlaying = false
+
+  constructor({ canvas, dom, height, width }) {
     this.canvas = canvas
+
+    dom.appendChild( this.#stats.dom )
+    this.#stats.showPanel( 0 )
 
     this.initializeCanvas({ height, width })
   }
@@ -21,7 +29,9 @@ export class Engine {
     })
   }
 
-  pause() {}
+  pause() {
+    this.isPlaying = false
+  }
 
   render() {}
 
@@ -39,9 +49,21 @@ export class Engine {
 
   start() {
     this.reset()
+    this.isPlaying = true
+
+    requestAnimationFrame(() => this.update( this ))
   }
 
-  stop() {}
+  stop() {
+    this.isPlaying = false
+  }
 
-  update() {}
+  update() {
+    this.#stats.begin()
+    this.scene.update()
+    this.#stats.end()
+
+    if ( this.isPlaying )
+      requestAnimationFrame(() => this.update())
+  }
 }

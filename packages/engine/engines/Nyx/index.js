@@ -12,8 +12,8 @@ import { Engine } from '../Engine/index.js'
 
 
 export class NyxEngine extends Engine {
-  constructor({ canvas, height, width }) {
-    super({ canvas, height, width })
+  constructor({ canvas, dom, height, width }) {
+    super({ canvas, dom, height, width })
   }
 
   pause() {
@@ -32,6 +32,10 @@ export class NyxEngine extends Engine {
     super.start()
     console.log( 'START!',  )
   }
-  stop() {}
-  update() {}
+  stop() {
+    super.stop()
+  }
+  update() {
+    super.update()
+  }
 }

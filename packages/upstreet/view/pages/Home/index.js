@@ -14,12 +14,17 @@ export default () => {
 
   return {
     async oncreate ({ dom }) {
+      // Get canvas element.
+      const canvas = dom.querySelector( Canvas )
+
       // Add resize listener.
       resizeListener = throttle(() => engine.resize(), 250 )
       addEventListener( 'resize', resizeListener )
 
+      // Create engine.
+      const engine = new NyxEngine({ canvas, dom })
+
       // Start the engine. VROOM
-      const engine = new NyxEngine({ canvas: dom })
       engine.start()
       engine.load( Test )
     },
@@ -29,6 +34,6 @@ export default () => {
       removeEventListener( 'resize', resizeListener )
     },
 
-    view () { return m( Canvas )}
+    view () { return m( '', m( Canvas ))}
   }
 }

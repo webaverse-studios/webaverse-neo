@@ -850,6 +850,7 @@ __metadata:
     "@webaverse-studios/zine-aux": "file:../zine-aux"
     "@webaverse-studios/zjs": "file:../zjs"
     murmurhash: =2.0.1
+    stats.js: ^0.17.0
     three: ^0.150.0
     troika-three-text: =0.47.1
   languageName: unknown
@@ -4257,6 +4258,13 @@ __metadata:
   dependencies:
     minipass: ^3.1.1
   checksum: fb58f5e46b6923ae67b87ad5ef1c5ab6d427a17db0bead84570c2df3cd50b4ceb880ebdba2d60726588272890bae842a744e1ecce5bd2a2a582fccd5068309eb
+  languageName: node
+  linkType: hard
+
+"stats.js@npm:^0.17.0":
+  version: 0.17.0
+  resolution: "stats.js@npm:0.17.0"
+  checksum: 62d55d9e28e701f5638eac312ab45f66da8cc14b43d4eba4d3ab5a26f444a91d3e0dd1f52e8fc182b03cae955dae4af471d54f1975525cc1e47dfa89a54a47c6
   languageName: node
   linkType: hard
 

@@ -47,29 +47,14 @@ export class Test {
     scene.add( light2 )
     scene.add( light3 )
 
-    this.animate()
+    this.update()
   }
 
-  animate() {
-    const ctx = this
-    function _animate() {
-      requestAnimationFrame( _animate )
+  update() {
+    this.cube.rotation.x += 0.004
+    this.cube.rotation.y += 0.004
 
-      ctx.cube.rotation.x += 0.004
-      ctx.cube.rotation.y += 0.004
-
-      //light1.position.x = 10 * Math.sin( Date.now() / 1000 )
-      //light1.position.y = 10 * Math.cos( Date.now() / 1000 )
-      //light1.position.z = 10 * Math.cos( Date.now() / 1000 )
-
-      //light2.position.x = 7 * Math.sin( Date.now() / 1200 )
-      //light2.position.y = 7 * Math.cos( Date.now() / 1200 )
-      //light2.position.z = 7 * Math.cos( Date.now() / 1200 )
-
-      ctx.renderer.render( ctx.scene, ctx.camera )
-    }
-
-    _animate()
+    this.renderer.render( this.scene, this.camera )
   }
 
 }
