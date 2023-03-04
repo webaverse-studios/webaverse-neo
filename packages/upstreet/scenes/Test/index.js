@@ -8,7 +8,7 @@ import {
   WebGLRenderer
 } from 'three'
 
-import { wall1 } from './geometry'
+import { cube } from './geometry'
 
 
 export class Test {
@@ -16,7 +16,7 @@ export class Test {
   constructor({ canvas }) {
     this.canvas = canvas
 
-    this.cube = wall1.scene.getObjectByName( 'Cube' )
+    this.cube = cube.scene.getObjectByName( 'Cube' )
     this.renderer  = new WebGLRenderer({ canvas })
 
     // Set up camera.
@@ -29,7 +29,7 @@ export class Test {
 
     this.scene = new Scene()
 
-    const { camera, cube, renderer, scene } = this
+    const { camera, renderer, scene } = this
 
     const
       light1 = new PointLight( 0xffffff, 1, 0, 2 ),
@@ -39,10 +39,10 @@ export class Test {
     // Configure.
     configureCamera( camera )
     configureLights( light1, light2, light3 )
-    configureRenderer( renderer, 0.5 )
+    configureRenderer( renderer, 1 )
     configureScene( scene )
 
-    scene.add( cube )
+    scene.add( this.cube )
     scene.add( light1 )
     scene.add( light2 )
     scene.add( light3 )
@@ -56,7 +56,6 @@ export class Test {
 
     this.renderer.render( this.scene, this.camera )
   }
-
 }
 
 
