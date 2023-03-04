@@ -8,7 +8,7 @@ import {
   WebGLRenderer
 } from 'three'
 
-import { TrackballControls } from 'three/addons/controls/TrackballControls.js'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
 import { avatar, grid } from './geometry'
 
@@ -47,12 +47,15 @@ export class Grid {
     // rotate to face the camera
     avatar.scene.rotation.y = Math.PI
 
-    grid.scene.scale.set( 10, 10, 10 )
+    const scale = 5
+
+    grid.scene.scale.set( scale, scale, scale )
     grid.scene.position.set( 0, 0, 0 )
+    grid.scene.rotation.set( 0, 0, 0 )
 
     // Controls
 
-    this.controls = new TrackballControls(
+    this.controls = new OrbitControls(
       this.camera,
       this.renderer.domElement
     )
