@@ -33,8 +33,8 @@ export default () => {
         }),
 
         /* Output */
-        m( '', [ 'Text: ', encryptedText()]),
-        m( '', [ 'Decoded: ', m( 'b', decryptedText())]),
+        m( '', [ 'Encrypted: ', encryptedText()]),
+        m( '', [ 'Decrypted: ', m( 'b', decryptedText())]),
       ])
     }
   }
