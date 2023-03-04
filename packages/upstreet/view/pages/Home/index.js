@@ -1,7 +1,7 @@
 import m from 'mithril'
 import { NyxEngine } from '@webaverse-studios/engine'
 import { throttle } from '@soulofmischief/js-utils'
-import { Test } from '../../../scenes/index.js'
+import { LoadAvatar } from '../../../scenes/index.js'
 import { canvas as _canvas } from './style.module.scss'
 
 
@@ -26,7 +26,7 @@ export default () => {
 
       // Start the engine. VROOM
       engine.start()
-      engine.load( Test )
+      engine.load( LoadAvatar )
     },
 
     // Remove resize listener.

@@ -5,7 +5,6 @@
   "description": "Webaverse Game Engine",
   "main": "index.js",
   "dependencies": {
-    "@pixiv/three-vrm": "=1.0.8",
     "@webaverse-studios/zine-aux": "file:../zine-aux",
     "@webaverse-studios/zjs": "file:../zjs",
     "murmurhash": "=2.0.1",

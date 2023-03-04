@@ -505,7 +505,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pixiv/three-vrm@npm:=1.0.8":
+"@pixiv/three-vrm@npm:=1.0.8, @pixiv/three-vrm@npm:^1.0.8":
   version: 1.0.8
   resolution: "@pixiv/three-vrm@npm:1.0.8"
   dependencies:
@@ -846,7 +846,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/engine@workspace:packages/engine"
   dependencies:
-    "@pixiv/three-vrm": =1.0.8
     "@webaverse-studios/zine-aux": "file:../zine-aux"
     "@webaverse-studios/zjs": "file:../zjs"
     murmurhash: =2.0.1
@@ -874,6 +873,7 @@ __metadata:
     "@gltf-transform/core": ^3.0.4
     "@gltf-transform/extensions": ^3.0.4
     "@gltf-transform/functions": ^3.0.4
+    "@pixiv/three-vrm": ^1.0.8
     "@soulofmischief/js-utils": =0.21.0
     "@webaverse-studios/engine": "file:../engine"
     mithril: =2.2.2
