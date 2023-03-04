@@ -14,20 +14,20 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "rollup-plugin-gltf": "^3.1.0",
+    "rollup-plugin-gltf": "=3.1.0",
     "sass": "=1.58.3",
     "vite": "=4.1.0",
-    "vite-plugin-gltf": "^3.1.0",
-    "vite-plugin-wasm": "^3.2.1"
+    "vite-plugin-gltf": "=3.1.0",
+    "vite-plugin-wasm": "=3.2.1"
   },
   "dependencies": {
-    "@gltf-transform/core": "^3.0.4",
-    "@gltf-transform/extensions": "^3.0.4",
-    "@gltf-transform/functions": "^3.0.4",
-    "@pixiv/three-vrm": "^1.0.8",
+    "@gltf-transform/core": "=3.0.4",
+    "@gltf-transform/extensions": "=3.0.4",
+    "@gltf-transform/functions": "=3.0.4",
+    "@pixiv/three-vrm": "=1.0.8",
     "@soulofmischief/js-utils": "=0.21.0",
     "@webaverse-studios/engine": "file:../engine",
     "mithril": "=2.2.2",
-    "three": "^0.150.1"
+    "three": "=0.150.1"
   }
 }

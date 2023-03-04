@@ -8,8 +8,8 @@
     "@webaverse-studios/zine-aux": "file:../zine-aux",
     "@webaverse-studios/zjs": "file:../zjs",
     "murmurhash": "=2.0.1",
-    "stats.js": "^0.17.0",
-    "three": "^0.150.1",
+    "stats.js": "=0.17.0",
+    "three": "=0.150.1",
     "troika-three-text": "=0.47.1"
   },
   "engines": {
