@@ -1,7 +1,7 @@
 //noinspection ES6RedundantAwait
 
-//import m from 'mithril'
-//import { Default } from '#Layouts/Default'
+import m from 'mithril'
+import { Default } from '../../../view/layouts/Default.js'
 
 
 /**
@@ -14,7 +14,7 @@
  */
 export const route = (
   module,
-  //{ layout = Default } = {}
+  { layout = Default } = {}
 ) => ({
   // Get appropriate module on match.
   onmatch: async () => {
@@ -25,7 +25,7 @@ export const route = (
   },
 
   // Render using default layout.
-  //render: v => m( layout, v )
+  render: v => m( layout, v )
 })
 
 

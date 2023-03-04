@@ -27,6 +27,7 @@
     "@pixiv/three-vrm": "=1.0.8",
     "@soulofmischief/js-utils": "=0.21.0",
     "@webaverse-studios/engine": "file:../engine",
+    "gun": "^0.2020.1239",
     "mithril": "=2.2.2",
     "three": "=0.150.1"
   }

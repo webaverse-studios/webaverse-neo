@@ -38,13 +38,14 @@ export class Engine {
   reset() {}
 
   resize(
-    width = this.canvas.width,
-    height = this.canvas.height,
+    width = innerWidth,
+    height = innerHeight,
   ) {
+    console.log( 'RESIZE',  )
     const { devicePixelRatio } = window
 
-    this.canvas.width = width * devicePixelRatio
-    this.canvas.height = height * devicePixelRatio
+    this.canvas.width = width
+    this.canvas.height = height
   }
 
   start() {

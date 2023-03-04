@@ -1,0 +1,13 @@
+
+.body {
+  /* Display */
+  display: flex;
+  flex-flow: column nowrap;
+
+  /* Position */
+  position: relative;
+
+  /* Size */
+  height: 100vh;
+  width: 100vw;
+}

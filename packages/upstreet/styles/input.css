@@ -2,8 +2,9 @@
 input,
 textarea {
   /* Display */
-  background: rgba( var(--textRGB), 0.1 );
-  border: none;
+  /*background: rgba( var(--textRGB), 0.1 );*/
+  /*border: none;*/
+  border: 1px solid black;
   border-radius: 0.325rem;
   padding: 14px 16px;
 
@@ -11,7 +12,7 @@ textarea {
   margin-bottom: 0.5rem;
 
   /* Text */
-  color: var(--text);
+  /*color: var(--text);*/
   font-size: 1em;
 }
 

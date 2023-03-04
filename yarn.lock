@@ -268,7 +268,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gltf-transform/core@npm:^3.0.4":
+"@gltf-transform/core@npm:=3.0.4, @gltf-transform/core@npm:^3.0.4":
   version: 3.0.4
   resolution: "@gltf-transform/core@npm:3.0.4"
   dependencies:
@@ -277,7 +277,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gltf-transform/extensions@npm:^3.0.4":
+"@gltf-transform/extensions@npm:=3.0.4, @gltf-transform/extensions@npm:^3.0.4":
   version: 3.0.4
   resolution: "@gltf-transform/extensions@npm:3.0.4"
   dependencies:
@@ -287,7 +287,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gltf-transform/functions@npm:^3.0.4":
+"@gltf-transform/functions@npm:=3.0.4":
   version: 3.0.4
   resolution: "@gltf-transform/functions@npm:3.0.4"
   dependencies:
@@ -505,7 +505,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pixiv/three-vrm@npm:=1.0.8, @pixiv/three-vrm@npm:^1.0.8":
+"@pixiv/three-vrm@npm:=1.0.8":
   version: 1.0.8
   resolution: "@pixiv/three-vrm@npm:1.0.8"
   dependencies:
@@ -780,9 +780,9 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 18.14.1
-  resolution: "@types/node@npm:18.14.1"
-  checksum: 58556bbdb0050e44a4934742c1da2530812782c06d266a758e669e44c5aa196166c5fce45fdb03f016876717e3840478b3220129bb77367f979607564047f0a3
+  version: 18.14.6
+  resolution: "@types/node@npm:18.14.6"
+  checksum: 2f88f482cabadc6dbddd627a1674239e68c3c9beab56eb4ae2309fb96fd17fc3a509d99b0309bafe13b58529574f49ecf3a583f2ebe2896dd32fe4be436dc96e
   languageName: node
   linkType: hard
 
@@ -849,8 +849,8 @@ __metadata:
     "@webaverse-studios/zine-aux": "file:../zine-aux"
     "@webaverse-studios/zjs": "file:../zjs"
     murmurhash: =2.0.1
-    stats.js: ^0.17.0
-    three: ^0.150.1
+    stats.js: =0.17.0
+    three: =0.150.1
     troika-three-text: =0.47.1
   languageName: unknown
   linkType: soft
@@ -870,19 +870,20 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/upstreet@workspace:packages/upstreet"
   dependencies:
-    "@gltf-transform/core": ^3.0.4
-    "@gltf-transform/extensions": ^3.0.4
-    "@gltf-transform/functions": ^3.0.4
-    "@pixiv/three-vrm": ^1.0.8
+    "@gltf-transform/core": =3.0.4
+    "@gltf-transform/extensions": =3.0.4
+    "@gltf-transform/functions": =3.0.4
+    "@pixiv/three-vrm": =1.0.8
     "@soulofmischief/js-utils": =0.21.0
     "@webaverse-studios/engine": "file:../engine"
+    gun: ^0.2020.1239
     mithril: =2.2.2
-    rollup-plugin-gltf: ^3.1.0
+    rollup-plugin-gltf: =3.1.0
     sass: =1.58.3
-    three: ^0.150.1
+    three: =0.150.1
     vite: =4.1.0
-    vite-plugin-gltf: ^3.1.0
-    vite-plugin-wasm: ^3.2.1
+    vite-plugin-gltf: =3.1.0
+    vite-plugin-wasm: =3.2.1
   languageName: unknown
   linkType: soft
 
@@ -2175,11 +2176,11 @@ __metadata:
   linkType: hard
 
 "esquery@npm:^1.4.0":
-  version: 1.4.2
-  resolution: "esquery@npm:1.4.2"
+  version: 1.5.0
+  resolution: "esquery@npm:1.5.0"
   dependencies:
     estraverse: ^5.1.0
-  checksum: 2f4ad89c5aafaca61cc2c15e256190f0d6deb4791cae6552d3cb4b1eb8867958cdf27a56aaa3272ff17435e3eaa19ee0d4129fac336ca6373d7354d7b5da7966
+  checksum: aefb0d2596c230118656cd4ec7532d447333a410a48834d80ea648b1e7b5c9bc9ed8b5e33a89cb04e487b60d622f44cf5713bf4abed7c97343edefdc84a35900
   languageName: node
   linkType: hard
 
@@ -2547,7 +2548,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gun@npm:=0.2020.1239":
+"gun@npm:=0.2020.1239, gun@npm:^0.2020.1239":
   version: 0.2020.1239
   resolution: "gun@npm:0.2020.1239"
   dependencies:
@@ -3059,9 +3060,9 @@ __metadata:
   linkType: hard
 
 "lru-cache@npm:^7.7.1":
-  version: 7.17.0
-  resolution: "lru-cache@npm:7.17.0"
-  checksum: 28c2a98ad313b8d61beac1f08257b6f0ca990e39d24a9bc831030b6e209447cfb11c6d9d1a774282189bfc9609d1dfd17ebe485228dd68f7b96b6b9b7740894e
+  version: 7.18.1
+  resolution: "lru-cache@npm:7.18.1"
+  checksum: ab0ec1360c552f1ffa54b1eaf0026126c5116a07bee156b92d1e971f4c8c88e9160f0fad4ab6fed4e0fdea84f25a4590ece085bc57ed9ab1d90b17f0b138c556
   languageName: node
   linkType: hard
 
@@ -3214,9 +3215,9 @@ __metadata:
   linkType: hard
 
 "minipass@npm:^4.0.0":
-  version: 4.2.1
-  resolution: "minipass@npm:4.2.1"
-  checksum: 727641018e2b2dcd8fb6239b9220b4f0ef1b43d279dcb7f53840f7c43d005a36f0cdcfe2ffbc18ce32fae2ea484d3e7d3cb29cbe99c9274b0365bbb74661266c
+  version: 4.2.4
+  resolution: "minipass@npm:4.2.4"
+  checksum: c664f2ae4401408d1e7a6e4f50aca45f87b1b0634bc9261136df5c378e313e77355765f73f59c4a5abcadcdf43d83fcd3eb14e4a7cdcce8e36508e2290345753
   languageName: node
   linkType: hard
 
@@ -3971,7 +3972,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-gltf@npm:^3.1.0":
+"rollup-plugin-gltf@npm:=3.1.0":
   version: 3.1.0
   resolution: "rollup-plugin-gltf@npm:3.1.0"
   dependencies:
@@ -4001,8 +4002,8 @@ __metadata:
   linkType: hard
 
 "rollup@npm:^3.10.0":
-  version: 3.17.3
-  resolution: "rollup@npm:3.17.3"
+  version: 3.18.0
+  resolution: "rollup@npm:3.18.0"
   dependencies:
     fsevents: ~2.3.2
   dependenciesMeta:
@@ -4010,7 +4011,7 @@ __metadata:
       optional: true
   bin:
     rollup: dist/bin/rollup
-  checksum: afce20a6ef4a613e5803eff7fb17a3efe740e326257b43f48bdbe10783f3eae79587d7e455234bc68f3c3154a50f2c29c85d4d2a42cdebcc17a5abeaeb04e0ed
+  checksum: 0bcd1abb1cc383abdd09b5594de862ecb2f946e950954bb472a370289bdc4499aea8d04477be55ce205450d973d38ad255f0dc6926162500a251d73bf0e60e6f
   languageName: node
   linkType: hard
 
@@ -4261,7 +4262,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stats.js@npm:^0.17.0":
+"stats.js@npm:=0.17.0":
   version: 0.17.0
   resolution: "stats.js@npm:0.17.0"
   checksum: 62d55d9e28e701f5638eac312ab45f66da8cc14b43d4eba4d3ab5a26f444a91d3e0dd1f52e8fc182b03cae955dae4af471d54f1975525cc1e47dfa89a54a47c6
@@ -4366,14 +4367,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"three@npm:^0.150.0":
-  version: 0.150.0
-  resolution: "three@npm:0.150.0"
-  checksum: 6177334162ce2b1fad8cdf15e33978d855d3724f6270d952667da1a64ea3a06c9369ddef12f4206b3fed5d98b7bc8be9a98f3ae705dfb3262ffb1234e7a9ea14
-  languageName: node
-  linkType: hard
-
-"three@npm:^0.150.1":
+"three@npm:=0.150.1, three@npm:^0.150.0":
   version: 0.150.1
   resolution: "three@npm:0.150.1"
   checksum: b12a92a681a30e62640d90bdf074d039c05d8294ad40f437e7e1807ce0e698ad6728878a1e72dad22bf05d7a359843ecea8739d05f2f13143bc3a4ecdfdbdd7b
@@ -4644,7 +4638,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-gltf@npm:^3.1.0":
+"vite-plugin-gltf@npm:=3.1.0":
   version: 3.1.0
   resolution: "vite-plugin-gltf@npm:3.1.0"
   dependencies:
@@ -4659,7 +4653,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-wasm@npm:^3.2.1":
+"vite-plugin-wasm@npm:=3.2.1":
   version: 3.2.1
   resolution: "vite-plugin-wasm@npm:3.2.1"
   dependencies:
