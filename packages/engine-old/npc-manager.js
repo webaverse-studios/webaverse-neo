@@ -8,12 +8,12 @@ npcs includes,
 
 import * as THREE from 'three';
 // import Avatar from './avatars/avatars.js';
-// import {LocalPlayer} from './character-controller.js';
+// import {LocalPlayer} from './character-controllers.js';
 import {NpcPlayer} from './character-controller.js';
 // import * as voices from './voices.js';
 // import {world} from './world.js';
 // import {chatManager} from './chat-manager.js';
-import {makeId, createRelativeUrl} from './util.js';
+import {createRelativeUrl, makeId} from './util.js';
 // import {characterSelectManager} from './characterselect-manager.js';
 // import {idleFn} from './npc-behavior.js';
 // import {
@@ -39,15 +39,15 @@ const localVector2 = new THREE.Vector3();
 
 export class NpcManager extends THREE.Object3D {
   constructor({
-    engine,
-    physicsTracker,
-    environmentManager,
-    audioManager,
-    chatManager,
-    sounds,
-    characterSelectManager,
-    hitManager,
-  }) {
+                engine,
+                physicsTracker,
+                environmentManager,
+                audioManager,
+                chatManager,
+                sounds,
+                characterSelectManager,
+                hitManager,
+              }) {
     super();
 
     // members
@@ -116,62 +116,62 @@ export class NpcManager extends THREE.Object3D {
 
     // load
     // if (mode === 'attached') {
-      // load json
-      const res = await fetch(srcUrl);
-      const json = await res.json();
+    // load json
+    const res = await fetch(srcUrl);
+    const json = await res.json();
 
-      // console.log('got npc json', json);
+    // console.log('got npc json', json);
 
-      // npc pameters
-      const name = json.name;
-      const avatarUrl = createRelativeUrl(json.avatarUrl, srcUrl);
-      // const detached = !!json.detached;
-      const {voice, voicePack} = json;
+    // npc pameters
+    const name = json.name;
+    const avatarUrl = createRelativeUrl(json.avatarUrl, srcUrl);
+    // const detached = !!json.detached;
+    const {voice, voicePack} = json;
 
-      const position = localVector.setFromMatrixPosition(app.matrixWorld)
-        .add(localVector2.set(0, 1, 0));
-      const quaternion = app.quaternion;
-      const scale = app.scale;
-      // const norenderer = app.getComponent('norenderer');
-      // const components = [{
-      //   key: 'quality',
-      //   value: app.getComponent('quality'),
-      // }];
-      const components = [];
+    const position = localVector.setFromMatrixPosition(app.matrixWorld)
+      .add(localVector2.set(0, 1, 0));
+    const quaternion = app.quaternion;
+    const scale = app.scale;
+    // const norenderer = app.getComponent('norenderer');
+    // const components = [{
+    //   key: 'quality',
+    //   value: app.getComponent('quality'),
+    // }];
+    const components = [];
 
-      // create npc
-      const npcPlayer = await this.#createNpcAsync({
-        ownerApp: app,
-        name,
-        avatarUrl,
-        voice,
-        voicePack,
-        position,
-        quaternion,
-        scale,
-        // detached,
-        // norenderer,
-        components,
+    // create npc
+    const npcPlayer = await this.#createNpcAsync({
+      ownerApp: app,
+      name,
+      avatarUrl,
+      voice,
+      voicePack,
+      position,
+      quaternion,
+      scale,
+      // detached,
+      // norenderer,
+      components,
+    });
+
+    {
+      const hitTracker = this.hitManager.createHitTracker({
+        app,
       });
+      hitTracker.addEventListener('hit', e => {
+        const e2 = {...e};
+        npcPlayer.dispatchEvent(e2);
+      });
+      this.hitManager.addAppHitTracker(app, hitTracker);
+    }
 
-      {
-        const hitTracker = this.hitManager.createHitTracker({
-          app,
-        });
-        hitTracker.addEventListener('hit', e => {
-          const e2 = {...e};
-          npcPlayer.dispatchEvent(e2);
-        });
-        this.hitManager.addAppHitTracker(app, hitTracker);
-      }
+    return npcPlayer;
 
-      return npcPlayer;
-
-      // await this.#setNpcApp({
-      //   npc,
-      //   app,
-      //   json,
-      // });
+    // await this.#setNpcApp({
+    //   npc,
+    //   app,
+    //   json,
+    // });
     // }
   }
 
@@ -214,18 +214,18 @@ export class NpcManager extends THREE.Object3D {
   } */
 
   async #createNpcAsync({
-    ownerApp,
-    name,
-    avatarUrl,
-    voice,
-    voicePack,
-    position,
-    quaternion,
-    scale,
-    detached,
-    // norenderer,
-    components,
-  }) {
+                          ownerApp,
+                          name,
+                          avatarUrl,
+                          voice,
+                          voicePack,
+                          position,
+                          quaternion,
+                          scale,
+                          detached,
+                          // norenderer,
+                          components,
+                        }) {
     const playerId = makeId(5);
     const npcPlayer = new NpcPlayer({
       playerId,
@@ -301,7 +301,7 @@ export class NpcManager extends THREE.Object3D {
         npc.destroy();
       },
     ];
-    
+
     cancelFnsMap.set(app, () => {
       for (const cancelFn of npc.cancelFns) {
         cancelFn();
@@ -356,7 +356,7 @@ export class NpcManager extends THREE.Object3D {
     });
 
     // events
-    
+
     const _listenEvents = () => {
       const animations = Avatar.getAnimations();
       const hurtAnimation = animations.find(a => a.isHurt);
@@ -369,7 +369,7 @@ export class NpcManager extends THREE.Object3D {
               animation: 'pain_back',
             };
             player.addAction(newAction);
-            
+
             setTimeout(() => {
               player.removeAction('hurt');
             }, hurtAnimationDuration * 1000);
@@ -435,7 +435,7 @@ export class NpcManager extends THREE.Object3D {
         };
 
         chatManager.addPlayerMessage(player, m);
-        
+
         const _triggerEmotes = () => {
           const fuzzyEmotionName = getFuzzyEmotionMapping(emote);
           if (fuzzyEmotionName) {

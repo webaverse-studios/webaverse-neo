@@ -4,16 +4,12 @@ it contains code for character capsules and world simulation.
 */
 
 import * as THREE from 'three'
-import { BoxGeometry } from 'three'
+import {BoxGeometry} from 'three'
 import physx from './physx.js'
-import {
-  getNextPhysicsId,
-  freePhysicsId,
-  convertMeshToPhysicsMesh
-} from './util.js'
-import { CapsuleGeometry } from '@webaverse-studios/zine-aux/geometries/CapsuleGeometry.js'
+import {convertMeshToPhysicsMesh, freePhysicsId, getNextPhysicsId} from './util.js'
+import {CapsuleGeometry} from '@webaverse-studios/zine-aux/geometries/CapsuleGeometry.js'
 import physxWorkerManager from './physx-worker-manager.js'
-import { GET, GET_NORMALIZED, GET_INVERSE } from './constants.js'
+import {GET} from './constants.js'
 
 //
 
@@ -25,16 +21,19 @@ const localMatrix = new THREE.Vector3()
 //
 
 export class PhysicsObjectTracker {
-  constructor () {
+  constructor() {
     this.physicsObjects = new Map()
   }
-  add (physicsObject) {
+
+  add(physicsObject) {
     this.physicsObjects.set(physicsObject.physicsId, physicsObject)
   }
-  getPhysicsObjectByPhysicsId (id) {
+
+  getPhysicsObjectByPhysicsId(id) {
     return this.physicsObjects.get(id)
   }
 }
+
 export const physicsObjectTracker = new PhysicsObjectTracker()
 
 //
@@ -64,7 +63,7 @@ const _makePhysicsObject = (physicsId, position, quaternion, scale) => {
 }
 const _updatePhysicsObjects = updatesOut => {
   for (const updateOut of updatesOut) {
-    const { id, position, quaternion, collided, grounded } = updateOut
+    const {id, position, quaternion, collided, grounded} = updateOut
     const physicsObject = physicsObjectTracker.getPhysicsObjectByPhysicsId(id)
     if (physicsObject) {
       physicsObject.position.copy(position)
@@ -79,8 +78,9 @@ const _updatePhysicsObjects = updatesOut => {
 
 const physicsUpdates = []
 const gravity = new THREE.Vector3(0, -9.8, 0)
+
 class PhysicsScene extends EventTarget {
-  constructor (opts) {
+  constructor(opts) {
     super()
 
     if (!opts) {
@@ -99,7 +99,7 @@ class PhysicsScene extends EventTarget {
     });
   } */
 
-  addCapsuleGeometry (
+  addCapsuleGeometry(
     position,
     quaternion,
     radius,
@@ -134,7 +134,7 @@ class PhysicsScene extends EventTarget {
     physicsMesh.visible = false
     physicsObject.add(physicsMesh)
     physicsMesh.updateMatrixWorld()
-    const { bounds } = this.getGeometryForPhysicsId(physicsId)
+    const {bounds} = this.getGeometryForPhysicsId(physicsId)
     physicsMesh.geometry.boundingBox = new THREE.Box3(
       new THREE.Vector3().fromArray(bounds, 0),
       new THREE.Vector3().fromArray(bounds, 3)
@@ -143,7 +143,7 @@ class PhysicsScene extends EventTarget {
     return physicsObject
   }
 
-  addPlaneGeometry (position, quaternion, dynamic) {
+  addPlaneGeometry(position, quaternion, dynamic) {
     const physicsId = getNextPhysicsId()
     physx.physxWorker.addPlaneGeometryPhysics(
       this.scene,
@@ -168,7 +168,7 @@ class PhysicsScene extends EventTarget {
     return physicsObject
   }
 
-  addBoxGeometry (
+  addBoxGeometry(
     position,
     quaternion,
     size,
@@ -200,7 +200,7 @@ class PhysicsScene extends EventTarget {
     physicsMesh.visible = false
     physicsObject.add(physicsMesh)
     physicsObject.updateMatrixWorld()
-    const { bounds } = this.getGeometryForPhysicsId(physicsId)
+    const {bounds} = this.getGeometryForPhysicsId(physicsId)
     physicsMesh.geometry.boundingBox = new THREE.Box3(
       new THREE.Vector3().fromArray(bounds, 0),
       new THREE.Vector3().fromArray(bounds, 3)
@@ -209,9 +209,9 @@ class PhysicsScene extends EventTarget {
     return physicsObject
   }
 
-  extractPhysicsGeometryForId (physicsId) {
+  extractPhysicsGeometryForId(physicsId) {
     const physicsGeometry = this.getGeometryForPhysicsId(physicsId)
-    const { positions, indices, bounds } = physicsGeometry
+    const {positions, indices, bounds} = physicsGeometry
     let geometry = new THREE.BufferGeometry()
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
     geometry.setIndex(new THREE.BufferAttribute(indices, 1))
@@ -224,7 +224,7 @@ class PhysicsScene extends EventTarget {
     return geometry
   }
 
-  addGeometry (mesh) {
+  addGeometry(mesh) {
     // console.log('add geometry', mesh.position.toArray(), mesh.matrixWorld.toArray());
     const physicsMesh = convertMeshToPhysicsMesh(mesh)
 
@@ -247,11 +247,11 @@ class PhysicsScene extends EventTarget {
     return physicsObject
   }
 
-  createMaterial (physicsMaterial) {
+  createMaterial(physicsMaterial) {
     return physx.physxWorker.createMaterial(this.scene, physicsMaterial)
   }
 
-  destroyMaterial (materialAddress) {
+  destroyMaterial(materialAddress) {
     physx.physxWorker.destroyMaterial(this.scene, materialAddress)
   }
 
@@ -302,20 +302,20 @@ class PhysicsScene extends EventTarget {
     return mesh2;
   } */
 
-  cookGeometry (mesh) {
+  cookGeometry(mesh) {
     const physicsMesh = convertMeshToPhysicsMesh(mesh)
     const buffer = physx.physxWorker.cookGeometryPhysics(physicsMesh)
     return buffer
   }
 
-  async cookGeometryAsync (mesh, { signal = null } = {}) {
+  async cookGeometryAsync(mesh, {signal = null} = {}) {
     const physicsMesh = convertMeshToPhysicsMesh(mesh)
     const buffer = await physxWorkerManager.cookGeometry(physicsMesh)
     signal && signal.throwIfAborted()
     return buffer
   }
 
-  addCookedGeometry (buffer, position, quaternion, scale) {
+  addCookedGeometry(buffer, position, quaternion, scale) {
     const physicsId = getNextPhysicsId()
     physx.physxWorker.addCookedGeometryPhysics(
       this.scene,
@@ -343,7 +343,7 @@ class PhysicsScene extends EventTarget {
     return physicsObject
   }
 
-  addConvexGeometry (mesh, dynamic = false, external = false) {
+  addConvexGeometry(mesh, dynamic = false, external = false) {
     const physicsMesh = convertMeshToPhysicsMesh(mesh)
 
     const physicsId = getNextPhysicsId()
@@ -371,7 +371,7 @@ class PhysicsScene extends EventTarget {
     return physicsObject
   }
 
-  cookConvexGeometry (mesh) {
+  cookConvexGeometry(mesh) {
     const physicsMesh = convertMeshToPhysicsMesh(mesh)
     const buffer = physx.physxWorker.cookConvexGeometryPhysics(
       this.scene,
@@ -380,14 +380,14 @@ class PhysicsScene extends EventTarget {
     return buffer
   }
 
-  async cookConvexGeometryAsync (mesh, { signal = null } = {}) {
+  async cookConvexGeometryAsync(mesh, {signal = null} = {}) {
     const physicsMesh = convertMeshToPhysicsMesh(mesh)
     const buffer = await physxWorkerManager.cookConvexGeometry(physicsMesh)
     signal && signal.throwIfAborted()
     return buffer
   }
 
-  addCookedConvexGeometry (
+  addCookedConvexGeometry(
     buffer,
     position,
     quaternion,
@@ -424,7 +424,7 @@ class PhysicsScene extends EventTarget {
     return physicsObject
   }
 
-  cookHeightfieldGeometry (numRows, numColumns, heights) {
+  cookHeightfieldGeometry(numRows, numColumns, heights) {
     const buffer = physx.physxWorker.cookHeightfieldGeometryPhysics(
       numRows,
       numColumns,
@@ -432,11 +432,12 @@ class PhysicsScene extends EventTarget {
     )
     return buffer
   }
-  async cookHeightfieldGeometryAsync (
+
+  async cookHeightfieldGeometryAsync(
     numRows,
     numColumns,
     heights,
-    { signal = null } = {}
+    {signal = null} = {}
   ) {
     const buffer = await physxWorkerManager.cookHeightfieldGeometry(
       numRows,
@@ -446,7 +447,8 @@ class PhysicsScene extends EventTarget {
     signal && signal.throwIfAborted()
     return buffer
   }
-  addCookedHeightfieldGeometry (
+
+  addCookedHeightfieldGeometry(
     buffer,
     heightScale,
     rowScale,
@@ -483,7 +485,7 @@ class PhysicsScene extends EventTarget {
     return physicsObject
   }
 
-  addShape (shapeAddress, position, quaternion, scale, external) {
+  addShape(shapeAddress, position, quaternion, scale, external) {
     const physicsId = getNextPhysicsId()
 
     physx.physxWorker.addShapePhysics(
@@ -513,7 +515,7 @@ class PhysicsScene extends EventTarget {
     return physicsObject
   }
 
-  addConvexShape (
+  addConvexShape(
     shapeAddress,
     position,
     quaternion,
@@ -554,7 +556,7 @@ class PhysicsScene extends EventTarget {
     return physicsObject
   }
 
-  addHeightFieldGeometry (
+  addHeightFieldGeometry(
     mesh,
     numRows,
     numColumns,
@@ -599,23 +601,23 @@ class PhysicsScene extends EventTarget {
     return physicsObject
   }
 
-  getGeometryForPhysicsId (physicsId) {
+  getGeometryForPhysicsId(physicsId) {
     return physx.physxWorker.getGeometryPhysics(this.scene, physicsId)
   }
 
-  getBoundingBoxForPhysicsId (physicsId, box) {
+  getBoundingBoxForPhysicsId(physicsId, box) {
     return physx.physxWorker.getBoundsPhysics(this.scene, physicsId, box)
   }
 
-  enableActor (physicsObject) {
+  enableActor(physicsObject) {
     physx.physxWorker.enableActorPhysics(this.scene, physicsObject.physicsId)
   }
 
-  disableActor (physicsObject) {
+  disableActor(physicsObject) {
     physx.physxWorker.disableActorPhysics(this.scene, physicsObject.physicsId)
   }
 
-  enableAppPhysics (app) {
+  enableAppPhysics(app) {
     const physicsObjects = app.getPhysicsObjects()
     for (let i = 0; i < physicsObjects.length; i++) {
       const physicsObject = physicsObjects[i]
@@ -623,7 +625,7 @@ class PhysicsScene extends EventTarget {
     }
   }
 
-  disableAppPhysics (app) {
+  disableAppPhysics(app) {
     const physicsObjects = app.getPhysicsObjects()
     for (let i = 0; i < physicsObjects.length; i++) {
       const physicsObject = physicsObjects[i]
@@ -631,32 +633,32 @@ class PhysicsScene extends EventTarget {
     }
   }
 
-  disableGeometry (physicsObject) {
+  disableGeometry(physicsObject) {
     physx.physxWorker.disableGeometryPhysics(
       this.scene,
       physicsObject.physicsId
     )
   }
 
-  enableGeometry (physicsObject) {
+  enableGeometry(physicsObject) {
     physx.physxWorker.enableGeometryPhysics(this.scene, physicsObject.physicsId)
   }
 
-  disableGeometryQueries (physicsObject) {
+  disableGeometryQueries(physicsObject) {
     physx.physxWorker.disableGeometryQueriesPhysics(
       this.scene,
       physicsObject.physicsId
     )
   }
 
-  enableGeometryQueries (physicsObject) {
+  enableGeometryQueries(physicsObject) {
     physx.physxWorker.enableGeometryQueriesPhysics(
       this.scene,
       physicsObject.physicsId
     )
   }
 
-  setMassAndInertia (physicsObject, mass, inertia) {
+  setMassAndInertia(physicsObject, mass, inertia) {
     physx.physxWorker.setMassAndInertiaPhysics(
       this.scene,
       physicsObject.physicsId,
@@ -665,7 +667,7 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  setGravityEnabled (physicsObject, enabled) {
+  setGravityEnabled(physicsObject, enabled) {
     physx.physxWorker.setGravityEnabledPhysics(
       this.scene,
       physicsObject.physicsId,
@@ -673,13 +675,13 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  removeGeometry (physicsObject) {
+  removeGeometry(physicsObject) {
     physx.physxWorker.removeGeometryPhysics(this.scene, physicsObject.physicsId)
 
     freePhysicsId(physicsObject.physicsId)
   }
 
-  getLinearVelocity (physicsObject, velocity) {
+  getLinearVelocity(physicsObject, velocity) {
     physx.physxWorker.getLinearVelocityPhysics(
       this.scene,
       physicsObject.physicsId,
@@ -687,7 +689,7 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  getAngularVelocity (physicsObject, velocity) {
+  getAngularVelocity(physicsObject, velocity) {
     physx.physxWorker.getAngularVelocityPhysics(
       this.scene,
       physicsObject.physicsId,
@@ -695,7 +697,7 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  getGlobalPosition (physicsObject, position) {
+  getGlobalPosition(physicsObject, position) {
     physx.physxWorker.getGlobalPositionPhysics(
       this.scene,
       physicsObject.physicsId,
@@ -703,7 +705,7 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  addForceAtPos (physicsObject, velocity, position, autoWake) {
+  addForceAtPos(physicsObject, velocity, position, autoWake) {
     physx.physxWorker.addForceAtPosPhysics(
       this.scene,
       physicsObject.physicsId,
@@ -713,7 +715,7 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  addLocalForceAtPos (physicsObject, velocity, position, autoWake) {
+  addLocalForceAtPos(physicsObject, velocity, position, autoWake) {
     physx.physxWorker.addLocalForceAtPosPhysics(
       this.scene,
       physicsObject.physicsId,
@@ -723,7 +725,7 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  addForceAtLocalPos (physicsObject, velocity, position, autoWake) {
+  addForceAtLocalPos(physicsObject, velocity, position, autoWake) {
     physx.physxWorker.addForceAtLocalPosPhysics(
       this.scene,
       physicsObject.physicsId,
@@ -733,7 +735,7 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  addLocalForceAtLocalPos (physicsObject, velocity, position, autoWake) {
+  addLocalForceAtLocalPos(physicsObject, velocity, position, autoWake) {
     physx.physxWorker.addLocalForceAtLocalPosPhysics(
       this.scene,
       physicsObject.physicsId,
@@ -743,7 +745,7 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  addForce (physicsObject, velocity, autoWake) {
+  addForce(physicsObject, velocity, autoWake) {
     physx.physxWorker.addForcePhysics(
       this.scene,
       physicsObject.physicsId,
@@ -752,7 +754,7 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  addTorque (physicsObject, velocity, autoWake) {
+  addTorque(physicsObject, velocity, autoWake) {
     physx.physxWorker.addTorquePhysics(
       this.scene,
       physicsObject.physicsId,
@@ -761,7 +763,7 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  setVelocity (physicsObject, velocity, autoWake) {
+  setVelocity(physicsObject, velocity, autoWake) {
     physx.physxWorker.setVelocityPhysics(
       this.scene,
       physicsObject.physicsId,
@@ -770,7 +772,7 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  setAngularVelocity (physicsObject, velocity, autoWake) {
+  setAngularVelocity(physicsObject, velocity, autoWake) {
     physx.physxWorker.setAngularVelocityPhysics(
       this.scene,
       physicsObject.physicsId,
@@ -779,7 +781,7 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  setTransform (physicsObject, autoWake) {
+  setTransform(physicsObject, autoWake) {
     physx.physxWorker.setTransformPhysics(
       this.scene,
       physicsObject.physicsId,
@@ -790,11 +792,11 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  setGeometryScale (physicsId, newScale) {
+  setGeometryScale(physicsId, newScale) {
     physx.physxWorker.setGeometryScale(this.scene, physicsId, newScale)
   }
 
-  getPath (
+  getPath(
     start,
     dest,
     isWalk,
@@ -817,11 +819,11 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  overlapBox (hx, hy, hz, p, q) {
+  overlapBox(hx, hy, hz, p, q) {
     return physx.physxWorker.overlapBoxPhysics(this.scene, hx, hy, hz, p, q)
   }
 
-  overlapCapsule (radius, halfHeight, p, q) {
+  overlapCapsule(radius, halfHeight, p, q) {
     return physx.physxWorker.overlapCapsulePhysics(
       this.scene,
       radius,
@@ -831,7 +833,7 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  collideBox (hx, hy, hz, p, q, maxIter) {
+  collideBox(hx, hy, hz, p, q, maxIter) {
     return physx.physxWorker.collideBoxPhysics(
       this.scene,
       hx,
@@ -843,7 +845,7 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  collideCapsule (radius, halfHeight, p, q, maxIter) {
+  collideCapsule(radius, halfHeight, p, q, maxIter) {
     return physx.physxWorker.collideCapsulePhysics(
       this.scene,
       radius,
@@ -854,7 +856,7 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  getCollisionObject (radius, halfHeight, p, q) {
+  getCollisionObject(radius, halfHeight, p, q) {
     return physx.physxWorker.getCollisionObjectPhysics(
       this.scene,
       radius,
@@ -864,7 +866,7 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  createCharacterController (
+  createCharacterController(
     radius,
     height,
     contactOffset,
@@ -885,7 +887,7 @@ class PhysicsScene extends EventTarget {
 
     const characterHeight = height + radius * 2
     const physicsObject = new THREE.Object3D()
-    const { bounds } = this.getGeometryForPhysicsId(physicsId)
+    const {bounds} = this.getGeometryForPhysicsId(physicsId)
     const box = new THREE.Box3(
       new THREE.Vector3().fromArray(bounds, 0),
       new THREE.Vector3().fromArray(bounds, 3)
@@ -900,7 +902,7 @@ class PhysicsScene extends EventTarget {
     physicsObject.add(physicsMesh)
     physicsMesh.updateMatrixWorld()
     physicsMesh.geometry.boundingBox = box
-    // console.log('character controller bounds', physicsId, physicsMesh.geometry.boundingBox);
+    // console.log('character controllers bounds', physicsId, physicsMesh.geometry.boundingBox);
     physicsObject.physicsMesh = physicsMesh
     physicsObject.characterControllerId = characterControllerId
     physicsObject.physicsId = physicsId
@@ -913,19 +915,19 @@ class PhysicsScene extends EventTarget {
     physicsMesh.updateMatrixWorld();
     physicsObject.physicsMesh = physicsMesh;
     characterController.physicsObject = physicsObject;
-    console.log('character controller id', physicsObject); */
+    console.log('character controllers id', physicsObject); */
 
     return physicsObject
   }
 
-  destroyCharacterController (characterController) {
+  destroyCharacterController(characterController) {
     physx.physxWorker.destroyCharacterControllerPhysics(
       this.scene,
       characterController.characterControllerId
     )
   }
 
-  moveCharacterController (
+  moveCharacterController(
     characterController,
     displacement,
     minDist,
@@ -943,7 +945,7 @@ class PhysicsScene extends EventTarget {
     return result
   }
 
-  setCharacterControllerPosition (characterController, position) {
+  setCharacterControllerPosition(characterController, position) {
     if (!characterController) {
       debugger
     }
@@ -955,11 +957,11 @@ class PhysicsScene extends EventTarget {
     return result
   }
 
-  raycast (position, quaternion) {
+  raycast(position, quaternion) {
     return physx.physxWorker.raycastPhysics(this.scene, position, quaternion)
   }
 
-  raycastArray (position, quaternion, n) {
+  raycastArray(position, quaternion, n) {
     return physx.physxWorker.raycastPhysicsArray(
       this.scene,
       position,
@@ -968,7 +970,7 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  cutMesh (
+  cutMesh(
     positions,
     numPositions,
     normals,
@@ -977,7 +979,6 @@ class PhysicsScene extends EventTarget {
     numUvs,
     faces, // Set to falsy to indicate that this is an non-indexed geometry
     numFaces,
-
     planeNormal, // normalized vector3 array
     planeDistance // number
   ) {
@@ -996,15 +997,15 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  setLinearLockFlags (physicsId, x, y, z) {
+  setLinearLockFlags(physicsId, x, y, z) {
     physx.physxWorker.setLinearLockFlags(this.scene, physicsId, x, y, z)
   }
 
-  setAngularLockFlags (physicsId, x, y, z) {
+  setAngularLockFlags(physicsId, x, y, z) {
     physx.physxWorker.setAngularLockFlags(this.scene, physicsId, x, y, z)
   }
 
-  sweepBox (origin, quaternion, halfExtents, direction, sweepDistance, maxHits) {
+  sweepBox(origin, quaternion, halfExtents, direction, sweepDistance, maxHits) {
     return physx.physxWorker.sweepBox(
       this.scene,
       origin,
@@ -1016,7 +1017,7 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  sweepConvexShape (
+  sweepConvexShape(
     shapeAddress,
     origin,
     quaternion,
@@ -1035,7 +1036,7 @@ class PhysicsScene extends EventTarget {
     )
   }
 
-  simulatePhysics (timeDiff) {
+  simulatePhysics(timeDiff) {
     if (this.physicsEnabled) {
       const t = timeDiff / 1000
       const updatesOut = physx.physxWorker.simulatePhysics(
@@ -1051,34 +1052,34 @@ class PhysicsScene extends EventTarget {
     return physx.physxWorker.marchingCubes(dims, potential, shift, scale);
   } */
 
-  createShape (buffer) {
+  createShape(buffer) {
     return physx.physxWorker.createShapePhysics(this.scene, buffer)
   }
 
-  createConvexShape (buffer) {
+  createConvexShape(buffer) {
     return physx.physxWorker.createConvexShapePhysics(this.scene, buffer)
   }
 
-  getPhysicsEnabled () {
+  getPhysicsEnabled() {
     return this.physicsEnabled
   }
 
-  setPhysicsEnabled (newPhysicsEnabled) {
+  setPhysicsEnabled(newPhysicsEnabled) {
     this.physicsEnabled = newPhysicsEnabled
   }
 
-  getGravity () {
+  getGravity() {
     return gravity
   }
 
-  setTrigger (id) {
+  setTrigger(id) {
     return physx.physxWorker.setTriggerPhysics(this.scene, id)
   }
 
-  getTriggerEvents () {
+  getTriggerEvents() {
     const triggerEvents = physx.physxWorker.getTriggerEventsPhysics(this.scene)
     triggerEvents.forEach(triggerEvent => {
-      const { status, triggerPhysicsId, otherPhysicsId } = triggerEvent
+      const {status, triggerPhysicsId, otherPhysicsId} = triggerEvent
       const triggerApp = metaversefileApi.getAppByPhysicsId(triggerPhysicsId)
       const otherApp = metaversefileApi.getAppByPhysicsId(otherPhysicsId)
       if (triggerApp) {
@@ -1111,7 +1112,7 @@ class PhysicsScene extends EventTarget {
     return triggerEvents
   }
 
-  getActionInterpolant (character, actionName, type = GET) {
+  getActionInterpolant(character, actionName, type = GET) {
     // note: type consts: GET, GET_NORMALIZED, GET_INVERSE.
     const interpolantValue =
       physx.physxWorker.getActionInterpolantAnimationAvatar(
@@ -1125,7 +1126,8 @@ class PhysicsScene extends EventTarget {
 
 class PhysicsManager {
   scenes = new Map()
-  getScene (instance = null) {
+
+  getScene(instance = null) {
     let scene = this.scenes.get(instance)
     if (!scene) {
       scene = new PhysicsScene()
@@ -1133,9 +1135,11 @@ class PhysicsManager {
     }
     return scene
   }
-  async waitForLoad () {
+
+  async waitForLoad() {
     await physx.waitForLoad()
   }
 }
+
 const physicsManager = new PhysicsManager()
 export default physicsManager

@@ -1,40 +1,47 @@
-import {
-  AmbientLight,
-  Color,
-  Fog,
-  PerspectiveCamera,
-  PointLight,
-  Scene,
-  WebGLRenderer
-} from 'three'
-
-import { Engine } from '../Engine/index.js'
+import {Engine} from '../Engine/index.js'
+import {AvatarCharacter} from "../../controllers/Character/avatar.js";
+import {Physx} from "../../managers/Physics/physx.js";
 
 
 export class NyxEngine extends Engine {
-  constructor({ canvas, dom, height, width }) {
-    super({ canvas, dom, height, width })
+  constructor({canvas, dom, height, width}) {
+    super({canvas, dom, height, width})
   }
 
   pause() {
     super.pause()
   }
+
   render() {
     super.render()
   }
+
   reset() {
     super.reset()
   }
-  resize( width, height ) {
-    super.resize( width, height )
+
+  resize(width, height) {
+    super.resize(width, height)
   }
-  start() {
+
+  async start() {
+    await new Promise(async (resolve) => {
+      console.log('WAITING FOR PHYSX LOAD')
+      await Physx.waitForLoad()
+      console.log('PHYSX LOADED')
+      resolve()
+    })
+
     super.start()
-    console.log( 'START!',  )
+    console.log('START!')
+
+    new AvatarCharacter({engine: this})
   }
+
   stop() {
     super.stop()
   }
+
   update() {
     super.update()
   }

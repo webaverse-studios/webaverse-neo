@@ -1,29 +1,35 @@
 import Stats from 'stats.js'
+import {PhysicsManager} from "../../managers/Physics/index.js";
 
 
 export class Engine {
   #stats = new Stats()
+  #physicsManager = new PhysicsManager();
 
   canvas = null
   isPlaying = false
 
-  constructor({ canvas, dom, height, width }) {
+  constructor({canvas, dom, height, width}) {
     this.canvas = canvas
 
-    dom.appendChild( this.#stats.dom )
-    this.#stats.showPanel( 0 )
+    dom.appendChild(this.#stats.dom)
+    this.#stats.showPanel(0)
 
-    this.initializeCanvas({ height, width })
+    this.initializeCanvas({height, width})
   }
 
-  initializeCanvas({ height, width }) {
-    if ( height ) this.canvas.height = height
-    if ( width ) this.canvas.width = width
+  get physicsManager() {
+    return this.#physicsManager;
+  }
+
+  initializeCanvas({height, width}) {
+    if (height) this.canvas.height = height
+    if (width) this.canvas.width = width
 
     this.resize()
   }
 
-  load( Scene ) {
+  load(Scene) {
     this.scene = new Scene({
       canvas: this.canvas,
     })
@@ -33,16 +39,18 @@ export class Engine {
     this.isPlaying = false
   }
 
-  render() {}
+  render() {
+  }
 
-  reset() {}
+  reset() {
+  }
 
   resize(
     width = innerWidth,
     height = innerHeight,
   ) {
-    console.log( 'RESIZE',  )
-    const { devicePixelRatio } = window
+    console.log('RESIZE',)
+    const {devicePixelRatio} = window
 
     this.canvas.width = width
     this.canvas.height = height
@@ -52,7 +60,7 @@ export class Engine {
     this.reset()
     this.isPlaying = true
 
-    requestAnimationFrame(() => this.update( this ))
+    requestAnimationFrame(() => this.update(this))
   }
 
   stop() {
@@ -64,7 +72,7 @@ export class Engine {
     this.scene.update()
     this.#stats.end()
 
-    if ( this.isPlaying )
+    if (this.isPlaying)
       requestAnimationFrame(() => this.update())
   }
 }

@@ -16,7 +16,6 @@
   },
   "devDependencies": {
     "@feathersjs/cli": "=5.0.0",
-    "@webaverse-studios/eslint-config": "=1.0.0",
     "concurrently": "=7.6.0",
     "eslint": "=8.34.0",
     "eslint-plugin-jsdoc": "=40.0.0",
@@ -28,5 +27,6 @@
   ],
   "resolutions": {
     "@webaverse-studios/engine": "workspace:*"
-  }
+  },
+  "packageManager": "yarn@3.4.1"
 }

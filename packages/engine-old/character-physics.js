@@ -4,7 +4,14 @@ it sets up and ticks the physics loop for our local character */
 import * as THREE from 'three';
 import physicsManager from './physics/physics-manager.js';
 import {applyVelocity} from './util.js';
-import {groundFriction, flyFriction, swimFriction, flatGroundJumpAirTime, jumpHeight, startSkydiveTimeS} from './constants.js';
+import {
+  flatGroundJumpAirTime,
+  flyFriction,
+  groundFriction,
+  jumpHeight,
+  startSkydiveTimeS,
+  swimFriction
+} from './constants.js';
 // import {getRenderer, camera} from './renderer.js';
 // import metaversefileApi from 'metaversefile';
 import avatarsWasmManager from './avatars/avatars-wasm-manager.js';
@@ -32,7 +39,7 @@ const zeroVector = new THREE.Vector3();
 const upVector = new THREE.Vector3(0, 1, 0);
 const leftHandOffset = new THREE.Vector3(0.2, -0.2, -0.4);
 const rightHandOffset = new THREE.Vector3(-0.2, -0.2, -0.4);
-const z22Quaternion = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), -Math.PI/8);
+const z22Quaternion = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), -Math.PI / 8);
 const groundStickOffset = 0.03;
 
 class CharacterPhysics {
@@ -47,7 +54,7 @@ class CharacterPhysics {
     this.lastTargetMoveDistancePerFrame = new THREE.Vector3(); // note: see velocity.
     this.wantMoveDistancePerFrame = new THREE.Vector3(); // note: see velocity.
     this.targetCameraQuaternion = new THREE.Quaternion();
-    
+
     // this.lastJumpTime = 0;
     this.grounded = null;
     this.lastGrounded = null;
@@ -63,7 +70,7 @@ class CharacterPhysics {
   }
 
   loadCharacterController(characterWidth, characterHeight) {
-    // console.log('load character controller', new Error().stack);
+    // console.log('load character controllers', new Error().stack);
     // debugger;
 
     this.characterWidth = characterWidth;
@@ -91,7 +98,7 @@ class CharacterPhysics {
       position
     );
     // if (!this.characterController) {
-    //   console.warn('no character controller 1');
+    //   console.warn('no character controllers 1');
     //   debugger;
     // }
   }
@@ -100,12 +107,12 @@ class CharacterPhysics {
     localVector.copy(p);
     localVector.y -= this.characterHeight * 0.5;
     const physicsScene = physicsManager.getScene();
-    
+
     // if (!this.characterController) {
-    //   console.warn('no character controller 2');
+    //   console.warn('no character controllers 2');
     //   debugger;
     // }
-    
+
     physicsScene.setCharacterControllerPosition(
       this.characterController,
       localVector
@@ -128,38 +135,38 @@ class CharacterPhysics {
 
   applyGravity(nowS, timeDiffS) {
     // if (this.character) {
-      const fallLoopAction = this.character.actionManager.getActionType('fallLoop');
-      if (fallLoopAction) {
-        const physicsScene = physicsManager.getScene();
-        if (!this.lastFallLoopAction) {
-          this.fallLoopStartTimeS = nowS;
-          this.lastGravityH = 0;
-          if (fallLoopAction.from === 'jump') {
-            const aestheticJumpBias = 1;
-            const t = flatGroundJumpAirTime / 1000 / 2 + aestheticJumpBias;
-            this.fallLoopStartTimeS -= t;
-            const previousT = t - timeDiffS;
-            this.lastGravityH = 0.5 * physicsScene.getGravity().y * previousT * previousT;
-          }
-        }
-        let t = nowS - this.fallLoopStartTimeS;
-        if (t > startSkydiveTimeS) {
-          if (!this.character.actionManager.hasActionType('skydive') && !this.character.actionManager.hasActionType('glider')) {
-            const newSkydiveAction = {type: 'skydive'};
-            this.character.actionManager.addAction(newSkydiveAction);
-          }
-          t = startSkydiveTimeS;
-          this.wantVelocity.y = t * physicsScene.getGravity().y;
-          this.wantMoveDistancePerFrame.y = this.wantVelocity.y * timeDiffS;
-        } else {
-          const h = 0.5 * physicsScene.getGravity().y * t * t;
-          this.wantMoveDistancePerFrame.y = h - this.lastGravityH;
-          this.wantVelocity.y = t * physicsScene.getGravity().y;
-          
-          this.lastGravityH = h;
+    const fallLoopAction = this.character.actionManager.getActionType('fallLoop');
+    if (fallLoopAction) {
+      const physicsScene = physicsManager.getScene();
+      if (!this.lastFallLoopAction) {
+        this.fallLoopStartTimeS = nowS;
+        this.lastGravityH = 0;
+        if (fallLoopAction.from === 'jump') {
+          const aestheticJumpBias = 1;
+          const t = flatGroundJumpAirTime / 1000 / 2 + aestheticJumpBias;
+          this.fallLoopStartTimeS -= t;
+          const previousT = t - timeDiffS;
+          this.lastGravityH = 0.5 * physicsScene.getGravity().y * previousT * previousT;
         }
       }
-      this.lastFallLoopAction = fallLoopAction;
+      let t = nowS - this.fallLoopStartTimeS;
+      if (t > startSkydiveTimeS) {
+        if (!this.character.actionManager.hasActionType('skydive') && !this.character.actionManager.hasActionType('glider')) {
+          const newSkydiveAction = {type: 'skydive'};
+          this.character.actionManager.addAction(newSkydiveAction);
+        }
+        t = startSkydiveTimeS;
+        this.wantVelocity.y = t * physicsScene.getGravity().y;
+        this.wantMoveDistancePerFrame.y = this.wantVelocity.y * timeDiffS;
+      } else {
+        const h = 0.5 * physicsScene.getGravity().y * t * t;
+        this.wantMoveDistancePerFrame.y = h - this.lastGravityH;
+        this.wantVelocity.y = t * physicsScene.getGravity().y;
+
+        this.lastGravityH = h;
+      }
+    }
+    this.lastFallLoopAction = fallLoopAction;
     // }
   }
 
@@ -169,7 +176,7 @@ class CharacterPhysics {
 
   applyCharacterPhysicsDetail(velocityAvatarDirection, updateRig, now, timeDiffS) {
     if (this.character.avatar) {
-      // move character controller
+      // move character controllers
       const minDist = 0;
       localVector3.copy(this.wantMoveDistancePerFrame);
 
@@ -193,25 +200,25 @@ class CharacterPhysics {
               avatarsWasmManager.physxWorker.getActionInterpolantAnimationAvatar(this.character.avatar.animationAvatarPtr, 'doubleJump', 0);
             localVector3.y =
               Math.sin(doubleJumpTime * (Math.PI / flatGroundJumpAirTime)) *
-                jumpHeight +
+              jumpHeight +
               doubleJumpAction.startPositionY -
               this.lastCharacterControllerY;
             if (doubleJumpTime >= flatGroundJumpAirTime) {
               this.character.actionManager.removeActionType('jump');
               this.character.actionManager.removeActionType('doubleJump');
-              fallLoopFromJump = true;              
+              fallLoopFromJump = true;
             }
           } else {
             const jumpTime = avatarsWasmManager.physxWorker.getActionInterpolantAnimationAvatar(this.character.avatar.animationAvatarPtr, 'jump', 0);
             localVector3.y =
               Math.sin(jumpTime * (Math.PI / flatGroundJumpAirTime)) *
-                jumpHeight +
+              jumpHeight +
               jumpAction.startPositionY -
               this.lastCharacterControllerY;
             // console.log('apply jump', jumpTime, flatGroundJumpAirTime);
             if (jumpTime >= flatGroundJumpAirTime) {
               this.character.actionManager.removeActionType('jump');
-              fallLoopFromJump = true;            
+              fallLoopFromJump = true;
             }
           }
         }
@@ -220,7 +227,7 @@ class CharacterPhysics {
 
       const _updateAir = () => {
         const localPlayer = this.character;
-        
+
         const _updateLand = () => {
           // console.log('update grounded', localPlayer.characterPhysics.grounded, new Error().stack);
           if (this.grounded) {
@@ -237,9 +244,9 @@ class CharacterPhysics {
               localPlayer.actionManager.removeActionType('fallLoop');
               hadJumpAction = true;
             }
-  
+
             // console.log('grounded clear jump', localPlayer.characterPhysics.grounded);
-  
+
             if (hadJumpAction) {
               const newLandAction = {
                 type: 'land',
@@ -253,7 +260,7 @@ class CharacterPhysics {
           }
         };
         _updateLand();
-  
+
         const _updateFallLoop = () => {
           if (
             !localPlayer.actionManager.hasActionType('fallLoop') &&
@@ -349,7 +356,7 @@ class CharacterPhysics {
           this.characterController.position.y = oldY;
         }
       }
-      
+
       if (this.grounded) {
         this.lastGroundedTime = now;
       }
@@ -407,8 +414,8 @@ class CharacterPhysics {
         // NOTE: We had a problem with sending the entire bone in the message buffer, so we're just sending the bone name
         const sitPos = sitComponent.sitBone
           ? rideMesh.skeleton.bones.find(
-              (bone) => bone.name === sitComponent.sitBone
-            )
+            (bone) => bone.name === sitComponent.sitBone
+          )
           : controlledApp;
         const {
           sitOffset = [0, 0, 0],
@@ -480,7 +487,7 @@ class CharacterPhysics {
 
       this.lastGrounded = this.grounded;
       this.lastCharacterControllerY =
-      this.characterController.position.y;
+        this.characterController.position.y;
     }
   }
 
@@ -499,11 +506,9 @@ class CharacterPhysics {
     }
     if (this.character.actionManager.hasActionType('fly')) {
       doDamping(flyFriction);
-    } 
-    else if(this.character.actionManager.hasActionType('swim')){
+    } else if (this.character.actionManager.hasActionType('swim')) {
       doDamping(swimFriction);
-    }
-    else {
+    } else {
       doDamping(groundFriction);
     }
   }
@@ -566,7 +571,7 @@ class CharacterPhysics {
       const isPlayerAiming = !!aimAction && !aimAction.playerAnimation;
       const isObjectAimable = !!aimComponent;
       // const isPlayingEnvelopeIkAnimation = !!useAction && useAction.ik === 'bow';
-      
+
       const isHandEnabled =
         isSession ||
         (isPlayerAiming &&
@@ -577,8 +582,8 @@ class CharacterPhysics {
           (aimComponent?.ikHand === 'left'
             ? 1
             : aimComponent?.ikHand === 'right'
-            ? 0
-            : null);
+              ? 0
+              : null);
         const enabled = isHandEnabled && isExpectedHandIndex;
         //
         if (this.character.hands[i].enabled !== enabled) {

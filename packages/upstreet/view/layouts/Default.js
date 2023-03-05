@@ -11,6 +11,11 @@ const
   _Default = `.${body}`
 
 
+/**
+ * Default Layout
+ *
+ * @returns {import('mithril').Component}
+ */
 export function Default() {
   // Track frame time.
 

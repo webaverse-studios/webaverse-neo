@@ -1,6 +1,6 @@
 import gltf from 'vite-plugin-gltf'
 
-import { draco } from '@gltf-transform/functions'
+import {draco} from '@gltf-transform/functions'
 import wasm from 'vite-plugin-wasm'
 
 /** @type {import('vite').UserConfig} */
@@ -20,5 +20,5 @@ export default {
       transforms: [draco()]
     })
   ],
-  assetsInclude: ['**/*.glb', '**/*.vrm', '**/*.z']
+  assetsInclude: ['**/*.glb', '**/*.vrm', '**/*.z', "**/*.wasm"]
 }

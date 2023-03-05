@@ -14,7 +14,7 @@ function locateFile(path) {
   if (Module["locateFile"]) {
     return Module["locateFile"](path, scriptDirectory)
   }
-  return "/" + path
+  return "./" + path
 }
 
 var read_, readAsync, readBinary, setWindowTitle;
@@ -378,6 +378,8 @@ wasmBinaryFile = "physics.wasm";
 if (!isDataURI(wasmBinaryFile)) {
   wasmBinaryFile = locateFile(wasmBinaryFile)
 }
+
+console.log("wasmBinaryFile", wasmBinaryFile);
 
 function getBinary(file) {
   try {

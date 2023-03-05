@@ -1,0 +1,2 @@
+class NyxCharacter extends StateCharacter {
+}

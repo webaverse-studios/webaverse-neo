@@ -846,25 +846,16 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/engine@workspace:packages/engine"
   dependencies:
+    "@soulofmischief/js-utils": =0.21.0
     "@webaverse-studios/zine-aux": "file:../zine-aux"
     "@webaverse-studios/zjs": "file:../zjs"
     murmurhash: =2.0.1
+    nanoid: ^4.0.1
     stats.js: =0.17.0
     three: =0.150.1
     troika-three-text: =0.47.1
   languageName: unknown
   linkType: soft
-
-"@webaverse-studios/eslint-config@npm:=1.0.0":
-  version: 1.0.0
-  resolution: "@webaverse-studios/eslint-config@npm:1.0.0::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40webaverse-studios%2Feslint-config%2F1.0.0%2F5d1a138ae899edf5f3ac81ef67bb21d2b7816eb6"
-  peerDependencies:
-    eslint: ">= 8"
-    eslint-plugin-jsdoc: "*"
-    eslint-plugin-promise: "*"
-  checksum: 80746a5bdc09cc9a76886f2a3bb58651992f5072044a949a3ea1d49b92b9f4f131e9bc7937c0546b794e9b0d268b48615157f02074916eda34bada7009eebf1a
-  languageName: node
-  linkType: hard
 
 "@webaverse-studios/upstreet@workspace:packages/upstreet":
   version: 0.0.0-use.local
@@ -892,7 +883,6 @@ __metadata:
   resolution: "@webaverse-studios/webaverse-neo@workspace:."
   dependencies:
     "@feathersjs/cli": =5.0.0
-    "@webaverse-studios/eslint-config": =1.0.0
     concurrently: =7.6.0
     eslint: =8.34.0
     eslint-plugin-jsdoc: =40.0.0
@@ -3332,6 +3322,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nanoid@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "nanoid@npm:4.0.1"
+  bin:
+    nanoid: bin/nanoid.js
+  checksum: 21022a7910aa690cb05872c07f0c4a317dfe2aa79cc2b5e4ab41d17476e23d973d24c683206d6fa7e1b56bf657cf5dfbc0f1cac7d596bcd2dea0f49635316628
+  languageName: node
+  linkType: hard
+
 "natural-compare@npm:^1.4.0":
   version: 1.4.0
   resolution: "natural-compare@npm:1.4.0"
@@ -4202,9 +4201,9 @@ __metadata:
   linkType: hard
 
 "spawn-command@npm:^0.0.2-1":
-  version: 0.0.2
-  resolution: "spawn-command@npm:0.0.2"
-  checksum: e35c5d28177b4d461d33c88cc11f6f3a5079e2b132c11e1746453bbb7a0c0b8a634f07541a2a234fa4758239d88203b758def509161b651e81958894c0b4b64b
+  version: 0.0.2-1
+  resolution: "spawn-command@npm:0.0.2-1"
+  checksum: 2cac8519332193d1ed37d57298c4a1f73095e9edd20440fbab4aa47f531da83831734f2b51c44bb42b2747bf3485dec3fa2b0a1003f74c67561f2636622e328b
   languageName: node
   linkType: hard
 

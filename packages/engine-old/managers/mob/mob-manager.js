@@ -1,14 +1,7 @@
 import * as THREE from 'three';
-import {
-  Matrix4,
-  Quaternion,
-  Vector3,
-  Euler,
-} from 'three';
-import * as SkeletonUtils from 'three/examples/jsm/utils/SkeletonUtils.js';
+import {Quaternion, Vector3} from 'three';
 
 // import metaversefile from 'metaversefile';
-
 // import {
 //   PlayersManager,
 // } from './players-manager.js';
@@ -17,23 +10,15 @@ import physicsManager from '../../physics/physics-manager.js';
 //   HPManager,
 // } from './hp-manager.js';
 // import {alea} from './procgen/procgen.js';
-import {
-  createRelativeUrl,
-  lookAtQuaternion,
-  getNextPhysicsId,
-} from '../../util.js';
+import {createRelativeUrl, lookAtQuaternion,} from '../../util.js';
 // import dropManager from './drop-manager.js';
 // import loaders from './loaders.js';
 // import {InstancedBatchedMesh, InstancedGeometryAllocator} from './geometry-batching.js';
 // import {createTextureAtlas} from './atlasing.js';
-import * as sounds from '../../sounds.js';
 // import {ConstructorFragment} from 'ethers/lib/utils.js';
 // import hitManager from './character-hitter.js'
 // import {scene, camera} from './renderer.js';
 // import * as coreModules from './core-modules.js';
-import {
-  MobSoundsPlayer,
-} from './mob-sounds.js';
 
 //
 
@@ -76,23 +61,23 @@ const MAXSOUNDSSAMETIME = 3;
 // hardcoded sound, loaded from centralized sound bank
 // todo: load sounds from app, from wave file packaged with glb
 const soundsDB = new Map([
-  ["https://webaverse.github.io/silkworm-bloater/silkworm-bloater.glbattack",     "worm_bloaterattack"],
+  ["https://webaverse.github.io/silkworm-bloater/silkworm-bloater.glbattack", "worm_bloaterattack"],
   ["https://webaverse.github.io/silkworm-bloater/silkworm-bloater.glbattack.001", "worm_bloaterattack"],
   ["https://webaverse.github.io/silkworm-bloater/silkworm-bloater.glbattack.002", "worm_bloaterattack"],
-  ["https://webaverse.github.io/silkworm-bloater/silkworm-bloater.glbdeath",      "worm_bloaterdie"],
+  ["https://webaverse.github.io/silkworm-bloater/silkworm-bloater.glbdeath", "worm_bloaterdie"],
   // ["https://webaverse.github.io/silkworm-bloater/silkworm-bloater.glbidle",       ""],
   // ["https://webaverse.github.io/silkworm-bloater/silkworm-bloater.glbwalk",       ""],
-  ["https://webaverse.github.io/silkworm-slasher/silkworm-slasher.glbattack",     "worm_slasherattack"],
+  ["https://webaverse.github.io/silkworm-slasher/silkworm-slasher.glbattack", "worm_slasherattack"],
   ["https://webaverse.github.io/silkworm-slasher/silkworm-slasher.glbattack.001", "worm_slasherattack"],
   ["https://webaverse.github.io/silkworm-slasher/silkworm-slasher.glbattack.002", "worm_slasherattack"],
-  ["https://webaverse.github.io/silkworm-slasher/silkworm-slasher.glbdeath",      "worm_slasherdie"],
+  ["https://webaverse.github.io/silkworm-slasher/silkworm-slasher.glbdeath", "worm_slasherdie"],
   // ["https://webaverse.github.io/silkworm-slasher/silkworm-slasher.glbidle",       ""],
   // ["https://webaverse.github.io/silkworm-slasher/silkworm-slasher.glbjump",       ""],
   // ["https://webaverse.github.io/silkworm-slasher/silkworm-slasher.glbwalk",       ""],
-  ["https://webaverse.github.io/silkworm-runner/silkworm-runner.glbattack",       "worm_runnerattack"],
-  ["https://webaverse.github.io/silkworm-runner/silkworm-runner.glbattack.001",   "worm_runnerattack"],
-  ["https://webaverse.github.io/silkworm-runner/silkworm-runner.glbattack.002",   "worm_runnerattack"],
-  ["https://webaverse.github.io/silkworm-runner/silkworm-runner.glbdeath",        "worm_runnerdie"],
+  ["https://webaverse.github.io/silkworm-runner/silkworm-runner.glbattack", "worm_runnerattack"],
+  ["https://webaverse.github.io/silkworm-runner/silkworm-runner.glbattack.001", "worm_runnerattack"],
+  ["https://webaverse.github.io/silkworm-runner/silkworm-runner.glbattack.002", "worm_runnerattack"],
+  ["https://webaverse.github.io/silkworm-runner/silkworm-runner.glbdeath", "worm_runnerdie"],
   // ["https://webaverse.github.io/silkworm-runner/silkworm-runner.glbidle",         ""],
   // ["https://webaverse.github.io/silkworm-runner/silkworm-runner.glbwalk",         ""]
   ["attack", "worm_attack"],
@@ -200,9 +185,9 @@ class Mob {
     this.cleanupFns = [];
 
     // if (srcUrl) {
-      this.loadPromise = (async () => {
-        await this.loadApp(srcUrl);
-      })();
+    this.loadPromise = (async () => {
+      await this.loadApp(srcUrl);
+    })();
     // }
   }
 
@@ -293,7 +278,7 @@ class Mob {
 
       const mesh = subApp;
       const animations = subApp.glb.animations;
-      let  {
+      let {
         idleAnimation = ['idle'],
         aggroDistance,
         walkSpeed = 1,
@@ -322,7 +307,7 @@ class Mob {
           position,
           quaternion,
         } = spec;
-        
+
         localVector.fromArray(position);
         localQuaternion.fromArray(quaternion);
         localVector2.set(1, 1, 1);
@@ -367,7 +352,7 @@ class Mob {
         for (const idleAction of idleActions) {
           idleAction.play();
         }
-        
+
         this.updateFns.push((timestamp, timeDiff) => {
           const deltaSeconds = timeDiff / 1000;
           mixer.update(deltaSeconds);
@@ -382,8 +367,8 @@ class Mob {
         const timeDiffS = timeDiff / 1000;
 
         if (animation) {
-          mesh.position.add(localVector.copy(animation.velocity).multiplyScalar(timeDiff/1000));
-          animation.velocity.add(localVector.copy(physicsManager.getGravity()).multiplyScalar(timeDiff/1000));
+          mesh.position.add(localVector.copy(animation.velocity).multiplyScalar(timeDiff / 1000));
+          animation.velocity.add(localVector.copy(physicsManager.getGravity()).multiplyScalar(timeDiff / 1000));
           if (mesh.position.y < 0) {
             animation = null;
           }
@@ -391,7 +376,7 @@ class Mob {
           physicsManager.setCharacterControllerPosition(characterController, mesh.position);
 
           mesh.updateMatrixWorld();
-          
+
           // _updatePhysics();
         } else {
           // decompose world transform
@@ -454,7 +439,7 @@ class Mob {
 
                 meshPosition.copy(characterController.position)
                   .sub(physicsOffset);
-                
+
                 const targetQuaternion = localQuaternion2
                   .setFromRotationMatrix(
                     localMatrix
@@ -636,7 +621,7 @@ class AttackAction extends ActionComponent {
     const actionMethod = (mob)=>{
       if(!mob)
         return;
-      
+
       mob.playAnimation(attackId, true);
       mob.target.characterHitter.getHit(Math.random() * 10);
     }
@@ -696,7 +681,7 @@ class MobAIControllerPrototype {
     playersManager,
   }) {
     if (!playersManager) {
-      throw new Error('playersManager is required'); 
+      throw new Error('playersManager is required');
     }
 
     this.playersManager = playersManager;
@@ -789,6 +774,7 @@ class MobAIControllerPrototype {
 }
 
 let ragdollSpawner; */
+
 /*
   class for mob instances. integrate the action system, performing actions through action components
   pos: mob position
@@ -839,12 +825,12 @@ export class MobInstance {
     hitManager.addEventListener('hitattempt', (e) => this.hitAction(e.data));
   }
 
-  hitAction(hitData){
-    if(!hitData.args.physicsId || hitData.args.physicsId !== this.controller.physicsId)
+  hitAction(hitData) {
+    if (!hitData.args.physicsId || hitData.args.physicsId !== this.controller.physicsId)
       return;
 
     // damage and death
-    switch(hitData.type){
+    switch (hitData.type) {
       case 'sword':
         this.life -= 2;
         this.checkDeath();
@@ -854,14 +840,14 @@ export class MobInstance {
         this.checkDeath();
         break;
     }
-    
+
     /* // damage UI
     const damageMeshApp = metaversefile.createApp();
     (async () => {
       const m = await coreModules.importModule('damageMesh');
       await damageMeshApp.addModule(m);
     })(); */
-    
+
     damageMeshApp.position.copy(this.position);
     localEuler.setFromQuaternion(camera.quaternion, 'YXZ');
     localEuler.x = 0;
@@ -871,61 +857,61 @@ export class MobInstance {
     scene.add(damageMeshApp);
   }
 
-  initPhysics(radius, height){
+  initPhysics(radius, height) {
     const physicsScene = physicsManager.getScene();
     this.controller = physicsScene.createCharacterController(
       radius,
       height,
-      height*0.05,
-      height*0.05,
+      height * 0.05,
+      height * 0.05,
       this.position
     );
     this.controller.position.copy(this.position);
     this.controller.applyQuaternion(this.quaternion);
     physicsScene.setTransform(this.controller, true);
     this.fallTime = 0;
-    if(debugBBox)
+    if (debugBBox)
       this.controller.physicsMesh.visible = true;
   }
 
-  getGeometryIndex(){
+  getGeometryIndex() {
     return this.geometryIndex;
   }
 
-  checkDeath(){
-    if(this.life <= 0){
+  checkDeath() {
+    if (this.life <= 0) {
       this.actionsQueue = [];
       this.startAction('death');
     }
   }
 
-  destroy(){
-    for(const k of this.killEvents){
+  destroy() {
+    for (const k of this.killEvents) {
       k();
     }
   }
 
-  kill(){
+  kill() {
     this.dead = true;
     const anim = this.animations.get('death');
-    this.timeOffset = anim.frameCount*0.99;
+    this.timeOffset = anim.frameCount * 0.99;
     this.updateTimeOffset = true;
     this.startAction('vanish');
   }
 
-  _createActions(){
-    for(let [key, value] of this.animations){
-      if(key === 'idle'){
+  _createActions() {
+    for (let [key, value] of this.animations) {
+      if (key === 'idle') {
         this.actions.push(new DefaultIdleAction(value.duration));
         continue;
       }
 
-      if(key.startsWith('attack')){
+      if (key.startsWith('attack')) {
         this.actions.push(new AttackAction(value.duration, key));
         continue;
       }
 
-      if(key === 'death'){
+      if (key === 'death') {
         this.actions.push(new DieAction(value.duration * 0.99));
         continue;
       }
@@ -937,67 +923,67 @@ export class MobInstance {
     this.actions.push(new VanishAction(4));
   }
 
-  getPostion(){
+  getPostion() {
     return this.position.toArray();
   }
 
-  getQuaternion(){
+  getQuaternion() {
     return this.quaternion.toArray();
   }
 
-  hasAction(type){
-    for(const a of this.actions){
+  hasAction(type) {
+    for (const a of this.actions) {
       if (a.type === type)
         return true;
     }
     return false;
   }
 
-  startAction(actionId){
-    for(const a of this.actions){
-      if(a.actionId === actionId){
-        if(this.life <= 0 && a.type !== DIEACTIONTYPE && a.type !== VANISHACTIONTYPE)
+  startAction(actionId) {
+    for (const a of this.actions) {
+      if (a.actionId === actionId) {
+        if (this.life <= 0 && a.type !== DIEACTIONTYPE && a.type !== VANISHACTIONTYPE)
           return;
         this.actionsQueue.push(a);
       }
     }
   }
 
-  addAction(action){
+  addAction(action) {
     this.action.push(action);
   }
 
   // turn mob towards t versor with an ease out profile animation
-  animatedLookAt(t){
+  animatedLookAt(t) {
     const p = this.position;
     this.lookAtTarget = new Vector3(t.x - p.x, 0/* t.y - p.y */, t.z - p.z);
     this.rotationInterpolation = 0;
   }
 
   // rotate mob instantly
-  lookAt(t){
+  lookAt(t) {
     const p = this.position;
     this.quaternion = lookAtQuaternion(new Vector3(t.x - p.x, 0, t.z - p.z));
     this.updateRotation = true;
   }
 
   // walk mob for one frame towards a direction;
-  walk(walkVersor){
+  walk(walkVersor) {
     this.playAnimation('walk', false);
     this.movement.add(walkVersor.normalize().multiplyScalar(this.velocity));
   }
 
-  debugAction(timeDiffS){
-    if(this.actionsQueue.length === 0){
+  debugAction(timeDiffS) {
+    if (this.actionsQueue.length === 0) {
       this.startAction('attack');
       this.actionsQueue.push(this.idleAction);
     }
 
     const currentAction = this.actionsQueue[0];
-    if(currentAction.isRunning()){
+    if (currentAction.isRunning()) {
       currentAction.tick(timeDiffS);
-    } else{
-      currentAction.start(this).then(()=>{
+    } else {
+      currentAction.start(this).then(() => {
         this.actionsQueue.shift();
       });
     }
@@ -1005,77 +991,76 @@ export class MobInstance {
 
   // action management routine, it will play action in a blocking way (for the moment).
   // after each action is finised it will pop it out of the action queue
-  manageActions(timeDiffS){
-    
-    if(this.actionsQueue.length === 0){
-      if(this.dead)
+  manageActions(timeDiffS) {
+
+    if (this.actionsQueue.length === 0) {
+      if (this.dead)
         return;
-      
-      if(!this.stateActionMap.has(this.state)){
+
+      if (!this.stateActionMap.has(this.state)) {
         return;
       }
-        
+
       const currentActions = this.stateActionMap.get(this.state);
-      for(const a of currentActions){
+      for (const a of currentActions) {
         this.startAction(a);
       }
       return;
     }
 
     const currentAction = this.actionsQueue[0];
-    if(currentAction.isRunning()){
+    if (currentAction.isRunning()) {
       currentAction.tick(timeDiffS);
-    } else{
-      currentAction.start(this).then(()=>{
+    } else {
+      currentAction.start(this).then(() => {
         this.actionsQueue.shift();
       });
     }
   }
 
-  followTarget(attack){
+  followTarget(attack) {
     if (this.life <= 0 || !this.target) {
       return;
     }
 
     this.animatedLookAt(this.target.position);
     const targetVector = this.target.position.clone().sub(this.position);
-    if(targetVector.length() < this.aggroDistance*1.1){
-      if(targetVector.length() < this.aggroDistance*0.8){
+    if (targetVector.length() < this.aggroDistance * 1.1) {
+      if (targetVector.length() < this.aggroDistance * 0.8) {
         this.followTargetOutOfRange = false;
-        if(this.currentAnimation === this.animations.get('walk').id){
+        if (this.currentAnimation === this.animations.get('walk').id) {
           this.playAnimation('idle', false);
         }
       }
 
-      if(attack){
+      if (attack) {
         let isAttacking = false;
-        for(const a of this.actionsQueue){
-          if(a.type === ATTACKACTIONTYPE){
+        for (const a of this.actionsQueue) {
+          if (a.type === ATTACKACTIONTYPE) {
             isAttacking = true;
             break;
           }
         }
-        if(!isAttacking){
-          for(const a of this.stateActionMap.get(MobStates.attack)){
+        if (!isAttacking) {
+          for (const a of this.stateActionMap.get(MobStates.attack)) {
             this.startAction(a);
           }
         }
       }
 
-    }
-    else if(targetVector.length() > this.aggroDistance){
+    } else if (targetVector.length() > this.aggroDistance) {
       this.followTargetOutOfRange = true;
     }
 
-    if(this.followTargetOutOfRange){
+    if (this.followTargetOutOfRange) {
       this.walk(targetVector);
     }
   }
 
   // called every frame
-  update(playerLocation, timeDiff){
+  update(playerLocation, timeDiff) {
     const timeDiffS = timeDiff / 1000;
-    switch(this.state) {
+    switch (this.state) {
       case MobStates.followTarget:
         this.followTarget(false);
         break;
@@ -1086,20 +1071,19 @@ export class MobInstance {
     }
     this.manageActions(timeDiffS);
 
-    if(!this.grounded){
+    if (!this.grounded) {
       // 15 seconds it reach terminal velocity in air
       this.fallTime = this.fallTime >= 15 ? this.fallTime : this.fallTime + timeDiffS;
       const physicsScene = physicsManager.getScene();
       const gravity = physicsScene.getGravity().clone();
       this.movement.add(gravity.multiplyScalar(this.fallTime * this.fallTime));
-    }
-    else{
+    } else {
       this.fallTime = 0;
     }
 
     // manage Rotation
-    if(this.rotationInterpolation < 1){
-      this.rotationInterpolation += (1-this.rotationInterpolation) / animationEasing;
+    if (this.rotationInterpolation < 1) {
+      this.rotationInterpolation += (1 - this.rotationInterpolation) / animationEasing;
       this.rotationInterpolation.toFixed(2);
       this.quaternion.slerp(lookAtQuaternion(this.lookAtTarget), this.rotationInterpolation);
       this.controller.rotation.setFromQuaternion(this.quaternion);
@@ -1107,14 +1091,14 @@ export class MobInstance {
     }
 
     // manage position
-    if(this.movement.length() > 0 || Math.floor(this.uTime) > this.uTimeInt){
+    if (this.movement.length() > 0 || Math.floor(this.uTime) > this.uTimeInt) {
       this.uTimeInt = Math.floor(this.uTime);
       this.moveMobInternal(timeDiffS);
     }
   }
 
   // mixes up gravity movement with action movements
-  moveMobInternal(timeDiffS){
+  moveMobInternal(timeDiffS) {
     const physicsScene = physicsManager.getScene();
     const flags = physicsScene.moveCharacterController(
       this.controller,
@@ -1125,9 +1109,9 @@ export class MobInstance {
     );
     // const collided = flags !== 0;
     this.grounded = !!(flags & 0x1);
-    if(this.controller.position.distanceTo(this.position) > 0.01){
+    if (this.controller.position.distanceTo(this.position) > 0.01) {
       this.position.copy(this.controller.position);
-      if(debugBBox)
+      if (debugBBox)
         this.controller.updateMatrixWorld();
       this.updatePosition = true;
     }
@@ -1136,8 +1120,8 @@ export class MobInstance {
     this.movement.z = 0;
   }
 
-  updateDrawTime(uTime, diff){
-    if (this.dead){
+  updateDrawTime(uTime, diff) {
+    if (this.dead) {
       return;
     }
     this.uTime = uTime;
@@ -1145,32 +1129,32 @@ export class MobInstance {
     this.updateTimeOffset = true;
   }
 
-  getLocalPlayerDistance(){
+  getLocalPlayerDistance() {
     const player = this.playersManager.getLocalPlayer();
     return this.position.clone().sub(player.position).length();
   }
 
   // plays the animationName animation. If the animationName is not among the available animations returns
-  playAnimation(animationName, restart, withSound = true){
+  playAnimation(animationName, restart, withSound = true) {
     if (this.dead) {
       return;
     }
     if (!this.animations.has(animationName)) {
       return;
     }
-    
+
     const anim = this.animations.get(animationName);
-    if(this.currentAnimation !== anim.id){
+    if (this.currentAnimation !== anim.id) {
       this.currentAnimation = anim.id;
       this.updateAnimation = true;
     }
-    if(restart){
+    if (restart) {
       // this.timeOffset = -((this.uTime % anim.frameCount) / anim.frameCount);
       this.timeOffset = 0;
       this.updateTimeOffset = true;
-      if(withSound){
+      if (withSound) {
         const soundName = anim.soundName ?? soundsDB.get(anim.key);
-        
+
         this.getLocalPlayerDistance() < 10 && soundName && mobSoundsPlayer.playSound(soundName);
       }
     }
@@ -1488,7 +1472,7 @@ int boneTextureIndex = gl_DrawID * ${maxBonesPerInstance};
 instanceIndex = gl_DrawID * ${maxInstancesPerDrawCall} + gl_InstanceID;
 
 #ifdef USE_SKINNING
-  
+
   const float timeOffsetWidth = ${attributeTextures.timeOffset.image.width.toFixed(8)};
   const float timeOffsetHeight = ${attributeTextures.timeOffset.image.height.toFixed(8)};
   float timeOffsetX = mod(float(instanceIndex), timeOffsetWidth);
@@ -1561,7 +1545,7 @@ instanceIndex = gl_DrawID * ${maxInstancesPerDrawCall} + gl_InstanceID;
   transformed = ( bindMatrixInverse * skinned ).xyz;
 #endif
         `);
-        
+
         // vertex shader
 
         shader.vertexShader = shader.vertexShader.replace(`#include <uv_pars_vertex>`, `\
@@ -1570,7 +1554,7 @@ uniform sampler2D pTexture;
 uniform sampler2D qTexture;
 varying vec4 debugColor;
 
-vec3 rotate_vertex_position(vec3 position, vec4 q) { 
+vec3 rotate_vertex_position(vec3 position, vec4 q) {
   return position + 2.0 * cross(q.xyz, cross(q.xyz, position) + q.w * position);
 }
         `);
@@ -1599,7 +1583,7 @@ gl_Position = projectionMatrix * mvPosition;
 
         `);
 
-        // fragment shader        
+        // fragment shader
 
         shader.fragmentShader = shader.fragmentShader.replace(`#include <uv_pars_fragment>`, `\
 #undef USE_INSTANCING
@@ -1620,13 +1604,13 @@ vec2 vanishpUv = (vec2(vanishX, vanishY) + 0.5) / vec2(vanishWidth, vanishHeight
 float vanish = texture2D(vanishTexture, vanishpUv).x;
 //generating hight field for vanish effect
 if(vanish > 0.){
-  float v1 = 
-    (sin(vUv.x*100.0) + 
+  float v1 =
+    (sin(vUv.x*100.0) +
     sin(vUv.x*65.5) +
     sin(vUv.x*82.364) +
     sin(vUv.x*23.185) +
     sin(vUv.x*71.346) +
-    sin(vUv.y*100.0) + 
+    sin(vUv.y*100.0) +
     sin(vUv.y*93.113) +
     sin(vUv.y*42.388) +
     sin(vUv.y*32.581) +
@@ -1634,7 +1618,7 @@ if(vanish > 0.){
     sin(vUv.x*16.15) +
     sin(vUv.x*301.2) +
     sin(vUv.x*152.78) +
-    sin(vUv.y*98.45) + 
+    sin(vUv.y*98.45) +
     sin(vUv.y*64.12) +
     sin(vUv.y*98.4) +
     sin(vUv.y*45.945) +
@@ -1658,7 +1642,7 @@ if(vanish > 0.){
 #include <clipping_planes_fragment>
 
         `);
-        
+
         // put true to debug shader
         if(debugShader)
           shader.fragmentShader = `\
@@ -1695,7 +1679,7 @@ void main() {
       // this.bindMatrixInverse = this.bindMatrix.clone().invert();
 
       this.skeleton = new InstancedSkeleton(this);
-    
+
       // window.skeleton = this.skeleton; // XXX
     }
 
@@ -1789,7 +1773,7 @@ void main() {
         this.material.userData.shader.uniforms.pTexture.value.needsUpdate = true;
         this.updateBBox = true;
       }
-      
+
       if(mob.updateRotation){
         drawCall.getTexture('q').image.data.set(mob.quaternion.toArray(), qOffset + instanceIndex * Math.max(4, padding));
         mob.updateRotation = false;
@@ -1830,7 +1814,7 @@ void main() {
 
     // min bbox
     for(let i = 0; i < 3; i++){
-      bbox[i] = drawCall.instances.reduce((prev, curr) => 
+      bbox[i] = drawCall.instances.reduce((prev, curr) =>
       prev.position.toArray()[i] < curr.position.toArray()[i] ? prev : curr).position.toArray()[i];
     }
 
@@ -1864,7 +1848,7 @@ void main() {
     const instanceIndex = drawCall.instances.indexOf(mobInstance);
     if (drawCall.instances.length >= 2) {
       // locals
-      
+
       const lastInstanceIndex = drawCall.getInstanceCount() - 1;
       const padding = this.allocator.getTextureBytePadding();
       const pTexture = drawCall.getTexture('p').image.data;
@@ -1943,7 +1927,7 @@ void main() {
     if (shader) {
       shader.uniforms.uTime.value = frameIndex;
     }
-    
+
     for(const d of this.drawCalls)
       this.updateMobs(d, frameIndex, timeDiff * bakeFps / 1000);
   }
@@ -2029,7 +2013,7 @@ void main() {
     for(let i = 0; i < mobCount; i++){
       // const size = new Vector3();
       // new THREE.Box3().setFromObject(meshes[geoId]).getSize(size);
-      
+
       let geoId;
       let pos;
       let quat;
@@ -2063,10 +2047,10 @@ void main() {
       if (debugMobActions) {
         this.MobController.addMob(mob);
       }
-      
+
       mobs.push(mob);
       if(debugBBox)
-        this.object.add(mob.controller);
+        this.object.add(mob.controllers);
     }
     return mobs;
   }
@@ -2087,7 +2071,7 @@ void main() {
       m.update(localPlayer.position, timeDiff);
     }
     this.mobBatchedMesh.update(timestamp, timeDiff);
-    
+
   }
 
   destroy() {
@@ -2162,5 +2146,6 @@ export class MobManager extends THREE.Object3D {
     }
   } */
 }
+
 // const mobManager = new MobManager();
 // export default mobManager;

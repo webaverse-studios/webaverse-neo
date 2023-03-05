@@ -4,8 +4,8 @@ physx wasm integration.
 
 import * as THREE from 'three'
 import Module from '../wasm/physics-wasm/physics-wasm.js'
-import { Allocator, ScratchStack } from '../geometry-util.js'
-import { heightfieldScale } from './constants.js'
+import {Allocator, ScratchStack} from '../geometry-util.js'
+import {heightfieldScale} from './constants.js'
 
 const localVector = new THREE.Vector3()
 const localVector2 = new THREE.Vector3()
@@ -596,7 +596,7 @@ const physxWorker = (() => {
         const status = scratchStack.u32[i * 3 + 0]
         const triggerPhysicsId = scratchStack.u32[i * 3 + 1]
         const otherPhysicsId = scratchStack.u32[i * 3 + 2]
-        triggerEvents.push({ status, triggerPhysicsId, otherPhysicsId })
+        triggerEvents.push({status, triggerPhysicsId, otherPhysicsId})
       }
     }
     return triggerEvents
@@ -628,6 +628,7 @@ const physxWorker = (() => {
       return defaultMaterial
     }
   })()
+
   w.getZeroMaterial = (() => {
     let zeroMaterial = null
     const zeroMaterialParams = [0, 0, 0]
@@ -706,15 +707,15 @@ const physxWorker = (() => {
 
       return scratchStack.u32[13]
         ? {
-            point: scratchStack.f32.slice(7, 10),
-            normal: scratchStack.f32.slice(10, 13),
-            distance: scratchStack.f32[13],
-            meshId: scratchStack.u32[14],
-            objectId,
-            faceIndex
-            // objectPosition,
-            // objectQuaternion,
-          }
+          point: scratchStack.f32.slice(7, 10),
+          normal: scratchStack.f32.slice(10, 13),
+          distance: scratchStack.f32[13],
+          meshId: scratchStack.u32[14],
+          objectId,
+          faceIndex
+          // objectPosition,
+          // objectQuaternion,
+        }
         : null
     }
   }
@@ -817,7 +818,6 @@ const physxWorker = (() => {
     numUvs,
     faces, // Set to falsy to indicate that this is an non-indexed geometry
     numFaces,
-
     planeNormal, // normalized vector3 array
     planeDistance // number
   ) => {
@@ -1197,10 +1197,10 @@ const physxWorker = (() => {
 
     return scratchStack.u32[14]
       ? {
-          direction: scratchStack.f32.slice(15, 18),
-          grounded: !!scratchStack.u32[18],
-          objectId: scratchStack.u32[19]
-        }
+        direction: scratchStack.f32.slice(15, 18),
+        grounded: !!scratchStack.u32[18],
+        objectId: scratchStack.u32[19]
+      }
       : null
   }
   w.collideCapsulePhysics = (physics, radius, halfHeight, p, q, maxIter) => {
@@ -1247,10 +1247,10 @@ const physxWorker = (() => {
 
     return scratchStack.u32[14]
       ? {
-          direction: scratchStack.f32.slice(15, 18),
-          grounded: !!scratchStack.u32[18],
-          objectId: scratchStack.u32[19]
-        }
+        direction: scratchStack.f32.slice(15, 18),
+        grounded: !!scratchStack.u32[18],
+        objectId: scratchStack.u32[19]
+      }
       : null
   }
   w.getCollisionObjectPhysics = (physics, radius, halfHeight, p, q) => {
@@ -1292,13 +1292,13 @@ const physxWorker = (() => {
 
     return scratchStack.u32[10]
       ? {
-          objectId: scratchStack.u32[11]
-        }
+        objectId: scratchStack.u32[11]
+      }
       : null
   }
 
   w.addGeometryPhysics = (physics, mesh, id) => {
-    const { geometry } = mesh
+    const {geometry} = mesh
 
     const allocator = new Allocator(Module)
     const positions = allocator.alloc(
@@ -1360,7 +1360,7 @@ const physxWorker = (() => {
   }
   w.cookGeometryPhysics = mesh => {
     mesh.updateMatrixWorld()
-    const { geometry } = mesh
+    const {geometry} = mesh
 
     const allocator = new Allocator(Module)
     const positions = allocator.alloc(
@@ -1435,7 +1435,7 @@ const physxWorker = (() => {
 
   w.addConvexGeometryPhysics = (physics, mesh, dynamic, external, id) => {
     mesh.updateMatrixWorld()
-    const { geometry } = mesh
+    const {geometry} = mesh
 
     const allocator = new Allocator(Module)
     const positions = allocator.alloc(
@@ -1497,7 +1497,7 @@ const physxWorker = (() => {
   }
   w.cookConvexGeometryPhysics = (physics, mesh) => {
     mesh.updateMatrixWorld()
-    const { geometry } = mesh
+    const {geometry} = mesh
 
     const allocator = new Allocator(Module)
     const positions = allocator.alloc(
@@ -1749,11 +1749,11 @@ const physxWorker = (() => {
       scratchStack.ptr,
       scratchStack.u32.byteOffset + heightsOffsetBytes,
       scratchStack.u32.byteOffset +
-        heightsOffsetBytes +
-        Uint32Array.BYTES_PER_ELEMENT,
+      heightsOffsetBytes +
+      Uint32Array.BYTES_PER_ELEMENT,
       scratchStack.u32.byteOffset +
-        heightsOffsetBytes +
-        Uint32Array.BYTES_PER_ELEMENT * 2
+      heightsOffsetBytes +
+      Uint32Array.BYTES_PER_ELEMENT * 2
     )
 
     const outputU32Offset = heightsOffsetBytes / Uint32Array.BYTES_PER_ELEMENT
@@ -2107,10 +2107,10 @@ const physxWorker = (() => {
     if (updates.length > maxNumUpdates) {
       throw new Error(
         'too many updates to simulate step: ' +
-          updates.length +
-          ' (max: ' +
-          maxNumUpdates +
-          ')'
+        updates.length +
+        ' (max: ' +
+        maxNumUpdates +
+        ')'
       )
     }
 
