@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"yarn upstreet dev\" \"yarn gun dev\"",
+    "dev": "concurrently -c #6D1A36,#53917E,#36558F \"yarn:upstreet dev\" \"yarn:feathers dev\" \"yarn:gun dev\"",
     "engine": "yarn workspace @webaverse-studios/engine",
     "feathers": "yarn workspace @webaverse-studios/backend-feathers",
     "gun": "yarn workspace @webaverse-studios/backend-gun",
