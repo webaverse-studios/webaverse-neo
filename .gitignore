@@ -245,5 +245,3 @@ fabric.properties
 #!/.yarn/cache
 /.pnp.*
 
-data/
-radata/
