@@ -35,14 +35,13 @@ export const fileMetadata = (app) => {
     around: {
       all: [
         authenticate('jwt'),
-        // disallow('external'),
         // schemaHooks.resolveExternal(fileMetadataExternalResolver),
         // schemaHooks.resolveResult(fileMetadataResolver)
       ]
     },
     before: {
       all: [
-
+        disallow('external'),
         // schemaHooks.validateQuery(fileMetadataQueryValidator),
         // schemaHooks.resolveQuery(fileMetadataQueryResolver)
       ],

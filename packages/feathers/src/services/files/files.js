@@ -38,13 +38,15 @@ export const files = (app) => {
     around: {
       all: [
         authenticate('jwt'),
-        // disallow('external'),
         // schemaHooks.resolveExternal(filesExternalResolver),
         // schemaHooks.resolveResult(filesResolver)
       ]
     },
     before: {
-      all: [schemaHooks.validateQuery(filesQueryValidator), schemaHooks.resolveQuery(filesQueryResolver)],
+      all: [
+        disallow('external'),
+        schemaHooks.validateQuery(filesQueryValidator),
+        schemaHooks.resolveQuery(filesQueryResolver)],
       find: [],
       get: [],
       create: [
