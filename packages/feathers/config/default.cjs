@@ -3,7 +3,8 @@ module.exports = {
   "port": 3030,
   "public": "./public/",
   "origins": [
-    "http://localhost:3030"
+    "http://localhost:3030",
+    "http://localhost:3400",
   ],
   "paginate": {
     "default": 10,

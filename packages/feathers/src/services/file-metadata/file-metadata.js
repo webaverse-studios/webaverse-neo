@@ -1,6 +1,6 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
 import { authenticate } from '@feathersjs/authentication'
-import {disallow} from 'feathers-hooks-common';
+import {disallow, keep} from 'feathers-hooks-common';
 
 import { hooks as schemaHooks } from '@feathersjs/schema'
 import {
@@ -48,6 +48,7 @@ export const fileMetadata = (app) => {
       find: [],
       get: [],
       create: [
+        keep('id', 'metadata', 'extra')
         // schemaHooks.validateData(fileMetadataDataValidator),
         // schemaHooks.resolveData(fileMetadataDataResolver)
       ],

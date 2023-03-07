@@ -33,9 +33,11 @@ export class NyxEngine extends Engine {
     })
 
     super.start()
-    console.log('START!')
+    console.log('START!, this.scene: ', this.scene)
 
-    new AvatarCharacter({engine: this})
+    this.avatar = new AvatarCharacter({engine: this})
+    // this.avatar.renderAvatarView()
+    // console.log('AVATAR')
   }
 
   stop() {

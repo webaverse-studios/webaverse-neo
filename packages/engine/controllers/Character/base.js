@@ -24,10 +24,10 @@ export class BaseCharacter extends Object3D {
     this.playerData = new PlayerData()
     this.characterPhysics = new CharacterPhysics(this)
 
-    this.characterPhysics.loadCharacterController(
-      20
-      , 20
-    )
+  //   this.characterPhysics.loadCharacterController(
+  //     20
+  //     , 20
+  //   )
   }
 
   /**

@@ -1,5 +1,6 @@
 import m from 'mithril'
 import { NyxEngine } from '@webaverse-studios/engine'
+
 import { throttle } from '@soulofmischief/js-utils'
 import { Grid } from '../../../scenes/index.js'
 import { body, canvas } from './style.module.scss'
