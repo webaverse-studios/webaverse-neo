@@ -11,14 +11,20 @@ describe('agent-view service', function() {
     assert.ok(service, 'Registered the service')
 
     // test create function
-
     // load image test/test.jpg to a blob
     const imageBuffer = fs.readFileSync("./test/test.jpg")
     const blob =  new Blob([imageBuffer], { type: 'image/jpeg' })
     const data = {
-      id: "123",
+      hash_condition: {agentID: "12345", timestamp: Date.now()},
       file: blob
     }
-    console.log("DONE", await service.create(data))
+    const created = await service.create(data)
+    assert.ok(created, 'Created an item')
+
+    // test get function
+    const got = await service.get(created.id)
+    assert.ok(got, 'Got an item')
+    console.log('got', got)
+
   })
 })

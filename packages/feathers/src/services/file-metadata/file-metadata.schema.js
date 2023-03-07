@@ -5,7 +5,7 @@ import {dataValidator, queryValidator} from '../../validators.js'
 
 function ExtraSchema() {
   return Type.Object({
-    [Type.String()]: Type.Any(),
+    [Type.Any()]: Type.Any(),
   });
 }
 

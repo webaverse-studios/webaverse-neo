@@ -25,7 +25,7 @@ async function main(){
 
   // test create function
   const data = {
-    id: "1234567",
+    id: "12345a67",
     metadata:
       {"type":"image/jpeg","size":25980},
     extra:

@@ -5,5 +5,5 @@ export function generateHash(condition={})
   const hash = crypto.createHash('md5');
   hash.update(JSON.stringify(condition));
   // return hash as integer
-  return parseInt(hash.digest('hex'), 16)
+  return hash.digest('hex');
 }

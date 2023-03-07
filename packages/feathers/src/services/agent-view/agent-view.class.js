@@ -1,18 +1,19 @@
-// This is a skeleton for a custom service class. Remove or add the methods you need here
+import mimeTypes from "mime-types";
+
 export class AgentViewService {
   constructor(options) {
     this.options = options
   }
 
-  async find(_params) {
-    return []
-  }
 
   async get(id, _params) {
-    return {
-      id: 0,
-      text: `A new message with ID: ${id}!`
-    }
+    // perform get call on file-metadata service
+    const fileMetadata = await this.options.app.service('file-metadata').get(id)
+    const metadata = JSON.parse(fileMetadata.metadata);
+    const filename = `${fileMetadata.id}.${mimeTypes.extension(metadata.type)}`
+
+    // return the file from the files service
+    return await this.options.app.service('files').get(filename)
   }
 
   async create(data, params) {
@@ -36,21 +37,7 @@ export class AgentViewService {
     return fileMetadata
   }
 
-  // This method has to be added to the 'methods' option to make it available to clients
-  async update(id, data, _params) {
-    return {
-      id: 0,
-      ...data
-    }
-  }
 
-  async patch(id, data, _params) {
-    return {
-      id: 0,
-      text: `Fallback for ${id}`,
-      ...data
-    }
-  }
 
   async remove(id, _params) {
     return {

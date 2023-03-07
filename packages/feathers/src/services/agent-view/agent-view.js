@@ -16,7 +16,7 @@ import { AgentViewService, getOptions } from './agent-view.class.js'
 import {generateHash} from "../../util.js";
 
 export const agentViewPath = 'agent-view'
-export const agentViewMethods = ['find', 'get', 'create', 'patch', 'remove']
+export const agentViewMethods = [ 'get', 'create', 'remove']
 
 export * from './agent-view.class.js'
 export * from './agent-view.schema.js'

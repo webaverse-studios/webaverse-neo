@@ -1,6 +1,6 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
 import { authenticate } from '@feathersjs/authentication'
-import {keep} from 'feathers-hooks-common'
+import {keep, disallow} from 'feathers-hooks-common'
 
 import { hooks as schemaHooks } from '@feathersjs/schema'
 import {
@@ -38,6 +38,7 @@ export const files = (app) => {
     around: {
       all: [
         authenticate('jwt'),
+        // disallow('external'),
         // schemaHooks.resolveExternal(filesExternalResolver),
         // schemaHooks.resolveResult(filesResolver)
       ]
