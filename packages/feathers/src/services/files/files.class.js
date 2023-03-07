@@ -1,54 +1,16 @@
-// This is a skeleton for a custom service class. Remove or add the methods you need here
-export class FilesService {
-  constructor(options) {
-    this.options = options
-  }
+import * as blobService from "feathers-blob";
+import mimeTypes from "mime-types";
+import fs from "fs-blob-store";
 
-  async find(_params) {
-    return []
-  }
-
-  async get(id, _params) {
-    return {
-      id: 0,
-      text: `A new message with ID: ${id}!`
-    }
-  }
+export class FilesService extends blobService.Service {
   async create(data, params) {
-    if (Array.isArray(data)) {
-      return Promise.all(data.map((current) => this.create(current, params)))
-    }
-
-    return {
-      id: 0,
-      ...data
-    }
-  }
-
-  // This method has to be added to the 'methods' option to make it available to clients
-  async update(id, data, _params) {
-    return {
-      id: 0,
-      ...data
-    }
-  }
-
-  async patch(id, data, _params) {
-    return {
-      id: 0,
-      text: `Fallback for ${id}`,
-      ...data
-    }
-  }
-
-  async remove(id, _params) {
-    return {
-      id: 0,
-      text: 'removed'
-    }
+    return super.create({ id: `${data.id}.${mimeTypes.extension(data.type)}`, uri: data.uri }, params);
   }
 }
 
 export const getOptions = (app) => {
-  return { app }
+  return {
+    paginate: app.get('paginate'),
+    Model: fs('./uploads/image-blob')
+  }
 }

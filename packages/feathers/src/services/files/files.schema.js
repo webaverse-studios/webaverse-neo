@@ -6,8 +6,9 @@ import { dataValidator, queryValidator } from '../../validators.js'
 // Main data model schema
 export const filesSchema = Type.Object(
   {
-    id: Type.Number(),
-    text: Type.String()
+    id: Type.String(),
+    uri: Type.String({ format: 'uri' }),
+    type: Type.String(),
   },
   { $id: 'Files', additionalProperties: false }
 )

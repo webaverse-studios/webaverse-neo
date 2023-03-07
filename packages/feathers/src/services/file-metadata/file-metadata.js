@@ -34,24 +34,24 @@ export const fileMetadata = (app) => {
     around: {
       all: [
         authenticate('jwt'),
-        schemaHooks.resolveExternal(fileMetadataExternalResolver),
-        schemaHooks.resolveResult(fileMetadataResolver)
+        // schemaHooks.resolveExternal(fileMetadataExternalResolver),
+        // schemaHooks.resolveResult(fileMetadataResolver)
       ]
     },
     before: {
       all: [
-        schemaHooks.validateQuery(fileMetadataQueryValidator),
-        schemaHooks.resolveQuery(fileMetadataQueryResolver)
+        // schemaHooks.validateQuery(fileMetadataQueryValidator),
+        // schemaHooks.resolveQuery(fileMetadataQueryResolver)
       ],
       find: [],
       get: [],
       create: [
-        schemaHooks.validateData(fileMetadataDataValidator),
-        schemaHooks.resolveData(fileMetadataDataResolver)
+        // schemaHooks.validateData(fileMetadataDataValidator),
+        // schemaHooks.resolveData(fileMetadataDataResolver)
       ],
       patch: [
-        schemaHooks.validateData(fileMetadataPatchValidator),
-        schemaHooks.resolveData(fileMetadataPatchResolver)
+        // schemaHooks.validateData(fileMetadataPatchValidator),
+        // schemaHooks.resolveData(fileMetadataPatchResolver)
       ],
       remove: []
     },

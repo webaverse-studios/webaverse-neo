@@ -1,5 +1,6 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
 import { authenticate } from '@feathersjs/authentication'
+import {keep} from 'feathers-hooks-common'
 
 import { hooks as schemaHooks } from '@feathersjs/schema'
 import {
@@ -14,8 +15,11 @@ import {
 } from './files.schema.js'
 import { FilesService, getOptions } from './files.class.js'
 
+import pkg from 'dauria';
+const { getBase64DataURI } = pkg;
+
 export const filesPath = 'files'
-export const filesMethods = ['find', 'get', 'create', 'patch', 'remove']
+export const filesMethods = ['get', 'create', 'remove']
 
 export * from './files.class.js'
 export * from './files.schema.js'
@@ -34,15 +38,27 @@ export const files = (app) => {
     around: {
       all: [
         authenticate('jwt'),
-        schemaHooks.resolveExternal(filesExternalResolver),
-        schemaHooks.resolveResult(filesResolver)
+        // schemaHooks.resolveExternal(filesExternalResolver),
+        // schemaHooks.resolveResult(filesResolver)
       ]
     },
     before: {
       all: [schemaHooks.validateQuery(filesQueryValidator), schemaHooks.resolveQuery(filesQueryResolver)],
       find: [],
       get: [],
-      create: [schemaHooks.validateData(filesDataValidator), schemaHooks.resolveData(filesDataResolver)],
+      create: [
+        async function(context) {
+          if (!context.data.uri && context.data.file) {
+            const file = context.data.file;
+            console.log('file', file);
+            const array = await file.arrayBuffer();
+            const buffer = Buffer.from(array);
+            context.data.type = file.type;
+            context.data.uri = getBase64DataURI(buffer, file.type);
+          }
+        },
+        keep('uri', 'id', 'type'),
+        ],
       patch: [schemaHooks.validateData(filesPatchValidator), schemaHooks.resolveData(filesPatchResolver)],
       remove: []
     },

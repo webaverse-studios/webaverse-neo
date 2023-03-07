@@ -28,5 +28,9 @@
   "resolutions": {
     "@webaverse-studios/engine": "workspace:*"
   },
-  "packageManager": "yarn@3.4.1"
+  "packageManager": "yarn@3.4.1",
+  "dependencies": {
+    "dauria": "^2.0.0",
+    "mime-types": "^2.1.35"
+  }
 }
