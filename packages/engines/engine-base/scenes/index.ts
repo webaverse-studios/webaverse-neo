@@ -1,12 +1,15 @@
 import {
   AmbientLight,
   Camera,
+  Color,
+  Fog,
   Light,
   PerspectiveCamera,
   Scene,
-  WebGLRenderer
-} from 'three'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+  WebGLRenderer,
+} from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import type { Engine } from "../index";
 
 /**
  * Abstract Scene Class
@@ -15,104 +18,116 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
  */
 export class BaseScene {
   /** Class Name */
-  #name: string
+  #name: string;
 
-  scene: Scene
-  canvas: HTMLCanvasElement
+  /** Base Three.js Scene */
+  declare scene: Scene;
+
+  /** Canvas to paint to */
+  declare canvas: HTMLCanvasElement;
 
   /** Scene Lights */
-  lights: Light[] = []
+  lights: Light[] = [];
 
   /** Base GLTF Loader */
-  gltfLoader: GLTFLoader
+  declare gltfLoader: GLTFLoader;
 
   /** WebGLRenderer */
-  renderer: WebGLRenderer
+  declare renderer: WebGLRenderer;
 
   /**
    * Scene Camera
    *
    * @default PerspectiveCamera
+   * @see {@link https://threejs.org/docs/#api/en/cameras/PerspectiveCamera}
    */
-  camera: Camera = new PerspectiveCamera()
+  camera: Camera | undefined;
 
   /**
    * Create a BaseScene
    *
-   * Scene construction flow:
-   *    1. initCamera
-   *    2. initRenderer
-   *    3. initLights
-   *    4. initGeometry
-   *    5. initScene
+   * @property {HTMLCanvasElement} canvas - scene canvas\
    *
-   * @property {HTMLCanvasElement} canvas - scene canvas
+   * ⚠️ **NOTE**: {@link Engine} will call {@link init} after instantiation.
    */
-  constructor ({ canvas }: { canvas: HTMLCanvasElement }) {
+  constructor({ canvas }: { canvas: HTMLCanvasElement }) {
     if (this.constructor === BaseScene) {
-      throw new Error("Abstract classes can't be instantiated.")
+      throw new Error("Abstract classes can't be instantiated.");
     }
 
-    this.#name = this.constructor.name
-
-    // Set up scene
-    this.canvas = canvas
-    this.scene = new Scene()
-    this.gltfLoader = new GLTFLoader()
-    this.renderer = new WebGLRenderer({ canvas })
+    this.#name = this.constructor.name;
+    this.#configureScene(canvas);
+    this.#addLightsToScene();
   }
 
-  get name () {
-    return this.#name
+  get name() {
+    return this.#name;
   }
+
+  /**
+   * Configure NyxScene
+   */
+  #configureScene = (canvas: HTMLCanvasElement) => {
+    this.canvas = canvas;
+    this.scene = createScene();
+    this.camera = createCamera();
+    this.lights = createLights();
+    this.gltfLoader = new GLTFLoader();
+    this.renderer = createRenderer(canvas, 1);
+  };
+
+  /**
+   * Add lights to the scene
+   */
+  #addLightsToScene = () => {
+    this.lights.forEach((light) => this.scene.add(light));
+  };
 
   /**
    * Initialize the scene
    */
-  async init () {
-    console.log('Init in base class')
-    await Promise.all([
-      this._initCamera(),
-      this._initRenderer(),
-      this._initLights(),
-      this._initGeometry()
-    ])
+  async init(): Promise<void> {
+    this.update();
   }
-
-  /**
-   * Configure the scene camera.
-   */
-  private async _initCamera () {
-    this.camera = new PerspectiveCamera()
-  }
-
-  /**
-   * Configures the scene lights
-   *
-   * Defaults to a single ambient white light.
-   */
-  private async _initLights () {
-    const light = new AmbientLight(0x404040) // Soft white light
-    this.lights.push(light)
-    this.scene.add(light)
-  }
-
-  /**
-   * Configures the scene renderer
-   *
-   * @param {number} scale - Scale the renderer by this amount.
-   */
-  // @ts-ignore
-  private async _initRenderer (scale: number = 1) {}
-
-  /**
-   * Configure the scene geometry
-   *
-   */
-  private async _initGeometry () {}
 
   /**
    * Update the scene
    */
-  update () {}
+  update() {}
 }
+
+/**
+ * Configure the scene camera.
+ */
+const createCamera = () => {
+  return new PerspectiveCamera();
+};
+
+/**
+ * Configures the scene lights
+ */
+const createLights = () => {
+  return [new AmbientLight(0xffffff, 2)];
+};
+
+/**
+ * Configures the scene renderer
+ *
+ * @param {number} scale - Scale the renderer by this amount.
+ */
+const createRenderer = (canvas: HTMLCanvasElement, scale = 1) => {
+  const renderer = new WebGLRenderer({ canvas });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(innerWidth * scale, innerHeight * scale, false);
+  return renderer;
+};
+
+const createScene = () => {
+  const scene = new Scene();
+
+  // Configure scene.
+  scene.background = new Color(0x2a2a2a);
+  scene.fog = new Fog(0xffffff, 0, 750);
+
+  return scene;
+};
