@@ -1,5 +1,3 @@
-abstract class KinematicController {}
-
 /**
  * Rapier Setup:
  * - Create a physics world
@@ -9,10 +7,20 @@ abstract class KinematicController {}
  */
 
 /**
+ * Base Kinematic Controller Class
+ */
+export class BaseKinematicController {}
+
+/**
  * Base Physics Adapter
  */
 export abstract class PhysicsAdapter {
   constructor () {}
 
-  abstract createKinematicController(): KinematicController
+  /**
+   * Construct and return a new Kinematic Controller
+   */
+  get kinematicController () {
+    return new BaseKinematicController()
+  }
 }

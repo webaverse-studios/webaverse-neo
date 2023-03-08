@@ -1,7 +1,7 @@
 import m from 'mithril'
 import { NyxEngine } from '@webaverse-studios/engine-nyx'
 import { throttle } from '@soulofmischief/js-utils'
-import { Grid } from '../../../scenes/index'
+import { Grid, OrbitControlsScene, Test } from '../../../scenes/index'
 import { body, canvas } from './style.module.scss'
 
 const defaultScene = Grid
@@ -14,7 +14,7 @@ export default () => {
   let resizeListener
 
   return {
-    oncreate ({ dom }) {
+    async oncreate ({ dom }) {
       // Get canvas element.
       const canvas = dom.querySelector(Canvas)
 
@@ -30,8 +30,8 @@ export default () => {
       const engine = new NyxEngine({ canvas, dom })
 
       // Start the engine. VROOM
-      engine.load(defaultScene)
-      engine.start()
+      await engine.load(defaultScene)
+      await engine.start()
     },
 
     // Remove resize listener.

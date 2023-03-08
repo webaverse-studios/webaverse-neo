@@ -14,6 +14,9 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
  * @class Scene
  */
 export class BaseScene {
+  /** Class Name */
+  #name: string
+
   scene: Scene
   canvas: HTMLCanvasElement
 
@@ -50,6 +53,8 @@ export class BaseScene {
       throw new Error("Abstract classes can't be instantiated.")
     }
 
+    this.#name = this.constructor.name
+
     // Set up scene
     this.canvas = canvas
     this.scene = new Scene()
@@ -57,10 +62,15 @@ export class BaseScene {
     this.renderer = new WebGLRenderer({ canvas })
   }
 
+  get name () {
+    return this.#name
+  }
+
   /**
    * Initialize the scene
    */
   async init () {
+    console.log('Init in base class')
     await Promise.all([
       this._initCamera(),
       this._initRenderer(),

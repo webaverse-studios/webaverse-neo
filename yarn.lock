@@ -1505,13 +1505,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ungap/promise-all-settled@npm:1.1.2":
-  version: 1.1.2
-  resolution: "@ungap/promise-all-settled@npm:1.1.2"
-  checksum: 08d37fdfa23a6fe8139f1305313562ebad973f3fac01bcce2773b2bda5bcb0146dfdcf3cb6a722cf0a5f2ca0bc56a827eac8f1e7b3beddc548f654addf1fc34c
-  languageName: node
-  linkType: hard
-
 "@webaverse-studios/backend-feathers@workspace:packages/feathers":
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/backend-feathers@workspace:packages/feathers"
@@ -1589,24 +1582,13 @@ __metadata:
   resolution: "@webaverse-studios/engine-old@workspace:packages/engine-old"
   dependencies:
     "@pixiv/three-vrm": =1.0.8
-    "@webaverse-studios/zine-aux": "file:../zine-aux"
-    "@webaverse-studios/zjs": "file:../zjs"
     murmurhash: =2.0.1
     three: ^0.150.0
     troika-three-text: =0.47.1
   languageName: unknown
   linkType: soft
 
-"@webaverse-studios/physics-base@file:../physics-base::locator=%40webaverse-studios%2Fphysics-rapier%40workspace%3Apackages%2Fphysics%2Fphysics-rapier":
-  version: 0.1.0
-  resolution: "@webaverse-studios/physics-base@file:../physics-base#../physics-base::hash=c4ee57&locator=%40webaverse-studios%2Fphysics-rapier%40workspace%3Apackages%2Fphysics%2Fphysics-rapier"
-  dependencies:
-    three: =0.150.1
-  checksum: 0c9e9ca68960373a486e9d455c284717c224bbc1778a468d654b78ed69235ad622219b8d2c7a692277de874ede26a326ff1400eba6e671ab387084300b31c451
-  languageName: node
-  linkType: hard
-
-"@webaverse-studios/physics-base@workspace:packages/physics/physics-base":
+"@webaverse-studios/physics-base@workspace:*, @webaverse-studios/physics-base@workspace:packages/physics/physics-base":
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/physics-base@workspace:packages/physics/physics-base"
   dependencies:
@@ -1659,42 +1641,6 @@ __metadata:
     eslint-plugin-jsdoc: =40.0.0
     eslint-plugin-promise: =6.1.1
     process: =0.11.10
-  languageName: unknown
-  linkType: soft
-
-"@webaverse-studios/zine-aux@file:../zine-aux::locator=%40webaverse-studios%2Fengine-old%40workspace%3Apackages%2Fengine-old":
-  version: 0.1.0
-  resolution: "@webaverse-studios/zine-aux@file:../zine-aux#../zine-aux::hash=908962&locator=%40webaverse-studios%2Fengine-old%40workspace%3Apackages%2Fengine-old"
-  dependencies:
-    three: ^0.150.0
-  checksum: 3d058417ac94b4485c7dfcd38dc06ee7d53c23eb88c0ce41ce6d33265d82a8c1d5ae12e0eae7013743a3611b9feb50e7b5599327a110daa61afb8ccfe2bbee05
-  languageName: node
-  linkType: hard
-
-"@webaverse-studios/zine-aux@workspace:packages/zine-aux":
-  version: 0.0.0-use.local
-  resolution: "@webaverse-studios/zine-aux@workspace:packages/zine-aux"
-  dependencies:
-    three: ^0.150.0
-  languageName: unknown
-  linkType: soft
-
-"@webaverse-studios/zjs@file:../zjs::locator=%40webaverse-studios%2Fengine-old%40workspace%3Apackages%2Fengine-old":
-  version: 0.1.0
-  resolution: "@webaverse-studios/zjs@file:../zjs#../zjs::hash=6b7725&locator=%40webaverse-studios%2Fengine-old%40workspace%3Apackages%2Fengine-old"
-  dependencies:
-    alea: =1.0.1
-    mocha: =9.1.3
-  checksum: ba9d019a3bc865edb24d07d9f398889da076160c49c45892b33beab00c7424930424608794ab78dcbfea1ca481297800d797a15224b9286094469b0e60ab3eb6
-  languageName: node
-  linkType: hard
-
-"@webaverse-studios/zjs@workspace:packages/zjs":
-  version: 0.0.0-use.local
-  resolution: "@webaverse-studios/zjs@workspace:packages/zjs"
-  dependencies:
-    alea: =1.0.1
-    mocha: =9.1.3
   languageName: unknown
   linkType: soft
 
@@ -1816,13 +1762,6 @@ __metadata:
     require-from-string: ^2.0.2
     uri-js: ^4.2.2
   checksum: 4dc13714e316e67537c8b31bc063f99a1d9d9a497eb4bbd55191ac0dcd5e4985bbb71570352ad6f1e76684fb6d790928f96ba3b2d4fd6e10024be9612fe3f001
-  languageName: node
-  linkType: hard
-
-"alea@npm:=1.0.1":
-  version: 1.0.1
-  resolution: "alea@npm:1.0.1"
-  checksum: b699177496913b3ea0c1e329e13cb164befb5e5a906b46299e375465a697613e6294e1d617008438d0a714c397ad17ce292ef10126fa76c1ca913e90ef28e81d
   languageName: node
   linkType: hard
 
@@ -2272,25 +2211,6 @@ __metadata:
   version: 0.7.0
   resolution: "chardet@npm:0.7.0"
   checksum: 6fd5da1f5d18ff5712c1e0aed41da200d7c51c28f11b36ee3c7b483f3696dabc08927fc6b227735eb8f0e1215c9a8abd8154637f3eff8cada5959df7f58b024d
-  languageName: node
-  linkType: hard
-
-"chokidar@npm:3.5.2":
-  version: 3.5.2
-  resolution: "chokidar@npm:3.5.2"
-  dependencies:
-    anymatch: ~3.1.2
-    braces: ~3.0.2
-    fsevents: ~2.3.2
-    glob-parent: ~5.1.2
-    is-binary-path: ~2.1.0
-    is-glob: ~4.0.1
-    normalize-path: ~3.0.0
-    readdirp: ~3.6.0
-  dependenciesMeta:
-    fsevents:
-      optional: true
-  checksum: d1fda32fcd67d9f6170a8468ad2630a3c6194949c9db3f6a91b16478c328b2800f433fb5d2592511b6cb145a47c013ea1cce60b432b1a001ae3ee978a8bffc2d
   languageName: node
   linkType: hard
 
@@ -2777,18 +2697,6 @@ __metadata:
     supports-color:
       optional: true
   checksum: 3dbad3f94ea64f34431a9cbf0bafb61853eda57bff2880036153438f50fb5a84f27683ba0d8e5426bf41a8c6ff03879488120cf5b3a761e77953169c0600a708
-  languageName: node
-  linkType: hard
-
-"debug@npm:4.3.2":
-  version: 4.3.2
-  resolution: "debug@npm:4.3.2"
-  dependencies:
-    ms: 2.1.2
-  peerDependenciesMeta:
-    supports-color:
-      optional: true
-  checksum: 820ea160e267e23c953c9ed87e7ad93494d8cda2f7349af5e7e3bb236d23707ee3022f477d5a7d2ee86ef2bf7d60aa9ab22d1f58080d7deb9dccd073585e1e43
   languageName: node
   linkType: hard
 
@@ -3953,20 +3861,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:7.1.7":
-  version: 7.1.7
-  resolution: "glob@npm:7.1.7"
-  dependencies:
-    fs.realpath: ^1.0.0
-    inflight: ^1.0.4
-    inherits: 2
-    minimatch: ^3.0.4
-    once: ^1.3.0
-    path-is-absolute: ^1.0.0
-  checksum: b61f48973bbdcf5159997b0874a2165db572b368b931135832599875919c237fc05c12984e38fe828e69aa8a921eb0e8a4997266211c517c9cfaae8a93988bb8
-  languageName: node
-  linkType: hard
-
 "glob@npm:7.2.0":
   version: 7.2.0
   resolution: "glob@npm:7.2.0"
@@ -4066,13 +3960,6 @@ __metadata:
   version: 1.0.4
   resolution: "grapheme-splitter@npm:1.0.4"
   checksum: 0c22ec54dee1b05cd480f78cf14f732cb5b108edc073572c4ec205df4cd63f30f8db8025afc5debc8835a8ddeacf648a1c7992fe3dcd6ad38f9a476d84906620
-  languageName: node
-  linkType: hard
-
-"growl@npm:1.10.5":
-  version: 1.10.5
-  resolution: "growl@npm:1.10.5"
-  checksum: 4b86685de6831cebcbb19f93870bea624afee61124b0a20c49017013987cd129e73a8c4baeca295728f41d21265e1f859d25ef36731b142ca59c655fea94bb1a
   languageName: node
   linkType: hard
 
@@ -5183,15 +5070,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:3.0.4":
-  version: 3.0.4
-  resolution: "minimatch@npm:3.0.4"
-  dependencies:
-    brace-expansion: ^1.1.7
-  checksum: 66ac295f8a7b59788000ea3749938b0970344c841750abd96694f80269b926ebcafad3deeb3f1da2522978b119e6ae3a5869b63b13a7859a456b3408bd18a078
-  languageName: node
-  linkType: hard
-
 "minimatch@npm:5.0.1":
   version: 5.0.1
   resolution: "minimatch@npm:5.0.1"
@@ -5327,41 +5205,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mocha@npm:=9.1.3":
-  version: 9.1.3
-  resolution: "mocha@npm:9.1.3"
-  dependencies:
-    "@ungap/promise-all-settled": 1.1.2
-    ansi-colors: 4.1.1
-    browser-stdout: 1.3.1
-    chokidar: 3.5.2
-    debug: 4.3.2
-    diff: 5.0.0
-    escape-string-regexp: 4.0.0
-    find-up: 5.0.0
-    glob: 7.1.7
-    growl: 1.10.5
-    he: 1.2.0
-    js-yaml: 4.1.0
-    log-symbols: 4.1.0
-    minimatch: 3.0.4
-    ms: 2.1.3
-    nanoid: 3.1.25
-    serialize-javascript: 6.0.0
-    strip-json-comments: 3.1.1
-    supports-color: 8.1.1
-    which: 2.0.2
-    workerpool: 6.1.5
-    yargs: 16.2.0
-    yargs-parser: 20.2.4
-    yargs-unparser: 2.0.0
-  bin:
-    _mocha: bin/_mocha
-    mocha: bin/mocha
-  checksum: 4185038f1d49c7c5ab2f8d77e42c182a77ed78f08f0ce713cc34919bc89b618ed9d6d4f24cbb92049f0d2ed03fb1a2a5b20e0fb07f8cf4a86ba83eb99dacde99
-  languageName: node
-  linkType: hard
-
 "mocha@npm:^10.2.0":
   version: 10.2.0
   resolution: "mocha@npm:10.2.0"
@@ -5426,15 +5269,6 @@ __metadata:
   version: 0.0.8
   resolution: "mute-stream@npm:0.0.8"
   checksum: ff48d251fc3f827e5b1206cda0ffdaec885e56057ee86a3155e1951bc940fd5f33531774b1cc8414d7668c10a8907f863f6561875ee6e8768931a62121a531a1
-  languageName: node
-  linkType: hard
-
-"nanoid@npm:3.1.25":
-  version: 3.1.25
-  resolution: "nanoid@npm:3.1.25"
-  bin:
-    nanoid: bin/nanoid.cjs
-  checksum: e2353828c7d8fde65265e9c981380102e2021f292038a93fd27288bad390339833286e8cbc7531abe1cb2c6b317e55f38b895dcb775151637bb487388558e0ff
   languageName: node
   linkType: hard
 
@@ -7499,7 +7333,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"which@npm:2.0.2, which@npm:^2.0.1, which@npm:^2.0.2":
+"which@npm:^2.0.1, which@npm:^2.0.2":
   version: 2.0.2
   resolution: "which@npm:2.0.2"
   dependencies:
@@ -7553,13 +7387,6 @@ __metadata:
   version: 1.2.3
   resolution: "word-wrap@npm:1.2.3"
   checksum: 30b48f91fcf12106ed3186ae4fa86a6a1842416df425be7b60485de14bec665a54a68e4b5156647dec3a70f25e84d270ca8bc8cd23182ed095f5c7206a938c1f
-  languageName: node
-  linkType: hard
-
-"workerpool@npm:6.1.5":
-  version: 6.1.5
-  resolution: "workerpool@npm:6.1.5"
-  checksum: 5defea1fd3e36b4f83c2bb184cade4a71e27030d46ee5efe704e90e19baf3a5c7146fddef010cbd0b7df3edbfca1e9e851bd35d8da8c99ec6d8bbfe121d8c0b0
   languageName: node
   linkType: hard
 

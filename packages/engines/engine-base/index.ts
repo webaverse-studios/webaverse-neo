@@ -4,13 +4,13 @@ import WebGL from './utils/WebGL'
 
 export class Engine {
   // # Private #
+  #stats = new Stats()
 
   // # Public #
   isPlaying = false
-  #stats = new Stats()
 
   scene: BaseScene | undefined
-  canvas: HTMLCanvasElement
+  canvas!: HTMLCanvasElement
 
   /**
    *  Create a new Base Engine instance.
@@ -26,14 +26,16 @@ export class Engine {
     height,
     width
   }: {
-    canvas: HTMLCanvasElement
     dom: Element
     height?: number
     width?: number
+    canvas: HTMLCanvasElement
   }) {
     if (!WebGL.isWebGLAvailable()) {
+      console.error('WebGL Is not supported!')
       const warning = WebGL.getWebGLErrorMessage()
       canvas.appendChild(warning)
+      return
     }
 
     this.canvas = canvas
@@ -51,10 +53,16 @@ export class Engine {
   }
 
   async load<S extends typeof BaseScene> (Scene: S) {
+    console.log(`Starting Loading of scene: ${Scene.name}`)
     this.scene = new Scene({
       canvas: this.canvas
     })
-    await this.scene?.init()
+
+    if (typeof this.scene?.init === 'function') {
+      await this.scene?.init()
+    }
+
+    console.log(`Finished Loading of scene: ${Scene.name}`)
   }
 
   pause () {
@@ -79,8 +87,10 @@ export class Engine {
     if (!this.scene) {
       console.error('No scene loaded for engine')
     } else {
-      requestAnimationFrame(() => this.update())
+      console.log(`Scene ${this.scene.name} is Starting`)
     }
+
+    requestAnimationFrame(() => this.update())
   }
 
   stop () {

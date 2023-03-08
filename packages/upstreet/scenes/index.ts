@@ -1,3 +1,3 @@
 export { Grid } from './Grid/index'
-// export {LoadAvatar} from './LoadAvatar/index.js'
-// export {Test} from './Test/index.js'
+export { OrbitControlsScene } from './OrbitalControls/index.js'
+export { Test } from './Test/index.js'

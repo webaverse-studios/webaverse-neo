@@ -30,7 +30,9 @@
   "resolutions": {
     "@webaverse-studios/engine-base": "workspace:*",
     "@webaverse-studios/engine-nyx": "workspace:*",
-    "@webaverse-studios/upstreet": "workspace:*"
+    "@webaverse-studios/upstreet": "workspace:*",
+    "@webaverse-studios/physics-base": "workspace:*",
+    "@webaverse-studios/physics-nyx": "workspace:*"
   },
   "packageManager": "yarn@3.4.1"
 }
