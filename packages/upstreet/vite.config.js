@@ -20,5 +20,15 @@ export default {
       transforms: [draco()]
     })
   ],
-  assetsInclude: ['**/*.glb', '**/*.vrm', '**/*.z', "**/*.wasm"]
+  assetsInclude: ['**/*.glb', '**/*.vrm', '**/*.z', "**/*.wasm"],
+  build:{
+    rollupOptions: {
+      output: {
+        assetFileNames: (assetInfo) => {
+          const { source } = assetInfo
+          return `[name][hash][extname]`
+        }
+      }
+    }
+  }
 }

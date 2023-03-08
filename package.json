@@ -9,13 +9,15 @@
     "feathers": "yarn workspace @webaverse-studios/backend-feathers",
     "gun": "yarn workspace @webaverse-studios/backend-gun",
     "lint": "eslint . --config ./.eslintrc.cjs --fix",
+    "engine-nyx": "yarn workspace @webaverse-studios/engine-nyx",
     "start": "concurrently \"yarn upstreet start\"",
-    "upstreet": "yarn workspace @webaverse-studios/upstreet",
-    "zine-aux": "yarn workspace @webaverse-studios/zine-aux",
-    "zjs": "yarn workspace @webaverse-studios/zjs"
+    "physics-base": "yarn workspace @webaverse-studios/physics-base",
+    "physics-nyx": "yarn workspace @webaverse-studios/physics-nyx",
+    "upstreet": "yarn workspace @webaverse-studios/upstreet"
   },
   "devDependencies": {
     "@feathersjs/cli": "=5.0.0",
+    "@typescript-eslint/parser": "^5.54.1",
     "concurrently": "=7.6.0",
     "eslint": "=8.34.0",
     "eslint-plugin-jsdoc": "=40.0.0",
@@ -23,10 +25,12 @@
     "process": "=0.11.10"
   },
   "workspaces": [
-    "packages/*"
+    "packages/**/*"
   ],
   "resolutions": {
-    "@webaverse-studios/engine": "workspace:*"
+    "@webaverse-studios/engine-base": "workspace:*",
+    "@webaverse-studios/engine-nyx": "workspace:*",
+    "@webaverse-studios/upstreet": "workspace:*"
   },
   "packageManager": "yarn@3.4.1"
 }

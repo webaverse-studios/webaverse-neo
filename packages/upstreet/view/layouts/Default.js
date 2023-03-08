@@ -1,5 +1,5 @@
 import m from 'mithril'
-import { body } from './style.module.scss'
+import { body, } from './style.module.scss'
 import { lastFrameTime } from '../../lib/mithril.js'
 
 const
@@ -25,10 +25,10 @@ export function Default() {
       const
         // Get last frame time.
         now = performance.now(),
-        diff = ( now - lastFrameTime ).toFixed( 2 ),
+        diff = Number(( now - lastFrameTime ).toFixed( 2 ))
 
         // Get color.
-        color = diff < 16
+        const color = diff < 16
           ? low
           : diff < 33
             ? medium

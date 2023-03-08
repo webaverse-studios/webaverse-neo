@@ -14,6 +14,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@types/mithril": "^2.0.12",
     "rollup-plugin-gltf": "=3.1.0",
     "sass": "=1.58.3",
     "vite": "=4.1.0",
@@ -26,9 +27,9 @@
     "@gltf-transform/functions": "=3.0.4",
     "@pixiv/three-vrm": "=1.0.8",
     "@soulofmischief/js-utils": "=0.21.0",
-    "@webaverse-studios/engine": "file:../engine",
+    "@webaverse-studios/engine-nyx": "file:../engine-nyx",
     "gun": "^0.2020.1239",
-    "mithril": "=2.2.2",
+    "mithril": "=3.0.0-next.12",
     "three": "=0.150.1"
   }
 }

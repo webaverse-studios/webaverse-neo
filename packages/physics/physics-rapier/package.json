@@ -1,0 +1,23 @@
+{
+  "name": "@webaverse-studios/physics-rapier",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Webaverse Physics Rapier Implementation",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webaverse-studios/webaverse-neo.git",
+    "directory": "packages/physics/physics-nyx"
+  },
+  "dependencies": {
+    "@dimforge/rapier3d": "=0.11.2",
+    "@webaverse-studios/physics-base": "file:../physics-base",
+    "three": "=0.150.1"
+  },
+  "devDependencies": {
+    "@types/three": "^0.149.0"
+  },
+  "engines": {
+    "node": "=19.0.0"
+  }
+}

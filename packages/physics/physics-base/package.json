@@ -1,0 +1,21 @@
+{
+  "name": "@webaverse-studios/physics-base",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Webaverse Physics",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webaverse-studios/webaverse-neo.git",
+    "directory": "packages/physics/physics-base"
+  },
+  "dependencies": {
+    "three": "=0.150.1"
+  },
+  "devDependencies": {
+    "@types/three": "^0.149.0"
+  },
+  "engines": {
+    "node": "=19.0.0"
+  }
+}
