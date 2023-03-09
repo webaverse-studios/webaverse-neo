@@ -1,16 +1,25 @@
-import Stats from 'stats.js'
-import { BaseScene } from './scenes'
-import WebGL from './utils/WebGL'
+import { PhysicsAdapter } from "@webaverse-studios/physics-base";
+import Stats from "stats.js";
+
+import { BaseScene } from "./scenes";
+import WebGL from "./utils/WebGL";
+import { RapierPhysicsAdapter } from "@webaverse-studios/physics-rapier";
+
+export interface EngineOptions {
+  dom: Element;
+  height?: number;
+  width?: number;
+  canvas: HTMLCanvasElement;
+  physicsAdapter: PhysicsAdapter;
+}
 
 export class Engine {
-  // # Private #
-  #stats = new Stats()
+  #stats = new Stats();
+  isPlaying = false;
 
-  // # Public #
-  isPlaying = false
-
-  scene: BaseScene | undefined
-  canvas!: HTMLCanvasElement
+  declare canvas: HTMLCanvasElement;
+  declare scene: BaseScene | undefined;
+  declare physicsAdapter: PhysicsAdapter;
 
   /**
    *  Create a new Base Engine instance.
@@ -20,88 +29,91 @@ export class Engine {
    * @property {height} Number
    * @property {width} Number
    */
-  constructor ({
-    canvas,
+  constructor({
     dom,
+    width,
     height,
-    width
-  }: {
-    dom: Element
-    height?: number
-    width?: number
-    canvas: HTMLCanvasElement
-  }) {
+    canvas,
+    physicsAdapter = new RapierPhysicsAdapter(),
+  }: EngineOptions) {
     if (!WebGL.isWebGLAvailable()) {
-      console.error('WebGL Is not supported!')
-      const warning = WebGL.getWebGLErrorMessage()
-      canvas.appendChild(warning)
-      return
+      console.error("WebGL Is not supported!");
+      const warning = WebGL.getWebGLErrorMessage();
+      canvas.appendChild(warning);
+      return;
     }
 
-    this.canvas = canvas
+    this.canvas = canvas;
+    this.physicsAdapter = physicsAdapter;
 
-    dom.appendChild(this.#stats.dom)
-    this.#stats.showPanel(0)
-
-    this.initializeCanvas({ height, width })
+    dom.appendChild(this.#stats.dom);
+    this.#stats.showPanel(0);
+    this.initializeCanvas({ height, width });
   }
 
-  initializeCanvas ({ height, width }: { height?: number; width?: number }) {
-    if (height) this.canvas.height = height
-    if (width) this.canvas.width = width
-    this.resize()
+  initializeCanvas({ height, width }: { height?: number; width?: number }) {
+    if (height) this.canvas.height = height;
+    if (width) this.canvas.width = width;
+    this.resize();
   }
 
-  async load<S extends typeof BaseScene> (Scene: S) {
-    console.log(`Starting Loading of scene: ${Scene.name}`)
+  async load(Scene: typeof BaseScene) {
+    const t0 = performance.now();
     this.scene = new Scene({
-      canvas: this.canvas
-    })
+      canvas: this.canvas,
+      physicsAdapter: this.physicsAdapter,
+    });
 
-    if (typeof this.scene?.init === 'function') {
-      await this.scene?.init()
+    if (typeof this.scene?.init === "function") {
+      await this.scene?.init();
     }
 
-    console.log(`Finished Loading of scene: ${Scene.name}`)
+    const t1 = performance.now();
+
+    console.log(`Finished Loading of scene: ${Scene.name} in ${t1 - t0}ms`);
   }
 
-  pause () {
-    this.isPlaying = false
+  pause() {
+    this.isPlaying = false;
   }
 
-  render () {}
+  render() {}
 
-  reset () {}
+  reset() {}
 
-  resize (width = innerWidth, height = innerHeight) {
-    console.log('RESIZE')
+  resize(width = innerWidth, height = innerHeight) {
+    console.log("RESIZE");
 
-    this.canvas.width = width
-    this.canvas.height = height
+    this.canvas.width = width;
+    this.canvas.height = height;
   }
 
-  start () {
-    this.reset()
-    this.isPlaying = true
+  start() {
+    this.reset();
+    this.isPlaying = true;
 
     if (!this.scene) {
-      console.error('No scene loaded for engine')
+      console.error("No scene loaded for engine");
     } else {
-      console.log(`Scene ${this.scene.name} is Starting`)
+      console.log(`Scene ${this.scene.name} is Starting`);
     }
 
-    requestAnimationFrame(() => this.update())
+    requestAnimationFrame(() => this.update());
   }
 
-  stop () {
-    this.isPlaying = false
+  stop() {
+    this.isPlaying = false;
   }
 
-  update () {
-    this.#stats.begin()
-    this.scene!.update()
-    this.#stats.end()
+  update() {
+    // Run physics
+    this.physicsAdapter.update();
 
-    if (this.isPlaying) requestAnimationFrame(() => this.update())
+    // Run scene update
+    this.#stats.begin();
+    this.scene!.update();
+    this.#stats.end();
+
+    if (this.isPlaying) requestAnimationFrame(() => this.update());
   }
 }

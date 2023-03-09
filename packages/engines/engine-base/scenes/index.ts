@@ -4,36 +4,43 @@ import {
   Color,
   Fog,
   Light,
+  LineSegments,
   PerspectiveCamera,
   Scene,
   WebGLRenderer,
 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import type { Engine } from "../index";
+import { PhysicsAdapter } from "@webaverse-studios/physics-base";
 
 /**
  * Abstract Scene Class
- *
- * @class Scene
  */
 export class BaseScene {
-  /** Class Name */
-  #name: string;
+  /**
+   * Class Name
+   */
+  protected declare _name: string;
 
-  /** Base Three.js Scene */
-  declare scene: Scene;
+  /**
+   * Base Three.js Scene
+   *
+   * @see {@link https://threejs.org/docs/#api/en/scenes/Scene}
+   */
+  protected declare _scene: Scene;
 
-  /** Canvas to paint to */
-  declare canvas: HTMLCanvasElement;
+  /**
+   * Canvas to paint to
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement}
+   */
+  protected declare _canvas: HTMLCanvasElement;
 
-  /** Scene Lights */
-  lights: Light[] = [];
-
-  /** Base GLTF Loader */
-  declare gltfLoader: GLTFLoader;
-
-  /** WebGLRenderer */
-  declare renderer: WebGLRenderer;
+  /**
+   * WebGLRenderer
+   * @see {@link https://threejs.org/docs/#api/en/renderers/WebGLRenderer}
+   */
+  protected declare _renderer: WebGLRenderer;
 
   /**
    * Scene Camera
@@ -41,52 +48,91 @@ export class BaseScene {
    * @default PerspectiveCamera
    * @see {@link https://threejs.org/docs/#api/en/cameras/PerspectiveCamera}
    */
-  camera: Camera | undefined;
+  protected declare _camera: Camera;
+
+  /** Physics Adapter
+   *
+   * @see {@link PhysicsAdapter}
+   */
+  protected declare _physicsAdapter: PhysicsAdapter;
+
+  /**
+   * Scene Lights
+   *
+   * @see {@link https://threejs.org/docs/#api/en/lights/Light}
+   */
+  protected declare _lights: Light[];
+
+  /**
+   * Base GLTF Loader
+   *
+   * @see {@link https://threejs.org/docs/#examples/en/loaders/GLTFLoader}
+   */
+  protected declare _gltfLoader: GLTFLoader;
+
+  /**
+   * Debugging lines
+   *
+   * @see {@link https://threejs.org/docs/#api/en/objects/LineSegments}
+   */
+  protected declare _debugLines: LineSegments;
 
   /**
    * Create a BaseScene
    *
    * @property {HTMLCanvasElement} canvas - scene canvas\
    *
-   * ⚠️ **NOTE**: {@link Engine} will call {@link init} after instantiation.
+   * ⚠️ **NOTE**: {@link Engine} will call {@link init} after instantiation. ⚠️
    */
-  constructor({ canvas }: { canvas: HTMLCanvasElement }) {
+  constructor({
+    canvas,
+    physicsAdapter,
+  }: {
+    canvas: HTMLCanvasElement;
+    physicsAdapter: PhysicsAdapter;
+  }) {
     if (this.constructor === BaseScene) {
       throw new Error("Abstract classes can't be instantiated.");
     }
 
-    this.#name = this.constructor.name;
+    this._name = this.constructor.name;
+    this._physicsAdapter = physicsAdapter;
     this.#configureScene(canvas);
-    this.#addLightsToScene();
   }
 
   get name() {
-    return this.#name;
+    return this._name;
+  }
+
+  get debugLines() {
+    return this._debugLines;
   }
 
   /**
    * Configure NyxScene
    */
   #configureScene = (canvas: HTMLCanvasElement) => {
-    this.canvas = canvas;
-    this.scene = createScene();
-    this.camera = createCamera();
-    this.lights = createLights();
-    this.gltfLoader = new GLTFLoader();
-    this.renderer = createRenderer(canvas, 1);
+    this._canvas = canvas;
+    this._scene = createScene();
+    this._camera = createCamera();
+    this._gltfLoader = new GLTFLoader();
+    this._debugLines = new LineSegments();
+    this._renderer = createRenderer(canvas, 1);
   };
 
   /**
    * Add lights to the scene
    */
   #addLightsToScene = () => {
-    this.lights.forEach((light) => this.scene.add(light));
+    this._lights.forEach((light) => this._scene.add(light));
   };
 
   /**
    * Initialize the scene
    */
   async init(): Promise<void> {
+    this._lights = createLights();
+    this.#addLightsToScene();
     this.update();
   }
 
@@ -95,6 +141,16 @@ export class BaseScene {
    */
   update() {}
 }
+
+const createScene = () => {
+  const scene = new Scene();
+
+  // Configure scene.
+  scene.background = new Color(0x2a2a2a);
+  scene.fog = new Fog(0xffffff, 0, 750);
+
+  return scene;
+};
 
 /**
  * Configure the scene camera.
@@ -115,19 +171,9 @@ const createLights = () => {
  *
  * @param {number} scale - Scale the renderer by this amount.
  */
-const createRenderer = (canvas: HTMLCanvasElement, scale = 1) => {
+const createRenderer = (canvas: HTMLCanvasElement, scale: number = 1) => {
   const renderer = new WebGLRenderer({ canvas });
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setSize(innerWidth * scale, innerHeight * scale, false);
   return renderer;
-};
-
-const createScene = () => {
-  const scene = new Scene();
-
-  // Configure scene.
-  scene.background = new Color(0x2a2a2a);
-  scene.fog = new Fog(0xffffff, 0, 750);
-
-  return scene;
 };

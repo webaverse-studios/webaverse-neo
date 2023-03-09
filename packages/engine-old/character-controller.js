@@ -15,30 +15,45 @@ import avatarsWasmManager from './avatars/avatars-wasm-manager.js'
 //   AudioManager,
 // } from './audio-manager.js';
 // import metaversefile from 'metaversefile';
-import {avatarInterpolationNumFrames, avatarInterpolationTimeDelay, numLoadoutSlots} from './constants.js'
-import {avatarMapName} from './network-schema/constants.js'
-import {voiceEndpointBaseUrl} from './endpoints.js'
-import {AppManager} from './app-manager.js'
-import {CharacterPhysics} from './character-physics.js'
-import {CharacterHups} from './character-hups.js'
-import {CharacterHitter} from './character-hitter.js'
-import {AvatarCharacterSfx} from './character-sfx.js'
-import {AvatarCharacterFace} from './character-face.js'
-import {AvatarCharacterFx} from './character-fx.js'
-import {VoiceInput} from './audio/voice-input/voice-input.js'
-import {VoicePack, VoicePackVoicer} from './audio/voice-output/voice-pack-voicer.js'
-import {VoiceEndpoint, VoiceEndpointVoicer} from './audio/voice-output/voice-endpoint-voicer.js'
-import {ActionInterpolant, PositionInterpolant, QuaternionInterpolant, VelocityInterpolant} from './interpolants.js'
-import {applyCharacterToAvatar, makeAvatar} from './player-avatar-binding.js'
+import {
+  avatarInterpolationNumFrames,
+  avatarInterpolationTimeDelay,
+  numLoadoutSlots
+} from './constants.js'
+import { avatarMapName } from './network-schema/constants.js'
+import { voiceEndpointBaseUrl } from './endpoints.js'
+import { AppManager } from './app-manager.js'
+import { CharacterPhysics } from './character-physics.js'
+import { CharacterHups } from './character-hups.js'
+import { CharacterHitter } from './character-hitter.js'
+import { AvatarCharacterSfx } from './character-sfx.js'
+import { AvatarCharacterFace } from './character-face.js'
+import { AvatarCharacterFx } from './character-fx.js'
+import { VoiceInput } from './audio/voice-input/voice-input.js'
+import {
+  VoicePack,
+  VoicePackVoicer
+} from './audio/voice-output/voice-pack-voicer.js'
+import {
+  VoiceEndpoint,
+  VoiceEndpointVoicer
+} from './audio/voice-output/voice-endpoint-voicer.js'
+import {
+  ActionInterpolant,
+  PositionInterpolant,
+  QuaternionInterpolant,
+  VelocityInterpolant
+} from './interpolants.js'
+import { applyCharacterToAvatar, makeAvatar } from './player-avatar-binding.js'
 // import musicManager from './music-manager.js';
 // import {
 //   MusicManager,
 // } from './music-manager.js';
-import {makeId} from './util.js'
+import { makeId } from './util.js'
 import overrides from './overrides.js'
 // import physx from './physics/physx.js';
-import {ActionManager} from './action-manager.js'
-import {NpcBehavior} from './npc-behavior.js'
+import { ActionManager } from './action-manager.js'
+import { NpcBehavior } from './npc-behavior.js'
 // import {
 //   LocalPlayerCharacterBehavior,
 // } from './character-behavior.js';
@@ -111,7 +126,7 @@ abortError.isAbortError = true
 } */
 
 class AvatarHand extends THREE.Object3D {
-  constructor() {
+  constructor () {
     super()
 
     this.pointer = 0
@@ -121,14 +136,14 @@ class AvatarHand extends THREE.Object3D {
 }
 
 class Character extends THREE.Object3D {
-  constructor({
-                engine,
-                audioManager,
-                chatManager,
-                sounds,
-                physicsTracker,
-                environmentManager
-              }) {
+  constructor ({
+    engine,
+    audioManager,
+    chatManager,
+    sounds,
+    physicsTracker,
+    environmentManager
+  }) {
     super()
 
     if (
@@ -202,11 +217,11 @@ class Character extends THREE.Object3D {
   set name(name) {
     debugger;
   } */
-  get bio() {
+  get bio () {
     debugger
   }
 
-  set bio(bio) {
+  set bio (bio) {
     debugger
   }
 
@@ -220,7 +235,7 @@ class Character extends THREE.Object3D {
     }
   } */
 
-  static async fetchThemeSong(npcThemeSongUrl) {
+  static async fetchThemeSong (npcThemeSongUrl) {
     console.warn('do not fetch theme song', {
       musicManager: this.musicManager
     })
@@ -234,11 +249,11 @@ class Character extends THREE.Object3D {
   }
 
   // serializers
-  getPosition(v) {
+  getPosition (v) {
     return this.position.toArray(v)
   }
 
-  getQuaternion(q) {
+  getQuaternion (q) {
     return this.quaternion.toArray(q)
   }
 
@@ -318,11 +333,11 @@ class Character extends THREE.Object3D {
     return false;
   } */
 
-  getVelocity(v) {
+  getVelocity (v) {
     return this.velocity.toArray(v)
   }
 
-  async setVoicePack({audioUrl, indexUrl}) {
+  async setVoicePack ({ audioUrl, indexUrl }) {
     const self = this
     const voiceSpec = JSON.stringify({
       audioUrl,
@@ -336,7 +351,7 @@ class Character extends THREE.Object3D {
     })
   }
 
-  async loadVoicePack({audioUrl, indexUrl}) {
+  async loadVoicePack ({ audioUrl, indexUrl }) {
     this.voicePack = await VoicePack.load({
       audioUrl,
       indexUrl,
@@ -345,7 +360,7 @@ class Character extends THREE.Object3D {
     this.updateVoicer()
   }
 
-  setVoiceEndpoint(voiceId) {
+  setVoiceEndpoint (voiceId) {
     if (!voiceId) {
       throw new Error('voice Id is null')
     }
@@ -365,7 +380,7 @@ class Character extends THREE.Object3D {
     this.loadVoiceEndpoint(url)
   }
 
-  loadVoiceEndpoint(url) {
+  loadVoiceEndpoint (url) {
     if (url) {
       this.voiceEndpoint = new VoiceEndpoint(url)
     } else {
@@ -374,14 +389,14 @@ class Character extends THREE.Object3D {
     this.updateVoicer()
   }
 
-  getVoice() {
+  getVoice () {
     return this.voiceEndpoint || this.voicePack
   }
 
-  updateVoicer() {
+  updateVoicer () {
     const voice = this.getVoice()
     if (voice instanceof VoicePack) {
-      const {syllableFiles, audioBuffer} = voice
+      const { syllableFiles, audioBuffer } = voice
       this.voicer = new VoicePackVoicer({
         syllableFiles,
         audioBuffer,
@@ -400,29 +415,29 @@ class Character extends THREE.Object3D {
     }
   }
 
-  async fetchThemeSong() {
+  async fetchThemeSong () {
     const avatarApp = this.getAvatarApp()
     const npcComponent = avatarApp.getComponent('npc')
     const npcThemeSongUrl = npcComponent?.themeSongUrl
     return await Character.fetchThemeSong(npcThemeSongUrl)
   }
 
-  getCrouchFactor() {
+  getCrouchFactor () {
     return (
       1 -
       0.4 *
-      avatarsWasmManager.physxWorker.getActionInterpolantAnimationAvatar(
-        this.avatar.animationAvatarPtr,
-        'crouch',
-        1
-      )
+        avatarsWasmManager.physxWorker.getActionInterpolantAnimationAvatar(
+          this.avatar.animationAvatarPtr,
+          'crouch',
+          1
+        )
     )
     /* let factor = 1;
     factor *= 1 - 0.4 * this.actionInterpolants.crouch.getNormalized();
     return factor; */
   }
 
-  wear(app, {loadoutIndex = -1} = {}) {
+  wear (app, { loadoutIndex = -1 } = {}) {
     // debugger;
 
     const _getNextLoadoutIndex = () => {
@@ -531,20 +546,20 @@ class Character extends THREE.Object3D {
     }
   }
 
-  unwear(
+  unwear (
     app,
-    {destroy = false, dropStartPosition = null, dropDirection = null} = {}
+    { destroy = false, dropStartPosition = null, dropDirection = null } = {}
   ) {
     if (!dropStartPosition) {
       debugger
     }
 
-    const wearAction = this.actionManager.findAction(({type, instanceId}) => {
+    const wearAction = this.actionManager.findAction(({ type, instanceId }) => {
       return type === 'wear' && instanceId === app.instanceId
     })
     if (wearAction) {
       // const wearAction = this.getActionsState().get(wearActionIndex);
-      const {loadoutIndex} = wearAction
+      const { loadoutIndex } = wearAction
 
       const _setAppTransform = () => {
         if (dropStartPosition && dropDirection) {
@@ -667,7 +682,7 @@ class Character extends THREE.Object3D {
     }
   }
 
-  setTarget(target) {
+  setTarget (target) {
     // set both head and eyeball target;
     if (target) {
       this.headTarget.copy(target)
@@ -682,7 +697,7 @@ class Character extends THREE.Object3D {
     }
   }
 
-  destroy() {
+  destroy () {
     this.characterHups.destroy()
   }
 }
@@ -690,23 +705,23 @@ class Character extends THREE.Object3D {
 //
 
 class PlayerData {
-  constructor() {
+  constructor () {
     this.data = new Map()
   }
 
-  get(k) {
+  get (k) {
     return this.data.get(k)
   }
 
-  set(k, v) {
+  set (k, v) {
     this.data.set(k, v)
   }
 
-  delete(k) {
+  delete (k) {
     this.data.delete(k)
   }
 
-  has(k) {
+  has (k) {
     return this.data.has(k)
   }
 }
@@ -724,13 +739,13 @@ const controlActionTypes = [
 ]
 
 class StateCharacter extends Character {
-  constructor(opts) {
+  constructor (opts) {
     if (!opts) {
       debugger
     }
     super(opts)
 
-    const {playerId = makeId(5)} = opts
+    const { playerId = makeId(5) } = opts
 
     this.playerId = playerId
     this.playerIdInt = murmurhash.v3(playerId)
@@ -745,11 +760,11 @@ class StateCharacter extends Character {
     // this.bindState(playersArray);
   }
 
-  get playersArray() {
+  get playersArray () {
     debugger
   }
 
-  set playersArray(v) {
+  set playersArray (v) {
     debugger
   }
 
@@ -760,7 +775,7 @@ class StateCharacter extends Character {
     debugger;
   } */
 
-  isBound() {
+  isBound () {
     return true
     // return !!this.playersArray;
   }
@@ -782,7 +797,7 @@ class StateCharacter extends Character {
     throw new Error('called abstract method');
   } */
 
-  bindCommonObservers() {
+  bindCommonObservers () {
     console.log('bind common observers')
     debugger
 
@@ -844,7 +859,7 @@ class StateCharacter extends Character {
     this.bindCommonObservers();
   } */
 
-  getAvatarInstanceId() {
+  getAvatarInstanceId () {
     return this.playerData.get(avatarMapName)
   }
 
@@ -1000,7 +1015,7 @@ class StateCharacter extends Character {
     });
   } */
 
-  destroy() {
+  destroy () {
     // this.unbindState();
     // this.appManager.unbindState();
 
@@ -1011,7 +1026,7 @@ class StateCharacter extends Character {
 }
 
 class AvatarCharacter extends StateCharacter {
-  constructor(opts) {
+  constructor (opts) {
     super(opts)
 
     // locals
@@ -1026,8 +1041,8 @@ class AvatarCharacter extends StateCharacter {
     // action manager
     this.actionManager = new ActionManager()
     this.actionManager.addEventListener('actionadded', e => {
-      const {data} = e
-      const {action} = data
+      const { data } = e
+      const { action } = data
       if (this.avatar) {
         avatarsWasmManager.physxWorker.addActionAnimationAvatar(
           this.avatar.animationAvatarPtr,
@@ -1038,8 +1053,8 @@ class AvatarCharacter extends StateCharacter {
       } */
     })
     this.actionManager.addEventListener('actionremoved', e => {
-      const {data} = e
-      const {action} = data
+      const { data } = e
+      const { action } = data
       if (this.avatar) {
         avatarsWasmManager.physxWorker.removeActionAnimationAvatar(
           this.avatar.animationAvatarPtr,
@@ -1065,23 +1080,23 @@ class AvatarCharacter extends StateCharacter {
   }
 
   // XXX debugging
-  get controlMode() {
+  get controlMode () {
     debugger
   }
 
-  set controlMode(controlMode) {
+  set controlMode (controlMode) {
     debugger
   }
 
-  get glider() {
+  get glider () {
     debugger
   }
 
-  set glider(glider) {
+  set glider (glider) {
     debugger
   }
 
-  async setPlayerSpec(playerSpec) {
+  async setPlayerSpec (playerSpec) {
     const p = this.loadAvatar(playerSpec.avatarUrl)
 
     overrides.userVoiceEndpoint.set(playerSpec.voice ?? null)
@@ -1090,13 +1105,13 @@ class AvatarCharacter extends StateCharacter {
     await p
   }
 
-  getAvatarApp() {
+  getAvatarApp () {
     const instanceId = this.playerData.get('avatar')
     const app = this.appManager.getAppByInstanceId(instanceId)
     return app
   }
 
-  async loadAvatar(url, {components = []} = {}) {
+  async loadAvatar (url, { components = [] } = {}) {
     const avatarApp = await this.appManager.addAppAsync({
       contentId: url,
       position: localVector.set(0, 0, 0),
@@ -1109,15 +1124,15 @@ class AvatarCharacter extends StateCharacter {
     this.syncAvatar()
   }
 
-  async toggleMic() {
+  async toggleMic () {
     await this.voiceInput.toggleMic()
   }
 
-  async toggleSpeech() {
+  async toggleSpeech () {
     await this.voiceInput.toggleSpeech()
   }
 
-  syncAvatar() {
+  syncAvatar () {
     if (this.avatar) {
       console.warn('already had avatar')
       debugger
@@ -1224,7 +1239,7 @@ class AvatarCharacter extends StateCharacter {
     } */
   }
 
-  updateAvatar(timestamp, timeDiff) {
+  updateAvatar (timestamp, timeDiff) {
     if (this.avatar) {
       const timeDiffS = timeDiff / 1000
 
@@ -1309,7 +1324,7 @@ class AvatarCharacter extends StateCharacter {
     }
   } */
 
-  destroy() {
+  destroy () {
     this.avatarFace.destroy()
     this.avatarCharacterSfx.destroy()
     this.avatarCharacterFx.destroy()
@@ -1324,7 +1339,7 @@ class AvatarCharacter extends StateCharacter {
 }
 
 class InterpolatedPlayer extends AvatarCharacter {
-  constructor(opts) {
+  constructor (opts) {
     super(opts)
 
     this.positionInterpolant = new PositionInterpolant(
@@ -1349,7 +1364,7 @@ class InterpolatedPlayer extends AvatarCharacter {
       actionsBufferSize
     )
     this.actionInterpolant.addEventListener('statechange', e => {
-      const {actionId, action} = e.data
+      const { actionId, action } = e.data
       if (action) {
         this.actionManager.addAction(action)
       } else {
@@ -1443,7 +1458,7 @@ class InterpolatedPlayer extends AvatarCharacter {
 
     this.avatar.update(timestamp, timeDiff);
   } */
-  updateInterpolation(timestamp) {
+  updateInterpolation (timestamp) {
     this.positionInterpolant.update(timestamp)
     this.quaternionInterpolant.update(timestamp)
     this.velocityInterpolant.update(timestamp)
@@ -1458,13 +1473,13 @@ class InterpolatedPlayer extends AvatarCharacter {
 }
 
 class UninterpolatedPlayer extends AvatarCharacter {
-  constructor(opts) {
+  constructor (opts) {
     super(opts)
 
     UninterpolatedPlayer.init.apply(this, arguments)
   }
 
-  static init() {
+  static init () {
     this.avatarBinding = {
       position: this.position,
       quaternion: this.quaternion,
@@ -1478,7 +1493,7 @@ class UninterpolatedPlayer extends AvatarCharacter {
 class LocalPlayer extends UninterpolatedPlayer {
   lastMatrix = new THREE.Matrix4()
 
-  constructor(opts) {
+  constructor (opts) {
     super(opts)
 
     // this.avatarTracker = new AvatarTracker({
@@ -1493,7 +1508,7 @@ class LocalPlayer extends UninterpolatedPlayer {
   set avatar(v) {
     debugger;
   } */
-  get avatarApp() {
+  get avatarApp () {
     debugger
   }
 
@@ -1504,7 +1519,7 @@ class LocalPlayer extends UninterpolatedPlayer {
     debugger;
   } */
 
-  set avatarApp(v) {
+  set avatarApp (v) {
     debugger
   }
 
@@ -1536,13 +1551,13 @@ class LocalPlayer extends UninterpolatedPlayer {
     });
   } */
 
-  setMicMediaStream(mediaStream) {
+  setMicMediaStream (mediaStream) {
     if (this.microphoneMediaStream) {
       this.microphoneMediaStream.disconnect()
       this.microphoneMediaStream = null
     }
     if (mediaStream) {
-      const {audioContext} = this.audioManager
+      const { audioContext } = this.audioManager
       this.avatar.setMicrophoneEnabled({
         audioContext
       })
@@ -1556,7 +1571,7 @@ class LocalPlayer extends UninterpolatedPlayer {
     }
   }
 
-  grab(app, hand = 'left') {
+  grab (app, hand = 'left') {
     let position = null
     let quaternion = null
 
@@ -1597,7 +1612,7 @@ class LocalPlayer extends UninterpolatedPlayer {
     })
   }
 
-  ungrab() {
+  ungrab () {
     const actions = Array.from(this.getActionsState())
     let removeOffset = 0
     for (let i = 0; i < actions.length; i++) {
@@ -1640,7 +1655,7 @@ class LocalPlayer extends UninterpolatedPlayer {
     // }
   } */
 
-  destroy() {
+  destroy () {
     super.destroy()
     this.characterPhysics.destroy()
   }
@@ -1683,7 +1698,7 @@ class LocalPlayer extends UninterpolatedPlayer {
 //
 
 export class NpcPlayer extends LocalPlayer {
-  constructor(opts) {
+  constructor (opts) {
     super(opts)
 
     this.npcBehavior = new NpcBehavior({
@@ -1691,7 +1706,7 @@ export class NpcPlayer extends LocalPlayer {
     })
   }
 
-  updateAvatar(timestamp, timeDiff) {
+  updateAvatar (timestamp, timeDiff) {
     this.npcBehavior.update(timestamp, timeDiff)
 
     super.updateAvatar(timestamp, timeDiff)
@@ -1701,7 +1716,7 @@ export class NpcPlayer extends LocalPlayer {
 //
 
 class RemotePlayer extends InterpolatedPlayer {
-  constructor(opts) {
+  constructor (opts) {
     super(opts)
 
     this.isRemotePlayer = true
@@ -1718,11 +1733,11 @@ class RemotePlayer extends InterpolatedPlayer {
     this.lastRemoteTimestamp = 0
   }
 
-  get remoteTimeBias() {
+  get remoteTimeBias () {
     debugger
   }
 
-  set remoteTimeBias(v) {
+  set remoteTimeBias (v) {
     debugger
   }
 
@@ -1773,16 +1788,16 @@ class RemotePlayer extends InterpolatedPlayer {
   } */
 
   // remote updates
-  getLocalToRemoteTimestampBias() {
+  getLocalToRemoteTimestampBias () {
     return this.lastRemoteTimestamp - this.lastLocalTimestamp
   }
 
-  setRemoteTimestampBias(localTimestamp, remoteTimestamp) {
+  setRemoteTimestampBias (localTimestamp, remoteTimestamp) {
     this.lastLocalTimestamp = localTimestamp
     this.lastRemoteTimestamp = remoteTimestamp
   }
 
-  setRemoteTransform(transform) {
+  setRemoteTransform (transform) {
     // const transform = e.changes.keys.get('transform').value;
     // const timestamp = performance.now();
 
@@ -1812,7 +1827,7 @@ class RemotePlayer extends InterpolatedPlayer {
     this.lastPosition.copy(this.position)
   }
 
-  setRemoteVelocity(velocity) {
+  setRemoteVelocity (velocity) {
     this.velocity.fromArray(velocity)
     const remoteTimestamp = velocity[3]
     const localToRemoteTimestampBias = this.getLocalToRemoteTimestampBias()
@@ -1902,7 +1917,7 @@ class RemotePlayer extends InterpolatedPlayer {
     });
   } */
 
-  updateAvatar(timestamp, timeDiff) {
+  updateAvatar (timestamp, timeDiff) {
     if (this.avatar) {
       const timeDiffS = timeDiff / 1000
 
@@ -1928,10 +1943,10 @@ class RemotePlayer extends InterpolatedPlayer {
     }
   }
 
-  destroy() {
+  destroy () {
     super.destroy()
     clearInterval(this.syncRemoteTimestampInterval)
   }
 }
 
-export {LocalPlayer, RemotePlayer}
+export { LocalPlayer, RemotePlayer }

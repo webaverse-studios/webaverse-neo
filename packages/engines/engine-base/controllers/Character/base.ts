@@ -1,51 +1,62 @@
-import { nanoid } from 'nanoid'
-import { Engine } from '../..'
-import { PhysicsCharacter } from './physics'
+import { nanoid } from "nanoid";
+
+import { VRM } from "@pixiv/three-vrm";
+import { PhysicsAdapter } from "@webaverse-studios/physics-base";
+
+import { PhysicsCharacter } from "./physics";
+import { Vector3 } from "three";
 
 class PlayerData extends Map {}
 
 /**
- * @class Base Character
+ * @class AvatarCharacter Character
  */
-export class BaseCharacter extends PhysicsCharacter {
-  /** @property {Engine} */
-  engine: Engine
-
+export class AvatarCharacter extends PhysicsCharacter {
   /**
    * UUID Of the player.
    *
    * @property {string}
    */
-  playerId: string
+  playerId: string;
 
   /**
    * Internal storage of player data as a map
    *
    * @property {PlayerData}
    */
-  playerData: PlayerData
+  playerData: PlayerData;
 
   /**
    * The avatar of the player.
    */
-  avatar: any
+  avatar: VRM;
 
   /**
    * Create a new base character controller.
    *
    * @param {Engine} engine
    */
-  constructor ({ engine }: { engine: Engine }) {
-    super()
+  constructor({
+    physicsAdapter,
+    avatar,
+  }: {
+    avatar: VRM;
+    physicsAdapter: PhysicsAdapter;
+  }) {
+    super({ physicsAdapter });
 
-    this.avatar = null
-    this.engine = engine
-    this.playerId = nanoid()
-    this.playerData = new PlayerData()
+    this.avatar = avatar;
+    this.playerId = nanoid();
+    this.playerData = new PlayerData();
+  }
+
+  update(dir: Vector3) {
+    // Update the physics character controller
+    super.update(dir);
   }
 
   /**
    * Destroy the character controller.
    */
-  destroy () {}
+  destroy() {}
 }

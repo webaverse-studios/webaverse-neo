@@ -1,26 +1,33 @@
-import { Object3D, Vector3 } from 'three'
+import {
+  KinematicController,
+  PhysicsAdapter,
+} from "@webaverse-studios/physics-base";
+import { Object3D, Vector3 } from "three";
 
 /**
  * @class Physics Character
  */
 export class PhysicsCharacter extends Object3D {
   /**
-   * Velocity of the character.
+   * Running physics adapter.
    *
-   * @property {Vector3}
+   * @property {PhysicsAdapter}
    */
-  velocity: Vector3
-
-  //   characterController: KinematicCharacterController
+  physicsAdapter: PhysicsAdapter;
 
   /**
-   * The gap the controller will leave between the character and its environment.
+   * Kinematic controller for the character.
    */
-  characterOffset: number = 0.1
+  kinematicController: KinematicController;
 
-  constructor () {
-    super()
+  constructor({ physicsAdapter }: { physicsAdapter: PhysicsAdapter }) {
+    super();
 
-    this.velocity = new Vector3()
+    this.physicsAdapter = physicsAdapter;
+    this.kinematicController = physicsAdapter.createKinematicController();
+  }
+
+  update(dir: Vector3) {
+    this.kinematicController.move(dir);
   }
 }

@@ -8,43 +8,50 @@ import {
   Scene,
   WebGLRenderer,
 } from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { PhysicsAdapter } from "@webaverse-studios/physics-base";
 
 import { NyxScene } from "../nyx-scene";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { loadGeometry } from "./geometry";
 
 export class Example extends NyxScene {
-  declare cube: Object3D;
-  declare camera: PerspectiveCamera;
+  declare _cube: Object3D;
+  declare _camera: PerspectiveCamera;
 
-  constructor({ canvas }: { canvas: HTMLCanvasElement }) {
-    super({ canvas });
+  constructor({
+    canvas,
+    physicsAdapter,
+  }: {
+    canvas: HTMLCanvasElement;
+    physicsAdapter: PhysicsAdapter;
+  }) {
+    super({ canvas, physicsAdapter });
   }
 
   /**
    * Configure NyxScene
    */
-  private configureNyxScene = () => {
-    this.scene = createScene();
-    this.camera = createCamera();
-    this.lights = createLights();
-    this.renderer = createRenderer(this.canvas, 1);
-  };
+  private configureNyxScene() {
+    this._scene = createScene();
+    this._camera = createCamera();
+    this._lights = createLights();
+    this._renderer = createRenderer(this._canvas, 1);
+  }
 
   /**
    * Load GLTF Model and return Object3D
    */
-  private initCube = async () => {
-    this.cube = await createCube(this.gltfLoader);
-    this.scene.add(this.cube);
-  };
+  private async initCube() {
+    this._cube = await createCube(this._gltfLoader);
+    this._scene.add(this._cube);
+  }
 
   /**
    * Add lights to the scene
    */
-  private addLightsToScene = () => {
-    this.lights.forEach((light) => this.scene.add(light));
-  };
+  private addLightsToScene() {
+    this._lights.forEach((light) => this._scene.add(light));
+  }
 
   /**
    * Initialize everything in the scene
@@ -60,13 +67,13 @@ export class Example extends NyxScene {
   }
 
   update() {
-    this.cube.rotation.x += 0.004;
-    this.cube.rotation.y += 0.004;
-    this.renderer.render(this.scene, this.camera);
+    this._cube.rotation.x += 0.004;
+    this._cube.rotation.y += 0.004;
+    this._renderer.render(this._scene, this._camera);
   }
 }
 
-const createCamera = () => {
+function createCamera() {
   const camera = new PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
@@ -75,9 +82,9 @@ const createCamera = () => {
   );
   camera.position.z = 10;
   return camera;
-};
+}
 
-const createLights = () => {
+function createLights() {
   const light1 = new PointLight(0xffffff, 1, 0, 2),
     light2 = new PointLight(0xffffff, 1, 0, 2),
     light3 = new AmbientLight(0xffffff, 2);
@@ -89,16 +96,16 @@ const createLights = () => {
   light2.castShadow = true;
 
   return [light1, light2, light3];
-};
+}
 
-const createRenderer = (canvas: HTMLCanvasElement, scale = 1) => {
+function createRenderer(canvas: HTMLCanvasElement, scale = 1) {
   const renderer = new WebGLRenderer({ canvas });
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setSize(innerWidth * scale, innerHeight * scale, false);
   return renderer;
-};
+}
 
-const createScene = () => {
+function createScene() {
   const scene = new Scene();
 
   // Configure scene.
@@ -106,9 +113,9 @@ const createScene = () => {
   scene.fog = new Fog(0xffffff, 0, 750);
 
   return scene;
-};
+}
 
-const createCube = async (loader: GLTFLoader) => {
+async function createCube(loader: GLTFLoader) {
   const cube = await loadGeometry(loader);
   return cube.scene.getObjectByName("Cube")!;
-};
+}

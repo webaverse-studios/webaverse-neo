@@ -1,26 +1,39 @@
-/**
- * Rapier Setup:
- * - Create a physics world
- * - Create a rigid body
- * - create collider using the rigid body
- * - create a kinematic controller using rigidBody + collider
- */
+import { BaseScene } from "@webaverse-studios/engine-base/scenes";
 
-/**
- * Base Kinematic Controller Class
- */
-export class BaseKinematicController {}
+import {
+  KinematicController,
+  BaseKinematicController,
+} from "./kinematicController";
 
 /**
  * Base Physics Adapter
  */
-export abstract class PhysicsAdapter {
-  constructor () {}
+abstract class PhysicsAdapter {
+  constructor() {}
 
   /**
-   * Construct and return a new Kinematic Controller
+   * Construct and return a it new Kinematic Controller
    */
-  get kinematicController () {
-    return new BaseKinematicController()
+  createKinematicController() {
+    return new BaseKinematicController();
   }
+
+  /**
+   * Update the physics adapter
+   */
+  abstract update(): void;
+
+  /**
+   * Destroy a character controller
+   *
+   * @param {KinematicController} controller - controller to destroy
+   */
+  abstract destroyCharacterController(controller: KinematicController): void;
+
+  /**
+   * Display debug information onto the scene
+   */
+  abstract displayDebugInformation(scene: BaseScene): void;
 }
+
+export { KinematicController, PhysicsAdapter };

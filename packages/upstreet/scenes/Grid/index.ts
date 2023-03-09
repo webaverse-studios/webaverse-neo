@@ -1,129 +1,152 @@
-import { AmbientLight, Color, Fog, PerspectiveCamera, PointLight } from "three";
+import {
+  BufferGeometry,
+  LineBasicMaterial,
+  LineSegments,
+  PerspectiveCamera,
+} from "three";
+
+import { VRM } from "@pixiv/three-vrm";
+import { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { AvatarCharacter } from "@webaverse-studios/engine-base/controllers/Character";
+import { PhysicsAdapter } from "@webaverse-studios/physics-base";
 
 import { loadGeometry } from "./geometry";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { NyxScene } from "../nyx-scene";
-import { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
-import { VRM } from "@pixiv/three-vrm";
+import {
+  createCamera,
+  createControls,
+  createDebugLines,
+  createLights,
+  createRenderer,
+  createScene,
+} from "./setup";
 
 /**
  * Grid Scene to display a grid and avatar.
  */
 export class Grid extends NyxScene {
-  grid!: GLTF;
-  avatar!: VRM;
-  controls!: OrbitControls;
+  declare _grid: GLTF;
+  declare _avatar: VRM;
+  declare _controls: OrbitControls;
+  declare _camera: PerspectiveCamera;
+  declare _character: AvatarCharacter;
+  declare _lines: LineSegments<BufferGeometry, LineBasicMaterial>;
 
   /**
    * Create Grid Scene to display a grid and avatar.
    *
    * @property {HtmlCanvasElement} canvas
    */
-  constructor({ canvas }: { canvas: HTMLCanvasElement }) {
-    super({ canvas });
+  constructor({
+    canvas,
+    physicsAdapter,
+  }: {
+    canvas: HTMLCanvasElement;
+    physicsAdapter: PhysicsAdapter;
+  }) {
+    super({ canvas, physicsAdapter });
   }
 
-  update() {
-    this.controls.update();
-    this.renderer.render(this.scene, this.camera);
-  }
-
-  async init() {
-    await Promise.all([
-      initCamera.apply(this),
-      initRenderer.apply(this),
-      initLights.apply(this),
-      initGeometry.apply(this),
+  /**
+   * Configure NyxScene
+   */
+  private async configureNyxScene() {
+    const [scene, camera, lights, lines, renderer] = await Promise.all([
+      createScene(),
+      createCamera(),
+      createLights(),
+      createDebugLines(),
+      createRenderer(this._canvas, 1),
     ]);
 
-    configureScene.apply(this);
+    this._lines = lines;
+    this._scene = scene;
+    this._camera = camera;
+    this._lights = lights;
+    this._renderer = renderer;
+    this._controls = createControls(camera, renderer);
+  }
+
+  /**
+   * Load GLTF Model and return Object3D
+   */
+  private async initGeometry() {
+    const { avatar, grid } = await loadGeometry(this._gltfLoader);
+    (this._avatar = avatar), (this._grid = grid);
+  }
+
+  /**
+   * Manipulate the geometry to display the grid and avatar.
+   */
+  private configureGeometry() {
+    // rotate to face the camera
+    this._avatar.scene.rotation.y = Math.PI;
+
+    const scale = 5;
+    this._grid.scene.scale.set(scale, scale, scale);
+    this._grid.scene.position.set(0, 0, 0);
+    this._grid.scene.rotation.set(0, 0, 0);
+
+    this._scene.add(this._lines);
+    this._scene.add(this._avatar.scene);
+    this._scene.add(this._grid.scene);
+  }
+
+  private configureCharacter() {
+    this._character = new AvatarCharacter({
+      avatar: this._avatar,
+      physicsAdapter: this._physicsAdapter,
+    });
+  }
+
+  /**
+   * Add lights to the scene
+   */
+  private addLightsToScene() {
+    this._lights.forEach((light) => this._scene.add(light));
+  }
+
+  async init(): Promise<void> {
+    await Promise.all([this.configureNyxScene(), this.initGeometry()]);
+
+    this.addLightsToScene();
+    this.configureGeometry();
+    this.configureCharacter();
+
+    // function down(this: Grid, event: KeyboardEvent) {
+    //   if (event.key == "ArrowUp") this.movementDirection.x = this.speed;
+    //   if (event.key == "ArrowDown") this.movementDirection.x = -this.speed;
+    //   if (event.key == "ArrowLeft") this.movementDirection.z = -this.speed;
+    //   if (event.key == "ArrowRight") this.movementDirection.z = this.speed;
+    //   if (event.key == " ") this.movementDirection.y = this.speed;
+    // }
+
+    // function up(this: Grid, event: KeyboardEvent) {
+    //   if (event.key == "ArrowUp") this.movementDirection.x = 0.0;
+    //   if (event.key == "ArrowDown") this.movementDirection.x = 0.0;
+    //   if (event.key == "ArrowLeft") this.movementDirection.z = 0.0;
+    //   if (event.key == "ArrowRight") this.movementDirection.z = 0.0;
+    //   if (event.key == " ") this.movementDirection.y = -this.speed; // Gravity
+    // }
+
+    // document.onkeyup = up.bind(this);
+    // document.onkeydown = down.bind(this);
+
     this.update();
   }
-}
 
-/**
- * Initialize Scene Renderer
- */
-async function initRenderer(this: Grid, scale = 1) {
-  this.renderer.setSize(window.innerWidth, window.innerHeight);
-  this.renderer.setSize(innerWidth * scale, innerHeight * scale, false);
-}
+  private render() {
+    this._physicsAdapter.displayDebugInformation(this);
+    this._renderer.render(this._scene, this._camera);
+  }
 
-/**
- * Initialize Scene Camera
- */
-async function initCamera(this: Grid) {
-  this.camera = new PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000
-  );
-  this.camera.position.y = 2;
-  this.camera.position.z = 3;
-}
+  // speed = 0.1;
+  // movementDirection = new Vector3(0.0, -0.1, 0.0);
 
-/**
- * Initialize Scene Lights
- */
-async function initLights(this: Grid): Promise<void> {
-  const light1 = new PointLight(0xffffff, 1, 0, 2),
-    light2 = new PointLight(0xffffff, 1, 0, 2),
-    light3 = new AmbientLight(0xffffff, 2);
-
-  light1.position.set(5 * Math.random(), 5 * Math.random(), 10);
-  light1.castShadow = true;
-
-  light2.position.set(5 * Math.random(), 10 * Math.random(), 10);
-  light2.castShadow = true;
-
-  this.lights = [light1, light2, light3];
-
-  this.scene.add(light1);
-  this.scene.add(light2);
-  this.scene.add(light3);
-}
-
-/**
- * Initialize Scene Geometry
- */
-async function initGeometry(this: Grid) {
-  const { avatar, grid } = await loadGeometry(this.gltfLoader);
-  this.avatar = avatar;
-  this.grid = grid;
-}
-
-/**
- * Configure Scene after initialization
- */
-function configureScene(this: Grid) {
-  // Configure scene.
-  this.scene.background = new Color(0x2a2a2a);
-  this.scene.fog = new Fog(0xffffff, 0, 750);
-
-  // rotate to face the camera
-  this.avatar.scene.rotation.y = Math.PI;
-
-  const scale = 5;
-  this.grid.scene.scale.set(scale, scale, scale);
-  this.grid.scene.position.set(0, 0, 0);
-  this.grid.scene.rotation.set(0, 0, 0);
-
-  this.scene.add(this.avatar.scene);
-  this.scene.add(this.grid.scene);
-
-  // Controls
-  this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-  this.controls.listenToKeyEvents(window); // optional
-
-  this.controls.rotateSpeed = 1.0;
-  this.controls.zoomSpeed = 1.2;
-  this.controls.panSpeed = 0.8;
-
-  this.controls.keys = {
-    LEFT: "KeyA", //left arrow
-    UP: "KeyW", // up arrow
-    RIGHT: "KeyD", // right arrow
-    BOTTOM: "KeyS", // down arrow
-  };
+  update() {
+    // this._character.update(this.movementDirection);
+    this._controls.update();
+    this.render();
+  }
 }

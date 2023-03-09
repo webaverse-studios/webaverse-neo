@@ -15,6 +15,8 @@ export default () => {
 
   return {
     async oncreate ({ dom }) {
+      const t0 = performance.now()
+
       // Get canvas element.
       const canvas = dom.querySelector(Canvas)
 
@@ -29,9 +31,12 @@ export default () => {
       // Create engine.
       const engine = new NyxEngine({ canvas, dom })
 
-      // Start the engine. VROOM
+      // Start the engine. VROOM!!
       await engine.load(defaultScene)
       await engine.start()
+      const t1 = performance.now()
+
+      console.log(`Engine started in ${t1 - t0}ms.`)
     },
 
     // Remove resize listener.
