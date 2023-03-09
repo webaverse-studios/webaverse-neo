@@ -26,7 +26,8 @@
     "packages/*"
   ],
   "resolutions": {
-    "@webaverse-studios/engine": "workspace:*"
+    "@webaverse-studios/engine": "workspace:*",
+    "@webaverse-studios/agent-backend": "workspace:*"
   },
   "packageManager": "yarn@3.4.1",
   "dependencies": {

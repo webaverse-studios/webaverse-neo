@@ -1,5 +1,6 @@
 import m from 'mithril'
 import { NyxEngine } from '@webaverse-studios/engine'
+import {Agent} from "@webaverse-studios/agent-backend";
 
 import { throttle } from '@soulofmischief/js-utils'
 import { Grid } from '../../../scenes/index.js'
@@ -34,7 +35,9 @@ export default () => {
       const engine = new NyxEngine({ canvas, dom })
 
       // Start the engine. VROOM
-      engine.start()
+      engine.start().then(() => {
+        const agent = new Agent({engine});
+      })
       engine.load( defaultScene )
     },
 

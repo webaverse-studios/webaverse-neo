@@ -26,6 +26,7 @@
     "@gltf-transform/functions": "=3.0.4",
     "@pixiv/three-vrm": "=1.0.8",
     "@soulofmischief/js-utils": "=0.21.0",
+    "@webaverse-studios/agent-backend": "file:../agent-backend",
     "@webaverse-studios/engine": "file:../engine",
     "gun": "^0.2020.1239",
     "mithril": "=2.2.2",
