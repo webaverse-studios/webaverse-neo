@@ -1,0 +1,12 @@
+{
+  "name": "@webaverse-studios/agent-backend",
+  "packageManager": "yarn@3.4.1",
+  "type": "module",
+  "dependencies": {
+    "@feathersjs/authentication-client": "^5.0.0",
+    "@feathersjs/client": "^5.0.0",
+    "gun": "^0.2020.1239",
+    "socket.io-client": "^4.6.1",
+    "three": "^0.150.1"
+  }
+}
