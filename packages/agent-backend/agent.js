@@ -1,9 +1,10 @@
-import feathers from "@feathersjs/client"
-import auth from "@feathersjs/authentication-client"
-import io from "socket.io-client"
+
 
 import * as THREE from "three";
-import GUN from 'gun'
+
+import {addMemory, getMemoryIDs, remember} from "./memory/memory.js";
+import {addAgentToGunDB} from "./gun-utils/agents-util.js";
+
 
 export class Agent {
   // agent class that handles AI agents that can be given API access to a game server
@@ -14,33 +15,15 @@ export class Agent {
     console.log('this.avatar: ', this.avatar)
 
     // feathers client
-    const socket = io('http://localhost:3030')
-    this.feathers = feathers(socket);
-    this.feathers.configure(feathers.socketio(socket))
-    this.feathers.configure(auth())
-    this.feathers.authenticate({
-      strategy: 'local',
-      email: 'admin',
-      password: 'admin'
-    }).then((result) => {
-      console.log('AUTHENTICATED', result)
-    }).catch((error) => {
-      console.error('ERROR', error)
-    })
 
-    // gun client
-    this.gun = GUN({peers: ['http://localhost:3401/gun']})
-    const createGunAgent = async () => {
-      await this.gun.get('agents').get(this.avatar.playerId)
-    }
-    createGunAgent()
+
+    // add agent to gun db
+    console.log("addAGENT", addAgentToGunDB("this.avatar.playerId"))
 
 
     this.offscreenCanvas = new OffscreenCanvas(1024, 1024)
     this.renderer = new THREE.WebGLRenderer({canvas: this.offscreenCanvas})
     this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000)
-
-    const timestamp = 1234
 
 
     const renderManager = async () => {
@@ -48,21 +31,35 @@ export class Agent {
     }
 
     const memorizeManager = async () => {
+      this.timestamp = Date.now()
       const imageBlob = await this.offscreenCanvas.convertToBlob()
-      const data = {
-        hash_condition: {agentID: this.avatar.playerId, timestamp: Date.now()},
+      const img_data = {
+        hash_condition: {agentID: this.avatar.playerId, timestamp: this.timestamp},
         file: imageBlob,
         metadata: {
           type: imageBlob.type,
           size: imageBlob.size,
         }
       }
-      console.log('data: ', data)
-      await this.memorize(timestamp, {image:data})
+
+      const text_blob = new Blob(["this is a test"], {type: 'text/plain'})
+      const text_data = {
+        hash_condition: {agentID: this.avatar.playerId, timestamp: this.timestamp},
+        file: text_blob,
+        metadata: {
+          type: text_blob.type,
+          size: text_blob.size,
+        }
+      }
+      await addMemory(this.avatar.playerId, this.timestamp, {image:img_data, text:text_data})
     }
 
     const rememberManager = async () => {
-      await this.remember(timestamp)
+      console.log(await remember(this.avatar.playerId, this.timestamp))
+    }
+
+    const getAllMemories = async () => {
+      console.log(await getMemoryIDs(this.avatar.playerId))
     }
 
     const clearRenderer = () => {
@@ -89,17 +86,21 @@ export class Agent {
         console.log('Backspace')
         clearRenderer()
       }
+      if (event.key === 'Control') {
+        console.log('Control')
+        getAllMemories()
+      }
     })
   }
 
-  async memorize(timestamp, memory){
+  async memorize(timestamp, memory) {
     console.log('addMemoryToDB', timestamp, memory)
     // add a memory to the feathers (caching files) and then storing the hash in gun
     for (const key of Object.keys(memory)) {
       console.log('key', key, memory[key])
       const response = await this.feathers.service('files').create(memory[key])
       console.log('response', response, response.id)
-      const gun_response = await this.gun.get("agents").get(this.avatar.playerId).get("memories").get(timestamp).get(key).put(response.id, function(ack){
+      const gun_response = await this.gun.get("agents").get(this.avatar.playerId).get("memories").get(timestamp).get(key).put(response.id, function (ack) {
         console.log('ACK', ack)
       })
       console.log('gun_response', gun_response)
@@ -108,7 +109,7 @@ export class Agent {
 
   async remember(timestamp) {
     // get the ids from the gun DB based on the timestamp
-    const ids = await this.gun.get("agents").get(this.avatar.playerId).get("memories").get(timestamp).get("image", function(ack){
+    const ids = await this.gun.get("agents").get(this.avatar.playerId).get("memories").get(timestamp).get("image", function (ack) {
       console.log('ACK, remember', ack)
     })
     console.log('ids', ids)
