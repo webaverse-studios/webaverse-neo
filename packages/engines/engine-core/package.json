@@ -1,5 +1,5 @@
 {
-  "name": "@webaverse-studios/engine-base",
+  "name": "@webaverse-studios/engine-core",
   "version": "0.1.0",
   "type": "module",
   "description": "Webaverse Game Engine",
@@ -7,11 +7,11 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/webaverse-studios/webaverse-neo.git",
-    "directory": "packages/engines/engine-base"
+    "directory": "packages/engines/engine-core"
   },
   "dependencies": {
     "@soulofmischief/js-utils": "=0.21.0",
-    "@webaverse-studios/physics-base": "file:../../physics/physics-base",
+    "@webaverse-studios/physics-core": "file:../../physics/physics-core",
     "@webaverse-studios/physics-rapier": "file:../../physics/physics-rapier",
     "murmurhash": "=2.0.1",
     "nanoid": "^4.0.1",

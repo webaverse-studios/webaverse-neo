@@ -3,8 +3,8 @@
  * @author Yendor <lecoqjacob@gmail.com>
  */
 
-import { Engine } from '@webaverse-studios/engine-base'
-import { AvatarCharacter } from '@webaverse-studios/engine-base/controllers/Character/index.js'
+import { Engine } from "@webaverse-studios/engine-core";
+import { AvatarCharacter } from "@webaverse-studios/engine-core/controllers/Character/index.js";
 
 /**
  * Character controller for the nyx engine.
@@ -17,7 +17,7 @@ export class NyxCharacter extends AvatarCharacter {
    *
    * @property {Engine} engine
    */
-  constructor ({ engine }) {
-    super({ engine })
+  constructor({ engine }) {
+    super({ engine });
   }
 }

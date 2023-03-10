@@ -8,8 +8,8 @@ import {
 import { VRM } from "@pixiv/three-vrm";
 import { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { AvatarCharacter } from "@webaverse-studios/engine-base/controllers/Character";
-import { PhysicsAdapter } from "@webaverse-studios/physics-base";
+import { AvatarCharacter } from "@webaverse-studios/engine-core/controllers/Character";
+import { PhysicsAdapter } from "@webaverse-studios/physics-core";
 
 import { loadGeometry } from "./geometry";
 import { NyxScene } from "../nyx-scene";

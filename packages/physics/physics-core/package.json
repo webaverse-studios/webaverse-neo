@@ -1,5 +1,5 @@
 {
-  "name": "@webaverse-studios/physics-base",
+  "name": "@webaverse-studios/physics-core",
   "version": "0.1.0",
   "type": "module",
   "description": "Webaverse Physics",
@@ -7,7 +7,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/webaverse-studios/webaverse-neo.git",
-    "directory": "packages/physics/physics-base"
+    "directory": "packages/physics/physics-core"
   },
   "engines": {
     "node": "=19.0.0"

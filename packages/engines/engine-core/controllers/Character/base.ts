@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
 
 import { VRM } from "@pixiv/three-vrm";
-import { PhysicsAdapter } from "@webaverse-studios/physics-base";
+import { PhysicsAdapter } from "@webaverse-studios/physics-core";
 
 import { PhysicsCharacter } from "./physics";
 import { Vector3 } from "three";

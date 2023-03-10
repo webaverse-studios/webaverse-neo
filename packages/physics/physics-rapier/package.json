@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@dimforge/rapier3d": "=0.11.2",
-    "@webaverse-studios/physics-base": "file:../physics-base",
+    "@webaverse-studios/physics-core": "file:../physics-core",
     "three": "^0.150.1"
   },
   "devDependencies": {

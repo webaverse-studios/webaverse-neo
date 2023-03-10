@@ -1,3 +1,3 @@
-import { BaseScene } from '@webaverse-studios/engine-base/scenes'
+import { BaseScene } from "@webaverse-studios/engine-core/scenes";
 
 export class NyxScene extends BaseScene {}

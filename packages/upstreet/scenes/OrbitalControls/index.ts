@@ -10,7 +10,7 @@ import {
 } from "three";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { PhysicsAdapter } from "@webaverse-studios/physics-base";
+import { PhysicsAdapter } from "@webaverse-studios/physics-core";
 
 import { NyxScene } from "../nyx-scene";
 

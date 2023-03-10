@@ -1,4 +1,4 @@
-import { PhysicsAdapter } from "@webaverse-studios/physics-base";
+import { PhysicsAdapter } from "@webaverse-studios/physics-core";
 import Stats from "stats.js";
 
 import { BaseScene } from "./scenes";

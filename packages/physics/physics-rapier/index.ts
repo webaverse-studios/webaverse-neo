@@ -1,7 +1,7 @@
 import {
   PhysicsAdapter,
   KinematicController,
-} from "@webaverse-studios/physics-base";
+} from "@webaverse-studios/physics-core";
 
 import {
   Collider,
@@ -13,7 +13,7 @@ import {
   World,
 } from "@dimforge/rapier3d";
 import { BufferAttribute } from "three";
-import { BaseScene } from "@webaverse-studios/engine-base/scenes";
+import { BaseScene } from "../../engines/engine-core/scenes";
 
 /**
  * Rapier Setup:

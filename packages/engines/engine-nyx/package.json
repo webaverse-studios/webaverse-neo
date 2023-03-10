@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@soulofmischief/js-utils": "=0.21.0",
-    "@webaverse-studios/engine-base": "file:../engine-base",
+    "@webaverse-studios/engine-core": "file:../engine-core",
     "murmurhash": "=2.0.1",
     "nanoid": "^4.0.1",
     "stats.js": "=0.17.0",

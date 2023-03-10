@@ -1,7 +1,7 @@
 import {
   KinematicController,
   PhysicsAdapter,
-} from "@webaverse-studios/physics-base";
+} from "@webaverse-studios/physics-core";
 import { Object3D, Vector3 } from "three";
 
 /**

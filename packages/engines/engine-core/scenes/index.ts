@@ -11,7 +11,7 @@ import {
 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import type { Engine } from "../index";
-import { PhysicsAdapter } from "@webaverse-studios/physics-base";
+import { PhysicsAdapter } from "@webaverse-studios/physics-core";
 
 /**
  * Abstract Scene Class

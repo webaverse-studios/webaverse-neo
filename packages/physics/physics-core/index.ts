@@ -1,4 +1,4 @@
-import { BaseScene } from "@webaverse-studios/engine-base/scenes";
+import { BaseScene } from "../../engines/engine-core/scenes";
 
 import {
   KinematicController,

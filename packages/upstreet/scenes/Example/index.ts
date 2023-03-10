@@ -9,7 +9,7 @@ import {
   WebGLRenderer,
 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { PhysicsAdapter } from "@webaverse-studios/physics-base";
+import { PhysicsAdapter } from "@webaverse-studios/physics-core";
 
 import { NyxScene } from "../nyx-scene";
 import { loadGeometry } from "./geometry";

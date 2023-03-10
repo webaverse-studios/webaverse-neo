@@ -11,7 +11,7 @@
     "lint": "eslint . --config ./.eslintrc.cjs --fix",
     "engine-nyx": "yarn workspace @webaverse-studios/engine-nyx",
     "start": "concurrently \"yarn upstreet start\"",
-    "physics-base": "yarn workspace @webaverse-studios/physics-base",
+    "physics-core": "yarn workspace @webaverse-studios/physics-core",
     "physics-nyx": "yarn workspace @webaverse-studios/physics-nyx",
     "upstreet": "yarn workspace @webaverse-studios/upstreet"
   },
@@ -29,10 +29,10 @@
     "packages/**/*"
   ],
   "resolutions": {
-    "@webaverse-studios/engine-base": "workspace:*",
+    "@webaverse-studios/engine-core": "workspace:*",
     "@webaverse-studios/engine-nyx": "workspace:*",
     "@webaverse-studios/upstreet": "workspace:*",
-    "@webaverse-studios/physics-base": "workspace:*",
+    "@webaverse-studios/physics-core": "workspace:*",
     "@webaverse-studios/physics-rapier": "workspace:*"
   },
   "packageManager": "yarn@3.4.1"

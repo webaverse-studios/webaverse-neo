@@ -1,4 +1,4 @@
-import { Engine } from '@webaverse-studios/engine-base'
+import { Engine } from "@webaverse-studios/engine-core";
 
 export class NyxEngine extends Engine {
   /**
@@ -9,46 +9,46 @@ export class NyxEngine extends Engine {
    * @property {number} height
    * @property {number} width
    */
-  constructor ({
+  constructor({
     canvas,
     dom,
     height,
-    width
+    width,
   }: {
-    canvas: HTMLCanvasElement
-    dom: Element
-    height?: number
-    width?: number
+    canvas: HTMLCanvasElement;
+    dom: Element;
+    height?: number;
+    width?: number;
   }) {
-    super({ canvas, dom, height, width })
+    super({ canvas, dom, height, width });
   }
 
-  pause () {
-    super.pause()
+  pause() {
+    super.pause();
   }
 
-  render () {
-    super.render()
+  render() {
+    super.render();
   }
 
-  reset () {
-    super.reset()
+  reset() {
+    super.reset();
   }
 
-  resize (width?: number, height?: number) {
-    super.resize(width, height)
+  resize(width?: number, height?: number) {
+    super.resize(width, height);
   }
 
-  async start () {
-    super.start()
-    console.log('START!')
+  async start() {
+    super.start();
+    console.log("START!");
   }
 
-  stop () {
-    super.stop()
+  stop() {
+    super.stop();
   }
 
-  update () {
-    super.update()
+  update() {
+    super.update();
   }
 }
