@@ -1,1 +1,3 @@
-module.exports = { extends: '@webaverse-studios' }
+module.exports = {
+  extends: '@webaverse-studios'
+}

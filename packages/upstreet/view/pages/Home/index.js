@@ -1,51 +1,54 @@
 import m from 'mithril'
-import { NyxEngine } from '@webaverse-studios/engine'
+import { NyxEngine } from '@webaverse-studios/engine-nyx'
 import {Agent} from "@webaverse-studios/agent-backend";
-
 import { throttle } from '@soulofmischief/js-utils'
-import { Grid } from '../../../scenes/index.js'
+import { Grid } from '../../../scenes/index'
 import { body, canvas } from './style.module.scss'
 
 
 const defaultScene = Grid
 
 // Components
-const
-  _Home = `.${body}`,
+const _Home = `.${body}`,
   Canvas = `canvas.${canvas}`
-
 
 export default () => {
   let resizeListener
 
   return {
-    oncreate ({ dom }) {
+    async oncreate ({ dom }) {
+      const t0 = performance.now()
+
       // Get canvas element.
-      const canvas = dom.querySelector( Canvas )
+      const canvas = dom.querySelector(Canvas)
 
       // Add resize listener.
       resizeListener = throttle(() => {
         engine.resize()
         //m.redraw()
-      }, 250 )
+      }, 250)
 
-      addEventListener( 'resize', resizeListener )
+      addEventListener('resize', resizeListener)
 
       // Create engine.
       const engine = new NyxEngine({ canvas, dom })
 
-      // Start the engine. VROOM
-      engine.start().then(() => {
-        const agent = new Agent({engine});
-      })
-      engine.load( defaultScene )
+      // Start the engine. VROOM!!
+      await engine.load(defaultScene)
+      await engine.start().then(() => {
+        const agent = new Agent({engine})});
+      const t1 = performance.now()
+
+      console.log(`Engine started in ${t1 - t0}ms.`)
     },
 
     // Remove resize listener.
     onremove () {
-      removeEventListener( 'resize', resizeListener )
+      removeEventListener('resize', resizeListener)
     },
 
-    view () { return m( _Home, m( Canvas ))}
+    view () {
+      return m(_Home, m(Canvas))
+    }
   }
 }

@@ -1,1 +1,0 @@
-export {BaseCharacter} from './base'
