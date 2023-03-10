@@ -18,8 +18,9 @@ export class Agent {
    * @param engine The engine instance for the game server.
    */
   constructor({engine}) {
+    console.log("ENGINE:", engine)
     this.engine = engine;
-    this.avatar = engine.avatar;
+    this.avatar = engine.scene._character;
     addAgentToGunDB(this.avatar.playerId);
 
     this.offscreenCanvas = new OffscreenCanvas(1024, 1024);
@@ -97,6 +98,6 @@ export class Agent {
     this.camera.position.set(position.x, position.y + 2, position.z) // faked height, will need to decapitate the avatar and get height in the future
     this.camera.rotation.set(rotation.x, rotation.y, rotation.z)
     this.camera.up = this.up
-    this.renderer.render(this.engine.scene.scene, this.camera)
+    this.renderer.render(this.engine.scene._scene, this.camera)
   }
 }
