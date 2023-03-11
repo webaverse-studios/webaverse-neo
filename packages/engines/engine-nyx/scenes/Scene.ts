@@ -7,12 +7,8 @@ import { Scene as _Scene } from '@webaverse-studios/engine-core'
 
 
 /**
- * Character controller for the nyx engine.
+ * Default scene.
  *
- * @class Nyx Character
+ * @class Nyx Scene
  */
-export class Scene extends _Scene {
-  constructor({ engine, physicsAdapter }) {
-    super({ engine, physicsAdapter })
-  }
-}
+export class Scene extends _Scene {}
