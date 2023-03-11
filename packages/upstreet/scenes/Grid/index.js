@@ -1,12 +1,7 @@
-import {
-  BufferGeometry,
-  LineBasicMaterial,
-  LineSegments,
-  PerspectiveCamera,
-} from 'three'
+import { LineSegments } from 'three'
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 import { VRM } from '@pixiv/three-vrm'
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { RapierPhysicsAdapter } from '@webaverse-studios/physics-rapier'
 import { AvatarCharacter, Scene } from '@webaverse-studios/engine-nyx'
@@ -39,11 +34,12 @@ export class Grid extends Scene {
 
   /**
    *
-   * @param {HTMLCanvasElement} canvas
-   * @param {RapierPhysicsAdapter} physicsAdapter
+   * @param {object} gridOptions - Grid Scene Options
+   * @param {HTMLCanvasElement} gridOptions.canvas - Canvas to render the scene to
+   * @param {RapierPhysicsAdapter} gridOptions.physicsAdapter - Physics Adapter to use
    */
-  constructor({ canvas, physicsAdapter }) {
-    super({ canvas, physicsAdapter })
+  constructor( gridOptions ) {
+    super( gridOptions )
   }
 
   /**
@@ -55,7 +51,7 @@ export class Grid extends Scene {
       createCamera(),
       createLights(),
       createDebugLines(),
-      createRenderer(this._canvas, 1),
+      createRenderer( this._canvas, 1 ),
     ])
 
     this.#lines = lines
@@ -63,14 +59,14 @@ export class Grid extends Scene {
     this._camera = camera
     this._lights = lights
     this._renderer = renderer
-    this.#controls = createControls(camera, renderer)
+    this.#controls = createControls( camera, renderer )
   }
 
   /**
    * Load GLTF Model and return Object3D
    */
   async #initGeometry() {
-    const { avatar, grid } = await loadGeometry(this._gltfLoader)
+    const { avatar, grid } = await loadGeometry( this._gltfLoader )
     this.#avatar = avatar
     this.#grid = grid
   }
@@ -83,13 +79,13 @@ export class Grid extends Scene {
     this.#avatar.scene.rotation.y = Math.PI
 
     const scale = 5
-    this.#grid.scene.scale.set(scale, scale, scale)
-    this.#grid.scene.position.set(0, 0, 0)
-    this.#grid.scene.rotation.set(0, 0, 0)
+    this.#grid.scene.scale.set( scale, scale, scale )
+    this.#grid.scene.position.set( 0, 0, 0 )
+    this.#grid.scene.rotation.set( 0, 0, 0 )
 
-    this._scene.add(this.#lines)
-    this._scene.add(this.#avatar.scene)
-    this._scene.add(this.#grid.scene)
+    this._scene.add( this.#lines )
+    this._scene.add( this.#avatar.scene )
+    this._scene.add( this.#grid.scene )
   }
 
   #configureCharacter() {
@@ -103,7 +99,7 @@ export class Grid extends Scene {
    * Add lights to the scene
    */
   #addLightsToScene() {
-    this._lights.forEach((light) => this._scene.add(light))
+    this._lights.forEach(( light ) => this._scene.add( light ))
   }
 
   async init() {
@@ -136,8 +132,8 @@ export class Grid extends Scene {
   }
 
   #render() {
-    this._physicsAdapter.displayDebugInformation(this)
-    this._renderer.render(this._scene, this._camera)
+    this._physicsAdapter.displayDebugInformation( this )
+    this._renderer.render( this._scene, this._camera )
   }
 
   // speed = 0.1;

@@ -12,22 +12,10 @@
  * @param {*} [arg8] - Eighth argument that is passed from caller.
  */
 
-export type HandleEventCallback = (
-  arg1: any,
-  arg2: any,
-  arg3: any,
-  arg4: any,
-  arg5: any,
-  arg6: any,
-  arg7: any,
-  arg8: any
-) => any;
-
-export type EventCallback = {
-  once: boolean;
-  scope: object;
-  callback: HandleEventCallback;
-};
+/**
+ * @typedef {{once: boolean, scope: object, callback: HandleEventCallback}} EventCallback
+ * @typedef {Object<string, EventCallback[] | null>} Callback
+ */
 
 /**
  * Abstract base class that implements functionality for event handling.
@@ -46,31 +34,21 @@ export type EventCallback = {
  */
 export class EventHandler {
   /**
-   * @type {object}
-   * @private
+   * @type {Callback}
    */
-  private _callbacks: Record<string, EventCallback[]> = {};
+  #callbacks = {}
 
   /**
-   * @type {object}
-   * @private
+   * @type {Callback}
    */
-  private _callbackActive: Record<string, EventCallback[] | null> = {};
+  #callbackActive = {}
 
   /**
    * Reinitialize the event handler.
    */
   initEventHandler() {
-    this._callbacks = {};
-    this._callbackActive = {};
-  }
-
-  set callbacks(callbacks: Record<string, EventCallback[]>) {
-    this._callbacks = callbacks;
-  }
-
-  set callbackActive(callbackActive: Record<string, EventCallback[] | null>) {
-    this._callbackActive = callbackActive;
+    this.#callbacks = {}
+    this.#callbackActive = {}
   }
 
   /**
@@ -84,27 +62,19 @@ export class EventHandler {
    * @param {boolean} [once=false] - If true, the callback will be unbound after being fired once.
    * @private
    */
-  protected _addCallback(
-    name: string,
-    callback: HandleEventCallback,
-    scope: object,
-    once: boolean = false
-  ) {
-    if (!name || typeof name !== "string" || !callback) return;
+  _addCallback( name, callback, scope, once = false ) {
+    if ( !name || typeof name !== 'string' || !callback ) return
 
-    if (!this._callbacks[name]) this._callbacks[name] = [];
+    if ( !this.#callbacks[name]) this.#callbacks[name] = []
 
-    if (
-      this._callbackActive[name] &&
-      this._callbackActive[name] === this._callbacks[name]
-    )
-      this._callbackActive[name] = this._callbackActive[name]!.slice();
+    if ( this.#callbackActive[name] && this.#callbackActive[name] === this.#callbacks[name])
+      this.#callbackActive[name] = this.#callbackActive[name].slice()
 
-    this._callbacks[name].push({
+    this.#callbacks[name].push({
       callback: callback,
       scope: scope || this,
       once: once,
-    });
+    })
   }
 
   /**
@@ -122,9 +92,9 @@ export class EventHandler {
    * });
    * obj.fire('test', 1, 2); // prints 3 to the console
    */
-  on(name: string, callback: HandleEventCallback, scope: object): EventHandler {
-    this._addCallback(name, callback, scope, false);
-    return this;
+  on( name, callback, scope ) {
+    this._addCallback( name, callback, scope, false )
+    return this
   }
 
   /**
@@ -146,48 +116,41 @@ export class EventHandler {
    * obj.off('test', handler); // Removes all handler functions, called 'test'
    * obj.off('test', handler, this); // Removes all handler functions, called 'test' with scope this
    */
-  off(
-    name: string,
-    callback: HandleEventCallback,
-    scope: object
-  ): EventHandler {
-    if (name) {
-      if (
-        this._callbackActive[name] &&
-        this._callbackActive[name] === this._callbacks[name]
-      )
-        this._callbackActive[name] = this._callbackActive[name]!.slice();
+  off( name, callback, scope ) {
+    if ( name ) {
+      if ( this.#callbackActive[name] && this.#callbackActive[name] === this.#callbacks[name])
+        this.#callbackActive[name] = this.#callbackActive[name].slice()
     } else {
-      for (const key in this._callbackActive) {
-        if (!this._callbacks[key]) continue;
+      for ( const key in this.#callbackActive ) {
+        if ( !this.#callbacks[key]) continue
 
-        if (this._callbacks[key] !== this._callbackActive[key]) continue;
+        if ( this.#callbacks[key] !== this.#callbackActive[key]) continue
 
-        this._callbackActive[key] = this._callbackActive[key]!.slice();
+        this.#callbackActive[key] = this.#callbackActive[key].slice()
       }
     }
 
-    if (!name) {
-      this._callbacks = {};
-    } else if (!callback) {
-      if (this._callbacks[name]) this._callbacks[name] = [];
+    if ( !name ) {
+      this.#callbacks = {}
+    } else if ( !callback ) {
+      if ( this.#callbacks[name]) this.#callbacks[name] = []
     } else {
-      const events = this._callbacks[name];
-      if (!events) return this;
+      const events = this.#callbacks[name]
+      if ( !events ) return this
 
-      let count = events.length;
+      let count = events.length
 
-      for (let i = 0; i < count; i++) {
-        if (events[i].callback !== callback) continue;
+      for ( let i = 0; i < count; i++ ) {
+        if ( events[i].callback !== callback ) continue
 
-        if (scope && events[i].scope !== scope) continue;
+        if ( scope && events[i].scope !== scope ) continue
 
-        events[i--] = events[--count];
+        events[i--] = events[--count]
       }
-      events.length = count;
+      events.length = count
     }
 
-    return this;
+    return this
   }
 
   /**
@@ -206,71 +169,50 @@ export class EventHandler {
    * @example
    * obj.fire('test', 'This is the message');
    */
-  fire(
-    name: string | number,
-    arg1?: any,
-    arg2?: any,
-    arg3?: any,
-    arg4?: any,
-    arg5?: any,
-    arg6?: any,
-    arg7?: any,
-    arg8?: any
-  ): EventHandler {
-    if (!name || !this._callbacks[name]) return this;
+  fire( name, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8 ) {
+    if ( !name || !this.#callbacks[name]) return this
 
-    let callbacks;
+    let callbacks
 
-    if (!this._callbackActive[name]) {
-      this._callbackActive[name] = this._callbacks[name];
+    if ( !this.#callbackActive[name]) {
+      this.#callbackActive[name] = this.#callbacks[name]
     } else {
-      if (this._callbackActive[name] === this._callbacks[name])
-        this._callbackActive[name] = this._callbackActive[name]!.slice();
+      if ( this.#callbackActive[name] === this.#callbacks[name])
+        this.#callbackActive[name] = this.#callbackActive[name].slice()
 
-      callbacks = this._callbacks[name].slice();
+      callbacks = this.#callbacks[name].slice()
     }
 
     // TODO: What does callbacks do here?
-    // In particular this condition check looks wrong: (i < (callbacks || this._callbackActive[name]).length)
+    // In particular this condition check looks wrong: (i < (callbacks || this.#callbackActive[name]).length)
     // Because callbacks is not an integer
     // eslint-disable-next-line no-unmodified-loop-condition
     for (
       let i = 0;
-      (callbacks || this._callbackActive[name]) &&
-      i < (callbacks || this._callbackActive[name])!.length;
+      ( callbacks || this.#callbackActive[name]) && i < ( callbacks || this.#callbackActive[name]).length;
       i++
     ) {
-      const evt = (callbacks || this._callbackActive[name])![i];
-      evt.callback.call(
-        evt.scope,
-        arg1,
-        arg2,
-        arg3,
-        arg4,
-        arg5,
-        arg6,
-        arg7,
-        arg8
-      );
+      const evt = ( callbacks || this.#callbackActive[name])[i]
+      evt.callback.call( evt.scope, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8 )
 
-      if (evt.once) {
+      if ( evt.once ) {
         // check that callback still exists because user may have unsubscribed
         // in the event handler
-        const existingCallback = this._callbacks[name];
-        const ind = existingCallback ? existingCallback.indexOf(evt) : -1;
+        const existingCallback = this.#callbacks[name]
+        const ind = existingCallback ? existingCallback.indexOf( evt ) : -1
 
-        if (ind !== -1) {
-          if (this._callbackActive[name] === existingCallback)
-            this._callbackActive[name] = this._callbackActive[name]!.slice();
+        if ( ind !== -1 ) {
+          if ( this.#callbackActive[name] === existingCallback )
+            this.#callbackActive[name] = this.#callbackActive[name].slice()
 
-          this._callbacks[name].splice(ind, 1);
+          this.#callbacks[name].splice( ind, 1 )
         }
       }
     }
 
-    if (!callbacks) this._callbackActive[name] = null;
+    if ( !callbacks ) this.#callbackActive[name] = null
 
-    return this;
+    return this
   }
 
   /**
@@ -289,13 +231,9 @@ export class EventHandler {
    * obj.fire('test', 1, 2); // prints 3 to the console
    * obj.fire('test', 1, 2); // not going to get handled
    */
-  once(
-    name: string,
-    callback: HandleEventCallback,
-    scope: object
-  ): EventHandler {
-    this._addCallback(name, callback, scope, true);
-    return this;
+  once( name, callback, scope ) {
+    this._addCallback( name, callback, scope, true )
+    return this
   }
 
   /**
@@ -308,9 +246,7 @@ export class EventHandler {
    * obj.hasEvent('test'); // returns true
    * obj.hasEvent('hello'); // returns false
    */
-  hasEvent(name: string): boolean {
-    return (
-      (this._callbacks[name] && this._callbacks[name].length !== 0) || false
-    );
+  hasEvent( name ) {
+    return ( this.#callbacks[name] && this.#callbacks[name].length !== 0 ) || false
   }
 }

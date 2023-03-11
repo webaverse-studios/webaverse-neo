@@ -9,8 +9,8 @@ import avatarURL from './assets/Scilly.vrm'
  * @param {GLTFLoader} loader - The loader to use.
  * @returns {Promise<{avatar: VRM}>} - The loaded geometry.
  */
-export async function loadGeometry(loader) {
-  loader.register((parser) => new VRMLoaderPlugin(parser))
-  const avatar = (await loader.loadAsync(avatarURL)).userData.vrm
+export async function loadGeometry( loader ) {
+  loader.register(( parser ) => new VRMLoaderPlugin( parser ))
+  const avatar = ( await loader.loadAsync( avatarURL )).userData.vrm
   return { avatar }
 }

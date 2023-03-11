@@ -1,35 +1,10 @@
-import {
-  TRACEID_PIPELINELAYOUT_ALLOC,
-  TRACEID_RENDERPIPELINE_ALLOC,
-  TRACEID_RENDER_ACTION,
-  TRACEID_RENDER_FRAME,
-  TRACEID_RENDER_FRAME_TIME,
-  TRACEID_RENDER_PASS,
-  TRACEID_RENDER_PASS_DETAIL,
-  TRACEID_RENDER_TARGET_ALLOC,
-  TRACEID_SHADER_ALLOC,
-  TRACEID_SHADER_COMPILE,
-  TRACEID_TEXTURE_ALLOC,
-  TRACEID_VRAM_IB,
-  TRACEID_VRAM_TEXTURE,
-  TRACEID_VRAM_VB,
-} from "./tracing-constants";
+import { TRACING_CHANNEL } from './tracing-constants'
 
-export type TracingChannel =
-  | typeof TRACEID_RENDER_FRAME
-  | typeof TRACEID_RENDER_FRAME_TIME
-  | typeof TRACEID_RENDER_PASS
-  | typeof TRACEID_RENDER_PASS_DETAIL
-  | typeof TRACEID_RENDER_ACTION
-  | typeof TRACEID_RENDER_TARGET_ALLOC
-  | typeof TRACEID_TEXTURE_ALLOC
-  | typeof TRACEID_SHADER_ALLOC
-  | typeof TRACEID_SHADER_COMPILE
-  | typeof TRACEID_VRAM_TEXTURE
-  | typeof TRACEID_VRAM_VB
-  | typeof TRACEID_VRAM_IB
-  | typeof TRACEID_RENDERPIPELINE_ALLOC
-  | typeof TRACEID_PIPELINELAYOUT_ALLOC;
+/**
+ * Type for the tracing channels.
+ *
+ * @typedef {TRACING_CHANNEL} TracingChannel
+ */
 
 /**
  * Log tracing functionality, allowing for tracing of the internal functionality of the engine.
@@ -43,14 +18,14 @@ class Tracing {
    * @type {Set<string>}
    * @private
    */
-  private static _traceChannels: Set<string> = new Set();
+  static #traceChannels = new Set()
 
   /**
    * Enable call stack logging for trace calls. Defaults to false.
    *
    * @type {boolean}
    */
-  static stack: boolean = false;
+  static stack = false
 
   /**
    * Enable or disable a trace channel.
@@ -71,15 +46,14 @@ class Tracing {
    * - {@link TRACEID_VRAM_IB}
    * - {@link TRACEID_RENDERPIPELINE_ALLOC}
    * - {@link TRACEID_PIPELINELAYOUT_ALLOC}
-   *
    * @param {boolean} enabled - New enabled state for the channel.
    */
-  static set(channel: TracingChannel, enabled: boolean = true) {
+  static set( channel, enabled = true ) {
     // #if _DEBUG
-    if (enabled) {
-      Tracing._traceChannels.add(channel);
+    if ( enabled ) {
+      Tracing._traceChannels.add( channel )
     } else {
-      Tracing._traceChannels.delete(channel);
+      Tracing._traceChannels.delete( channel )
     }
     // #endif
   }
@@ -90,9 +64,9 @@ class Tracing {
    * @param {TracingChannel} channel - Name of the trace channel.
    * @returns {boolean} - True if the trace channel is enabled.
    */
-  static get(channel: TracingChannel): boolean {
-    return Tracing._traceChannels.has(channel);
+  static get( channel ) {
+    return Tracing._traceChannels.has( channel )
   }
 }
 
-export { Tracing };
+export { Tracing }

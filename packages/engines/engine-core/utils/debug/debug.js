@@ -1,4 +1,5 @@
-import { Tracing, TracingChannel } from "./tracing";
+/* eslint-disable no-console */
+import { Tracing, TracingChannel } from './tracing'
 
 /**
  * Engine debug log system. Note that the logging only executes in the
@@ -13,17 +14,17 @@ class Debug {
    * @type {Set<string>}
    * @private
    */
-  private static _loggedMessages: Set<string> = new Set();
+  #loggedMessages = new Set()
 
   /**
    * Deprecated warning message.
    *
    * @param {string} message - The message to log.
    */
-  static deprecated(message: string) {
-    if (!Debug._loggedMessages.has(message)) {
-      Debug._loggedMessages.add(message);
-      console.warn("DEPRECATED: " + message);
+  static deprecated( message ) {
+    if ( !Debug._loggedMessages.has( message )) {
+      Debug._loggedMessages.add( message )
+      console.warn( 'DEPRECATED: ' + message )
     }
   }
 
@@ -33,9 +34,9 @@ class Debug {
    * @param {boolean|object} assertion - The assertion to check.
    * @param {string} message - The message to log.
    */
-  static assertDeprecated(assertion: boolean | object, message: string) {
-    if (!assertion) {
-      Debug.deprecated(message);
+  static assertDeprecated( assertion, message ) {
+    if ( !assertion ) {
+      Debug.deprecated( message )
     }
   }
 
@@ -45,9 +46,9 @@ class Debug {
    * @param {boolean|object} assertion - The assertion to check.
    * @param {...*} args - The values to be written to the log.
    */
-  static assert(assertion: boolean | object, ...args: any[]) {
-    if (!assertion) {
-      console.error("ASSERT FAILED: ", ...args);
+  static assert( assertion, ...args ) {
+    if ( !assertion ) {
+      console.error( 'ASSERT FAILED: ', ...args )
     }
   }
 
@@ -56,8 +57,8 @@ class Debug {
    *
    * @param {Function} func - Function to call.
    */
-  static call(func: Function) {
-    func();
+  static call( func ) {
+    func()
   }
 
   /**
@@ -65,8 +66,8 @@ class Debug {
    *
    * @param {...*} args - The values to be written to the log.
    */
-  static log(...args: any[]) {
-    console.log(...args);
+  static log( ...args ) {
+    console.log( ...args )
   }
 
   /**
@@ -74,10 +75,10 @@ class Debug {
    *
    * @param {string} message - The message to log.
    */
-  static logOnce(message: string) {
-    if (!Debug._loggedMessages.has(message)) {
-      Debug._loggedMessages.add(message);
-      console.log(message);
+  static logOnce( message ) {
+    if ( !Debug._loggedMessages.has( message )) {
+      Debug._loggedMessages.add( message )
+      console.log( message )
     }
   }
 
@@ -86,8 +87,8 @@ class Debug {
    *
    * @param {...*} args - The values to be written to the log.
    */
-  static warn(...args: any[]) {
-    console.warn(...args);
+  static warn( ...args ) {
+    console.warn( ...args )
   }
 
   /**
@@ -95,10 +96,10 @@ class Debug {
    *
    * @param {string} message - The message to log.
    */
-  static warnOnce(message: string) {
-    if (!Debug._loggedMessages.has(message)) {
-      Debug._loggedMessages.add(message);
-      console.warn(message);
+  static warnOnce( message ) {
+    if ( !Debug._loggedMessages.has( message )) {
+      Debug._loggedMessages.add( message )
+      console.warn( message )
     }
   }
 
@@ -107,8 +108,8 @@ class Debug {
    *
    * @param {...*} args - The values to be written to the log.
    */
-  static error(...args: any[]) {
-    console.error(...args);
+  static error( ...args ) {
+    console.error( ...args )
   }
 
   /**
@@ -116,39 +117,39 @@ class Debug {
    *
    * @param {string} message - The message to log.
    */
-  static errorOnce(message: string) {
-    if (!Debug._loggedMessages.has(message)) {
-      Debug._loggedMessages.add(message);
-      console.error(message);
+  static errorOnce( message ) {
+    if ( !Debug._loggedMessages.has( message )) {
+      Debug._loggedMessages.add( message )
+      console.error( message )
     }
   }
 
   /**
    * Error in validation of GPU commands, logged no more than once.
    *
-   * @param {...*} args - The values to be written to the log. Uniqueness of the first parameter
+   * @param {...string} args - The values to be written to the log. Uniqueness of the first parameter
    * is used to determine if the message was already logged out.
    */
-  static gpuError(...args: string[]) {
-    if (!Debug._loggedMessages.has(args[0])) {
-      Debug._loggedMessages.add(args[0]);
-      console.error(`GPU VALIDATION ERROR: `, ...args);
+  static gpuError( ...args ) {
+    if ( !Debug._loggedMessages.has( args[0])) {
+      Debug._loggedMessages.add( args[0])
+      console.error( `GPU VALIDATION ERROR: `, ...args )
     }
   }
 
   /**
    * Trace message, which is logged to the console if the tracing for the channel is enabled
    *
-   * @param {string} channel - The trace channel
+   * @param {TracingChannel} channel - The trace channel
    * @param {...*} args - The values to be written to the log.
    */
-  static trace(channel: TracingChannel, ...args: any[]) {
-    if (Tracing.get(channel)) {
-      console.groupCollapsed(`${channel.padEnd(20, " ")}|`, ...args);
-      if (Tracing.stack) {
-        console.trace();
+  static trace( channel, ...args ) {
+    if ( Tracing.get( channel )) {
+      console.groupCollapsed( `${channel.padEnd( 20, ' ' )}|`, ...args )
+      if ( Tracing.stack ) {
+        console.trace()
       }
-      console.groupEnd();
+      console.groupEnd()
     }
   }
 }
@@ -165,12 +166,9 @@ class DebugHelper {
    * @param {object} object - The object to assign the name to.
    * @param {string} name - The name to assign.
    */
-  static setName(
-    object: Record<string | number | symbol, string>,
-    name: string
-  ) {
-    if (object) {
-      object.name = name;
+  static setName( object, name ) {
+    if ( object ) {
+      object.name = name
     }
   }
 
@@ -180,14 +178,11 @@ class DebugHelper {
    * @param {object} object - The object to assign the name to.
    * @param {string} label - The label to assign.
    */
-  static setLabel(
-    object: Record<string | number | symbol, string>,
-    label: string
-  ) {
-    if (object) {
-      object.label = label;
+  static setLabel( object, label ) {
+    if ( object ) {
+      object.label = label
     }
   }
 }
 
-export { Debug, DebugHelper };
+export { Debug, DebugHelper }

@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "concurrently -c #6D1A36,#53917E,#36558F \"yarn:upstreet dev\" \"yarn:feathers dev\" \"yarn:gun dev\"",
+    "dev": "concurrently -c #6D1A36,#53917E,#36558F,#e009a3 \"yarn:upstreet dev\" \"yarn:feathers dev\" \"yarn:gun dev\"",
     "engine": "yarn workspace @webaverse-studios/engine",
     "feathers": "yarn workspace @webaverse-studios/backend-feathers",
     "gun": "yarn workspace @webaverse-studios/backend-gun",
@@ -12,20 +12,20 @@
     "engine-nyx": "yarn workspace @webaverse-studios/engine-nyx",
     "start": "concurrently \"yarn upstreet start\"",
     "physics-core": "yarn workspace @webaverse-studios/physics-core",
-    "physics-nyx": "yarn workspace @webaverse-studios/physics-nyx",
+    "physics-rapier": "yarn workspace @webaverse-studios/physics-rapier",
     "upstreet": "yarn workspace @webaverse-studios/upstreet"
   },
   "devDependencies": {
-    "@feathersjs/cli": "=5.0.0",
-    "@types/three": "^0.149.0",
+    "@types/prettier": "^2",
     "@typescript-eslint/parser": "^5.54.1",
     "@webaverse-studios/eslint-config": "^1.0.0",
     "concurrently": "=7.6.0",
     "eslint": "=8.34.0",
     "eslint-plugin-jsdoc": "=40.0.0",
     "eslint-plugin-promise": "=6.1.1",
+    "prettier": "^2.8.4",
     "process": "=0.11.10",
-    "typescript": "=4.9.5"
+    "vite": "=4.1.0"
   },
   "workspaces": [
     "packages/**/*"
