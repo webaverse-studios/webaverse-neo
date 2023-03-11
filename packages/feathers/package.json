@@ -31,8 +31,8 @@
   "main": "lib/index",
   "type": "module",
   "scripts": {
-    "start": "node src",
-    "dev": "nodemon src/",
+    "start": "cross-env NODE_ENV=production node src",
+    "dev": "cross-env NODE_ENV=development nodemon src/",
     "prettier": "npx prettier \"**/*.js\" --write",
     "mocha": "cross-env NODE_ENV=test mocha test/ --recursive --exit",
     "test": "cross-env NODE_ENV=test npm run migrate && npm run mocha",

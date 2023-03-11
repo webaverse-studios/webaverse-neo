@@ -6,7 +6,9 @@ const socket = io('http://localhost:3030')
 const feathersClient = feathers(socket);
 feathersClient.configure(feathers.socketio(socket))
 feathersClient.configure(auth())
-feathersClient.authenticate({
+
+// TODO: Use correct auth strategy and reenable authentication.
+/*feathersClient.authenticate({
   strategy: 'local',
   email: 'admin',
   password: 'admin'
@@ -14,6 +16,6 @@ feathersClient.authenticate({
   console.log('AUTHENTICATED', result)
 }).catch((error) => {
   console.error('ERROR', error)
-})
+})*/
 
 export {feathersClient}

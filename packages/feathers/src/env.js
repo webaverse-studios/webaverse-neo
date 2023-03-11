@@ -1,3 +1,4 @@
-import dotenv from 'dotenv-safe'
+import { config } from 'dotenv-safe'
 
-dotenv.config()
+// Load the appropriate configuration file based on the environment.
+config({ path: `.env.${process.env.NODE_ENV}` })

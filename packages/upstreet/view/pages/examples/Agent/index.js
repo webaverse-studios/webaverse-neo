@@ -1,7 +1,8 @@
 import m from 'mithril'
 import { NyxEngine } from '@webaverse-studios/engine-nyx'
+import { Agent } from "@webaverse-studios/agent-backend";
 import { throttle } from '@soulofmischief/js-utils'
-import { Grid } from '../../../scenes/index'
+import { Grid } from '../../../../scenes/index'
 import { body, canvas } from './style.module.scss'
 
 
@@ -38,6 +39,8 @@ export default () => {
       const t1 = performance.now()
 
       console.log( `Engine started in ${t1 - t0}ms.` )
+
+      // const agent = new Agent({engine})
     },
 
     // Remove resize listener.

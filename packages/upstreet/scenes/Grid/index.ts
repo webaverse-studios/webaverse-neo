@@ -8,11 +8,12 @@ import {
 import { VRM } from "@pixiv/three-vrm";
 import { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { AvatarCharacter } from "@webaverse-studios/engine-core/controllers/Character";
 import { PhysicsAdapter } from "@webaverse-studios/physics-core";
+import { AvatarCharacter, Scene } from '@webaverse-studios/engine-nyx'
 
 import { loadGeometry } from "./geometry";
-import { NyxScene } from "../nyx-scene";
+
+
 import {
   createCamera,
   createControls,
@@ -25,7 +26,7 @@ import {
 /**
  * Grid Scene to display a grid and avatar.
  */
-export class Grid extends NyxScene {
+export class Grid extends Scene {
   declare _grid: GLTF;
   declare _avatar: VRM;
   declare _controls: OrbitControls;
@@ -49,9 +50,9 @@ export class Grid extends NyxScene {
   }
 
   /**
-   * Configure NyxScene
+   * Configure scene
    */
-  private async configureNyxScene() {
+  private async configureScene() {
     const [scene, camera, lights, lines, renderer] = await Promise.all([
       createScene(),
       createCamera(),
@@ -73,7 +74,8 @@ export class Grid extends NyxScene {
    */
   private async initGeometry() {
     const { avatar, grid } = await loadGeometry(this._gltfLoader);
-    (this._avatar = avatar), (this._grid = grid);
+    this._avatar = avatar;
+    this._grid = grid;
   }
 
   /**
@@ -108,7 +110,10 @@ export class Grid extends NyxScene {
   }
 
   async init(): Promise<void> {
-    await Promise.all([this.configureNyxScene(), this.initGeometry()]);
+    await Promise.all([
+      this.configureScene(),
+      this.initGeometry(),
+    ]);
 
     this.addLightsToScene();
     this.configureGeometry();

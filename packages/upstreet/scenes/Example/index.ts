@@ -5,16 +5,15 @@ import {
   Object3D,
   PerspectiveCamera,
   PointLight,
-  Scene,
+  Scene as THREEScene,
   WebGLRenderer,
 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { PhysicsAdapter } from "@webaverse-studios/physics-core";
-
-import { NyxScene } from "../nyx-scene";
+import { Scene } from "@webaverse-studios/engine-nyx";
 import { loadGeometry } from "./geometry";
 
-export class Example extends NyxScene {
+export class Example extends Scene {
   declare _cube: Object3D;
   declare _camera: PerspectiveCamera;
 
@@ -29,10 +28,10 @@ export class Example extends NyxScene {
   }
 
   /**
-   * Configure NyxScene
+   * Configure Scene
    */
-  private configureNyxScene() {
-    this._scene = createScene();
+  private configureScene() {
+    this._scene = createTHREEScene();
     this._camera = createCamera();
     this._lights = createLights();
     this._renderer = createRenderer(this._canvas, 1);
@@ -57,10 +56,11 @@ export class Example extends NyxScene {
    * Initialize everything in the scene
    */
   async init(): Promise<void> {
+    this.configureScene()
+    this.addLightsToScene()
+
     await Promise.all([
-      this.configureNyxScene(),
       await this.initCube(),
-      this.addLightsToScene(),
     ]);
 
     this.update();
@@ -105,8 +105,8 @@ function createRenderer(canvas: HTMLCanvasElement, scale = 1) {
   return renderer;
 }
 
-function createScene() {
-  const scene = new Scene();
+function createTHREEScene() {
+  const scene = new THREEScene();
 
   // Configure scene.
   scene.background = new Color(0x2a2a2a);

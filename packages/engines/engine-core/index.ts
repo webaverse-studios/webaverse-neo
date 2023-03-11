@@ -1,9 +1,12 @@
 import { PhysicsAdapter } from "@webaverse-studios/physics-core";
 import Stats from "stats.js";
 
-import { BaseScene } from "./scenes";
+import { Scene as BaseScene } from "./scenes";
 import WebGL from "./utils/WebGL";
 import { RapierPhysicsAdapter } from "@webaverse-studios/physics-rapier";
+
+export * from './scenes'
+export * from './controllers'
 
 export interface EngineOptions {
   dom: Element;
@@ -18,7 +21,7 @@ export class Engine {
   isPlaying = false;
 
   declare canvas: HTMLCanvasElement;
-  declare scene: BaseScene | undefined;
+  declare scene: Scene | undefined;
   declare physicsAdapter: PhysicsAdapter;
 
   /**
@@ -59,6 +62,7 @@ export class Engine {
 
   async load(Scene: typeof BaseScene) {
     const t0 = performance.now();
+
     this.scene = new Scene({
       canvas: this.canvas,
       physicsAdapter: this.physicsAdapter,
@@ -106,14 +110,29 @@ export class Engine {
   }
 
   update() {
-    // Run physics
-    this.physicsAdapter.update();
+    // Encapsulate context.
+    const ctx = this
 
-    // Run scene update
-    this.#stats.begin();
-    this.scene!.update();
-    this.#stats.end();
+    let
+      delta = 0,
+      lastTime = 0;
 
-    if (this.isPlaying) requestAnimationFrame(() => this.update());
+    function loop( time ) {
+      // delta = time - lastTime;
+      // lastTime = time;
+
+      // Run physics
+      ctx.physicsAdapter.update();
+
+      // Run scene update
+      ctx.#stats.begin();
+      ctx.scene!.update();
+      ctx.#stats.end();
+
+      if ( ctx.isPlaying )
+        requestAnimationFrame( loop );
+    }
+
+    requestAnimationFrame( loop );
   }
 }

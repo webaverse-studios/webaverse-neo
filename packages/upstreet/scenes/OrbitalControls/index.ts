@@ -10,11 +10,10 @@ import {
 } from "three";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { Scene } from '@webaverse-studios/engine-nyx';
 import { PhysicsAdapter } from "@webaverse-studios/physics-core";
 
-import { NyxScene } from "../nyx-scene";
-
-export class OrbitControlsScene extends NyxScene {
+export class OrbitControlsScene extends Scene {
   controls: any;
 
   constructor({

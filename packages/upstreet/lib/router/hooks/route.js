@@ -1,27 +1,30 @@
 //noinspection ES6RedundantAwait
 
 import m from 'mithril'
-import { Default } from '../../../view/layouts/Default.js'
+import {Default} from '../../../view/layouts/Default.js'
+import {getPageComponent} from "./getPageComponent.js";
 
 
 /**
  * Route to and render a component module.
  *
- * @param {string|Array} module - Module name or array of module names.
+ * @param {string|Array} page - Module name or array of module names.
  * @param {object} opts - Route handling options.
  * @param {object} opts.layout - Layout component
  * @returns {object} - Mithril route object.
  */
 export const route = (
-  module,
+  page,
   { layout = Default } = {}
 ) => ({
   // Get appropriate module on match.
   onmatch: async () => {
-    if ( Array.isArray( module ))
-      return ( await _import( module[0])).default
+    // Only use the first page of an array.
+    const _page = Array.isArray( page )
+      ? page[0]
+      : page
 
-    return( await _import( module )).default
+    return getPageComponent( _page )
   },
 
   // Render using default layout.
@@ -29,12 +32,3 @@ export const route = (
 })
 
 
-/**
- * Dynamic import wrapper
- */
-export const _import = async module => import(
-  /* webpackChunkName: "[request]" */
-  /* webpackMode: "lazy" */
-  /* webpackPrefetch: true */
-  `../../../view/pages/${module}/index.js`
-)

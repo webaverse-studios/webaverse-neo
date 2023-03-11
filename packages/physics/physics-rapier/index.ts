@@ -13,7 +13,7 @@ import {
   World,
 } from "@dimforge/rapier3d";
 import { BufferAttribute } from "three";
-import { BaseScene } from "../../engines/engine-core/scenes";
+import { Scene } from "../../engines/engine-core/scenes";
 
 /**
  * Rapier Setup:
@@ -133,7 +133,7 @@ export class RapierPhysicsAdapter extends PhysicsAdapter {
     this.world.removeCharacterController(controller.characterController);
   }
 
-  displayDebugInformation(scene: BaseScene) {
+  displayDebugInformation(scene: Scene) {
     const buffers = this.world.debugRender();
     scene.debugLines.geometry.setAttribute(
       "position",

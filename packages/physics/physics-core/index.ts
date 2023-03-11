@@ -1,18 +1,16 @@
-import { BaseScene } from "../../engines/engine-core/scenes";
+import { Scene } from "../../engines/engine-core/scenes";
 
-import {
-  KinematicController,
-  BaseKinematicController,
-} from "./kinematicController";
+import { KinematicController } from "./models/KinematicController";
+import { BaseKinematicController } from "./models/BaseKinematicController";
 
 /**
  * Base Physics Adapter
  */
-abstract class PhysicsAdapter {
+export abstract class PhysicsAdapter {
   constructor() {}
 
   /**
-   * Construct and return a it new Kinematic Controller
+   * Construct and return a new Kinematic Controller
    */
   createKinematicController() {
     return new BaseKinematicController();
@@ -33,7 +31,7 @@ abstract class PhysicsAdapter {
   /**
    * Display debug information onto the scene
    */
-  abstract displayDebugInformation(scene: BaseScene): void;
+  abstract displayDebugInformation(scene: Scene): void;
 }
 
-export { KinematicController, PhysicsAdapter };
+export { KinematicController };

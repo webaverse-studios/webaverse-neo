@@ -1,2 +1,2 @@
-export { AvatarCharacter } from "./base";
-export { PhysicsCharacter } from "./physics";
+export { AvatarCharacter } from './AvatarCharacter'
+export { PhysicsCharacter } from './PhysicsCharacter'
