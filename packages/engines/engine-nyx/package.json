@@ -12,8 +12,9 @@
   "dependencies": {
     "@soulofmischief/js-utils": "=0.21.0",
     "@webaverse-studios/engine-core": "file:../engine-core",
+    "bitecs": "=0.3.38",
     "murmurhash": "=2.0.1",
-    "nanoid": "^4.0.1",
+    "nanoid": "=4.0.1",
     "stats.js": "=0.17.0",
     "three": "=0.150.1",
     "troika-three-text": "=0.47.1",

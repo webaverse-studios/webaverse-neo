@@ -1,6 +1,3 @@
-
-export * from './controllers'
-export { NyxEngine } from './engine'
-export * from './scenes'
-
-
+export * from "./controllers";
+export { NyxEngine } from "./engine";
+export * from "./scenes";

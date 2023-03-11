@@ -3,7 +3,10 @@
  * @author Yendor <lecoqjacob@gmail.com>
  */
 
-import { AvatarCharacter as _AvatarCharacter, Engine } from "@webaverse-studios/engine-core";
+import { VRM } from "@pixiv/three-vrm";
+
+import { AvatarCharacter as _AvatarCharacter } from "@webaverse-studios/engine-core";
+import { PhysicsAdapter } from "@webaverse-studios/physics-core";
 
 /**
  * Character controller for the nyx engine.
@@ -16,7 +19,13 @@ export class AvatarCharacter extends _AvatarCharacter {
    *
    * @property {Engine} engine
    */
-  constructor({ engine, physicsAdapter }) {
-    super({ engine, physicsAdapter });
+  constructor({
+    avatar,
+    physicsAdapter,
+  }: {
+    avatar: VRM;
+    physicsAdapter: PhysicsAdapter;
+  }) {
+    super({ avatar, physicsAdapter });
   }
 }

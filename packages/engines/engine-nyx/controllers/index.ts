@@ -1,1 +1,1 @@
-export { AvatarCharacter } from './AvatarCharacter'
+export { AvatarCharacter } from "./AvatarCharacter";

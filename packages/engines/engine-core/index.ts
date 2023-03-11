@@ -1,19 +1,20 @@
 import { PhysicsAdapter } from "@webaverse-studios/physics-core";
 import Stats from "stats.js";
 
-import { Scene as BaseScene } from "./scenes";
+import { Scene } from "./scene";
 import WebGL from "./utils/WebGL";
 import { RapierPhysicsAdapter } from "@webaverse-studios/physics-rapier";
+import { disableChromePerformanceBloat } from "./utils/disableChromePerformance";
 
-export * from './scenes'
-export * from './controllers'
+export * from "./scene";
+export * from "./controllers";
 
 export interface EngineOptions {
   dom: Element;
   height?: number;
   width?: number;
   canvas: HTMLCanvasElement;
-  physicsAdapter: PhysicsAdapter;
+  physicsAdapter?: PhysicsAdapter;
 }
 
 export class Engine {
@@ -46,6 +47,8 @@ export class Engine {
       return;
     }
 
+    disableChromePerformanceBloat();
+
     this.canvas = canvas;
     this.physicsAdapter = physicsAdapter;
 
@@ -60,7 +63,7 @@ export class Engine {
     this.resize();
   }
 
-  async load(Scene: typeof BaseScene) {
+  async load<S extends typeof Scene>(Scene: S) {
     const t0 = performance.now();
 
     this.scene = new Scene({
@@ -111,13 +114,12 @@ export class Engine {
 
   update() {
     // Encapsulate context.
-    const ctx = this
+    const ctx = this;
 
-    let
-      delta = 0,
-      lastTime = 0;
+    // let delta = 0,
+    //   lastTime = 0;
 
-    function loop( time ) {
+    function loop(_time: number) {
       // delta = time - lastTime;
       // lastTime = time;
 
@@ -129,10 +131,9 @@ export class Engine {
       ctx.scene!.update();
       ctx.#stats.end();
 
-      if ( ctx.isPlaying )
-        requestAnimationFrame( loop );
+      if (ctx.isPlaying) requestAnimationFrame(loop);
     }
 
-    requestAnimationFrame( loop );
+    requestAnimationFrame(loop);
   }
 }

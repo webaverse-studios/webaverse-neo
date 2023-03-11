@@ -13,7 +13,7 @@ import {
   World,
 } from "@dimforge/rapier3d";
 import { BufferAttribute } from "three";
-import { Scene } from "../../engines/engine-core/scenes";
+import { Scene } from "../../engines/engine-core/scene";
 
 /**
  * Rapier Setup:
