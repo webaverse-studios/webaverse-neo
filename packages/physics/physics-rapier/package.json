@@ -20,5 +20,12 @@
   },
   "engines": {
     "node": "=19.0.0"
+  },
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "require": "./index.js"
+    },
+    "./package.json": "./package.json"
   }
 }

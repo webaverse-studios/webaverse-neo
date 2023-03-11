@@ -13,73 +13,32 @@ import {
   textureResize,
   textureCompress,
   weld,
-  quantize
+  quantize,
 } from '@gltf-transform/functions'
 
-const stripFunctions = [
-  'Debug.assert',
-  'Debug.assertDeprecated',
-  'Debug.call',
-  'Debug.deprecated',
-  'Debug.warn',
-  'Debug.warnOnce',
-  'Debug.error',
-  'Debug.errorOnce',
-  'Debug.gpuError',
-  'Debug.log',
-  'Debug.logOnce',
-  'Debug.trace',
-  'DebugHelper.setName',
-  'DebugHelper.setLabel',
-  'DebugGraphics.toString',
-  'DebugGraphics.clearGpuMarkers',
-  'DebugGraphics.pushGpuMarker',
-  'DebugGraphics.popGpuMarker'
-]
-
-const plugins = [
-  wasm(),
-  gltf({
-    transforms: [
-      // remove unused resources
-      prune(),
-      weld(),
-      quantize(),
-      // combine duplicated resources
-      dedup(),
-      // keep textures under 2048x2048
-      textureResize({ size: [2048, 2048] }),
-      // optimize images
-      textureCompress({ encoder: sharp }),
-      // compress mesh geometry
-      draco()
-    ]
-  }),
-  checker({
-    typescript: true
-  }),
-  process.env.NODE_ENV != 'development'
-    ? strip({
-        debugger: true,
-        functions: stripFunctions
-      })
-    : undefined
-]
+// const stripFunctions = [
+//   'Debug.assert',
+//   'Debug.assertDeprecated',
+//   'Debug.call',
+//   'Debug.deprecated',
+//   'Debug.warn',
+//   'Debug.warnOnce',
+//   'Debug.error',
+//   'Debug.errorOnce',
+//   'Debug.gpuError',
+//   'Debug.log',
+//   'Debug.logOnce',
+//   'Debug.trace',
+//   'DebugHelper.setName',
+//   'DebugHelper.setLabel',
+//   'DebugGraphics.toString',
+//   'DebugGraphics.clearGpuMarkers',
+//   'DebugGraphics.pushGpuMarker',
+//   'DebugGraphics.popGpuMarker',
+// ]
 
 /** @type {import('vite').UserConfig} */
 export default {
-  server: {
-    port: 3400,
-    fs: {
-      strict: true
-    }
-  },
-  worker: {
-    format: 'es'
-  },
-  esbuild: {
-    drop: ['console', 'debugger']
-  },
   plugins: [
     wasm(),
     gltf({
@@ -95,15 +54,28 @@ export default {
         // optimize images
         textureCompress({ encoder: sharp }),
         // compress mesh geometry
-        draco()
-      ]
+        draco(),
+      ],
     }),
-    checker({
-      typescript: true
-    }),
-    strip({
-      debugger: true
-    })
+
+    // process.env.NODE_ENV != 'development'
+    //   ? strip({
+    //       debugger: true,
+    //       functions: stripFunctions,
+    //     })
+    //   : undefined,
   ],
-  assetsInclude: ['**/*.glb', '**/*.vrm', '**/*.z', '**/*.wasm']
+  server: {
+    port: 3400,
+    fs: {
+      strict: true,
+    },
+  },
+  worker: {
+    format: 'es',
+  },
+  esbuild: {
+    drop: ['console', 'debugger'],
+  },
+  assetsInclude: ['**/*.glb', '**/*.vrm', '**/*.z', '**/*.wasm'],
 }

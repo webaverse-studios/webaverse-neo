@@ -17,7 +17,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
  *
  * @returns {Scene}
  */
-export function createScene(): Scene {
+export function createScene() {
   const scene = new Scene();
 
   scene.background = new Color(0x2a2a2a);
@@ -33,7 +33,7 @@ export function createScene(): Scene {
  * @param {number} scale
  * @returns {WebGLRenderer}
  */
-export function createRenderer(canvas: HTMLCanvasElement, scale = 1) {
+export function createRenderer(canvas, scale = 1) {
   const renderer = new WebGLRenderer({ canvas });
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setSize(innerWidth * scale, innerHeight * scale, false);
@@ -82,8 +82,8 @@ export function createLights() {
  * @returns {OrbitControls}
  */
 export function createControls(
-  camera: PerspectiveCamera,
-  renderer: WebGLRenderer
+  camera,
+  renderer,
 ) {
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.listenToKeyEvents(window); // optional

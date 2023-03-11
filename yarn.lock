@@ -1470,9 +1470,9 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:>=10.0.0":
-  version: 18.14.6
-  resolution: "@types/node@npm:18.14.6"
-  checksum: 2f88f482cabadc6dbddd627a1674239e68c3c9beab56eb4ae2309fb96fd17fc3a509d99b0309bafe13b58529574f49ecf3a583f2ebe2896dd32fe4be436dc96e
+  version: 18.15.0
+  resolution: "@types/node@npm:18.15.0"
+  checksum: d81372276dd5053b1743338b61a2178ff9722dc609189d01fc7d1c2acd539414039e0e4780678730514390dad3f29c366a28c29e8dbd5b0025651181f6dd6669
   languageName: node
   linkType: hard
 
@@ -1788,12 +1788,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/upstreet@workspace:packages/upstreet"
   dependencies:
+    "@gltf-transform/core": ^3.0.4
     "@gltf-transform/functions": ^3.0.4
     "@pixiv/three-vrm": =1.0.8
     "@rollup/plugin-strip": ^3.0.2
     "@soulofmischief/js-utils": =0.21.0
     "@webaverse-studios/agent-backend": "file:../agent-backend"
-    "@webaverse-studios/engine-nyx": "file:../engine-nyx"
+    "@webaverse-studios/engine-nyx": "file:../engines/engine-nyx"
+    "@webaverse-studios/physics-rapier": "file:../physics/physics-rapier"
     gun: ^0.2020.1239
     mithril: =3.0.0-next.12
     sass: =1.58.3
@@ -1811,6 +1813,7 @@ __metadata:
   resolution: "@webaverse-studios/webaverse-neo@workspace:."
   dependencies:
     "@feathersjs/cli": =5.0.0
+    "@types/three": ^0.149.0
     "@typescript-eslint/parser": ^5.54.1
     "@webaverse-studios/eslint-config": ^1.0.0
     concurrently: =7.6.0
@@ -1873,7 +1876,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"agentkeepalive@npm:^4.1.3":
+"agentkeepalive@npm:^4.1.3, agentkeepalive@npm:^4.2.1":
   version: 4.3.0
   resolution: "agentkeepalive@npm:4.3.0"
   dependencies:
@@ -1881,17 +1884,6 @@ __metadata:
     depd: ^2.0.0
     humanize-ms: ^1.2.1
   checksum: 982453aa44c11a06826c836025e5162c846e1200adb56f2d075400da7d32d87021b3b0a58768d949d824811f5654223d5a8a3dad120921a2439625eb847c6260
-  languageName: node
-  linkType: hard
-
-"agentkeepalive@npm:^4.2.1":
-  version: 4.2.1
-  resolution: "agentkeepalive@npm:4.2.1"
-  dependencies:
-    debug: ^4.1.0
-    depd: ^1.1.2
-    humanize-ms: ^1.2.1
-  checksum: 39cb49ed8cf217fd6da058a92828a0a84e0b74c35550f82ee0a10e1ee403c4b78ade7948be2279b188b7a7303f5d396ea2738b134731e464bf28de00a4f72a18
   languageName: node
   linkType: hard
 
@@ -3075,7 +3067,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"depd@npm:^1.1.2, depd@npm:~1.1.2":
+"depd@npm:~1.1.2":
   version: 1.1.2
   resolution: "depd@npm:1.1.2"
   checksum: 6b406620d269619852885ce15965272b829df6f409724415e0002c8632ab6a8c0a08ec1f0bd2add05dc7bd7507606f7e2cc034fa24224ab829580040b835ecd9
@@ -3735,13 +3727,13 @@ __metadata:
   linkType: hard
 
 "espree@npm:^9.4.0":
-  version: 9.4.1
-  resolution: "espree@npm:9.4.1"
+  version: 9.5.0
+  resolution: "espree@npm:9.5.0"
   dependencies:
     acorn: ^8.8.0
     acorn-jsx: ^5.3.2
     eslint-visitor-keys: ^3.3.0
-  checksum: 4d266b0cf81c7dfe69e542c7df0f246e78d29f5b04dda36e514eb4c7af117ee6cfbd3280e560571ed82ff6c9c3f0003c05b82583fc7a94006db7497c4fe4270e
+  checksum: a7f110aefb6407e0d3237aa635ab3cea87106ae63748dd23c67031afccc640d04c4209fca2daf16e2233c82efb505faead0fb84097478fd9cc6e8f8dd80bf99d
   languageName: node
   linkType: hard
 
@@ -4703,9 +4695,9 @@ __metadata:
   linkType: hard
 
 "immutable@npm:^4.0.0":
-  version: 4.2.4
-  resolution: "immutable@npm:4.2.4"
-  checksum: 3be84eded37b05e65cad57bfba630bc1bf170c498b7472144bc02d2650cc9baef79daf03574a9c2e41d195ebb55a1c12c9b312f41ee324b653927b24ad8bcaa7
+  version: 4.3.0
+  resolution: "immutable@npm:4.3.0"
+  checksum: bbd7ea99e2752e053323543d6ff1cc71a4b4614fa6121f321ca766db2bd2092f3f1e0a90784c5431350b7344a4f792fa002eac227062d59b9377b6c09063b58b
   languageName: node
   linkType: hard
 
@@ -5492,9 +5484,9 @@ __metadata:
   linkType: hard
 
 "lru-cache@npm:^7.7.1":
-  version: 7.18.1
-  resolution: "lru-cache@npm:7.18.1"
-  checksum: ab0ec1360c552f1ffa54b1eaf0026126c5116a07bee156b92d1e971f4c8c88e9160f0fad4ab6fed4e0fdea84f25a4590ece085bc57ed9ab1d90b17f0b138c556
+  version: 7.18.3
+  resolution: "lru-cache@npm:7.18.3"
+  checksum: e550d772384709deea3f141af34b6d4fa392e2e418c1498c078de0ee63670f1f46f5eee746e8ef7e69e1c895af0d4224e62ee33e66a543a14763b0f2e74c1356
   languageName: node
   linkType: hard
 
@@ -6639,12 +6631,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:6.11.0, qs@npm:^6.10.2, qs@npm:^6.11.0, qs@npm:^6.5.2, qs@npm:^6.9.4, qs@npm:^6.9.6":
+"qs@npm:6.11.0":
   version: 6.11.0
   resolution: "qs@npm:6.11.0"
   dependencies:
     side-channel: ^1.0.4
   checksum: 6e1f29dd5385f7488ec74ac7b6c92f4d09a90408882d0c208414a34dd33badc1a621019d4c799a3df15ab9b1d0292f97c1dd71dc7c045e69f81a8064e5af7297
+  languageName: node
+  linkType: hard
+
+"qs@npm:^6.10.2, qs@npm:^6.11.0, qs@npm:^6.5.2, qs@npm:^6.9.4, qs@npm:^6.9.6":
+  version: 6.11.1
+  resolution: "qs@npm:6.11.1"
+  dependencies:
+    side-channel: ^1.0.4
+  checksum: 82ee78ef12a16f3372fae5b64f76f8aedecb000feea882bbff1af146c147f6eb66b08f9c3f34d7e076f28563586956318b9b2ca41141846cdd6d5ad6f241d52f
   languageName: node
   linkType: hard
 
@@ -6731,7 +6732,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"readable-stream@npm:^3.0.2, readable-stream@npm:^3.1.1":
+"readable-stream@npm:^3.0.2, readable-stream@npm:^3.1.1, readable-stream@npm:^3.4.0, readable-stream@npm:^3.6.0":
   version: 3.6.2
   resolution: "readable-stream@npm:3.6.2"
   dependencies:
@@ -6739,17 +6740,6 @@ __metadata:
     string_decoder: ^1.1.1
     util-deprecate: ^1.0.1
   checksum: bdcbe6c22e846b6af075e32cf8f4751c2576238c5043169a1c221c92ee2878458a816a4ea33f4c67623c0b6827c8a400409bfb3cf0bf3381392d0b1dfb52ac8d
-  languageName: node
-  linkType: hard
-
-"readable-stream@npm:^3.4.0, readable-stream@npm:^3.6.0":
-  version: 3.6.1
-  resolution: "readable-stream@npm:3.6.1"
-  dependencies:
-    inherits: ^2.0.3
-    string_decoder: ^1.1.1
-    util-deprecate: ^1.0.1
-  checksum: b7ab0508dba3c37277b9e43c0a970ea27635375698859a687f558c3c9393154b6c4f39c3aa5689641de183fffa26771bc1a45878ddde0236ad18fc8fdfde50ea
   languageName: node
   linkType: hard
 
@@ -6969,8 +6959,8 @@ __metadata:
   linkType: hard
 
 "rollup@npm:^3.10.0":
-  version: 3.18.0
-  resolution: "rollup@npm:3.18.0"
+  version: 3.19.1
+  resolution: "rollup@npm:3.19.1"
   dependencies:
     fsevents: ~2.3.2
   dependenciesMeta:
@@ -6978,7 +6968,7 @@ __metadata:
       optional: true
   bin:
     rollup: dist/bin/rollup
-  checksum: 0bcd1abb1cc383abdd09b5594de862ecb2f946e950954bb472a370289bdc4499aea8d04477be55ce205450d973d38ad255f0dc6926162500a251d73bf0e60e6f
+  checksum: f78198c6de224b26650c70b16db156762d1fcceeb375d34fb2c76fc5b23a78f712c3c881d3248e6f277a511589e20d50c247bcf5c7920f1ddc0a43cadf9f0140
   languageName: node
   linkType: hard
 
@@ -7357,9 +7347,9 @@ __metadata:
   linkType: hard
 
 "spawn-command@npm:^0.0.2-1":
-  version: 0.0.2-1
-  resolution: "spawn-command@npm:0.0.2-1"
-  checksum: 2cac8519332193d1ed37d57298c4a1f73095e9edd20440fbab4aa47f531da83831734f2b51c44bb42b2747bf3485dec3fa2b0a1003f74c67561f2636622e328b
+  version: 0.0.2
+  resolution: "spawn-command@npm:0.0.2"
+  checksum: e35c5d28177b4d461d33c88cc11f6f3a5079e2b132c11e1746453bbb7a0c0b8a634f07541a2a234fa4758239d88203b758def509161b651e81958894c0b4b64b
   languageName: node
   linkType: hard
 
@@ -7381,9 +7371,9 @@ __metadata:
   linkType: hard
 
 "spdx-license-ids@npm:^3.0.0":
-  version: 3.0.12
-  resolution: "spdx-license-ids@npm:3.0.12"
-  checksum: 92a4dddce62ce1db6fe54a7a839cf85e06abc308fc83b776a55b44e4f1906f02e7ebd506120847039e976bbbad359ea8bdfafb7925eae5cd7e73255f02e0b7d6
+  version: 3.0.13
+  resolution: "spdx-license-ids@npm:3.0.13"
+  checksum: 3469d85c65f3245a279fa11afc250c3dca96e9e847f2f79d57f466940c5bb8495da08a542646086d499b7f24a74b8d0b42f3fc0f95d50ff99af1f599f6360ad7
   languageName: node
   linkType: hard
 

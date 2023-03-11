@@ -7,7 +7,7 @@ import {
 } from '@feathersjs/authentication'
 
 class AnonymousStrategy extends AuthenticationBaseStrategy {
-  async authenticate(authentication, params: Params) {
+  async authenticate(authentication, params) {
     const { signature } = this.configuration
 
 
@@ -17,7 +17,7 @@ class AnonymousStrategy extends AuthenticationBaseStrategy {
   }
 }
 
-export default function (app: Application) {
+export default function (app) {
   const authentication = new AuthenticationService(app)
   // ... authentication service setup
   authentication.register('anonymous', new AnonymousStrategy())
