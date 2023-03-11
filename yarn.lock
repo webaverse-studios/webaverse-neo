@@ -66,13 +66,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@esbuild/android-arm@npm:0.15.18":
-  version: 0.15.18
-  resolution: "@esbuild/android-arm@npm:0.15.18"
-  conditions: os=android & cpu=arm
-  languageName: node
-  linkType: hard
-
 "@esbuild/android-arm@npm:0.16.17":
   version: 0.16.17
   resolution: "@esbuild/android-arm@npm:0.16.17"
@@ -133,13 +126,6 @@ __metadata:
   version: 0.16.17
   resolution: "@esbuild/linux-ia32@npm:0.16.17"
   conditions: os=linux & cpu=ia32
-  languageName: node
-  linkType: hard
-
-"@esbuild/linux-loong64@npm:0.15.18":
-  version: 0.15.18
-  resolution: "@esbuild/linux-loong64@npm:0.15.18"
-  conditions: os=linux & cpu=loong64
   languageName: node
   linkType: hard
 
@@ -833,19 +819,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pixiv/three-vrm-core@npm:1.0.8":
-  version: 1.0.8
-  resolution: "@pixiv/three-vrm-core@npm:1.0.8"
+"@pixiv/three-vrm-core@npm:1.0.9":
+  version: 1.0.9
+  resolution: "@pixiv/three-vrm-core@npm:1.0.9"
   dependencies:
     "@pixiv/types-vrm-0.0": 1.0.0
     "@pixiv/types-vrmc-vrm-1.0": 1.0.0
   peerDependencies:
-    "@types/three": ^0.148.0
-    three: ^0.148.0
-  checksum: 08820898ce2775d285c4e3eb5571d5f75149946ddb66abb50ebe7ac5815f190a54396aa3c0c738555212fbc50808b87e5f0259c452c9bd158de0585a4a5e8626
+    "@types/three": ^0.149.0
+    three: ^0.149.0
+  checksum: 8bf557438b7cf57ad8384ede2173defa04b712c6a46b1c5677b5db714883340e35523effc51229e71e61d44e1046d0254c02da799001b6f38a2123159e9aef6a
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@pixiv/three-vrm-core@npm:1.0.9":
   version: 1.0.9
   resolution: "@pixiv/three-vrm-core@npm:1.0.9"
@@ -862,15 +849,21 @@ __metadata:
 "@pixiv/three-vrm-materials-hdr-emissive-multiplier@npm:1.0.7":
   version: 1.0.7
   resolution: "@pixiv/three-vrm-materials-hdr-emissive-multiplier@npm:1.0.7"
+=======
+"@pixiv/three-vrm-materials-hdr-emissive-multiplier@npm:1.0.9":
+  version: 1.0.9
+  resolution: "@pixiv/three-vrm-materials-hdr-emissive-multiplier@npm:1.0.9"
+>>>>>>> 037b420 (Suppress yarn warnings)
   dependencies:
     "@pixiv/types-vrmc-materials-hdr-emissive-multiplier-1.0": 1.0.0
   peerDependencies:
-    "@types/three": ^0.148.0
-    three: ^0.148.0
-  checksum: 5c00b9701e7b42a408d871457f2f5902957f924a7a2d5a0b5ff96ab1c2ed6b282e29ff10622b75edf384c576cdcd2ab8be33276287315d41f2bb8f0a5f8f619c
+    "@types/three": ^0.149.0
+    three: ^0.149.0
+  checksum: 6cf1851e74e0cdd456c01761ed99830e93a9b14b01223d79cfd4c3732625f28998ec618d5134706963887bfb5640326c5e3f66e2cb34a52313616f81607bf64c
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@pixiv/three-vrm-materials-hdr-emissive-multiplier@npm:1.0.9":
   version: 1.0.9
   resolution: "@pixiv/three-vrm-materials-hdr-emissive-multiplier@npm:1.0.9"
@@ -886,16 +879,22 @@ __metadata:
 "@pixiv/three-vrm-materials-mtoon@npm:1.0.7":
   version: 1.0.7
   resolution: "@pixiv/three-vrm-materials-mtoon@npm:1.0.7"
+=======
+"@pixiv/three-vrm-materials-mtoon@npm:1.0.9":
+  version: 1.0.9
+  resolution: "@pixiv/three-vrm-materials-mtoon@npm:1.0.9"
+>>>>>>> 037b420 (Suppress yarn warnings)
   dependencies:
     "@pixiv/types-vrm-0.0": 1.0.0
     "@pixiv/types-vrmc-materials-mtoon-1.0": 1.0.0
   peerDependencies:
-    "@types/three": ^0.148.0
-    three: ^0.148.0
-  checksum: 04d016f435556060cbf715957c5dc616744b9fd3e6422f2e15bf078e81d3ae814d58d08817ba053f29575f985932d2457f62a23d232bd0ab8784f443c1b9c31e
+    "@types/three": ^0.149.0
+    three: ^0.149.0
+  checksum: aa9b0d3f77537df2ba3eb133fae9ff4d897baf55adfc4452c5f8d9af2557a2ffdaf51e55a549c626f179aac2f480faea7424aa5ba782af8fd96524dd58cbb9fa
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@pixiv/three-vrm-materials-mtoon@npm:1.0.9":
   version: 1.0.9
   resolution: "@pixiv/three-vrm-materials-mtoon@npm:1.0.9"
@@ -912,16 +911,22 @@ __metadata:
 "@pixiv/three-vrm-materials-v0compat@npm:1.0.7":
   version: 1.0.7
   resolution: "@pixiv/three-vrm-materials-v0compat@npm:1.0.7"
+=======
+"@pixiv/three-vrm-materials-v0compat@npm:1.0.9":
+  version: 1.0.9
+  resolution: "@pixiv/three-vrm-materials-v0compat@npm:1.0.9"
+>>>>>>> 037b420 (Suppress yarn warnings)
   dependencies:
     "@pixiv/types-vrm-0.0": 1.0.0
     "@pixiv/types-vrmc-materials-mtoon-1.0": 1.0.0
   peerDependencies:
-    "@types/three": ^0.148.0
-    three: ^0.148.0
-  checksum: 2635185fe97df95c6e9f65c445109f8ee208f1d1f5e538bc6f774178e5cbdc611e588282f40a4c3b6ff676699216dc1f6de9ec93c4bf25b31adbaa870c263060
+    "@types/three": ^0.149.0
+    three: ^0.149.0
+  checksum: 4514febf4d4e1a0e324c30581414c0c6c439096c0e071d414e3e5ce6498d91daa4bb3efdb4be9ebcfe1a1c0eaf3ca0475c6a944557a21d2acca229364d400a7a
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@pixiv/three-vrm-materials-v0compat@npm:1.0.9":
   version: 1.0.9
   resolution: "@pixiv/three-vrm-materials-v0compat@npm:1.0.9"
@@ -938,15 +943,21 @@ __metadata:
 "@pixiv/three-vrm-node-constraint@npm:1.0.7":
   version: 1.0.7
   resolution: "@pixiv/three-vrm-node-constraint@npm:1.0.7"
+=======
+"@pixiv/three-vrm-node-constraint@npm:1.0.9":
+  version: 1.0.9
+  resolution: "@pixiv/three-vrm-node-constraint@npm:1.0.9"
+>>>>>>> 037b420 (Suppress yarn warnings)
   dependencies:
     "@pixiv/types-vrmc-node-constraint-1.0": 1.0.0
   peerDependencies:
-    "@types/three": ^0.148.0
-    three: ^0.148.0
-  checksum: c0cf57e306c11d8567db8ba71376f350157f8530de340ad7147e28a4ffa6ae223df5b88e4f0a9c988ad4fe15fa4fc864e62fe9fd646fcfdb9618e3e2b0729763
+    "@types/three": ^0.149.0
+    three: ^0.149.0
+  checksum: cbc8f15a1b23506481ef42e661cb01d3ea8b927f764eedc51a050c8b6a0aa9dcd788d7d790816d29f856bc5a91fb377c0975641ca4a6674ac39d585024d49ffd
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@pixiv/three-vrm-node-constraint@npm:1.0.9":
   version: 1.0.9
   resolution: "@pixiv/three-vrm-node-constraint@npm:1.0.9"
@@ -962,15 +973,21 @@ __metadata:
 "@pixiv/three-vrm-springbone@npm:1.0.7":
   version: 1.0.7
   resolution: "@pixiv/three-vrm-springbone@npm:1.0.7"
+=======
+"@pixiv/three-vrm-springbone@npm:1.0.9":
+  version: 1.0.9
+  resolution: "@pixiv/three-vrm-springbone@npm:1.0.9"
+>>>>>>> 037b420 (Suppress yarn warnings)
   dependencies:
     "@pixiv/types-vrm-0.0": 1.0.0
     "@pixiv/types-vrmc-springbone-1.0": 1.0.0
   peerDependencies:
-    three: ^0.148.0
-  checksum: 8ab535f68a210cb6cd7893ab33f31b739b2824f231442c3058fbc84ae5ae6c50afd5b6568b996e217929f4bccef6e06177fcde9836509b2545ed391636abe364
+    three: ^0.149.0
+  checksum: dcc25d76c330ad56edc3c0d19ed7bc8366aab78645510929a105b2ff2e29a95058629821c9d44c4f63f37cd4da150d33f31e44eb3ddd3fd21c66dcc85db7ca01
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@pixiv/three-vrm-springbone@npm:1.0.9":
   version: 1.0.9
   resolution: "@pixiv/three-vrm-springbone@npm:1.0.9"
@@ -986,17 +1003,22 @@ __metadata:
 "@pixiv/three-vrm@npm:=1.0.8":
   version: 1.0.8
   resolution: "@pixiv/three-vrm@npm:1.0.8"
+=======
+"@pixiv/three-vrm@npm:=1.0.9":
+  version: 1.0.9
+  resolution: "@pixiv/three-vrm@npm:1.0.9"
+>>>>>>> 037b420 (Suppress yarn warnings)
   dependencies:
-    "@pixiv/three-vrm-core": 1.0.8
-    "@pixiv/three-vrm-materials-hdr-emissive-multiplier": 1.0.7
-    "@pixiv/three-vrm-materials-mtoon": 1.0.7
-    "@pixiv/three-vrm-materials-v0compat": 1.0.7
-    "@pixiv/three-vrm-node-constraint": 1.0.7
-    "@pixiv/three-vrm-springbone": 1.0.7
+    "@pixiv/three-vrm-core": 1.0.9
+    "@pixiv/three-vrm-materials-hdr-emissive-multiplier": 1.0.9
+    "@pixiv/three-vrm-materials-mtoon": 1.0.9
+    "@pixiv/three-vrm-materials-v0compat": 1.0.9
+    "@pixiv/three-vrm-node-constraint": 1.0.9
+    "@pixiv/three-vrm-springbone": 1.0.9
   peerDependencies:
-    "@types/three": ^0.148.0
-    three: ^0.148.0
-  checksum: cb5d4d531d79b54c64dd5f320d2f53ec86a04b0bd4974a3b38c62a723580f161d923df56c12c79f4f2ea346c45c977bb27b40e674fbde7a18ffd1d67944f99b7
+    "@types/three": ^0.149.0
+    three: ^0.149.0
+  checksum: 6f1830c3f0252de5e9fdb454d9ab87e9ab5a841d7056d38a880bcc16fc030427f15683bb4f24d96bfb9f0ab97b125b13f585681131eb849e3e1d60cc41c93cea
   languageName: node
   linkType: hard
 
@@ -1674,6 +1696,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@types/node@npm:*, @types/node@npm:>=10.0.0":
   version: 18.15.0
   resolution: "@types/node@npm:18.15.0"
@@ -1685,6 +1708,12 @@ __metadata:
   version: 2.7.2
   resolution: "@types/prettier@npm:2.7.2"
   checksum: b47d76a5252265f8d25dd2fe2a5a61dc43ba0e6a96ffdd00c594cb4fd74c1982c2e346497e3472805d97915407a09423804cc2110a0b8e1b22cffcab246479b7
+=======
+"@types/node@npm:*, @types/node@npm:>=10.0.0, @types/node@npm:^18.15.0":
+  version: 18.15.0
+  resolution: "@types/node@npm:18.15.0"
+  checksum: d81372276dd5053b1743338b61a2178ff9722dc609189d01fc7d1c2acd539414039e0e4780678730514390dad3f29c366a28c29e8dbd5b0025651181f6dd6669
+>>>>>>> 037b420 (Suppress yarn warnings)
   languageName: node
   linkType: hard
 
@@ -1839,9 +1868,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@webaverse-studios/agent-backend@workspace:*, @webaverse-studios/agent-backend@workspace:packages/agent-backend":
+"@webaverse-studios/backend-agent@workspace:*, @webaverse-studios/backend-agent@workspace:packages/backend/agent":
   version: 0.0.0-use.local
-  resolution: "@webaverse-studios/agent-backend@workspace:packages/agent-backend"
+  resolution: "@webaverse-studios/backend-agent@workspace:packages/backend/agent"
   dependencies:
     "@feathersjs/authentication-client": ^5.0.0
     "@feathersjs/client": ^5.0.0
@@ -1851,9 +1880,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webaverse-studios/backend-feathers@workspace:packages/feathers":
+"@webaverse-studios/backend-feathers@workspace:packages/backend/feathers":
   version: 0.0.0-use.local
-  resolution: "@webaverse-studios/backend-feathers@workspace:packages/feathers"
+  resolution: "@webaverse-studios/backend-feathers@workspace:packages/backend/feathers"
   dependencies:
     "@feathersjs/adapter-commons": ^5.0.0
     "@feathersjs/authentication": ^5.0.0
@@ -1861,6 +1890,7 @@ __metadata:
     "@feathersjs/authentication-local": ^5.0.0
     "@feathersjs/authentication-oauth": ^5.0.0
     "@feathersjs/cli": 5.0.0
+    "@feathersjs/commons": ^5.0.0
     "@feathersjs/configuration": ^5.0.0
     "@feathersjs/errors": ^5.0.0
     "@feathersjs/feathers": ^5.0.0
@@ -1872,6 +1902,7 @@ __metadata:
     "@feathersjs/transport-commons": ^5.0.0
     "@feathersjs/typebox": ^5.0.0
     "@seald-io/nedb": ^4.0.1
+    "@types/node": ^18.15.0
     axios: ^1.3.4
     cross-env: latest
     dauria: ^2.0.0
@@ -1892,9 +1923,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webaverse-studios/backend-gun@workspace:packages/gun":
+"@webaverse-studios/backend-gun@workspace:packages/backend/gun":
   version: 0.0.0-use.local
-  resolution: "@webaverse-studios/backend-gun@workspace:packages/gun"
+  resolution: "@webaverse-studios/backend-gun@workspace:packages/backend/gun"
   dependencies:
     dotenv-safe: =8.2.0
     gun: =0.2020.1239
@@ -1903,14 +1934,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webaverse-studios/engine-core@workspace:*, @webaverse-studios/engine-core@workspace:packages/engines/engine-core":
+"@webaverse-studios/engine-core@workspace:*, @webaverse-studios/engine-core@workspace:packages/engines/core":
   version: 0.0.0-use.local
-  resolution: "@webaverse-studios/engine-core@workspace:packages/engines/engine-core"
+  resolution: "@webaverse-studios/engine-core@workspace:packages/engines/core"
   dependencies:
     "@soulofmischief/js-utils": =0.21.0
+<<<<<<< HEAD
     "@webaverse-studios/physics-core": "file:../../physics/physics-core"
     "@webaverse-studios/physics-rapier": "file:../../physics/physics-rapier"
     eslint: =8.34.0
+=======
+    "@types/stats": ^0.16.30
+    "@types/three": ^0.149.0
+    "@webaverse-studios/physics-core": "file:../../physics/core"
+    "@webaverse-studios/physics-rapier": "file:../../physics/rapier"
+>>>>>>> 037b420 (Suppress yarn warnings)
     murmurhash: =2.0.1
     nanoid: ^4.0.1
     prettier: ^2.8.4
@@ -1920,15 +1958,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webaverse-studios/engine-nyx@workspace:*, @webaverse-studios/engine-nyx@workspace:packages/engines/engine-nyx":
+"@webaverse-studios/engine-nyx@workspace:*, @webaverse-studios/engine-nyx@workspace:packages/engines/nyx":
   version: 0.0.0-use.local
-  resolution: "@webaverse-studios/engine-nyx@workspace:packages/engines/engine-nyx"
+  resolution: "@webaverse-studios/engine-nyx@workspace:packages/engines/nyx"
   dependencies:
     "@pixiv/three-vrm": ^1.0.9
     "@soulofmischief/js-utils": =0.21.0
+<<<<<<< HEAD
     "@webaverse-studios/engine-core": "file:../engine-core"
     "@webaverse-studios/physics-core": "workspace:^"
     bitecs: =0.3.38
+=======
+    "@webaverse-studios/engine-core": "file:../engines/core"
+>>>>>>> 037b420 (Suppress yarn warnings)
     murmurhash: =2.0.1
     nanoid: =4.0.1
     stats.js: =0.17.0
@@ -1937,6 +1979,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+<<<<<<< HEAD
 "@webaverse-studios/engine-old@workspace:packages/engine-old":
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/engine-old@workspace:packages/engine-old"
@@ -1951,6 +1994,11 @@ __metadata:
 "@webaverse-studios/eslint-config@npm:=1.1.1":
   version: 1.1.1
   resolution: "@webaverse-studios/eslint-config@npm:1.1.1::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40webaverse-studios%2Feslint-config%2F1.1.1%2Fbd81bb8f998edccbf7951ccb17e590c150183ff2"
+=======
+"@webaverse-studios/eslint-config@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@webaverse-studios/eslint-config@npm:1.0.0::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40webaverse-studios%2Feslint-config%2F1.0.0%2F5d1a138ae899edf5f3ac81ef67bb21d2b7816eb6"
+>>>>>>> 037b420 (Suppress yarn warnings)
   peerDependencies:
     eslint: ">= 8"
     eslint-plugin-jsdoc: "*"
@@ -1959,9 +2007,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@webaverse-studios/input@workspace:*, @webaverse-studios/input@workspace:packages/input":
+=======
+"@webaverse-studios/input-manager@workspace:packages/managers/input":
+>>>>>>> 037b420 (Suppress yarn warnings)
   version: 0.0.0-use.local
-  resolution: "@webaverse-studios/input@workspace:packages/input"
+  resolution: "@webaverse-studios/input-manager@workspace:packages/managers/input"
   dependencies:
     "@soulofmischief/js-utils": =0.21.0
     "@types/stats": ^0.16.30
@@ -1978,9 +2030,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webaverse-studios/physics-core@workspace:*, @webaverse-studios/physics-core@workspace:packages/physics/physics-core":
+"@webaverse-studios/physics-core@workspace:*, @webaverse-studios/physics-core@workspace:packages/physics/core":
   version: 0.0.0-use.local
-  resolution: "@webaverse-studios/physics-core@workspace:packages/physics/physics-core"
+  resolution: "@webaverse-studios/physics-core@workspace:packages/physics/core"
   dependencies:
     "@types/three": ^0.149.0
     three: ^0.150.1
@@ -1988,13 +2040,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webaverse-studios/physics-rapier@workspace:*, @webaverse-studios/physics-rapier@workspace:packages/physics/physics-rapier":
+"@webaverse-studios/physics-rapier@workspace:*, @webaverse-studios/physics-rapier@workspace:packages/physics/rapier":
   version: 0.0.0-use.local
-  resolution: "@webaverse-studios/physics-rapier@workspace:packages/physics/physics-rapier"
+  resolution: "@webaverse-studios/physics-rapier@workspace:packages/physics/rapier"
   dependencies:
+<<<<<<< HEAD
     "@dimforge/rapier3d-compat": =0.11.2
     "@webaverse-studios/physics-core": "file:../physics-core"
     three: =0.150.1
+=======
+    "@dimforge/rapier3d": =0.11.2
+    "@types/three": ^0.149.0
+    "@webaverse-studios/physics-core": "file:../core"
+    three: ^0.150.1
+    typescript: =4.9.5
+>>>>>>> 037b420 (Suppress yarn warnings)
   languageName: unknown
   linkType: soft
 
@@ -2005,6 +2065,7 @@ __metadata:
     "@gltf-transform/core": =3.0.4
     "@gltf-transform/extensions": ^3.1.1
     "@gltf-transform/functions": =3.0.4
+<<<<<<< HEAD
     "@pixiv/three-vrm": =1.0.8
     "@rollup/plugin-strip": =3.0.2
     "@soulofmischief/js-utils": =0.21.0
@@ -2022,6 +2083,19 @@ __metadata:
     vite-plugin-gltf: =3.1.0
     vite-plugin-top-level-await: =1.3.0
     vite-plugin-wasm: =3.2.1
+=======
+    "@pixiv/three-vrm": =1.0.9
+    "@soulofmischief/js-utils": =0.21.0
+    "@webaverse-studios/backend-agent": "file:../backend/agent"
+    "@webaverse-studios/engine-nyx": "file:../engines/nyx"
+    gun: ^0.2020.1239
+    mithril: =3.0.0-next.12
+    sass: =1.59.2
+    three: =0.150.1
+    vite: =4.1.4
+    vite-plugin-gltf: =3.1.0
+    vite-plugin-wasm: =3.2.2
+>>>>>>> 037b420 (Suppress yarn warnings)
   languageName: unknown
   linkType: soft
 
@@ -2029,9 +2103,16 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/webaverse-neo@workspace:."
   dependencies:
+<<<<<<< HEAD
     "@types/prettier": =2
     "@typescript-eslint/parser": =5.54.1
     "@webaverse-studios/eslint-config": =1.1.1
+=======
+    "@feathersjs/cli": =5.0.0
+    "@types/node": ^18.15.0
+    "@typescript-eslint/parser": ^5.54.1
+    "@webaverse-studios/eslint-config": ^1.0.0
+>>>>>>> 037b420 (Suppress yarn warnings)
     concurrently: =7.6.0
     eslint: =8.34.0
     eslint-plugin-jsdoc: =40.0.0
@@ -3474,223 +3555,6 @@ __metadata:
   version: 2.0.3
   resolution: "err-code@npm:2.0.3"
   checksum: 8b7b1be20d2de12d2255c0bc2ca638b7af5171142693299416e6a9339bd7d88fc8d7707d913d78e0993176005405a236b066b45666b27b797252c771156ace54
-  languageName: node
-  linkType: hard
-
-"esbuild-android-64@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-android-64@npm:0.15.18"
-  conditions: os=android & cpu=x64
-  languageName: node
-  linkType: hard
-
-"esbuild-android-arm64@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-android-arm64@npm:0.15.18"
-  conditions: os=android & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"esbuild-darwin-64@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-darwin-64@npm:0.15.18"
-  conditions: os=darwin & cpu=x64
-  languageName: node
-  linkType: hard
-
-"esbuild-darwin-arm64@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-darwin-arm64@npm:0.15.18"
-  conditions: os=darwin & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"esbuild-freebsd-64@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-freebsd-64@npm:0.15.18"
-  conditions: os=freebsd & cpu=x64
-  languageName: node
-  linkType: hard
-
-"esbuild-freebsd-arm64@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-freebsd-arm64@npm:0.15.18"
-  conditions: os=freebsd & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"esbuild-linux-32@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-linux-32@npm:0.15.18"
-  conditions: os=linux & cpu=ia32
-  languageName: node
-  linkType: hard
-
-"esbuild-linux-64@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-linux-64@npm:0.15.18"
-  conditions: os=linux & cpu=x64
-  languageName: node
-  linkType: hard
-
-"esbuild-linux-arm64@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-linux-arm64@npm:0.15.18"
-  conditions: os=linux & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"esbuild-linux-arm@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-linux-arm@npm:0.15.18"
-  conditions: os=linux & cpu=arm
-  languageName: node
-  linkType: hard
-
-"esbuild-linux-mips64le@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-linux-mips64le@npm:0.15.18"
-  conditions: os=linux & cpu=mips64el
-  languageName: node
-  linkType: hard
-
-"esbuild-linux-ppc64le@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-linux-ppc64le@npm:0.15.18"
-  conditions: os=linux & cpu=ppc64
-  languageName: node
-  linkType: hard
-
-"esbuild-linux-riscv64@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-linux-riscv64@npm:0.15.18"
-  conditions: os=linux & cpu=riscv64
-  languageName: node
-  linkType: hard
-
-"esbuild-linux-s390x@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-linux-s390x@npm:0.15.18"
-  conditions: os=linux & cpu=s390x
-  languageName: node
-  linkType: hard
-
-"esbuild-netbsd-64@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-netbsd-64@npm:0.15.18"
-  conditions: os=netbsd & cpu=x64
-  languageName: node
-  linkType: hard
-
-"esbuild-openbsd-64@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-openbsd-64@npm:0.15.18"
-  conditions: os=openbsd & cpu=x64
-  languageName: node
-  linkType: hard
-
-"esbuild-sunos-64@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-sunos-64@npm:0.15.18"
-  conditions: os=sunos & cpu=x64
-  languageName: node
-  linkType: hard
-
-"esbuild-windows-32@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-windows-32@npm:0.15.18"
-  conditions: os=win32 & cpu=ia32
-  languageName: node
-  linkType: hard
-
-"esbuild-windows-64@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-windows-64@npm:0.15.18"
-  conditions: os=win32 & cpu=x64
-  languageName: node
-  linkType: hard
-
-"esbuild-windows-arm64@npm:0.15.18":
-  version: 0.15.18
-  resolution: "esbuild-windows-arm64@npm:0.15.18"
-  conditions: os=win32 & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"esbuild@npm:^0.15.9":
-  version: 0.15.18
-  resolution: "esbuild@npm:0.15.18"
-  dependencies:
-    "@esbuild/android-arm": 0.15.18
-    "@esbuild/linux-loong64": 0.15.18
-    esbuild-android-64: 0.15.18
-    esbuild-android-arm64: 0.15.18
-    esbuild-darwin-64: 0.15.18
-    esbuild-darwin-arm64: 0.15.18
-    esbuild-freebsd-64: 0.15.18
-    esbuild-freebsd-arm64: 0.15.18
-    esbuild-linux-32: 0.15.18
-    esbuild-linux-64: 0.15.18
-    esbuild-linux-arm: 0.15.18
-    esbuild-linux-arm64: 0.15.18
-    esbuild-linux-mips64le: 0.15.18
-    esbuild-linux-ppc64le: 0.15.18
-    esbuild-linux-riscv64: 0.15.18
-    esbuild-linux-s390x: 0.15.18
-    esbuild-netbsd-64: 0.15.18
-    esbuild-openbsd-64: 0.15.18
-    esbuild-sunos-64: 0.15.18
-    esbuild-windows-32: 0.15.18
-    esbuild-windows-64: 0.15.18
-    esbuild-windows-arm64: 0.15.18
-  dependenciesMeta:
-    "@esbuild/android-arm":
-      optional: true
-    "@esbuild/linux-loong64":
-      optional: true
-    esbuild-android-64:
-      optional: true
-    esbuild-android-arm64:
-      optional: true
-    esbuild-darwin-64:
-      optional: true
-    esbuild-darwin-arm64:
-      optional: true
-    esbuild-freebsd-64:
-      optional: true
-    esbuild-freebsd-arm64:
-      optional: true
-    esbuild-linux-32:
-      optional: true
-    esbuild-linux-64:
-      optional: true
-    esbuild-linux-arm:
-      optional: true
-    esbuild-linux-arm64:
-      optional: true
-    esbuild-linux-mips64le:
-      optional: true
-    esbuild-linux-ppc64le:
-      optional: true
-    esbuild-linux-riscv64:
-      optional: true
-    esbuild-linux-s390x:
-      optional: true
-    esbuild-netbsd-64:
-      optional: true
-    esbuild-openbsd-64:
-      optional: true
-    esbuild-sunos-64:
-      optional: true
-    esbuild-windows-32:
-      optional: true
-    esbuild-windows-64:
-      optional: true
-    esbuild-windows-arm64:
-      optional: true
-  bin:
-    esbuild: bin/esbuild
-  checksum: ec12682b2cb2d4f0669d0e555028b87a9284ca7f6a1b26e35e69a8697165b35cc682ad598abc70f0bbcfdc12ca84ef888caf5ceee389237862e8f8c17da85f89
   languageName: node
   linkType: hard
 
@@ -5646,6 +5510,7 @@ __metadata:
   version: 7.18.3
   resolution: "lru-cache@npm:7.18.3"
   checksum: e550d772384709deea3f141af34b6d4fa392e2e418c1498c078de0ee63670f1f46f5eee746e8ef7e69e1c895af0d4224e62ee33e66a543a14763b0f2e74c1356
+<<<<<<< HEAD
   languageName: node
   linkType: hard
 
@@ -5655,6 +5520,8 @@ __metadata:
   dependencies:
     "@jridgewell/sourcemap-codec": ^1.4.13
   checksum: 273faaa50baadb7a2df6e442eac34ad611304fc08fe16e24fe2e472fd944bfcb73ffb50d2dc972dc04e92784222002af46868cb9698b1be181c81830fd95a13e
+=======
+>>>>>>> 037b420 (Suppress yarn warnings)
   languageName: node
   linkType: hard
 
@@ -6630,7 +6497,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.4.18, postcss@npm:^8.4.21":
+"postcss@npm:^8.4.21":
   version: 8.4.21
   resolution: "postcss@npm:8.4.21"
   dependencies:
@@ -7094,6 +6961,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "rollup@npm:^2.79.1":
   version: 2.79.1
   resolution: "rollup@npm:2.79.1"
@@ -7108,6 +6976,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> 037b420 (Suppress yarn warnings)
 "rollup@npm:^3.10.0":
   version: 3.19.1
   resolution: "rollup@npm:3.19.1"
@@ -7175,16 +7045,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:=1.58.3":
-  version: 1.58.3
-  resolution: "sass@npm:1.58.3"
+"sass@npm:=1.59.2":
+  version: 1.59.2
+  resolution: "sass@npm:1.59.2"
   dependencies:
     chokidar: ">=3.0.0 <4.0.0"
     immutable: ^4.0.0
     source-map-js: ">=0.6.2 <2.0.0"
   bin:
     sass: sass.js
-  checksum: 35a2b98c037ef80fdc93c9b0be846e6ccc7d75596351a37ee79c397e66666d0a754c52c4696e746c0aff32327471e185343ca349e998a58340411adc9d0489a5
+  checksum: ab015ac49beb1252373023cc79b687aabd7850a7f450250b2fbe4eb3f64b0aef6759f8c7b33234221788a0e42cdd3999edfb5995218e474123b99cb126773e30
   languageName: node
   linkType: hard
 
@@ -7781,7 +7651,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"three@npm:=0.150.1, three@npm:^0.150.0, three@npm:^0.150.1":
+"three@npm:=0.150.1, three@npm:^0.150.1":
   version: 0.150.1
   resolution: "three@npm:0.150.1"
   checksum: b12a92a681a30e62640d90bdf074d039c05d8294ad40f437e7e1807ce0e698ad6728878a1e72dad22bf05d7a359843ecea8739d05f2f13143bc3a4ecdfdbdd7b
@@ -8235,6 +8105,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "vite-plugin-top-level-await@npm:=1.3.0":
   version: 1.3.0
   resolution: "vite-plugin-top-level-await@npm:1.3.0"
@@ -8254,12 +8125,20 @@ __metadata:
   dependencies:
     vite: ^3
   checksum: f3a17d7c58c2e9060fbb1bbd9efeed48ca7b6125d6304d8337b93891d6cf1fd4d895b892e1d16763e1dd6c0b9b7ec680a1a6020c8e95893cf801b8562a6c995f
+=======
+"vite-plugin-wasm@npm:=3.2.2":
+  version: 3.2.2
+  resolution: "vite-plugin-wasm@npm:3.2.2"
+  peerDependencies:
+    vite: ^2 || ^3 || ^4
+  checksum: ed9b56b3cd47e6376c21592f4d24f818334d5796226f6c1dfca89a4f744d69a34cb85dd5e06f164a2670827113ccfa5f03d0361e51210012706123374b0f8277
+>>>>>>> 037b420 (Suppress yarn warnings)
   languageName: node
   linkType: hard
 
-"vite@npm:=4.1.0":
-  version: 4.1.0
-  resolution: "vite@npm:4.1.0"
+"vite@npm:=4.1.4":
+  version: 4.1.4
+  resolution: "vite@npm:4.1.4"
   dependencies:
     esbuild: ^0.16.14
     fsevents: ~2.3.2
@@ -8291,45 +8170,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 00443893c922a41539d4e990eb0ee58e2774c6254a442640b339e0ab200813e3010b463ab0487e5b487918add7935320464054e6f3473d84a6ea01d0799ec286
-  languageName: node
-  linkType: hard
-
-"vite@npm:^3":
-  version: 3.2.5
-  resolution: "vite@npm:3.2.5"
-  dependencies:
-    esbuild: ^0.15.9
-    fsevents: ~2.3.2
-    postcss: ^8.4.18
-    resolve: ^1.22.1
-    rollup: ^2.79.1
-  peerDependencies:
-    "@types/node": ">= 14"
-    less: "*"
-    sass: "*"
-    stylus: "*"
-    sugarss: "*"
-    terser: ^5.4.0
-  dependenciesMeta:
-    fsevents:
-      optional: true
-  peerDependenciesMeta:
-    "@types/node":
-      optional: true
-    less:
-      optional: true
-    sass:
-      optional: true
-    stylus:
-      optional: true
-    sugarss:
-      optional: true
-    terser:
-      optional: true
-  bin:
-    vite: bin/vite.js
-  checksum: ad35b7008c2b62a167d1d1a82f0a0c60fa457733f1969e9eedf0b0077f67a7ac74b4c9477e75a397895150f09b6551f0c17841c5b05c34d9fe302bb0b5dc28a8
+  checksum: 50a9a1f2e29e0ee8fefdec60314d38fb9b746df0bb6ae5a8114014b5bfd95e0fc9b29c0d5e73939361ba53af7eb66c7d20c5656bbe53a783e96540bd3b907c47
   languageName: node
   linkType: hard
 
