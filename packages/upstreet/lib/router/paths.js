@@ -4,6 +4,6 @@ export const paths = {
   examples: {
     agent: '/examples/agent',
     input: '/examples/input',
-    sea: '/sea',
+    sea: '/examples/sea',
   },
 }
