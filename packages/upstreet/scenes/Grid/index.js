@@ -1,10 +1,12 @@
 import { LineSegments } from 'three'
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+// import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 import { VRM } from '@pixiv/three-vrm'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { RapierPhysicsAdapter } from '@webaverse-studios/physics-rapier'
 import { AvatarCharacter, Scene } from '@webaverse-studios/engine-nyx'
+
+import { InputManager } from '@webaverse-studios/input'
 
 import { loadGeometry } from './geometry'
 
@@ -32,11 +34,13 @@ export class Grid extends Scene {
   /** @type {LineSegments} */
   #lines
 
+  #inputManager = new InputManager()
+
   /**
    *
-   * @param {object} gridOptions - Grid Scene Options
-   * @param {HTMLCanvasElement} gridOptions.canvas - Canvas to render the scene to
-   * @param {RapierPhysicsAdapter} gridOptions.physicsAdapter - Physics Adapter to use
+   * @param {object} gridOptions Grid Scene Options
+   * @param {HTMLCanvasElement} gridOptions.canvas Canvas to render the scene to
+   * @param {RapierPhysicsAdapter} gridOptions.physicsAdapter Physics Adapter to use
    */
   constructor( gridOptions ) {
     super( gridOptions )
@@ -108,6 +112,9 @@ export class Grid extends Scene {
     this.#addLightsToScene()
     this.#configureGeometry()
     this.#configureCharacter()
+
+    this.#inputManager.destroy()
+    this.#inputManager.addEventListeners( document )
 
     // function down(this: Grid, event: KeyboardEvent) {
     //   if (event.key == "ArrowUp") this.movementDirection.x = this.speed;

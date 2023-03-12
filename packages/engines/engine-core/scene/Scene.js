@@ -98,13 +98,13 @@ export class Scene {
    * ⚠️ **NOTE**: {@link Engine} will call {@link init} after instantiation. ⚠️
    */
   constructor({ canvas, physicsAdapter }) {
-    if ( this.constructor === Scene ) {
-      throw new Error( "Abstract classes can't be instantiated." )
+    if (this.constructor === Scene) {
+      throw new Error("Abstract classes can't be instantiated.")
     }
 
     this._name = this.constructor.name
     this._physicsAdapter = physicsAdapter
-    this.#configureScene( canvas )
+    this.#configureScene(canvas)
   }
 
   get name() {
@@ -120,20 +120,20 @@ export class Scene {
    *
    * @param {HTMLCanvasElement} canvas - scene canvas
    */
-  #configureScene = ( canvas ) => {
+  #configureScene = (canvas) => {
     this._canvas = canvas
     this._scene = createTHREEScene()
     this._camera = createCamera()
     this._gltfLoader = new GLTFLoader()
     this._debugLines = new LineSegments()
-    this._renderer = createRenderer( canvas, 1 )
+    this._renderer = createRenderer(canvas, 1)
   }
 
   /**
    * Add lights to the scene
    */
   #addLightsToScene = () => {
-    this._lights.forEach(( light ) => this._scene.add( light ))
+    this._lights.forEach((light) => this._scene.add(light))
   }
 
   /**
@@ -160,8 +160,8 @@ const createTHREEScene = () => {
   const scene = new THREEScene()
 
   // Configure scene.
-  scene.background = new Color( 0x2a2a2a )
-  scene.fog = new Fog( 0xffffff, 0, 750 )
+  scene.background = new Color(0x2a2a2a)
+  scene.fog = new Fog(0xffffff, 0, 750)
 
   return scene
 }
@@ -181,7 +181,7 @@ const createCamera = () => {
  * @returns {Light[]} The configured renderer.
  */
 const createLights = () => {
-  return [new AmbientLight( 0xffffff, 2 )]
+  return [new AmbientLight(0xffffff, 2)]
 }
 
 /**
@@ -191,9 +191,9 @@ const createLights = () => {
  * @param {number} scale - Scale the renderer by this amount.
  * @returns {WebGLRenderer} The configured renderer.
  */
-const createRenderer = ( canvas, scale = 1 ) => {
+const createRenderer = (canvas, scale = 1) => {
   const renderer = new WebGLRenderer({ canvas })
-  renderer.setSize( window.innerWidth, window.innerHeight )
-  renderer.setSize( innerWidth * scale, innerHeight * scale, false )
+  renderer.setSize(window.innerWidth, window.innerHeight)
+  renderer.setSize(innerWidth * scale, innerHeight * scale, false)
   return renderer
 }

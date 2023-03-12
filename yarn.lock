@@ -613,6 +613,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gltf-transform/core@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "@gltf-transform/core@npm:3.1.1"
+  dependencies:
+    property-graph: ^1.1.0
+  checksum: 9075872d39f86083710a71d8a73c1c15b12ab79981f6d782428ac1812519f9bcfa1e15baad8b999a9b4446c7efcb0fbeb255452c6ef7edf6240dce1fa89ac581
+  languageName: node
+  linkType: hard
+
 "@gltf-transform/extensions@npm:^3.0.4":
   version: 3.0.4
   resolution: "@gltf-transform/extensions@npm:3.0.4"
@@ -620,6 +629,16 @@ __metadata:
     "@gltf-transform/core": ^3.0.4
     ktx-parse: ^0.5.0
   checksum: 763f67f97d1530e450573d4c38b26d7eb046ce2acc3fbf4fd9212fb4d6a6c9495fffd5190ccfd3a28d5a4c5cc65156230d6eb2e5512b5fb1b82a4c1501260ef9
+  languageName: node
+  linkType: hard
+
+"@gltf-transform/extensions@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "@gltf-transform/extensions@npm:3.1.1"
+  dependencies:
+    "@gltf-transform/core": ^3.1.1
+    ktx-parse: ^0.5.0
+  checksum: 2693e97b697730d157ad3b28ec039ce0c391220b3d504ad106d67e58833fe392522defb512375cef3b8235c5d18a7c67bf6528f6eda649c731dace1b3dfcf856
   languageName: node
   linkType: hard
 
@@ -827,6 +846,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pixiv/three-vrm-core@npm:1.0.9":
+  version: 1.0.9
+  resolution: "@pixiv/three-vrm-core@npm:1.0.9"
+  dependencies:
+    "@pixiv/types-vrm-0.0": 1.0.0
+    "@pixiv/types-vrmc-vrm-1.0": 1.0.0
+  peerDependencies:
+    "@types/three": ^0.149.0
+    three: ^0.149.0
+  checksum: 8bf557438b7cf57ad8384ede2173defa04b712c6a46b1c5677b5db714883340e35523effc51229e71e61d44e1046d0254c02da799001b6f38a2123159e9aef6a
+  languageName: node
+  linkType: hard
+
 "@pixiv/three-vrm-materials-hdr-emissive-multiplier@npm:1.0.7":
   version: 1.0.7
   resolution: "@pixiv/three-vrm-materials-hdr-emissive-multiplier@npm:1.0.7"
@@ -836,6 +868,18 @@ __metadata:
     "@types/three": ^0.148.0
     three: ^0.148.0
   checksum: 5c00b9701e7b42a408d871457f2f5902957f924a7a2d5a0b5ff96ab1c2ed6b282e29ff10622b75edf384c576cdcd2ab8be33276287315d41f2bb8f0a5f8f619c
+  languageName: node
+  linkType: hard
+
+"@pixiv/three-vrm-materials-hdr-emissive-multiplier@npm:1.0.9":
+  version: 1.0.9
+  resolution: "@pixiv/three-vrm-materials-hdr-emissive-multiplier@npm:1.0.9"
+  dependencies:
+    "@pixiv/types-vrmc-materials-hdr-emissive-multiplier-1.0": 1.0.0
+  peerDependencies:
+    "@types/three": ^0.149.0
+    three: ^0.149.0
+  checksum: 6cf1851e74e0cdd456c01761ed99830e93a9b14b01223d79cfd4c3732625f28998ec618d5134706963887bfb5640326c5e3f66e2cb34a52313616f81607bf64c
   languageName: node
   linkType: hard
 
@@ -852,6 +896,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pixiv/three-vrm-materials-mtoon@npm:1.0.9":
+  version: 1.0.9
+  resolution: "@pixiv/three-vrm-materials-mtoon@npm:1.0.9"
+  dependencies:
+    "@pixiv/types-vrm-0.0": 1.0.0
+    "@pixiv/types-vrmc-materials-mtoon-1.0": 1.0.0
+  peerDependencies:
+    "@types/three": ^0.149.0
+    three: ^0.149.0
+  checksum: aa9b0d3f77537df2ba3eb133fae9ff4d897baf55adfc4452c5f8d9af2557a2ffdaf51e55a549c626f179aac2f480faea7424aa5ba782af8fd96524dd58cbb9fa
+  languageName: node
+  linkType: hard
+
 "@pixiv/three-vrm-materials-v0compat@npm:1.0.7":
   version: 1.0.7
   resolution: "@pixiv/three-vrm-materials-v0compat@npm:1.0.7"
@@ -862,6 +919,19 @@ __metadata:
     "@types/three": ^0.148.0
     three: ^0.148.0
   checksum: 2635185fe97df95c6e9f65c445109f8ee208f1d1f5e538bc6f774178e5cbdc611e588282f40a4c3b6ff676699216dc1f6de9ec93c4bf25b31adbaa870c263060
+  languageName: node
+  linkType: hard
+
+"@pixiv/three-vrm-materials-v0compat@npm:1.0.9":
+  version: 1.0.9
+  resolution: "@pixiv/three-vrm-materials-v0compat@npm:1.0.9"
+  dependencies:
+    "@pixiv/types-vrm-0.0": 1.0.0
+    "@pixiv/types-vrmc-materials-mtoon-1.0": 1.0.0
+  peerDependencies:
+    "@types/three": ^0.149.0
+    three: ^0.149.0
+  checksum: 4514febf4d4e1a0e324c30581414c0c6c439096c0e071d414e3e5ce6498d91daa4bb3efdb4be9ebcfe1a1c0eaf3ca0475c6a944557a21d2acca229364d400a7a
   languageName: node
   linkType: hard
 
@@ -877,6 +947,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pixiv/three-vrm-node-constraint@npm:1.0.9":
+  version: 1.0.9
+  resolution: "@pixiv/three-vrm-node-constraint@npm:1.0.9"
+  dependencies:
+    "@pixiv/types-vrmc-node-constraint-1.0": 1.0.0
+  peerDependencies:
+    "@types/three": ^0.149.0
+    three: ^0.149.0
+  checksum: cbc8f15a1b23506481ef42e661cb01d3ea8b927f764eedc51a050c8b6a0aa9dcd788d7d790816d29f856bc5a91fb377c0975641ca4a6674ac39d585024d49ffd
+  languageName: node
+  linkType: hard
+
 "@pixiv/three-vrm-springbone@npm:1.0.7":
   version: 1.0.7
   resolution: "@pixiv/three-vrm-springbone@npm:1.0.7"
@@ -886,6 +968,18 @@ __metadata:
   peerDependencies:
     three: ^0.148.0
   checksum: 8ab535f68a210cb6cd7893ab33f31b739b2824f231442c3058fbc84ae5ae6c50afd5b6568b996e217929f4bccef6e06177fcde9836509b2545ed391636abe364
+  languageName: node
+  linkType: hard
+
+"@pixiv/three-vrm-springbone@npm:1.0.9":
+  version: 1.0.9
+  resolution: "@pixiv/three-vrm-springbone@npm:1.0.9"
+  dependencies:
+    "@pixiv/types-vrm-0.0": 1.0.0
+    "@pixiv/types-vrmc-springbone-1.0": 1.0.0
+  peerDependencies:
+    three: ^0.149.0
+  checksum: dcc25d76c330ad56edc3c0d19ed7bc8366aab78645510929a105b2ff2e29a95058629821c9d44c4f63f37cd4da150d33f31e44eb3ddd3fd21c66dcc85db7ca01
   languageName: node
   linkType: hard
 
@@ -903,6 +997,23 @@ __metadata:
     "@types/three": ^0.148.0
     three: ^0.148.0
   checksum: cb5d4d531d79b54c64dd5f320d2f53ec86a04b0bd4974a3b38c62a723580f161d923df56c12c79f4f2ea346c45c977bb27b40e674fbde7a18ffd1d67944f99b7
+  languageName: node
+  linkType: hard
+
+"@pixiv/three-vrm@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "@pixiv/three-vrm@npm:1.0.9"
+  dependencies:
+    "@pixiv/three-vrm-core": 1.0.9
+    "@pixiv/three-vrm-materials-hdr-emissive-multiplier": 1.0.9
+    "@pixiv/three-vrm-materials-mtoon": 1.0.9
+    "@pixiv/three-vrm-materials-v0compat": 1.0.9
+    "@pixiv/three-vrm-node-constraint": 1.0.9
+    "@pixiv/three-vrm-springbone": 1.0.9
+  peerDependencies:
+    "@types/three": ^0.149.0
+    three: ^0.149.0
+  checksum: 6f1830c3f0252de5e9fdb454d9ab87e9ab5a841d7056d38a880bcc16fc030427f15683bb4f24d96bfb9f0ab97b125b13f585681131eb849e3e1d60cc41c93cea
   languageName: node
   linkType: hard
 
@@ -1570,7 +1681,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prettier@npm:^2":
+"@types/prettier@npm:=2":
   version: 2.7.2
   resolution: "@types/prettier@npm:2.7.2"
   checksum: b47d76a5252265f8d25dd2fe2a5a61dc43ba0e6a96ffdd00c594cb4fd74c1982c2e346497e3472805d97915407a09423804cc2110a0b8e1b22cffcab246479b7
@@ -1666,7 +1777,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^5.54.1":
+"@typescript-eslint/parser@npm:=5.54.1":
   version: 5.54.1
   resolution: "@typescript-eslint/parser@npm:5.54.1"
   dependencies:
@@ -1799,8 +1910,10 @@ __metadata:
     "@soulofmischief/js-utils": =0.21.0
     "@webaverse-studios/physics-core": "file:../../physics/physics-core"
     "@webaverse-studios/physics-rapier": "file:../../physics/physics-rapier"
+    eslint: =8.34.0
     murmurhash: =2.0.1
     nanoid: ^4.0.1
+    prettier: ^2.8.4
     stats.js: =0.17.0
     three: =0.150.1
     troika-three-text: =0.47.1
@@ -1811,8 +1924,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/engine-nyx@workspace:packages/engines/engine-nyx"
   dependencies:
+    "@pixiv/three-vrm": ^1.0.9
     "@soulofmischief/js-utils": =0.21.0
     "@webaverse-studios/engine-core": "file:../engine-core"
+    "@webaverse-studios/physics-core": "workspace:^"
     bitecs: =0.3.38
     murmurhash: =2.0.1
     nanoid: =4.0.1
@@ -1833,26 +1948,30 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webaverse-studios/eslint-config@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@webaverse-studios/eslint-config@npm:1.0.0::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40webaverse-studios%2Feslint-config%2F1.0.0%2F5d1a138ae899edf5f3ac81ef67bb21d2b7816eb6"
+"@webaverse-studios/eslint-config@npm:=1.1.1":
+  version: 1.1.1
+  resolution: "@webaverse-studios/eslint-config@npm:1.1.1::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40webaverse-studios%2Feslint-config%2F1.1.1%2Fbd81bb8f998edccbf7951ccb17e590c150183ff2"
   peerDependencies:
     eslint: ">= 8"
     eslint-plugin-jsdoc: "*"
     eslint-plugin-promise: "*"
-  checksum: 80746a5bdc09cc9a76886f2a3bb58651992f5072044a949a3ea1d49b92b9f4f131e9bc7937c0546b794e9b0d268b48615157f02074916eda34bada7009eebf1a
+  checksum: 78139cdd2d88dc5f73a18b1d8eee94587a2a1cfd1015fa23a06beeb6f874230fb883099daaa938a14475d06f09e1e665ca4fd48154a0c836fe20ee71965a5cb9
   languageName: node
   linkType: hard
 
-"@webaverse-studios/input@workspace:packages/input":
+"@webaverse-studios/input@workspace:*, @webaverse-studios/input@workspace:packages/input":
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/input@workspace:packages/input"
   dependencies:
     "@soulofmischief/js-utils": =0.21.0
     "@types/stats": ^0.16.30
     "@types/three": ^0.149.0
+    eslint: =8.34.0
+    lodash.clonedeep: ^4.5.0
+    lodash.pull: ^4.1.0
     murmurhash: =2.0.1
     nanoid: ^4.0.1
+    prettier: ^2.8.4
     stats.js: =0.17.0
     three: =0.150.1
     troika-three-text: =0.47.1
@@ -1884,15 +2003,19 @@ __metadata:
   resolution: "@webaverse-studios/upstreet@workspace:packages/upstreet"
   dependencies:
     "@gltf-transform/core": =3.0.4
+    "@gltf-transform/extensions": ^3.1.1
     "@gltf-transform/functions": =3.0.4
     "@pixiv/three-vrm": =1.0.8
     "@rollup/plugin-strip": =3.0.2
     "@soulofmischief/js-utils": =0.21.0
     "@webaverse-studios/agent-backend": "file:../agent-backend"
     "@webaverse-studios/engine-nyx": "file:../engines/engine-nyx"
+    "@webaverse-studios/input": "file:../input"
     "@webaverse-studios/physics-rapier": "file:../physics/physics-rapier"
+    eslint: =8.34.0
     gun: =0.2020.1239
     mithril: =3.0.0-next.12
+    prettier: ^2.8.4
     sass: =1.58.3
     sharp: =0.31.3
     three: =0.150.1
@@ -1906,14 +2029,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/webaverse-neo@workspace:."
   dependencies:
-    "@types/prettier": ^2
-    "@typescript-eslint/parser": ^5.54.1
-    "@webaverse-studios/eslint-config": ^1.0.0
+    "@types/prettier": =2
+    "@typescript-eslint/parser": =5.54.1
+    "@webaverse-studios/eslint-config": =1.1.1
     concurrently: =7.6.0
     eslint: =8.34.0
     eslint-plugin-jsdoc: =40.0.0
     eslint-plugin-promise: =6.1.1
-    prettier: ^2.8.4
+    prettier: =2.8.4
     process: =0.11.10
     vite: =4.1.0
   languageName: unknown
@@ -5451,10 +5574,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash.clonedeep@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "lodash.clonedeep@npm:4.5.0"
+  checksum: 92c46f094b064e876a23c97f57f81fbffd5d760bf2d8a1c61d85db6d1e488c66b0384c943abee4f6af7debf5ad4e4282e74ff83177c9e63d8ff081a4837c3489
+  languageName: node
+  linkType: hard
+
 "lodash.merge@npm:^4.6.2":
   version: 4.6.2
   resolution: "lodash.merge@npm:4.6.2"
   checksum: ad580b4bdbb7ca1f7abf7e1bce63a9a0b98e370cf40194b03380a46b4ed799c9573029599caebc1b14e3f24b111aef72b96674a56cfa105e0f5ac70546cdc005
+  languageName: node
+  linkType: hard
+
+"lodash.pull@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "lodash.pull@npm:4.1.0"
+  checksum: a187a596688b2b372079dca4cb6eca057dde6c36df6c46de079b887b270ee47f89061b27bd14c392c112ae9bed9d2be06dd3a340b0bd1a538a56a10b6caf6fe5
   languageName: node
   linkType: hard
 
@@ -6533,7 +6670,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^2.8.4, prettier@npm:latest":
+"prettier@npm:=2.8.4, prettier@npm:^2.8.4, prettier@npm:latest":
   version: 2.8.4
   resolution: "prettier@npm:2.8.4"
   bin:

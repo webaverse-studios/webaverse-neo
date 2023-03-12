@@ -10,8 +10,10 @@
     "directory": "packages/engines/engine-nyx"
   },
   "dependencies": {
+    "@pixiv/three-vrm": "^1.0.9",
     "@soulofmischief/js-utils": "=0.21.0",
     "@webaverse-studios/engine-core": "file:../engine-core",
+    "@webaverse-studios/physics-core": "workspace:^",
     "bitecs": "=0.3.38",
     "murmurhash": "=2.0.1",
     "nanoid": "=4.0.1",

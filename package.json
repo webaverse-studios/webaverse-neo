@@ -8,6 +8,7 @@
     "engine": "yarn workspace @webaverse-studios/engine",
     "feathers": "yarn workspace @webaverse-studios/backend-feathers",
     "gun": "yarn workspace @webaverse-studios/backend-gun",
+    "input": "yarn workspace @webaverse-studios/input",
     "lint": "eslint . --config ./.eslintrc.cjs --fix",
     "engine-nyx": "yarn workspace @webaverse-studios/engine-nyx",
     "start": "concurrently \"yarn upstreet start\"",
@@ -16,14 +17,14 @@
     "upstreet": "yarn workspace @webaverse-studios/upstreet"
   },
   "devDependencies": {
-    "@types/prettier": "^2",
-    "@typescript-eslint/parser": "^5.54.1",
-    "@webaverse-studios/eslint-config": "^1.0.0",
+    "@types/prettier": "=2",
+    "@typescript-eslint/parser": "=5.54.1",
+    "@webaverse-studios/eslint-config": "=1.1.1",
     "concurrently": "=7.6.0",
     "eslint": "=8.34.0",
     "eslint-plugin-jsdoc": "=40.0.0",
     "eslint-plugin-promise": "=6.1.1",
-    "prettier": "^2.8.4",
+    "prettier": "=2.8.4",
     "process": "=0.11.10",
     "vite": "=4.1.0"
   },
@@ -34,9 +35,10 @@
     "@webaverse-studios/agent-backend": "workspace:*",
     "@webaverse-studios/engine-core": "workspace:*",
     "@webaverse-studios/engine-nyx": "workspace:*",
-    "@webaverse-studios/upstreet": "workspace:*",
+    "@webaverse-studios/input": "workspace:*",
     "@webaverse-studios/physics-core": "workspace:*",
-    "@webaverse-studios/physics-rapier": "workspace:*"
+    "@webaverse-studios/physics-rapier": "workspace:*",
+    "@webaverse-studios/upstreet": "workspace:*"
   },
   "packageManager": "yarn@3.4.1"
 }

@@ -9,7 +9,6 @@ export class KinematicController {
    * is the controller grounded?
    *
    * @type {boolean}
-   * @readonly
    */
   #grounded
 
@@ -17,7 +16,7 @@ export class KinematicController {
   #velocity
 
   constructor() {
-    this.grounded = true
+    // this.grounded = true
     this.#velocity = new Vector3()
   }
 
