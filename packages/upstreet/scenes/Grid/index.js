@@ -3,7 +3,7 @@ import { LineSegments } from 'three'
 
 import { VRM } from '@pixiv/three-vrm'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { RapierPhysicsAdapter } from '@webaverse-studios/physics-rapier'
+import { PhysicsAdapter } from '@webaverse-studios/physics-rapier'
 import { AvatarCharacter, Scene } from '@webaverse-studios/engine-nyx'
 
 import { InputManager } from '@webaverse-studios/input'
@@ -40,7 +40,7 @@ export class Grid extends Scene {
    *
    * @param {object} gridOptions Grid Scene Options
    * @param {HTMLCanvasElement} gridOptions.canvas Canvas to render the scene to
-   * @param {RapierPhysicsAdapter} gridOptions.physicsAdapter Physics Adapter to use
+   * @param {PhysicsAdapter} gridOptions.physicsAdapter Physics Adapter to use
    */
   constructor( gridOptions ) {
     super( gridOptions )

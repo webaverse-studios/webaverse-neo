@@ -11,7 +11,7 @@ import {
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { Scene } from '@webaverse-studios/engine-nyx'
-import { RapierPhysicsAdapter } from '@webaverse-studios/physics-rapier'
+import { PhysicsAdapter } from '@webaverse-studios/physics-rapier'
 
 export class OrbitControlsScene extends Scene {
   /** @type {OrbitControls} */
@@ -21,7 +21,7 @@ export class OrbitControlsScene extends Scene {
    *
    * @param {object} options - Scene Options
    * @param {HTMLCanvasElement} options.canvas - Canvas to render the scene to
-   * @param {RapierPhysicsAdapter} options.physicsAdapter - Physics Adapter to use
+   * @param {PhysicsAdapter} options.physicsAdapter - Physics Adapter to use
    */
   constructor({ canvas, physicsAdapter }) {
     super({ canvas, physicsAdapter })

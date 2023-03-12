@@ -41,10 +41,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dimforge/rapier3d@npm:=0.11.2":
+"@dimforge/rapier3d-compat@npm:=0.11.2":
   version: 0.11.2
-  resolution: "@dimforge/rapier3d@npm:0.11.2"
-  checksum: 39b96bc87bb78883df585c6560394f1cc6724d1f466f95ae3379940413d66b169651b1dd9cc14d3f9a2d3fa0af41a6208222c9747300d6102c179df47fc55e7b
+  resolution: "@dimforge/rapier3d-compat@npm:0.11.2"
+  checksum: f0fbf99feaef4ea3b5cb3d81892c1caf14bd35c89c90ce31462f3707f068f5677d5a2c845efdefa2951a90b276a6ba63a9453f139badda66c4b322b661bf6b81
   languageName: node
   linkType: hard
 
@@ -1837,23 +1837,23 @@ __metadata:
     "@soulofmischief/js-utils": =0.21.0
     "@webaverse-studios/engine-core": "workspace:*"
     "@webaverse-studios/physics-core": "workspace:*"
+    bitecs: =0.3.38
     murmurhash: =2.0.1
-    nanoid: ^4.0.1
+    nanoid: =4.0.1
     stats.js: =0.17.0
     three: =0.150.1
     troika-three-text: =0.47.1
-    typescript: =4.9.5
   languageName: unknown
   linkType: soft
 
-"@webaverse-studios/eslint-config@npm:=1.1.0":
-  version: 1.1.0
-  resolution: "@webaverse-studios/eslint-config@npm:1.1.0::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40webaverse-studios%2Feslint-config%2F1.1.0%2Fa0ef9a5a42c22cfbd275009ac34cc8da9dc2caf1"
+"@webaverse-studios/eslint-config@npm:=1.1.3":
+  version: 1.1.3
+  resolution: "@webaverse-studios/eslint-config@npm:1.1.3::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40webaverse-studios%2Feslint-config%2F1.1.3%2Fe04543c09a74534e3d5f86ace937b60819a0cd5a"
   peerDependencies:
     eslint: ">= 8"
     eslint-plugin-jsdoc: "*"
     eslint-plugin-promise: "*"
-  checksum: 6c19f4eabb2f240a0df8fff5a37894d269acccd948d3f701b27d54cb22bc2a760a58f020b91893c47c3fba3ec588257f298f61244d9bdb8901f985a538fcafb8
+  checksum: d0a066771badb687cab42d6ecaeddd5a536d55a001a7fae76cf1d512604225907c3b926262508c303945a7247313dd78fa543e39e4836835a973b956ae018973
   languageName: node
   linkType: hard
 
@@ -1881,6 +1881,7 @@ __metadata:
   resolution: "@webaverse-studios/physics-core@workspace:packages/physics/core"
   dependencies:
     "@types/three": ^0.149.0
+    "@webaverse-studios/engine-core": "workspace:*"
     three: ^0.150.1
     typescript: =4.9.5
   languageName: unknown
@@ -1890,11 +1891,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/physics-rapier@workspace:packages/physics/rapier"
   dependencies:
-    "@dimforge/rapier3d": =0.11.2
-    "@types/three": ^0.149.0
+    "@dimforge/rapier3d-compat": =0.11.2
+    "@webaverse-studios/engine-core": "workspace:*"
     "@webaverse-studios/physics-core": "workspace:*"
-    three: ^0.150.1
-    typescript: =4.9.5
+    three: =0.150.1
   languageName: unknown
   linkType: soft
 
@@ -1909,11 +1909,11 @@ __metadata:
     "@rollup/plugin-strip": =3.0.2
     "@soulofmischief/js-utils": =0.21.0
     "@types/sharp": ^0
-    "@webaverse-studios/backend-agent": "file:../backend/agent"
-    "@webaverse-studios/config": "file:../config"
-    "@webaverse-studios/engine-nyx": "file:../engine/nyx"
-    "@webaverse-studios/input": "file:../core/input"
-    "@webaverse-studios/physics-rapier": "file:../physics/rapier"
+    "@webaverse-studios/backend-agent": "workspace:*"
+    "@webaverse-studios/config": "workspace:*"
+    "@webaverse-studios/engine-nyx": "workspace:*"
+    "@webaverse-studios/input": "workspace:*"
+    "@webaverse-studios/physics-rapier": "workspace:*"
     gun: ^0.2020.1239
     mithril: =3.0.0-next.12
     sass: =1.59.2
@@ -1934,7 +1934,7 @@ __metadata:
     "@types/node": ^18.15.0
     "@types/prettier": =2
     "@typescript-eslint/parser": ^5.54.1
-    "@webaverse-studios/eslint-config": =1.1.0
+    "@webaverse-studios/eslint-config": =1.1.3
     concurrently: =7.6.0
     eslint: =8.34.0
     eslint-plugin-jsdoc: =40.0.0
@@ -2309,6 +2309,13 @@ __metadata:
   dependencies:
     underscore: ~1.4.4
   checksum: 04d2fbdce33ecbaafab9cd58ea286ecbadbc4ead0262bc0489a7d1a1eeef03109fd17f16a5de92b7113c08f31ac0083ab86b283a961b661d4f5f0d7e81d88586
+  languageName: node
+  linkType: hard
+
+"bitecs@npm:=0.3.38":
+  version: 0.3.38
+  resolution: "bitecs@npm:0.3.38"
+  checksum: 8e77f98fc1c180bbd0f05e83e1926e5f65bdb941d8060886a5c43b61cf139d0448e31f6037bb6d5216d3e825372bacb9283a00b2d482d769d99c37bf3e08bcb2
   languageName: node
   linkType: hard
 
@@ -5749,21 +5756,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nanoid@npm:=4.0.1, nanoid@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "nanoid@npm:4.0.1"
+  bin:
+    nanoid: bin/nanoid.js
+  checksum: 21022a7910aa690cb05872c07f0c4a317dfe2aa79cc2b5e4ab41d17476e23d973d24c683206d6fa7e1b56bf657cf5dfbc0f1cac7d596bcd2dea0f49635316628
+  languageName: node
+  linkType: hard
+
 "nanoid@npm:^3.1.12, nanoid@npm:^3.3.4":
   version: 3.3.4
   resolution: "nanoid@npm:3.3.4"
   bin:
     nanoid: bin/nanoid.cjs
   checksum: 2fddd6dee994b7676f008d3ffa4ab16035a754f4bb586c61df5a22cf8c8c94017aadd360368f47d653829e0569a92b129979152ff97af23a558331e47e37cd9c
-  languageName: node
-  linkType: hard
-
-"nanoid@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "nanoid@npm:4.0.1"
-  bin:
-    nanoid: bin/nanoid.js
-  checksum: 21022a7910aa690cb05872c07f0c4a317dfe2aa79cc2b5e4ab41d17476e23d973d24c683206d6fa7e1b56bf657cf5dfbc0f1cac7d596bcd2dea0f49635316628
   languageName: node
   linkType: hard
 

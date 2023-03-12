@@ -72,6 +72,7 @@ export default {
         })
       : undefined,
   ],
+
   server: {
     port,
     fs: {

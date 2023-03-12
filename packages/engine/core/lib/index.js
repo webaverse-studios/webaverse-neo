@@ -1,0 +1,1 @@
+export { disableChromePerformanceBloat } from './disableChromePerformanceBloat'

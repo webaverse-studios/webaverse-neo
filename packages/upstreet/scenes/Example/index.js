@@ -8,7 +8,7 @@ import {
   Scene as THREEScene,
   WebGLRenderer,
 } from 'three'
-import { RapierPhysicsAdapter } from '@webaverse-studios/physics-rapier'
+import { PhysicsAdapter } from '@webaverse-studios/physics-rapier'
 import { Scene } from '@webaverse-studios/engine-nyx'
 import { loadGeometry } from './geometry'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
@@ -20,7 +20,7 @@ export class Example extends Scene {
   /**
    *
    * @param {HTMLCanvasElement} canvas - Canvas to render the scene to
-   * @param {RapierPhysicsAdapter} physicsAdapter - Physics Adapter to use
+   * @param {PhysicsAdapter} physicsAdapter - Physics Adapter to use
    */
   constructor({ canvas, physicsAdapter }) {
     super({ canvas, physicsAdapter })
