@@ -9,7 +9,7 @@ import {
 } from '@gltf-transform/functions'
 
 import strip from '@rollup/plugin-strip'
-import { upstreetConfig } from '@webaverse-studios/config'
+import config from '@webaverse-studios/config'
 import sharp from 'sharp'
 import gltf from 'vite-plugin-gltf'
 import wasm from 'vite-plugin-wasm'

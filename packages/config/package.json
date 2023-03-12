@@ -2,7 +2,7 @@
   "name": "@webaverse-studios/config",
   "description": "Webaverse common configuration",
   "version": "0.1.0",
-  "type": "module",
+  "type": "commonjs",
   "main": "index.js",
   "repository": {
     "type": "git",

@@ -1,6 +1,8 @@
-import { config } from './config/index.js'
+const { config } = require( './config/index.js' )
 
-export const
-  feathersConfig = config.get( 'feathers' ),
-  gunConfig = config.get( 'gun' ),
-  upstreetConfig = config.get( 'upstreet' )
+
+module.exports = {
+  feathersConfig: config.get( 'feathers' ),
+  gunConfig: config.get( 'gun' ),
+  upstreetConfig: config.get( 'upstreet' ),
+}

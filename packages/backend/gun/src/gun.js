@@ -1,4 +1,4 @@
-import { gunConfig } from '@webaverse-studios/config'
+import config from '@webaverse-studios/config'
 
 // GUN modules are imported here.
 import GUN from 'gun'
@@ -7,7 +7,7 @@ import 'gun/lib/promise.js'
 import { server } from '#Server'
 
 
-const { url } = gunConfig
+const { url } = config.gunConfig
 
 
 export const

@@ -1,9 +1,9 @@
 import Gun from 'gun'
 import 'gun/lib/promise.js'
-import { gunConfig } from '@webaverse-studios/config'
+import config from '@webaverse-studios/config'
 
 
-const { peers } = gunConfig
+const { peers } = config.gunConfig
 
 
 export const

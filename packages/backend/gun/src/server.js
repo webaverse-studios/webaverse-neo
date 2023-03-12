@@ -1,8 +1,8 @@
-import { gunConfig } from '@webaverse-studios/config'
+import config from '@webaverse-studios/config'
 import http from 'http'
 
 
-const { port } = gunConfig
+const { port } = config.gunConfig
 
 
 // Create a new HTTP server.

@@ -6,6 +6,9 @@
  * @param {number} port The port.
  * @returns {string} The URL.
  */
-export function createURL( protocol, host, port ) {
+function createURL( protocol, host, port ) {
   return `${protocol}://${host}:${port}`
 }
+
+
+module.exports = { createURL }

@@ -1,2 +1,5 @@
 
-export { createURL } from './createURL.js'
+module.exports = {
+  createURL: require( './createURL.js' ),
+  getNetworkConfig: require( './getNetworkConfig.js' ),
+}

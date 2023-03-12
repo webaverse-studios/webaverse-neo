@@ -1,7 +1,7 @@
 import GUN from 'gun'
-import { gunConfig } from '@webaverse-studios/config'
+import config from '@webaverse-studios/config'
 
 
 const
-  { peers } = gunConfig,
+  { peers } = config.gunConfig,
   gun = GUN({ peers })

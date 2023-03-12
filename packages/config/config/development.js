@@ -1,4 +1,4 @@
-import {createURL} from '../lib/index.js'
+const { getNetworkConfig } = require( '../lib/getNetworkConfig.js' )
 
 
 const
@@ -17,7 +17,8 @@ const
 
 gunNetworkConfig.url += '/gun'
 
-export default {
+
+module.exports = {
   feathers: {
     ...getNetworkConfig( feathersProtocol, feathersHost, feathersPort ),
   },
@@ -29,23 +30,5 @@ export default {
 
   upstreet: {
     ...getNetworkConfig( upstreetProtocol, upstreetHost, upstreetPort ),
-  }
-}
-
-
-/**
- * Get a network configuration object.
- *
- * @param {string} protocol The protocol.
- * @param {string} host The host.
- * @param {number} port The port.
- * @returns {object} The network configuration object.
- */
-export function getNetworkConfig( protocol, host, port ) {
-  return {
-    protocol,
-    host,
-    port,
-    url: createURL( protocol, host, port ),
   }
 }

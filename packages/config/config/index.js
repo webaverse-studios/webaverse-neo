@@ -1,5 +1,5 @@
-import defaultConfig from './default.js'
-import development from './development.js'
+const defaultConfig = require( './default.js' )
+const development = require( './development.js' )
 
 
 const
@@ -16,9 +16,12 @@ const
   envConfig = configs[ mode ] || {}
 
 
-export const config = new Map(
+const config = new Map(
   Object.entries({
     ...defaultConfig,
     ...envConfig,
   })
 )
+
+
+module.exports = { config }
