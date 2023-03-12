@@ -1,10 +1,3 @@
-import sharp from 'sharp'
-import gltf from 'vite-plugin-gltf'
-
-import wasm from 'vite-plugin-wasm'
-// import topLevelAwait from 'vite-plugin-top-level-await'
-import strip from '@rollup/plugin-strip'
-
 import {
   dedup,
   draco,
@@ -15,29 +8,42 @@ import {
   quantize,
 } from '@gltf-transform/functions'
 
-const stripFunctions = [
-  'Debug.assert',
-  'Debug.assertDeprecated',
-  'Debug.call',
-  'Debug.deprecated',
-  'Debug.warn',
-  'Debug.warnOnce',
-  'Debug.error',
-  'Debug.errorOnce',
-  'Debug.gpuError',
-  'Debug.log',
-  'Debug.logOnce',
-  'Debug.trace',
-  'DebugHelper.setName',
-  'DebugHelper.setLabel',
-  'DebugGraphics.toString',
-  'DebugGraphics.clearGpuMarkers',
-  'DebugGraphics.pushGpuMarker',
-  'DebugGraphics.popGpuMarker',
-]
+import strip from '@rollup/plugin-strip'
+import { upstreetConfig } from '@webaverse-studios/config'
+import sharp from 'sharp'
+import gltf from 'vite-plugin-gltf'
+import wasm from 'vite-plugin-wasm'
+
+
+const
+  { port } = upstreetConfig,
+  stripFunctions = [
+    'Debug.assert',
+    'Debug.assertDeprecated',
+    'Debug.call',
+    'Debug.deprecated',
+    'Debug.warn',
+    'Debug.warnOnce',
+    'Debug.error',
+    'Debug.errorOnce',
+    'Debug.gpuError',
+    'Debug.log',
+    'Debug.logOnce',
+    'Debug.trace',
+    'DebugHelper.setName',
+    'DebugHelper.setLabel',
+    'DebugGraphics.toString',
+    'DebugGraphics.clearGpuMarkers',
+    'DebugGraphics.pushGpuMarker',
+    'DebugGraphics.popGpuMarker',
+  ]
+
 
 /** @type {import('vite').UserConfig} */
 export default {
+  esbuild: {
+    drop: ['console', 'debugger'],
+  },
   plugins: [
     wasm(),
     // topLevelAwait(),
@@ -66,16 +72,14 @@ export default {
       : undefined,
   ],
   server: {
-    port: 3400,
+    port,
     fs: {
-      strict: true,
-    },
+      strict: true
+    }
   },
   worker: {
-    format: 'es',
+    format: 'es'
   },
-  esbuild: {
-    drop: ['console', 'debugger'],
-  },
-  assetsInclude: ['**/*.glb', '**/*.vrm', '**/*.z', '**/*.wasm'],
+  
+  assetsInclude: ['**/*.glb', '**/*.vrm', '**/*.z', "**/*.wasm"],
 }

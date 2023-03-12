@@ -1,0 +1,9 @@
+{
+  "watch": [
+    "src/",
+    "config/",
+    "package.json",
+    "*.env*"
+  ],
+  "exec": "cross-env NODE_ENV=development node ./src/index.js"
+}

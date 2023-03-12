@@ -1,0 +1,18 @@
+{
+  "name": "@webaverse-studios/config",
+  "description": "Webaverse common configuration",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webaverse-studios/webaverse-neo.git",
+    "directory": "packages/config"
+  },
+  "dependencies": {
+    "config": "^3.3.9"
+  },
+  "devDependencies": {
+    "@types/config": "^3"
+  }
+}

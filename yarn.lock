@@ -1476,7 +1476,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/config@npm:^3.3.0":
+"@types/config@npm:^3, @types/config@npm:^3.3.0":
   version: 3.3.0
   resolution: "@types/config@npm:3.3.0"
   checksum: d9485041cfa05864d3b8095cf7b44fae910887f6782dc43ab1ba4ea78d9cdf4a8c9d697557318ede2b4b63a05b7f91e8571b8dbe048ad024e709d9e51e0487d8
@@ -1874,6 +1874,7 @@ __metadata:
   dependencies:
     "@feathersjs/authentication-client": ^5.0.0
     "@feathersjs/client": ^5.0.0
+    "@webaverse-studios/config": "file:../../config"
     gun: ^0.2020.1239
     socket.io-client: ^4.6.1
     three: ^0.150.1
@@ -1903,6 +1904,7 @@ __metadata:
     "@feathersjs/typebox": ^5.0.0
     "@seald-io/nedb": ^4.0.1
     "@types/node": ^18.15.0
+    "@webaverse-studios/config": "file:../../config"
     axios: ^1.3.4
     cross-env: latest
     dauria: ^2.0.0
@@ -1927,10 +1929,35 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/backend-gun@workspace:packages/backend/gun"
   dependencies:
+    "@webaverse-studios/config": "file:../../config"
     dotenv-safe: =8.2.0
     gun: =0.2020.1239
     nodemon: =2.0.20
     ospec: =4.1.7
+  languageName: unknown
+  linkType: soft
+
+"@webaverse-studios/commands@workspace:packages/core/input":
+  version: 0.0.0-use.local
+  resolution: "@webaverse-studios/commands@workspace:packages/core/input"
+  dependencies:
+    "@soulofmischief/js-utils": =0.21.0
+    "@types/stats": ^0.16.30
+    "@types/three": ^0.149.0
+    murmurhash: =2.0.1
+    nanoid: ^4.0.1
+    stats.js: =0.17.0
+    three: =0.150.1
+    troika-three-text: =0.47.1
+  languageName: unknown
+  linkType: soft
+
+"@webaverse-studios/config@workspace:*, @webaverse-studios/config@workspace:packages/config":
+  version: 0.0.0-use.local
+  resolution: "@webaverse-studios/config@workspace:packages/config"
+  dependencies:
+    "@types/config": ^3
+    config: ^3.3.9
   languageName: unknown
   linkType: soft
 
@@ -2008,6 +2035,7 @@ __metadata:
   linkType: hard
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@webaverse-studios/input@workspace:*, @webaverse-studios/input@workspace:packages/input":
 =======
 "@webaverse-studios/input-manager@workspace:packages/managers/input":
@@ -2030,6 +2058,8 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+=======
+>>>>>>> ccda376 (Refactor codebase)
 "@webaverse-studios/physics-core@workspace:*, @webaverse-studios/physics-core@workspace:packages/physics/core":
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/physics-core@workspace:packages/physics/core"
@@ -2087,6 +2117,7 @@ __metadata:
     "@pixiv/three-vrm": =1.0.9
     "@soulofmischief/js-utils": =0.21.0
     "@webaverse-studios/backend-agent": "file:../backend/agent"
+    "@webaverse-studios/config": "file:../config"
     "@webaverse-studios/engine-nyx": "file:../engines/nyx"
     gun: ^0.2020.1239
     mithril: =3.0.0-next.12

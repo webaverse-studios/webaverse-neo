@@ -1,3 +1,7 @@
 import GUN from 'gun'
+import { gunConfig } from '@webaverse-studios/config'
 
-const gun = GUN({peers: ['http://localhost:3401/gun']})
+
+const
+  { peers } = gunConfig,
+  gun = GUN({ peers })

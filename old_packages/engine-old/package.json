@@ -1,0 +1,16 @@
+{
+  "name": "@webaverse-studios/engine-old",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Old Webaverse Game Engine",
+  "main": "index.js",
+  "dependencies": {
+    "@pixiv/three-vrm": "=1.0.8",
+    "murmurhash": "=2.0.1",
+    "three": "^0.150.1",
+    "troika-three-text": "=0.47.1"
+  },
+  "engines": {
+    "node": "=19.0.0"
+  }
+}

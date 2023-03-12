@@ -49,8 +49,8 @@ which aliases to:
 yarn workspace @webaverse-studios/backend-gun add <package>
 ```
 
-[0]: ./packages/gun/README.md "@webaverse-studios/backend-gun"
-[1]: ./packages/feathers/README.md "@webaverse-studios/backend-feathers"
+[0]: packages/backend/gun/README.md "@webaverse-studios/backend-gun"
+[1]: packages/backend/feathers/README.md "@webaverse-studios/backend-feathers"
 [2]: https://gun.eco/ "GunDB"
 [3]: https://feathersjs.com/ "Feathers"
 [4]: https://yarnpkg.com/lang/en/docs/workspaces/ "Yarn Workspaces"

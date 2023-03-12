@@ -1,0 +1,29 @@
+{
+  "name": "@webaverse-studios/backend-agent",
+  "description": "Backend for Webaverse agents",
+  "type": "module",
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webaverse-studios/webaverse-neo.git",
+    "directory": "packages/backend/agent"
+  },
+  "import": {
+    "#Feathers": "./src/feathers/index.js",
+    "#Feathers/*": "./src/feathers/*",
+    "#Gun": "./src/gun/index.js",
+    "#Gun/*": "./src/gun/*",
+    "#Lib": "./src/lib/index.js",
+    "#Lib/*": "./src/lib/*"
+  },
+  "dependencies": {
+    "@feathersjs/authentication-client": "^5.0.0",
+    "@feathersjs/client": "^5.0.0",
+    "@webaverse-studios/config": "file:../../config",
+    "gun": "^0.2020.1239",
+    "socket.io-client": "^4.6.1",
+    "three": "^0.150.1"
+  }
+}
