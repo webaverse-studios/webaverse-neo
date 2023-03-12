@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "type": "module",
   "description": "Webaverse Nyx Game Engine",
-  "main": "index.js",
+  "main": "index.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/webaverse-studios/webaverse-neo.git",
-    "directory": "packages/engines/engine-nyx"
+    "directory": "packages/engine/engine-nyx"
   },
   "dependencies": {
     "@pixiv/three-vrm": "^1.0.9",

@@ -1,4 +1,4 @@
-import { Scene } from "../../engines/core/scenes";
+import { Scene } from "../../engine/core/scenes";
 
 import { KinematicController } from "./models/KinematicController";
 import { BaseKinematicController } from "./models/BaseKinematicController";

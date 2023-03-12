@@ -1,5 +1,5 @@
 {
-  "name": "@webaverse-studios/commands",
+  "name": "@webaverse-studios/input",
   "version": "0.1.0",
   "type": "module",
   "description": "Webaverse input manager",

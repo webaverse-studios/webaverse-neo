@@ -16,6 +16,7 @@ import wasm from 'vite-plugin-wasm'
 
 
 const
+  { upstreetConfig } = config,
   { port } = upstreetConfig,
   stripFunctions = [
     'Debug.assert',
@@ -80,6 +81,6 @@ export default {
   worker: {
     format: 'es'
   },
-  
+
   assetsInclude: ['**/*.glb', '**/*.vrm', '**/*.z', "**/*.wasm"],
 }

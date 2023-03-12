@@ -15,8 +15,11 @@
   "dependencies": {
     "@pixiv/three-vrm": "=1.0.9",
     "@soulofmischief/js-utils": "=0.21.0",
-    "@webaverse-studios/agent-backend": "workspace:*",
+    "@webaverse-studios/backend-agent": "workspace:*",
+    "@webaverse-studios/config": "workspace:*",
     "@webaverse-studios/engine-nyx": "workspace:*",
+    "@webaverse-studios/input": "workspace:*",
+    "@webaverse-studios/physics-rapier": "workspace:*",
     "gun": "^0.2020.1239",
     "mithril": "=3.0.0-next.12",
     "three": "=0.150.1"
@@ -26,7 +29,9 @@
     "@gltf-transform/extensions": "^3.1.1",
     "@gltf-transform/functions": "=3.0.4",
     "@rollup/plugin-strip": "=3.0.2",
+    "@types/sharp": "^0",
     "sass": "=1.59.2",
+    "sharp": "^0.31.3",
     "vite": "=4.1.4",
     "vite-plugin-gltf": "=3.1.0",
     "vite-plugin-top-level-await": "=1.3.0",

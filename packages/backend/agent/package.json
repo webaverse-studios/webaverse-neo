@@ -21,7 +21,7 @@
   "dependencies": {
     "@feathersjs/authentication-client": "^5.0.0",
     "@feathersjs/client": "^5.0.0",
-    "@webaverse-studios/config": "file:../../config",
+    "@webaverse-studios/config": "workspace:*",
     "gun": "^0.2020.1239",
     "socket.io-client": "^4.6.1",
     "three": "^0.150.1"
