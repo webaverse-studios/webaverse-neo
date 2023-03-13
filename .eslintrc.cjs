@@ -7,8 +7,8 @@ module.exports = {
     'max-len': [
       1,
       {
-        code: 110,
-        comments: 110,
+        code: 85,
+        comments: 85,
         ignoreUrls: true,
       },
     ],

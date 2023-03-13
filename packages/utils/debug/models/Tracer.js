@@ -1,13 +1,11 @@
-/**
- * Type for the tracing channels.
- *
- * @typedef {TRACING_CHANNEL} TracingChannel
- */
+import { TracingChannel } from '@webaverse/types'
 
 /**
- * Log tracing functionality, allowing for tracing of the internal functionality of the engine.
- * Note that the trace logging only takes place in the debug build of the engine and is stripped
- * out in other builds.
+ * Log tracing functionality, allowing for tracing of the internal
+ * functionality of the engine.
+ *
+ * Note that the trace logging only takes place in the debug build
+ * of the engine and is stripped out in other builds.
  */
 export class Tracer {
   /**
@@ -28,7 +26,8 @@ export class Tracer {
   /**
    * Enable or disable a trace channel.
    *
-   * @param {string} channel - Name of the trace channel. Can be:
+   * @param {TracingChannel} channel Name of the trace channel. Can be:
+   * @param {boolean} enabled New enabled state for the channel.
    *
    * - {@link TRACEID_RENDER_FRAME}
    * - {@link TRACEID_RENDER_FRAME_TIME}
@@ -44,7 +43,6 @@ export class Tracer {
    * - {@link TRACEID_VRAM_IB}
    * - {@link TRACEID_RENDERPIPELINE_ALLOC}
    * - {@link TRACEID_PIPELINELAYOUT_ALLOC}
-   * @param {boolean} enabled - New enabled state for the channel.
    */
   static set( channel, enabled = true ) {
     // #if _DEBUG
@@ -59,7 +57,7 @@ export class Tracer {
   /**
    * Test if the trace channel is enabled.
    *
-   * @param {TracingChannel} channel - Name of the trace channel.
+   * @param {TracingChannel} channel Name of the trace channel.
    * @returns {boolean} - True if the trace channel is enabled.
    */
   static get( channel ) {

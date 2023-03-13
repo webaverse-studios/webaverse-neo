@@ -1,5 +1,7 @@
 export class WebGL {
   /**
+   * Returns if WebGL is available.
+   *
    * @returns {boolean} - Whether WebGL is available or not.
    */
   static isWebGLAvailable() {
@@ -15,6 +17,8 @@ export class WebGL {
   }
 
   /**
+   * Returns if WebGL2 is available.
+   *
    * @returns {boolean} - Whether WebGL 2 is available or not.
    */
   static isWebGL2Available() {
@@ -45,9 +49,9 @@ export class WebGL {
   }
 
   /**
-   *  Retreive the error message based on the version of WebGL.
+   * Retreive the error message based on the version of WebGL.
    *
-   * @param {number} version - The version of WebGL to check for.
+   * @param {number} version The version of WebGL to check for.
    * @returns {HTMLDivElement} - The div with the error message attached.
    */
   static getErrorMessage( version ) {

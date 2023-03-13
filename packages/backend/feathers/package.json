@@ -54,7 +54,7 @@
     "@feathersjs/transport-commons": "^5.0.0",
     "@feathersjs/typebox": "^5.0.0",
     "@seald-io/nedb": "^4.0.1",
-    "@webaverse-studios/config": "file:../../config",
+    "@webaverse-studios/config": "workspace:*",
     "config": "^3.3.9",
     "dauria": "^2.0.0",
     "dotenv-safe": "^8.2.0",

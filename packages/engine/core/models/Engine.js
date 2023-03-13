@@ -1,13 +1,15 @@
-import { PhysicsAdapter } from "@webaverse-studios/physics-rapier";
-import Stats from "stats.js";
-import { disableChromePerformanceBloat } from "../lib";
-import { Debug } from "@webaverse-studios/debug";
-import { WebGL } from "./WebGL.js";
+import Stats from 'stats.js'
+import { Debug } from '@webaverse-studios/debug'
+import { PhysicsAdapter } from '@webaverse-studios/physics-rapier'
 
+import { disableChromePerformanceBloat } from '../lib'
+import { WebGL } from './WebGL.js'
 
 export class Engine {
   #stats = new Stats()
+
   isPlaying = false
+  debugMode = false
 
   /**
    * @type {HTMLCanvasElement}
@@ -25,16 +27,17 @@ export class Engine {
   physicsAdapter
 
   /**
-   *  Create a new Base Engine instance.
+   * Create a new Base Engine instance.
    *
-   * @param {object} engineOptions - The options for the engine.
-   * @param {HTMLElement} engineOptions.dom - The dom element to render the scene on.
-   * @param {number} engineOptions.width - The width of the canvas.
-   * @param {number} engineOptions.height - The height of the canvas.
-   * @param {HTMLCanvasElement} engineOptions.canvas - The canvas element to render the scene on.
-   * @param {PhysicsAdapter} engineOptions.physicsAdapter - The physics adapter to use.
+   * @param {object} engineOptions The options for the engine.
+   * @param {number} engineOptions.width The width of the canvas.
+   * @param {number} engineOptions.height The height of the canvas.
+   * @param {boolean} engineOptions.debugMode Run the engine in debug mode
+   * @param {HTMLElement} engineOptions.dom The dom element to render the scene on.
+   * @param {HTMLCanvasElement} engineOptions.canvas The canvas element to render the scene on.
+   * @param {PhysicsAdapter} engineOptions.physicsAdapter The physics adapter to use.
    */
-  constructor({ dom, width, height, canvas, physicsAdapter }) {
+  constructor({ dom, width, height, canvas, physicsAdapter, debugMode = false }) {
     if ( !WebGL.isWebGLAvailable()) {
       console.error( 'WebGL Is not supported!' )
       const warning = WebGL.getWebGLErrorMessage()
@@ -45,6 +48,7 @@ export class Engine {
     disableChromePerformanceBloat()
 
     this.canvas = canvas
+    this.debugMode = debugMode
     this.physicsAdapter = physicsAdapter || new PhysicsAdapter()
 
     dom.appendChild( this.#stats.dom )
@@ -54,9 +58,11 @@ export class Engine {
 
   /**
    *
-   * @param {object} params - The parameters for the canvas.
-   * @param {number} params.height - The height of the canvas.
-   * @param {number} params.width - The width of the canvas.
+   * Initialize canvas for painting with engine.
+   *
+   * @param {object} params The parameters for the canvas.
+   * @param {number} params.height The height of the canvas.
+   * @param {number} params.width The width of the canvas.
    */
   initializeCanvas({ height, width }) {
     if ( height ) this.canvas.height = height
@@ -64,6 +70,12 @@ export class Engine {
     this.resize()
   }
 
+  /**
+   *
+   * Load a scene into the engine
+   *
+   * @param {Scene} Scene scene to load
+   */
   async load( Scene ) {
     const t0 = performance.now()
 
@@ -81,7 +93,8 @@ export class Engine {
 
     const t1 = performance.now()
 
-    Debug.log( `Finished Loading of scene: ${Scene.name} in ${t1 - t0}ms` )
+    if ( this.debugMode )
+      Debug.log( `Finished Loading of scene: ${Scene.name} in ${t1 - t0}ms` )
   }
 
   pause() {
@@ -103,10 +116,12 @@ export class Engine {
     this.reset()
     this.isPlaying = true
 
-    if ( !this.scene ) {
-      Debug.error( 'No scene loaded for engine' )
-    } else {
-      Debug.log( `Scene ${this.scene.name} is Starting` )
+    if ( this.debugMode ) {
+      if ( !this.scene ) {
+        Debug.error( 'No scene loaded for engine' )
+      } else {
+        Debug.log( `Scene ${this.scene.name} is Starting` )
+      }
     }
 
     requestAnimationFrame(() => this.update())
@@ -120,17 +135,19 @@ export class Engine {
     // Encapsulate context.
     const ctx = this
 
-    // let delta = 0,
-    //   lastTime = 0;
+    let delta = 0,
+      lastTime = 0
 
     /**
      *
-     * @param {number} _time - The time in milliseconds since the last frame.
+     * Internal update loop
+     *
+     * @param {number} time The time in milliseconds since the last frame.
      */
     // eslint-disable-next-line no-unused-vars
-    function loop( _time ) {
-      // delta = time - lastTime;
-      // lastTime = time;
+    function loop( time ) {
+      delta = time - lastTime
+      lastTime = time
 
       // Run physics
       ctx.physicsAdapter.update()
@@ -140,6 +157,7 @@ export class Engine {
       ctx.scene.update()
       ctx.#stats.end()
 
+      if ( ctx.debugMode ) Debug.log( `[Engine Update]: delta: ${delta}` )
       if ( ctx.isPlaying ) requestAnimationFrame( loop )
     }
 

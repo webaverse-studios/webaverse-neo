@@ -1,9 +1,8 @@
+import { TracingChannel } from '@webaverse-studios/types'
+
 /**
  * @readonly
- * @enum {('RenderFrame' | 'RenderFrameTime' | 'RenderPass' | 'RenderPassDetail' | 'RenderAction' |
- * 'RenderTargetAlloc' | 'TextureAlloc' | 'ShaderAlloc' | 'ShaderCompile' | 'VRAM.Texture' | 'VRAM.Vb' |
- * 'VRAM.Ib' | 'BindGroupAlloc' | 'BindGroupFormatAlloc' | 'RenderPipelineAlloc' | 'PipelineLayoutAlloc' |
- * 'PipelineLayoutAlloc')}
+ * @enum {TracingChannel}
  */
 export const TRACING_CHANNEL = {
   /**
@@ -27,8 +26,8 @@ export const TRACING_CHANNEL = {
   TRACEID_RENDER_PASS_DETAIL: 'RenderPassDetail',
 
   /**
-   * Logs render actions created by the layer composition. Only executes when the
-   * layer composition changes.
+   * Logs render actions created by the layer composition.
+   * Only executes when the layer composition changes.
    */
   TRACEID_RENDER_ACTION: 'RenderAction',
 

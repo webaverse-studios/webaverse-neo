@@ -17,9 +17,9 @@ export class AvatarCharacter extends _AvatarCharacter {
   /**
    * Create a new nyx character controller.
    *
-   * @param {object} avatarCharacterOptions - The options for the character controller.
-   * @param {VRM} avatarCharacterOptions.avatar - The avatar to control.
-   * @param {PhysicsAdapter} avatarCharacterOptions.physicsAdapter - The physics adapter to use.
+   * @param {object} avatarCharacterOptions The options for the character controller.
+   * @param {VRM} avatarCharacterOptions.avatar The avatar to control.
+   * @param {PhysicsAdapter} avatarCharacterOptions.physicsAdapter The physics adapter to use.
    */
   constructor({ avatar, physicsAdapter }) {
     super({ avatar, physicsAdapter })

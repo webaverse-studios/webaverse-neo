@@ -4,11 +4,11 @@ export class NyxEngine extends Engine {
   /**
    *  Create a new NyxEngine instance.
    *
-   * @param {object} nyxEngineOptions - The options for the engine.
-   * @param {HTMLCanvasElement} nyxEngineOptions.canvas - The canvas element to render the scene on.
-   * @param {HTMLElement} nyxEngineOptions.dom - The dom element to render the scene on.
-   * @param {number} nyxEngineOptions.height - The height of the canvas.
-   * @param {number} nyxEngineOptions.width - The width of the canvas.
+   * @param {object} nyxEngineOptions The options for the engine.
+   * @param {HTMLCanvasElement} nyxEngineOptions.canvas The canvas element to render the scene on.
+   * @param {HTMLElement} nyxEngineOptions.dom The dom element to render the scene on.
+   * @param {number} nyxEngineOptions.height The height of the canvas.
+   * @param {number} nyxEngineOptions.width The width of the canvas.
    */
   constructor({ canvas, dom, height, width }) {
     super({ canvas, dom, height, width })

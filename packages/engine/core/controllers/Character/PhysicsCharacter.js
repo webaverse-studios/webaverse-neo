@@ -20,9 +20,10 @@ export class PhysicsCharacter extends Object3D {
   kinematicController
 
   /**
+   * Construct a physics player
    *
-   * @param {object} options - The options for the character.
-   * @param {PhysicsAdapter} options.physicsAdapter - The physics adapter to use.
+   * @param {object} options The options for the character.
+   * @param {PhysicsAdapter} options.physicsAdapter The physics adapter to use.
    */
   constructor({ physicsAdapter }) {
     super()
@@ -34,8 +35,8 @@ export class PhysicsCharacter extends Object3D {
   /**
    * Update the character.
    *
-   * @param {Vector3} direction - The direction to move the character.
    * @instance
+   * @param {Vector3} direction The direction to move the character.
    */
   update( direction ) {
     this.kinematicController.move( direction )

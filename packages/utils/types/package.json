@@ -1,18 +1,15 @@
 {
-  "name": "@webaverse-studios/debug",
+  "name": "@webaverse-studios/types",
   "version": "0.1.0",
   "type": "module",
-  "description": "Webaverse Game Engine",
+  "description": "Webaverse Game Engine jsDocs",
   "main": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/webaverse-studios/webaverse-neo.git",
-    "directory": "packages/utils/debug"
+    "directory": "packages/utils/types"
   },
   "engines": {
     "node": "=19.0.0"
-  },
-  "dependencies": {
-    "@webaverse/types": "file:../types"
   }
 }

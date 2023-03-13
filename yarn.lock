@@ -1769,7 +1769,7 @@ __metadata:
     "@seald-io/nedb": ^4.0.1
     "@types/config": ^3
     "@types/node": ^18.15.0
-    "@webaverse-studios/config": "file:../../config"
+    "@webaverse-studios/config": "workspace:*"
     axios: ^1.3.4
     config: ^3.3.9
     cross-env: latest
@@ -1815,6 +1815,8 @@ __metadata:
 "@webaverse-studios/debug@workspace:*, @webaverse-studios/debug@workspace:packages/utils/debug":
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/debug@workspace:packages/utils/debug"
+  dependencies:
+    "@webaverse/types": "file:../types"
   languageName: unknown
   linkType: soft
 
@@ -1826,6 +1828,7 @@ __metadata:
     "@webaverse-studios/debug": "workspace:*"
     "@webaverse-studios/physics-core": "workspace:*"
     "@webaverse-studios/physics-rapier": "workspace:*"
+    "@webaverse-studios/types": "workspace:*"
     murmurhash: =2.0.1
     nanoid: ^4.0.1
     stats.js: =0.17.0
@@ -1904,6 +1907,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@webaverse-studios/types@workspace:*, @webaverse-studios/types@workspace:packages/utils/types":
+  version: 0.0.0-use.local
+  resolution: "@webaverse-studios/types@workspace:packages/utils/types"
+  languageName: unknown
+  linkType: soft
+
 "@webaverse-studios/upstreet@workspace:packages/upstreet":
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/upstreet@workspace:packages/upstreet"
@@ -1945,6 +1954,7 @@ __metadata:
     eslint: =8.34.0
     eslint-plugin-jsdoc: =40.0.0
     eslint-plugin-promise: =6.1.1
+    prettier: =2.8.4
     process: =0.11.10
     typescript: =4.9.5
   dependenciesMeta:
@@ -1952,6 +1962,13 @@ __metadata:
       unplugged: true
   languageName: unknown
   linkType: soft
+
+"@webaverse/types@file:../types::locator=%40webaverse-studios%2Fdebug%40workspace%3Apackages%2Futils%2Fdebug":
+  version: 0.1.0
+  resolution: "@webaverse/types@file:../types#../types::hash=f03e75&locator=%40webaverse-studios%2Fdebug%40workspace%3Apackages%2Futils%2Fdebug"
+  checksum: 8a5e85175a7ffc0d465bc520b064ff4bd23549ef96534dfa8da9e31c4c0550f73ed8c1384ec403b2a30fdef05f963c942a30479f5f426fb50c7da9a8bed89616
+  languageName: node
+  linkType: hard
 
 "abbrev@npm:1, abbrev@npm:^1.0.0":
   version: 1.1.1
@@ -6364,7 +6381,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^2.8.4, prettier@npm:latest":
+"prettier@npm:=2.8.4, prettier@npm:^2.8.4, prettier@npm:latest":
   version: 2.8.4
   resolution: "prettier@npm:2.8.4"
   bin:

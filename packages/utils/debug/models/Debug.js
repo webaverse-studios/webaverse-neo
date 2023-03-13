@@ -1,5 +1,5 @@
-import {Tracer} from '../models'
-
+/* eslint-disable no-console */
+import { Tracer } from '../models'
 
 /**
  * Engine debug log system. Note that the logging only executes in the
@@ -9,7 +9,8 @@ import {Tracer} from '../models'
  */
 export class Debug {
   /**
-   * Set storing already logged messages, to only print each unique message one time.
+   * Set storing already logged messages, to only print each
+   * unique message one time.
    *
    * @type {Set<string>}
    * @private
@@ -17,7 +18,8 @@ export class Debug {
   #loggedMessages = new Set()
 
   /**
-   * Assertion error message. If the assertion is false, the error message is written to the log.
+   * Assertion error message. If the assertion is false, the error
+   * message is written to the log.
    *
    * @param {boolean|object} assertion The assertion to check.
    * @param {...*} args The values to be written to the log.
@@ -29,7 +31,8 @@ export class Debug {
   }
 
   /**
-   * Assertion deprecated message. If the assertion is false, the deprecated message is written to the log.
+   * Assertion deprecated message. If the assertion is false, the deprecated
+   * message is written to the log.
    *
    * @param {boolean|object} assertion The assertion to check.
    * @param {string} message The message to log.
@@ -127,8 +130,9 @@ export class Debug {
   /**
    * Error in validation of GPU commands, logged no more than once.
    *
-   * @param {...string} args - The values to be written to the log. Uniqueness of the first parameter
-   * is used to determine if the message was already logged out.
+   * @param {...string} args The values to be written to the log.
+   * Uniqueness of the first parameter is used to determine if the
+   * message was already logged out.
    */
   static gpuError( ...args ) {
     if ( !Debug._loggedMessages.has( args[0])) {
