@@ -1,2 +1,2 @@
 
-export { createInputMap } from './createInputMap.js'
+export { createCommands } from './createCommands.js'

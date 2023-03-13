@@ -1,4 +1,4 @@
-import { createInputMap } from '../lib/index.js'
+import { createCommands } from '../lib/index.js'
 import { defaultProfile } from '../profiles/index.js'
 
 /**
@@ -11,7 +11,7 @@ export class InputManager {
    */
   #eventListeners = {}
 
-  #map = createInputMap( defaultProfile )
+  #commands = createCommands( defaultProfile )
 
   #profile = defaultProfile
 
@@ -24,8 +24,7 @@ export class InputManager {
     if ( profile )
       this.profile = profile
 
-    console.log( 'InputManager', this.#map )
-    this.registerCommands( this.#map )
+    this.registerCommands( this.#commands )
   }
 
   /**
@@ -136,6 +135,6 @@ export class InputManager {
 
   set profile( profile ) {
     this.#profile = profile
-    this.#map = createInputMap( profile )
+    this.#commands = createCommands( profile )
   }
 }
