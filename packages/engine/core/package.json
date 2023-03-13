@@ -10,7 +10,8 @@
     "directory": "packages/engine/core"
   },
   "dependencies": {
-    "@soulofmischief/js-utils": "=0.21.0",
+    "@soulofmischief/js-utils": "=0.22.0",
+    "@webaverse-studios/debug": "workspace:*",
     "@webaverse-studios/physics-core": "workspace:*",
     "@webaverse-studios/physics-rapier": "workspace:*",
     "murmurhash": "=2.0.1",
@@ -18,12 +19,5 @@
     "stats.js": "=0.17.0",
     "three": "=0.150.1",
     "troika-three-text": "=0.47.1"
-  },
-  "devDependencies": {
-    "eslint": "=8.34.0",
-    "prettier": "^2.8.4"
-  },
-  "engines": {
-    "node": "=19.0.0"
   }
 }

@@ -23,7 +23,7 @@
     "@types/node": "^18.15.0",
     "@types/prettier": "=2",
     "@typescript-eslint/parser": "^5.54.1",
-    "@webaverse-studios/eslint-config": "=1.1.3",
+    "@webaverse-studios/eslint-config": "=1.1.4",
     "concurrently": "=7.6.0",
     "eslint": "=8.34.0",
     "eslint-plugin-jsdoc": "=40.0.0",
@@ -43,5 +43,10 @@
     "@webaverse-studios/physics-core": "workspace:*",
     "@webaverse-studios/physics-rapier": "workspace:*",
     "@webaverse-studios/upstreet": "workspace:*"
+  },
+  "dependenciesMeta": {
+    "@soulofmischief/js-utils@0.22.0": {
+      "unplugged": true
+    }
   }
 }

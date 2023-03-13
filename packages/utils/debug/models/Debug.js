@@ -1,4 +1,4 @@
-import {Tracing} from '../models'
+import {Tracer} from '../models'
 
 
 /**
@@ -17,14 +17,14 @@ export class Debug {
   #loggedMessages = new Set()
 
   /**
-   * Deprecated warning message.
+   * Assertion error message. If the assertion is false, the error message is written to the log.
    *
-   * @param {string} message The message to log.
+   * @param {boolean|object} assertion The assertion to check.
+   * @param {...*} args The values to be written to the log.
    */
-  static deprecated( message ) {
-    if ( !Debug._loggedMessages.has( message )) {
-      Debug._loggedMessages.add( message )
-      console.warn( 'DEPRECATED: ' + message )
+  static assert( assertion, ...args ) {
+    if ( !assertion ) {
+      console.error( 'ASSERT FAILED: ', ...args )
     }
   }
 
@@ -41,24 +41,24 @@ export class Debug {
   }
 
   /**
-   * Assertion error message. If the assertion is false, the error message is written to the log.
-   *
-   * @param {boolean|object} assertion The assertion to check.
-   * @param {...*} args The values to be written to the log.
-   */
-  static assert( assertion, ...args ) {
-    if ( !assertion ) {
-      console.error( 'ASSERT FAILED: ', ...args )
-    }
-  }
-
-  /**
    * Executes a function in debug mode only.
    *
    * @param {Function} func Function to call.
    */
   static call( func ) {
     func()
+  }
+
+  /**
+   * Deprecated warning message.
+   *
+   * @param {string} message The message to log.
+   */
+  static deprecated( message ) {
+    if ( !Debug._loggedMessages.has( message )) {
+      Debug._loggedMessages.add( message )
+      console.warn( 'DEPRECATED: ' + message )
+    }
   }
 
   /**
@@ -141,13 +141,13 @@ export class Debug {
    * Trace message, which is logged to the console if the tracing for the
    * channel is enabled
    *
-   * @param {import('./tracing').TracingChannel} channel The trace channel
+   * @param {import('./Tracer.js').TracingChannel} channel The trace channel
    * @param {...*} args The values to be written to the log.
    */
   static trace( channel, ...args ) {
-    if ( Tracing.get( channel )) {
+    if ( Tracer.get( channel )) {
       console.groupCollapsed( `${channel.padEnd( 20, ' ' )}|`, ...args )
-      if ( Tracing.stack ) {
+      if ( Tracer.stack ) {
         console.trace()
       }
       console.groupEnd()

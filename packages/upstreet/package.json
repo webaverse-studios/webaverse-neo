@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@pixiv/three-vrm": "=1.0.9",
-    "@soulofmischief/js-utils": "=0.21.0",
+    "@soulofmischief/js-utils": "=0.22.0",
     "@webaverse-studios/backend-agent": "workspace:*",
     "@webaverse-studios/config": "workspace:*",
     "@webaverse-studios/engine-nyx": "workspace:*",

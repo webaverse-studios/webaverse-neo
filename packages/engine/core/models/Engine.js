@@ -1,7 +1,7 @@
 import { PhysicsAdapter } from "@webaverse-studios/physics-rapier";
 import Stats from "stats.js";
 import { disableChromePerformanceBloat } from "../lib";
-import { Debug } from "./Debug.js";
+import { Debug } from "@webaverse-studios/debug";
 import { WebGL } from "./WebGL.js";
 
 

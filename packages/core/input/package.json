@@ -10,7 +10,8 @@
     "directory": "packages/core/input"
   },
   "dependencies": {
-    "@soulofmischief/js-utils": "=0.21.0",
+    "@soulofmischief/js-utils": "=0.22.0",
+    "@webaverse-studios/debug": "workspace:*",
     "lodash.clonedeep": "^4.5.0",
     "lodash.pull": "^4.1.0",
     "murmurhash": "=2.0.1",

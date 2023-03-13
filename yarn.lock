@@ -1097,15 +1097,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@soulofmischief/js-utils@npm:=0.21.0":
-  version: 0.21.0
-  resolution: "@soulofmischief/js-utils@npm:0.21.0"
+"@soulofmischief/js-utils@npm:=0.22.0":
+  version: 0.22.0
+  resolution: "@soulofmischief/js-utils@npm:0.22.0"
   dependencies:
     "@soulofmischief/array.js": ^0.22.0
     "@soulofmischief/async.js": ^5.0.0
     "@soulofmischief/strings": ^0.8.0
     lodash-es: ^4.17.21
-  checksum: 939f8499c52ad8fa46ff8d90b9180f8eadd5754b28a660930829641005362ecb19f169117430ff17e9f96c8b49c8b02fbf30a0a10771f07bd109c97ff42171be
+  checksum: fff7e00abd94391810011adad6c1db3e470180b0b15c78b61a4e052b830b690883795e1c61a10e8c13a457286bbbdcb0c284cf2d48788c531f75e6f876af67d5
   languageName: node
   linkType: hard
 
@@ -1812,17 +1812,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@webaverse-studios/debug@workspace:*, @webaverse-studios/debug@workspace:packages/utils/debug":
+  version: 0.0.0-use.local
+  resolution: "@webaverse-studios/debug@workspace:packages/utils/debug"
+  languageName: unknown
+  linkType: soft
+
 "@webaverse-studios/engine-core@workspace:*, @webaverse-studios/engine-core@workspace:packages/engine/core":
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/engine-core@workspace:packages/engine/core"
   dependencies:
-    "@soulofmischief/js-utils": =0.21.0
+    "@soulofmischief/js-utils": =0.22.0
+    "@webaverse-studios/debug": "workspace:*"
     "@webaverse-studios/physics-core": "workspace:*"
     "@webaverse-studios/physics-rapier": "workspace:*"
-    eslint: =8.34.0
     murmurhash: =2.0.1
     nanoid: ^4.0.1
-    prettier: ^2.8.4
     stats.js: =0.17.0
     three: =0.150.1
     troika-three-text: =0.47.1
@@ -1834,7 +1839,7 @@ __metadata:
   resolution: "@webaverse-studios/engine-nyx@workspace:packages/engine/nyx"
   dependencies:
     "@pixiv/three-vrm": ^1.0.9
-    "@soulofmischief/js-utils": =0.21.0
+    "@soulofmischief/js-utils": =0.22.0
     "@webaverse-studios/engine-core": "workspace:*"
     "@webaverse-studios/physics-core": "workspace:*"
     bitecs: =0.3.38
@@ -1846,14 +1851,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webaverse-studios/eslint-config@npm:=1.1.3":
-  version: 1.1.3
-  resolution: "@webaverse-studios/eslint-config@npm:1.1.3::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40webaverse-studios%2Feslint-config%2F1.1.3%2Fe04543c09a74534e3d5f86ace937b60819a0cd5a"
+"@webaverse-studios/eslint-config@npm:=1.1.4":
+  version: 1.1.4
+  resolution: "@webaverse-studios/eslint-config@npm:1.1.4::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40webaverse-studios%2Feslint-config%2F1.1.4%2Fe8c34702b25fdd66f283425e66a8f9eb59302653"
   peerDependencies:
     eslint: ">= 8"
     eslint-plugin-jsdoc: "*"
     eslint-plugin-promise: "*"
-  checksum: d0a066771badb687cab42d6ecaeddd5a536d55a001a7fae76cf1d512604225907c3b926262508c303945a7247313dd78fa543e39e4836835a973b956ae018973
+  checksum: 3b7846b58ccff21c332e2ea84ef7dd0c50359b35575808a974eff0ef03df7209b99d8bc08c3dd00e56e4915604488b68b42d4c376013ee3a3db4704f94a42e8c
   languageName: node
   linkType: hard
 
@@ -1861,9 +1866,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/input@workspace:packages/core/input"
   dependencies:
-    "@soulofmischief/js-utils": =0.21.0
+    "@soulofmischief/js-utils": =0.22.0
     "@types/stats": ^0.16.30
     "@types/three": ^0.149.0
+    "@webaverse-studios/debug": "workspace:*"
     eslint: =8.34.0
     lodash.clonedeep: ^4.5.0
     lodash.pull: ^4.1.0
@@ -1907,7 +1913,7 @@ __metadata:
     "@gltf-transform/functions": =3.0.4
     "@pixiv/three-vrm": =1.0.9
     "@rollup/plugin-strip": =3.0.2
-    "@soulofmischief/js-utils": =0.21.0
+    "@soulofmischief/js-utils": =0.22.0
     "@types/sharp": ^0
     "@webaverse-studios/backend-agent": "workspace:*"
     "@webaverse-studios/config": "workspace:*"
@@ -1934,13 +1940,16 @@ __metadata:
     "@types/node": ^18.15.0
     "@types/prettier": =2
     "@typescript-eslint/parser": ^5.54.1
-    "@webaverse-studios/eslint-config": =1.1.3
+    "@webaverse-studios/eslint-config": =1.1.4
     concurrently: =7.6.0
     eslint: =8.34.0
     eslint-plugin-jsdoc: =40.0.0
     eslint-plugin-promise: =6.1.1
     process: =0.11.10
     typescript: =4.9.5
+  dependenciesMeta:
+    "@soulofmischief/js-utils@0.22.0":
+      unplugged: true
   languageName: unknown
   linkType: soft
 

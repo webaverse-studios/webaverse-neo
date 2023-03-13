@@ -9,7 +9,7 @@
  * Note that the trace logging only takes place in the debug build of the engine and is stripped
  * out in other builds.
  */
-export class Tracing {
+export class Tracer {
   /**
    * Set storing the names of enabled trace channels.
    *
@@ -49,9 +49,9 @@ export class Tracing {
   static set( channel, enabled = true ) {
     // #if _DEBUG
     if ( enabled ) {
-      Tracing._traceChannels.add( channel )
+      Tracer._traceChannels.add( channel )
     } else {
-      Tracing._traceChannels.delete( channel )
+      Tracer._traceChannels.delete( channel )
     }
     // #endif
   }
@@ -63,6 +63,6 @@ export class Tracing {
    * @returns {boolean} - True if the trace channel is enabled.
    */
   static get( channel ) {
-    return Tracing._traceChannels.has( channel )
+    return Tracer._traceChannels.has( channel )
   }
 }
