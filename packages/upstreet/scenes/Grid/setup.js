@@ -84,18 +84,18 @@ export function createControls(
   renderer,
 ) {
   const controls = new OrbitControls( camera, renderer.domElement )
-  controls.listenToKeyEvents( window ) // optional
+  // controls.listenToKeyEvents( window ) // optional
 
   controls.rotateSpeed = 1.0
   controls.zoomSpeed = 1.2
   controls.panSpeed = 0.8
 
-  controls.keys = {
-    LEFT: 'KeyA', //left arrow
-    UP: 'KeyW', // up arrow
-    RIGHT: 'KeyD', // right arrow
-    BOTTOM: 'KeyS', // down arrow
-  }
+  // controls.keys = {
+  //   LEFT: 'KeyA', //left arrow
+  //   UP: 'KeyW', // up arrow
+  //   RIGHT: 'KeyD', // right arrow
+  //   BOTTOM: 'KeyS', // down arrow
+  // }
 
   return controls
 }
