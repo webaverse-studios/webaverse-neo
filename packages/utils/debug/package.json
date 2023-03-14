@@ -13,6 +13,6 @@
     "node": "=19.0.0"
   },
   "dependencies": {
-    "@webaverse/types": "file:../types"
+    "@webaverse-studios/types": "workspace:*"
   }
 }

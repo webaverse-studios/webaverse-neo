@@ -1816,7 +1816,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/debug@workspace:packages/utils/debug"
   dependencies:
-    "@webaverse/types": "file:../types"
+    "@webaverse-studios/types": "workspace:*"
   languageName: unknown
   linkType: soft
 
@@ -1962,13 +1962,6 @@ __metadata:
       unplugged: true
   languageName: unknown
   linkType: soft
-
-"@webaverse/types@file:../types::locator=%40webaverse-studios%2Fdebug%40workspace%3Apackages%2Futils%2Fdebug":
-  version: 0.1.0
-  resolution: "@webaverse/types@file:../types#../types::hash=f03e75&locator=%40webaverse-studios%2Fdebug%40workspace%3Apackages%2Futils%2Fdebug"
-  checksum: 8a5e85175a7ffc0d465bc520b064ff4bd23549ef96534dfa8da9e31c4c0550f73ed8c1384ec403b2a30fdef05f963c942a30479f5f426fb50c7da9a8bed89616
-  languageName: node
-  linkType: hard
 
 "abbrev@npm:1, abbrev@npm:^1.0.0":
   version: 1.1.1
