@@ -46,10 +46,5 @@
     "@webaverse-studios/physics-rapier": "workspace:*",
     "@webaverse-studios/types": "workspace:*",
     "@webaverse-studios/upstreet": "workspace:*"
-  },
-  "dependenciesMeta": {
-    "@soulofmischief/js-utils@0.22.0": {
-      "unplugged": true
-    }
   }
 }
