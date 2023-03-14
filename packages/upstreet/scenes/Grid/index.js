@@ -1,5 +1,5 @@
+import '@webaverse-studios/types'
 import { LineSegments } from 'three'
-// import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 import { VRM } from '@pixiv/three-vrm'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -37,6 +37,7 @@ export class Grid extends Scene {
   #inputManager = new InputManager()
 
   /**
+   * Grid Scene Constructor
    *
    * @param {object} gridOptions Grid Scene Options
    * @param {HTMLCanvasElement} gridOptions.canvas Canvas to render the scene to

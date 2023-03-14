@@ -11,5 +11,11 @@
   },
   "engines": {
     "node": "=19.0.0"
+  },
+  "dependencies": {
+    "three": "=0.150.1"
+  },
+  "devDependencies": {
+    "@types/three": "=0.149.0"
   }
 }

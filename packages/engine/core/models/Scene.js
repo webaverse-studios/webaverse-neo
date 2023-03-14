@@ -11,6 +11,7 @@ import {
 } from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { PhysicsAdapter } from '@webaverse-studios/physics-core'
+import {InputManager} from '@webaverse-studios/input'
 
 /**
  * Abstract Scene Class
@@ -89,6 +90,13 @@ export class Scene {
   _debugLines
 
   /**
+   * Input Manager
+   *
+   * @type {InputManager}
+   */
+  _inputManager
+
+  /**
    * Create a Scene
    *
    * @param {object} options The options for the scene.
@@ -122,10 +130,11 @@ export class Scene {
    */
   #configureScene = ( canvas ) => {
     this._canvas = canvas
-    this._scene = createTHREEScene()
     this._camera = createCamera()
+    this._scene = createTHREEScene()
     this._gltfLoader = new GLTFLoader()
     this._debugLines = new LineSegments()
+    this._inputManager = createInputManager()
     this._renderer = createRenderer( canvas, 1 )
   }
 
@@ -196,4 +205,13 @@ const createRenderer = ( canvas, scale = 1 ) => {
   renderer.setSize( window.innerWidth, window.innerHeight )
   renderer.setSize( innerWidth * scale, innerHeight * scale, false )
   return renderer
+}
+
+/**
+ * Creates the scene input manager
+ *
+ * @returns {Light[]} The configured renderer.
+ */
+const createInputManager = () => {
+  return new InputManager() // default profile
 }

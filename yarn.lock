@@ -1645,7 +1645,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/sharp@npm:^0":
+"@types/sharp@npm:=0.31.1":
   version: 0.31.1
   resolution: "@types/sharp@npm:0.31.1"
   dependencies:
@@ -1671,7 +1671,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/three@npm:^0.149.0":
+"@types/three@npm:=0.149.0, @types/three@npm:^0.149.0":
   version: 0.149.0
   resolution: "@types/three@npm:0.149.0"
   dependencies:
@@ -1875,6 +1875,7 @@ __metadata:
   dependencies:
     "@soulofmischief/js-utils": =0.22.0
     "@webaverse-studios/debug": "workspace:*"
+    "@webaverse-studios/input": "workspace:*"
     "@webaverse-studios/physics-core": "workspace:*"
     "@webaverse-studios/physics-rapier": "workspace:*"
     "@webaverse-studios/types": "workspace:*"
@@ -1959,6 +1960,9 @@ __metadata:
 "@webaverse-studios/types@workspace:*, @webaverse-studios/types@workspace:packages/utils/types":
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/types@workspace:packages/utils/types"
+  dependencies:
+    "@types/three": =0.149.0
+    three: =0.150.1
   languageName: unknown
   linkType: soft
 
@@ -1972,12 +1976,14 @@ __metadata:
     "@pixiv/three-vrm": =1.0.9
     "@rollup/plugin-strip": =3.0.2
     "@soulofmischief/js-utils": =0.22.0
-    "@types/sharp": ^0
+    "@types/sharp": =0.31.1
+    "@types/three": =0.149.0
     "@webaverse-studios/backend-agent": "workspace:*"
     "@webaverse-studios/config": "workspace:*"
     "@webaverse-studios/engine-nyx": "workspace:*"
     "@webaverse-studios/input": "workspace:*"
     "@webaverse-studios/physics-rapier": "workspace:*"
+    "@webaverse-studios/types": "workspace:*"
     gun: ^0.2020.1239
     mithril: =3.0.0-next.12
     sass: =1.59.2
