@@ -11,9 +11,9 @@ export class InputManager {
    */
   #eventListeners = {}
 
-  #commands = createCommands( defaultProfile )
+  #commands = null
 
-  #profile = defaultProfile
+  #profile = null
 
   /**
    * @param {Command[]} commands
@@ -21,10 +21,7 @@ export class InputManager {
   constructor({
     profile,
   } = {}) {
-    if ( profile )
-      this.profile = profile
-
-    this.registerCommands( this.#commands )
+    this.profile = profile || defaultProfile
   }
 
   /**
@@ -136,5 +133,7 @@ export class InputManager {
   set profile( profile ) {
     this.#profile = profile
     this.#commands = createCommands( profile )
+    this.#bindings.clear()
+    this.registerCommands( this.#commands )
   }
 }
