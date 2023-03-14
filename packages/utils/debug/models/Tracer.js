@@ -1,4 +1,4 @@
-import { TracingChannel } from '@webaverse/types'
+import '@webaverse-studios/types'
 
 /**
  * Log tracing functionality, allowing for tracing of the internal
