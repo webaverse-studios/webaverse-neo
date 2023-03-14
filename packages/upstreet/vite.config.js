@@ -14,7 +14,6 @@ import sharp from 'sharp'
 import gltf from 'vite-plugin-gltf'
 import wasm from 'vite-plugin-wasm'
 
-
 const
   { upstreetConfig } = config,
   { port } = upstreetConfig,
@@ -39,12 +38,25 @@ const
     'DebugGraphics.popGpuMarker',
   ]
 
-
 /** @type {import('vite').UserConfig} */
 export default {
+  assetsInclude: ['**/*.glb', '**/*.vrm', '**/*.z', '**/*.wasm'],
+
+  build: {
+    commonjsOptions: {
+      include: [/node_modules/, /@webaverse-studios\/config/],
+      // transformMixedEsModules: true,
+    },
+  },
+
   esbuild: {
     drop: ['console', 'debugger'],
   },
+
+  optimizeDeps: {
+    include: ['@webaverse-studios/config'],
+  },
+
   plugins: [
     wasm(),
     // topLevelAwait(),
@@ -76,12 +88,11 @@ export default {
   server: {
     port,
     fs: {
-      strict: true
-    }
-  },
-  worker: {
-    format: 'es'
+      strict: true,
+    },
   },
 
-  assetsInclude: ['**/*.glb', '**/*.vrm', '**/*.z', "**/*.wasm"],
+  worker: {
+    format: 'es',
+  },
 }
