@@ -1,4 +1,3 @@
-import '@webaverse-studios/types'
 import { LineSegments } from 'three'
 
 import { VRM } from '@pixiv/three-vrm'
@@ -18,6 +17,10 @@ import {
   createRenderer,
   createScene,
 } from './setup'
+
+import '@webaverse-studios/types'
+
+/** @typedef {import('@webaverse-studios/types').GLTF} GLTF */
 
 /**
  * Grid Scene to display a grid and avatar.
