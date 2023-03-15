@@ -13,12 +13,32 @@ export class KinematicController {
    */
   #grounded
 
-  /** @type {Vector3} */
+  /**
+   * Velocity of the controller
+   *
+   * @type {Vector3}
+   */
   #velocity
 
+  /**
+   * Position of the controller
+   *
+   * @type {Vector3}
+   */
+  _position
+
+  /**
+   * Rotation of the controller
+   *
+   * @type {Vector3}
+   */
+  _rotation
+
   constructor() {
-    // this.grounded = true
+    this.#grounded = false
     this.#velocity = new Vector3()
+    this._position = new Vector3()
+    this._rotation = new Vector3()
   }
 
   /**
@@ -37,6 +57,24 @@ export class KinematicController {
    */
   get grounded() {
     return this.#grounded
+  }
+
+  /**
+   * Position of the controller
+   *
+   * @returns {Vector3} position of the controller
+   */
+  get position() {
+    return this._position
+  }
+
+  /**
+   * Rotation of the controller
+   *
+   * @returns {Vector3} position of the controller
+   */
+  get rotation() {
+    return this._rotation
   }
 
   /**

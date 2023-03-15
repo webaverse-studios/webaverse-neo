@@ -124,10 +124,13 @@ export function createDebugLines() {
 /**
  * Create input manager for test scene
  *
+ * @param ctx
  * @returns {InputManager} - The configured input manager.
  */
-export function createInputManager() {
-  const profile = [[c.MOVE_FORWARD, db[c.MOVE_FORWARD], moveController]]
+export function createInputManager( ctx ) {
+  const profile = [
+    [c.MOVE_FORWARD, db[c.MOVE_FORWARD], moveController.bind( ctx )],
+  ]
   return new InputManager( profile )
 }
 

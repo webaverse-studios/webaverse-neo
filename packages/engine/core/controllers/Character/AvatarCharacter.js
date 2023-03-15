@@ -1,6 +1,5 @@
 import { VRM } from '@pixiv/three-vrm'
 import { nanoid } from 'nanoid'
-import { Vector3 } from 'three'
 
 import { PhysicsAdapter } from '@webaverse-studios/physics-core'
 
@@ -49,18 +48,22 @@ export class AvatarCharacter extends PhysicsCharacter {
   }
 
   /**
-   * Update AvatarCharacter
-   *
-   * @override
-   * @param {Vector3} direction The direction to move the character.
-   */
-  update( direction ) {
-    // Update the physics character controller
-    super.update( direction )
-  }
-
-  /**
    * Destroy the character controller.
    */
   destroy() {}
+
+  /**
+   * Update AvatarCharacter
+   *
+   * @override
+   */
+  update() {
+    // Update the physics character controller
+    super.update()
+    this.avatar.scene.position.set(
+      this.position.x,
+      this.position.y,
+      this.position.z
+    )
+  }
 }

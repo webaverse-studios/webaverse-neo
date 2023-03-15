@@ -119,9 +119,9 @@ export class KinematicController extends _KinematicController {
     newPos.x += movement.x
     newPos.y += movement.y
     newPos.z += movement.z
-    this.character.setNextKinematicTranslation( newPos )
 
-    // eslint-disable-next-line no-console
-    console.log( this.characterController.computedMovement())
+    this._position = newPos
+    this._rotation = this.character.rotation()
+    this.character.setNextKinematicTranslation( newPos )
   }
 }

@@ -54,24 +54,26 @@ export class Grid extends Scene {
    * Configure scene
    */
   async #configureScene() {
+    const ctx = this
+
     const [scene, camera, lights, lines, inputManager, renderer] =
       await Promise.all([
         createScene(),
         createCamera(),
         createLights(),
         createDebugLines(),
-        createInputManager(),
+        createInputManager( ctx ),
         createRenderer( this._canvas, 1 ),
       ])
 
-    this._lines = lines
-    this._scene = scene
-    this._camera = camera
-    this._lights = lights
-    this._renderer = renderer
-    this._inputManager = inputManager
-    this._textureLoader = new TextureLoader()
-    this._controls = createControls( camera, renderer )
+    ctx._lines = lines
+    ctx._scene = scene
+    ctx._camera = camera
+    ctx._lights = lights
+    ctx._renderer = renderer
+    ctx._inputManager = inputManager
+    ctx._textureLoader = new TextureLoader()
+    ctx._controls = createControls( camera, renderer )
   }
 
   /**
@@ -120,6 +122,11 @@ export class Grid extends Scene {
     this._lights.forEach(( light ) => this._scene.add( light ))
   }
 
+  #render() {
+    this._physicsAdapter.displayDebugInformation( this._lines )
+    this._renderer.render( this._scene, this._camera )
+  }
+
   async init() {
     await Promise.all([this.#configureScene(), this.#initGeometry()])
     await Promise.all([
@@ -153,16 +160,8 @@ export class Grid extends Scene {
     this.update()
   }
 
-  #render() {
-    this._physicsAdapter.displayDebugInformation( this._lines )
-    this._renderer.render( this._scene, this._camera )
-  }
-
-  // speed = 0.1;
-  // movementDirection = new Vector3(0.0, -0.1, 0.0);
-
   update() {
-    // this._character.update(this.movementDirection);
+    this._character.update()
     this._controls.update()
     this.#render()
   }
