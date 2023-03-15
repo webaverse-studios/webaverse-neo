@@ -1,6 +1,8 @@
+import { Debug } from '@webaverse-studios/debug'
+
 /**
  * Move right.
  */
 export function moveRight() {
-  console.log( 'moveRight' )
+  Debug.log( 'moveRight' )
 }

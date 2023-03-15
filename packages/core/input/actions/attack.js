@@ -1,6 +1,8 @@
+import { Debug } from '@webaverse-studios/debug'
+
 /**
  * Attack another entity.
  */
 export function attack() {
-  console.log( 'attack' )
+  Debug.log( 'attack' )
 }

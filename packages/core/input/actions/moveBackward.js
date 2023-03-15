@@ -1,6 +1,8 @@
+import { Debug } from '@webaverse-studios/debug'
+
 /**
  * Move backward..
  */
 export function moveBackward() {
-  console.log( 'moveBackward' )
+  Debug.log( 'moveBackward' )
 }

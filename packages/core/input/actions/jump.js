@@ -1,6 +1,8 @@
+import { Debug } from '@webaverse-studios/debug'
+
 /**
  * Jump.
  */
 export function jump() {
-  console.log( 'jump' )
+  Debug.log( 'jump' )
 }
