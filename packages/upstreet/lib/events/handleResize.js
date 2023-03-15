@@ -1,5 +1,6 @@
-import m from 'mithril'
 import { throttle } from '@soulofmischief/js-utils'
+import m from 'mithril'
+
 import { setViewHeight } from './setViewHeight'
 
 

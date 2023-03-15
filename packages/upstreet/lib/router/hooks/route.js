@@ -1,16 +1,17 @@
 //noinspection ES6RedundantAwait
 
 import m from 'mithril'
+
+import {getPageComponent} from './getPageComponent.js'
 import {Default} from '../../../view/layouts/Default.js'
-import {getPageComponent} from "./getPageComponent.js";
 
 
 /**
  * Route to and render a component module.
  *
- * @param {string|Array} page - Module name or array of module names.
- * @param {object} opts - Route handling options.
- * @param {object} opts.layout - Layout component
+ * @param {string|Array} page Module name or array of module names.
+ * @param {object} opts Route handling options.
+ * @param {object} opts.layout Layout component
  * @returns {object} - Mithril route object.
  */
 export const route = (

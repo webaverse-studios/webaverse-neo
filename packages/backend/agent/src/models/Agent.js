@@ -5,8 +5,8 @@
 
 import * as THREE from 'three'
 
-import {addMemory, getMemoryIDs, remember} from '#Lib/memory/index.js'
 import {addAgentToGunDB} from '#Lib/gun/agents/index.js'
+import {addMemory, getMemoryIDs, remember} from '#Lib/memory/index.js'
 
 /**
  * @class Agent
@@ -14,9 +14,9 @@ import {addAgentToGunDB} from '#Lib/gun/agents/index.js'
  */
 export class Agent {
   /**
-   * @brief Constructor for the Agent class.
    * @param engine.engine
    * @param engine The engine instance for the game server.
+   * @brief Constructor for the Agent class.
    */
   constructor({engine}) {
     console.log( 'ENGINE:', engine )

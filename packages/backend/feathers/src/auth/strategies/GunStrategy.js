@@ -2,11 +2,10 @@
 import {
   AuthenticationBaseStrategy,
 } from '@feathersjs/authentication'
-
 import { createDebug } from '@feathersjs/commons'
 
 
-const debug = createDebug('@feathersjs/authentication/jwt')
+const debug = createDebug( '@feathersjs/authentication/jwt' )
 
 
 export class GunStrategy extends AuthenticationBaseStrategy {

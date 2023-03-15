@@ -1,4 +1,4 @@
-import {agents} from "../../gun.js";
+import {agents} from '../../gun.js'
 
 /**
  * Add an agent to gun.

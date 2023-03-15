@@ -1,4 +1,5 @@
 import Gun from 'gun'
+
 import 'gun/lib/promise.js'
 import config from '@webaverse-studios/config'
 

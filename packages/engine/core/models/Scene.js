@@ -1,5 +1,4 @@
 import {
-  TextureLoader,
   AmbientLight,
   Camera,
   Color,
@@ -8,14 +7,18 @@ import {
   LineSegments,
   PerspectiveCamera,
   Scene as THREEScene,
+  TextureLoader,
   WebGLRenderer,
 } from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import { PhysicsAdapter } from '@webaverse-studios/physics-core'
+
 import { InputManager } from '@webaverse-studios/input'
+import { PhysicsAdapter } from '@webaverse-studios/physics-core'
 
 /**
  * Abstract Scene Class
+ *
+ * @class
  */
 export class Scene {
   /**

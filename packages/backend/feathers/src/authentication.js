@@ -3,6 +3,7 @@ import {
   AuthenticationService,
   // JWTStrategy,
 } from '@feathersjs/authentication'
+
 // import { LocalStrategy } from '@feathersjs/authentication-local'
 import {GunStrategy} from './auth/strategies/GunStrategy.js'
 

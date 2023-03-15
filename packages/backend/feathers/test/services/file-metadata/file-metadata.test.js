@@ -1,5 +1,6 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.test.html
 import assert from 'assert'
+
 import { app } from '../../../src/app.js'
 
 // describe('file-metadata service', () => {
@@ -20,18 +21,21 @@ import { app } from '../../../src/app.js'
 //   })
 // })
 
+/**
+ *
+ */
 async function main(){
-  const service = app.service('file-metadata')
+  const service = app.service( 'file-metadata' )
 
   // test create function
   const data = {
-    id: "12345a67",
+    id: '12345a67',
     metadata:
-      {"type":"image/jpeg","size":25980},
+      {'type':'image/jpeg','size':25980},
     extra:
-      {agentID: "123456", timestamp: 123456789}
+      {agentID: '123456', timestamp: 123456789}
   }
-  console.log("DONE", await service.create(data))
+  console.log( 'DONE', await service.create( data ))
 }
 
 await main()

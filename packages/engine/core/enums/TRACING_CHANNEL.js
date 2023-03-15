@@ -1,8 +1,11 @@
-import types from '@webaverse-studios/types'
+
+// eslint-disable-next-line max-len
+/** @typedef {import('@webaverse-studios/types').TracingChannel} TracingChannel */
+
 
 /**
  * @readonly
- * @enum {types.TracingChannel}
+ * @enum {TracingChannel}
  */
 export const TRACING_CHANNEL = {
   /**

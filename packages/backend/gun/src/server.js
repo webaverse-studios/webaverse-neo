@@ -1,5 +1,6 @@
-import config from '@webaverse-studios/config'
 import http from 'http'
+
+import config from '@webaverse-studios/config'
 
 
 const { port } = config.gunConfig

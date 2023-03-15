@@ -38,11 +38,11 @@ export class EventHandler {
    * Registers a new event handler.
    *
    * @param {string} name Name of the event to bind the callback to.
-   * @param {HandleEventCallback} callback - Function that is called when event
+   * @param {HandleEventCallback} callback Function that is called when event
    * is fired. Note the callback is limited to 8 arguments.
-   * @param {object} [scope] - Object to use as 'this' when the event is fired,
+   * @param {object} [scope] Object to use as 'this' when the event is fired,
    * defaults to current this.
-   * @param {boolean} [once=false] - If true, the callback will be unbound after
+   * @param {boolean} [once=false] If true, the callback will be unbound after
    * being fired once.
    * @private
    */
@@ -70,7 +70,7 @@ export class EventHandler {
    * @param {string} name Name of the event to bind the callback to.
    * @param {HandleEventCallback} callback Function that is called when event is
    * fired. Note the callback is limited to 8 arguments.
-   * @param {object} [scope] - Object to use as 'this' when the event is fired,
+   * @param {object} [scope] Object to use as 'this' when the event is fired,
    * defaults to current this.
    * @returns {EventHandler} Self for chaining.
    * @example
@@ -86,12 +86,13 @@ export class EventHandler {
 
   /**
    * Detach an event handler from an event. If callback is not provided then all
-   * callbacks are unbound from the event, if scope is not provided then all events
-   * with the callback will be unbound.
+   * callbacks are unbound from the event, if scope is not provided then all
+   * events with the callback will be unbound.
    *
    * @param {string} [name] Name of the event to unbind.
    * @param {HandleEventCallback} [callback] Function to be unbound.
-   * @param {object} [scope] Scope that was used as the this when the event is fired.
+   * @param {object} [scope] Scope that was used as the this when the
+   * event is fired.
    * @returns {EventHandler} Self for chaining.
    * @example
    * var handler = function () {
@@ -145,7 +146,8 @@ export class EventHandler {
   }
 
   /**
-   * Fire an event, all additional arguments are passed on to the event listener.
+   * Fire an event, all additional arguments are passed on to the
+   * event listener.
    *
    * @param {string} name Name of event to fire.
    * @param {*} [arg1] First argument that is passed to the event handler.
@@ -185,7 +187,17 @@ export class EventHandler {
       i++
     ) {
       const evt = ( callbacks || this.#callbackActive[name])[i]
-      evt.callback.call( evt.scope, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8 )
+      evt.callback.call(
+        evt.scope,
+        arg1,
+        arg2,
+        arg3,
+        arg4,
+        arg5,
+        arg6,
+        arg7,
+        arg8
+      )
 
       if ( evt.once ) {
         // check that callback still exists because user may have unsubscribed
@@ -208,8 +220,8 @@ export class EventHandler {
   }
 
   /**
-   * Attach an event handler to an event. This handler will be removed after being
-   * fired once.
+   * Attach an event handler to an event.
+   * This handler will be removed after being fired once.
    *
    * @param {string} name Name of the event to bind the callback to.
    * @param {HandleEventCallback} callback Function that is called when event
@@ -241,6 +253,8 @@ export class EventHandler {
    * obj.hasEvent('hello'); // returns false
    */
   hasEvent( name ) {
-    return ( this.#callbacks[name] && this.#callbacks[name].length !== 0 ) || false
+    return (
+      ( this.#callbacks[name] && this.#callbacks[name].length !== 0 ) || false
+    )
   }
 }

@@ -1,4 +1,5 @@
 import m from 'mithril'
+
 import { route as _ } from './hooks/route'
 import { paths } from './paths.js'
 

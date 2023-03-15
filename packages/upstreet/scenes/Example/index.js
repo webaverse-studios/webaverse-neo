@@ -8,22 +8,30 @@ import {
   Scene as THREEScene,
   WebGLRenderer,
 } from 'three'
-import { PhysicsAdapter } from '@webaverse-studios/physics-rapier'
-import { Scene } from '@webaverse-studios/engine-nyx'
-import { loadGeometry } from './geometry'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+
+import { Scene } from '@webaverse-studios/engine-nyx'
+import { PhysicsAdapter } from '@webaverse-studios/physics-rapier'
+
+import { loadGeometry } from './geometry'
 
 export class Example extends Scene {
   /** @type {Object3D} */
-  #cube
+  _cube
+
+  /** @type {PhysicsAdapter} */
+  _physicsAdapter
 
   /**
+   * Create Example Scene
    *
-   * @param {HTMLCanvasElement} canvas - Canvas to render the scene to
-   * @param {PhysicsAdapter} physicsAdapter - Physics Adapter to use
+   * @param {object} exampleOptions Example Scene Options
+   * @param {HTMLCanvasElement} exampleOptions.canvas Rendering Canvas
+   * @param {PhysicsAdapter} exampleOptions.physicsAdapter Physics Adapter
    */
-  constructor({ canvas, physicsAdapter }) {
-    super({ canvas, physicsAdapter })
+  constructor( exampleOptions ) {
+    super( exampleOptions )
+    this._physicsAdapter = exampleOptions.physicsAdapter
   }
 
   /**
@@ -40,8 +48,8 @@ export class Example extends Scene {
    * Load GLTF Model and return Object3D
    */
   async #initCube() {
-    this.#cube = await createCube( this._gltfLoader )
-    this._scene.add( this.#cube )
+    this._cube = await createCube( this._gltfLoader )
+    this._scene.add( this._cube )
   }
 
   /**
@@ -64,13 +72,15 @@ export class Example extends Scene {
   }
 
   update() {
-    this.#cube.rotation.x += 0.004
-    this.#cube.rotation.y += 0.004
+    this._cube.rotation.x += 0.004
+    this._cube.rotation.y += 0.004
     this._renderer.render( this._scene, this._camera )
   }
 }
 
 /**
+ * Create Camera
+ *
  * @returns {PerspectiveCamera} - The configured camera.
  */
 function createCamera() {
@@ -85,6 +95,8 @@ function createCamera() {
 }
 
 /**
+ * Create Lights
+ *
  * @returns {PointLight[]} - The configured lights.
  */
 function createLights() {
@@ -104,8 +116,8 @@ function createLights() {
 /**
  * Setup WebGL Renderer
  *
- * @param {HTMLCanvasElement} canvas - Canvas to render the scene to
- * @param {number} scale - Scale the renderer by this amount.
+ * @param {HTMLCanvasElement} canvas Canvas to render the scene to
+ * @param {number} scale Scale the renderer by this amount.
  * @returns {WebGLRenderer} - The configured renderer.
  */
 function createRenderer( canvas, scale = 1 ) {
@@ -116,6 +128,8 @@ function createRenderer( canvas, scale = 1 ) {
 }
 
 /**
+ * Create THREE Scene
+ *
  * @returns {Scene} - The configured scene.
  */
 function createTHREEScene() {
@@ -129,8 +143,9 @@ function createTHREEScene() {
 }
 
 /**
+ * Load GLTF Model and return Object3D
  *
- * @param {GLTFLoader} loader - The GLTFLoader to use.
+ * @param {GLTFLoader} loader The GLTFLoader to use.
  * @returns {Promise<Object3D>} - The loaded cube.
  */
 async function createCube( loader ) {

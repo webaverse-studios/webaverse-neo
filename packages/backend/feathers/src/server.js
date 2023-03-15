@@ -1,5 +1,6 @@
-import { app } from '#App'
 import { logger } from './logger.js'
+
+import { app } from '#App'
 
 const port = app.get( 'port' )
 const host = app.get( 'host' )

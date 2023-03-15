@@ -53,9 +53,11 @@ export class PhysicsAdapter {
    * @param {Vector3} colliderParams.translation Translation
    * @param {Vector3} colliderParams.rotation Rotation
    * @param {object} colliderParams.dimensions Collider dimensions
+   * @returns {object} Generated collider
    */
   async createCollider( colliderParams ) {
     inlineParameters( colliderParams )
+    console.warn( '[PhysicsAdapter]: `createCollider` not implemented' )
   }
 
   /**

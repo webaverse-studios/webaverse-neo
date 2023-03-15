@@ -1,4 +1,5 @@
 import m from 'mithril'
+
 import { paths } from './paths'
 import { routes } from './routes'
 

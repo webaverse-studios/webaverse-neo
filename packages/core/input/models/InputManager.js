@@ -1,7 +1,8 @@
+import { Debug } from '@webaverse-studios/debug'
+
+import { Command } from './Command'
 import { createCommands } from '../lib/index'
 import { defaultProfile } from '../profiles/index'
-import { Command } from './Command'
-import { Debug } from '@webaverse-studios/debug'
 
 /** @typedef {import('../commands').Commands} Commands */
 /** @typedef {import('@webaverse-studios/types').Profile} Profile */
@@ -73,7 +74,7 @@ export class InputManager {
    * Trigger a command's callback
    *
    * @param {Command} command The command to trigger
-   * @param binding
+   * @param {string} binding The binding that triggered the command
    */
   #triggerCommand( command, binding ) {
     command?.callback( binding )

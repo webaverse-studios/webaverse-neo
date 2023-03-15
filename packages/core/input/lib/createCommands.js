@@ -1,3 +1,5 @@
+import { Debug } from '@webaverse-studios/debug'
+
 import { Command } from '../models/index'
 
 /**
@@ -7,7 +9,7 @@ import { Command } from '../models/index'
  * @returns {Map<string, Command>} The command map
  */
 export function createCommands( profile ) {
-  console.log( 'profile', profile )
+  Debug.log( 'profile', profile )
   return profile.reduce(( acc, params ) => {
     acc.set( params[0], new Command( ...params ))
     return acc

@@ -1,7 +1,8 @@
 // // For more information about this file see https://dove.feathersjs.com/guides/cli/service.schemas.html
+import { passwordHash } from '@feathersjs/authentication-local'
 import { resolve } from '@feathersjs/schema'
 import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
-import { passwordHash } from '@feathersjs/authentication-local'
+
 import { dataValidator, queryValidator } from '../../validators.js'
 
 // Main data model schema

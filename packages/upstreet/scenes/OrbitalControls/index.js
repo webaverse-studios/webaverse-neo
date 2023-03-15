@@ -8,8 +8,8 @@ import {
   MeshPhongMaterial,
   PerspectiveCamera,
 } from 'three'
-
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+
 import { Scene } from '@webaverse-studios/engine-nyx'
 import { PhysicsAdapter } from '@webaverse-studios/physics-rapier'
 
@@ -18,10 +18,11 @@ export class OrbitControlsScene extends Scene {
   controls
 
   /**
+   * Create Orbit Controls Scene
    *
-   * @param {object} options - Scene Options
-   * @param {HTMLCanvasElement} options.canvas - Canvas to render the scene to
-   * @param {PhysicsAdapter} options.physicsAdapter - Physics Adapter to use
+   * @param {object} options Scene Options
+   * @param {HTMLCanvasElement} options.canvas Canvas to render the scene to
+   * @param {PhysicsAdapter} options.physicsAdapter Physics Adapter to use
    */
   constructor({ canvas, physicsAdapter }) {
     super({ canvas, physicsAdapter })
@@ -44,7 +45,8 @@ export class OrbitControlsScene extends Scene {
     this.controls = new OrbitControls( this._camera, this._renderer.domElement )
     this.controls.listenToKeyEvents( window ) // optional
 
-    // an animation loop is required when either damping or auto-rotation are enabled
+    // an animation loop is required when either damping
+    // or auto-rotation are enabled
     this.controls.enableDamping = true
     this.controls.dampingFactor = 0.05
 

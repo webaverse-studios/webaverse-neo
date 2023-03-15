@@ -6,14 +6,14 @@ import {addMemoryToGunDB} from './gundb.js'
  * databases. This function stores the memory data in FeathersDB and
  * the ids associated with the memory data in GunDB.
  *
- * @async
  * @function addMemory
- * @param {string} agent - The name of the agent associated with the memory.
- * @param {string} timestamp - The timestamp associated with the memory.
+ * @param {string} agent The name of the agent associated with the memory.
+ * @param {string} timestamp The timestamp associated with the memory.
  * @param {object} data - An object containing the memory data, with each
  * type of memory (text, image, audio) being represented by a property in the
  * object.
  * @returns {Promise<void>}
+ * @async
  */
 export async function addMemory( agent, timestamp, data ) {
   // store data in feathers and store the ids in the gun database

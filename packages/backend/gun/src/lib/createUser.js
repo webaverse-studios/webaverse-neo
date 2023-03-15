@@ -1,5 +1,6 @@
-import { gun } from '#Gun'
 import { auth } from './auth.js'
+
+import { gun } from '#Gun'
 
 
 /**

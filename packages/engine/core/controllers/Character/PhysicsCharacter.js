@@ -1,5 +1,6 @@
-import { KinematicController, PhysicsAdapter } from '@webaverse-studios/physics-core'
 import { Object3D, Vector3 } from 'three'
+
+import { KinematicController, PhysicsAdapter } from '@webaverse-studios/physics-core'
 
 /**
  * @class Physics Character

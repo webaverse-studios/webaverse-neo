@@ -1,7 +1,9 @@
 import { VRM } from '@pixiv/three-vrm'
-import { PhysicsAdapter } from '@webaverse-studios/physics-core'
 import { nanoid } from 'nanoid'
 import { Vector3 } from 'three'
+
+import { PhysicsAdapter } from '@webaverse-studios/physics-core'
+
 import { PhysicsCharacter } from './PhysicsCharacter'
 
 class PlayerData extends Map {}
@@ -34,9 +36,9 @@ export class AvatarCharacter extends PhysicsCharacter {
   /**
    * Create a new base character controller.
    *
-   * @param {object} options - The options for the character controller.
-   * @param {VRM} options.avatar - The avatar to control.
-   * @param {PhysicsAdapter} options.physicsAdapter - The physics adapter to use.
+   * @param {object} options The options for the character controller.
+   * @param {VRM} options.avatar The avatar to control.
+   * @param {PhysicsAdapter} options.physicsAdapter The physics adapter to use.
    */
   constructor({ physicsAdapter, avatar }) {
     super({ physicsAdapter })
@@ -49,8 +51,8 @@ export class AvatarCharacter extends PhysicsCharacter {
   /**
    * Update AvatarCharacter
    *
-   * @param {Vector3} direction - The direction to move the character.
    * @override
+   * @param {Vector3} direction The direction to move the character.
    */
   update( direction ) {
     // Update the physics character controller
