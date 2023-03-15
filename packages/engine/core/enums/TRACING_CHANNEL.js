@@ -1,8 +1,8 @@
-import { TracingChannel } from '@webaverse-studios/types'
+import types from '@webaverse-studios/types'
 
 /**
  * @readonly
- * @enum {TracingChannel}
+ * @enum {types.TracingChannel}
  */
 export const TRACING_CHANNEL = {
   /**
