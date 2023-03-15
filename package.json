@@ -19,14 +19,15 @@
     "upstreet": "yarn workspace @webaverse-studios/upstreet"
   },
   "devDependencies": {
-    "@feathersjs/cli": "=5.0.0",
+    "@feathersjs/cli": "=5.0.1",
     "@types/node": "^18.15.3",
     "@types/prettier": "=2",
     "@typescript-eslint/parser": "^5.55.0",
-    "@webaverse-studios/eslint-config": "=1.1.4",
+    "@webaverse-studios/eslint-config": "=1.1.6",
     "concurrently": "=7.6.0",
     "eslint": "=8.36.0",
-    "eslint-plugin-jsdoc": "=40.0.2",
+    "eslint-plugin-import": "=2.27.5",
+    "eslint-plugin-jsdoc": "=40.0.3",
     "eslint-plugin-promise": "=6.1.1",
     "prettier": "=2.8.4",
     "process": "=0.11.10",

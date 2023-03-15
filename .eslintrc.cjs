@@ -3,7 +3,14 @@ module.exports = {
   env: {
     node: true,
   },
+  ignorePatterns: ['**/node_modules/**', '**/old_packages/**'],
   rules: {
+    'sort-imports': [
+      'error',
+      {
+        ignoreDeclarationSort: true,
+      },
+    ],
     'no-unused-vars': [
       1,
       {
@@ -15,7 +22,7 @@ module.exports = {
     'max-len': [
       1,
       {
-        ignorePattern: '^import .*',
+        ignorePattern: 'import.*',
         ignoreUrls: true,
       },
     ],
