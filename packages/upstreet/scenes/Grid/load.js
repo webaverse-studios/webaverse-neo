@@ -1,8 +1,8 @@
+import { VRM, VRMLoaderPlugin } from '@pixiv/three-vrm'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { VRMLoaderPlugin, VRM } from '@pixiv/three-vrm'
 
-import avatarURL from './assets/Scilly.vrm'
 import gridURL from './assets/grid.glb'
+import avatarURL from './assets/Scilly.vrm'
 
 /**
  * Load the geometry for the scene.

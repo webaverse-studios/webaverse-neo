@@ -2,24 +2,24 @@ import { createEnum } from '@soulofmischief/js-utils'
 
 /**
  * @typedef ColliderType
- * @property {string} BALL Ball shape.
- * @property {string} CONE Cone shape.
- * @property {string} CUBOID Cuboid shape.
- * @property {string} CAPSULE Capsule shape.
- * @property {string} TRIMESH Triangle mesh shape
- * @property {string} SEGMENT Segment shape.
- * @property {string} TRIANGLE Triangle shape.
- * @property {string} POLYLINE Polyline shape.
- * @property {string} CYLINDER Cylinder shape.
- * @property {string} ROUND_CONE Round cone shape.
- * @property {string} HEIGHTFIELD Heightfield shape.
- * @property {string} CONVEX_HULL Convex hull shape.
- * @property {string} CONVEX_MESH Convex mesh shape.
- * @property {string} ROUND_CUBOID Rectangular shape with round borders.
- * @property {string} ROUND_TRIANGLE Round triangle shape.
- * @property {string} ROUND_CYLINDER Round cylinder shape.
- * @property {string} ROUND_CONVEX_HULL Round convex hull shape.
- * @property {string} ROUND_CONVEX_MESH Round convex mesh shape.
+ * @property {symbol} BALL Ball shape.
+ * @property {symbol} CONE Cone shape.
+ * @property {symbol} CUBOID Cuboid shape.
+ * @property {symbol} CAPSULE Capsule shape.
+ * @property {symbol} TRIMESH Triangle mesh shape
+ * @property {symbol} SEGMENT Segment shape.
+ * @property {symbol} TRIANGLE Triangle shape.
+ * @property {symbol} POLYLINE Polyline shape.
+ * @property {symbol} CYLINDER Cylinder shape.
+ * @property {symbol} ROUND_CONE Round cone shape.
+ * @property {symbol} HEIGHTFIELD Heightfield shape.
+ * @property {symbol} CONVEX_HULL Convex hull shape.
+ * @property {symbol} CONVEX_MESH Convex mesh shape.
+ * @property {symbol} ROUND_CUBOID Rectangular shape with round borders.
+ * @property {symbol} ROUND_TRIANGLE Round triangle shape.
+ * @property {symbol} ROUND_CYLINDER Round cylinder shape.
+ * @property {symbol} ROUND_CONVEX_HULL Round convex hull shape.
+ * @property {symbol} ROUND_CONVEX_MESH Round convex mesh shape.
  */
 
 /**

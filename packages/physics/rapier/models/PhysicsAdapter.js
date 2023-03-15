@@ -1,33 +1,32 @@
 import {
-  init,
+  CoefficientCombineRule,
+  Collider,
   ColliderDesc,
   RigidBodyDesc,
   Vector3,
   World,
-  Collider,
-  CoefficientCombineRule,
-  RigidBody,
+  init,
 } from '@dimforge/rapier3d-compat'
 import {
-  LineSegments,
-  Vector3 as THREEVector3,
-  BufferAttribute,
-  Euler,
-  Quaternion,
   BoxGeometry,
-  SphereGeometry,
-  CylinderGeometry,
+  BufferAttribute,
   CapsuleGeometry,
-  MeshPhongMaterial,
-  Mesh,
   ConeGeometry,
+  CylinderGeometry,
+  Euler,
+  LineSegments,
+  Mesh,
+  MeshPhongMaterial,
+  Quaternion,
+  SphereGeometry,
+  Vector3 as THREEVector3,
 } from 'three'
 
 import { Debug } from '@webaverse-studios/debug'
 import { PhysicsAdapter as _PhysicsAdapter } from '@webaverse-studios/physics-core'
 
-import { bodyType as bt } from '../bodyType'
 import { KinematicController } from './KinematicController'
+import { bodyType as bt } from '../bodyType'
 import { colliderType as ct } from '../colliderType'
 
 /**
@@ -36,13 +35,18 @@ import { colliderType as ct } from '../colliderType'
  */
 
 /**
- * @typedef {object} Dimensions
+ * @typedef {object} DimensionOptions
  * @property {number} [height] Height
  * @property {number} [radius] Radius
  * @property {number} [hx] Height x dimension
  * @property {number} [hy] Height y dimension
  * @property {number} [hz] Height z dimension
  * @property {number} [halfHeight] Half height
+ */
+
+/**
+ * @typedef {object} MeshOptions
+ * @property {string} [color] Color of Mesh
  */
 
 export class PhysicsAdapter extends _PhysicsAdapter {
@@ -61,7 +65,6 @@ export class PhysicsAdapter extends _PhysicsAdapter {
 
   async init() {
     await init()
-
     this.world = new World( this.gravity )
   }
 
@@ -77,7 +80,7 @@ export class PhysicsAdapter extends _PhysicsAdapter {
   /**
    * Destroy Character Controller
    *
-   * @param {KinematicController} controller Controller to destroy
+   * @param {KinematicController} controller ControlRigidBody
    */
   destroyCharacterController( controller ) {
     this.world.removeCharacterController( controller.characterController )
@@ -147,15 +150,25 @@ export class PhysicsAdapter extends _PhysicsAdapter {
   }
 
   /**
+   * @typedef {object} ColliderReturn
+   * @property {Mesh} mesh Generated THREE.Mesh
+   * @property {Collider} collider Generated Collider
+   * @property {import('@dimforge/rapier3d-compat').RigidBody} rigidBody
+   * Generated Rigid-body
+   */
+
+  /**
    * Create a collider for a rigid-body
    *
-   * @param {object} colliderParams Collider parameters
-   * @param {BodyType} colliderParams.bodyType Rigid-body type
-   * @param {string} colliderParams.colliderType Collider type
-   * @param {Vector3} colliderParams.translation Translation
-   * @param {Vector3} colliderParams.rotation Rotation
-   * @param {Dimensions} colliderParams.dimensions Collider dimensions
-   * @returns {{mesh: Mesh, rigidBody: RigidBody, collider: Collider }} Generated collider
+   * @param {object} params Collider parameters
+   * @param {BodyType} params.bodyType Rigid-body type
+   * @param {string} params.colliderType Collider type
+   * @param {Vector3} params.translation Translation
+   * @param {Vector3} params.rotation Rotation
+   * @param {DimensionOptions} params.dimensions Collider dimensions
+   * @param {import('three').MeshPhongMaterialParameters} params.meshOptions
+   * Mesh options
+   * @returns {ColliderReturn} Generated collider
    */
   createCollider({
     bodyType,
@@ -163,31 +176,37 @@ export class PhysicsAdapter extends _PhysicsAdapter {
     translation,
     rotation,
     dimensions,
+    meshOptions,
   }) {
     const bodyDesc = (() => {
-      switch ( Symbol( bodyType ).toString()) {
-        case bt.FIXED.toString(): {
+      switch ( bodyType ) {
+        case bt.FIXED: {
           const body = RigidBodyDesc.fixed()
           body.setCanSleep( true )
           return body
         }
-        case bt.DYNAMIC.toString(): {
+        case bt.DYNAMIC: {
           return RigidBodyDesc.dynamic()
         }
-        case bt.KINEMATIC_VELOCITY_BASED.toString(): {
+        case bt.KINEMATIC_VELOCITY_BASED: {
           return RigidBodyDesc.kinematicVelocityBased()
         }
-        case bt.KINEMATIC_POSITION_BASED.toString(): {
+        case bt.KINEMATIC_POSITION_BASED: {
           return RigidBodyDesc.kinematicPositionBased()
         }
         default: {
-          // throw new Error( `Unknown body type: ${bodyType}` )
+          throw new Error(
+            `Unknown body type: ${
+              bodyType.description || bodyType.toString()
+            }`
+          )
         }
       }
     })()
 
     if ( translation )
       bodyDesc.setTranslation( translation.x, translation.y, translation.z )
+
     if ( rotation ) {
       const q = new Quaternion().setFromEuler(
         new Euler( rotation.x, rotation.y, rotation.z, 'XYZ' )
@@ -198,45 +217,49 @@ export class PhysicsAdapter extends _PhysicsAdapter {
     const rigidBody = this.world.createRigidBody( bodyDesc )
 
     const colliderDesc = (() => {
-      switch ( Symbol( colliderType ).toString()) {
-        case ct.CUBOID.toString(): {
+      switch ( colliderType ) {
+        case ct.CUBOID: {
           return ColliderDesc.cuboid(
             dimensions.hx,
             dimensions.hy,
             dimensions.hz
           )
         }
-        case ct.CYLINDER.toString(): {
+        case ct.CYLINDER: {
           return ColliderDesc.cylinder(
             dimensions.halfHeight,
             dimensions.radius
           )
         }
-        case ct.BALL.toString(): {
+        case ct.BALL: {
           return ColliderDesc.ball( dimensions.radius )
         }
-        case ct.CAPSULE.toString(): {
+        case ct.CAPSULE: {
           return ColliderDesc.capsule(
             dimensions.halfHeight,
             dimensions.radius
           )
         }
-        case ct.CONE.toString(): {
+        case ct.CONE: {
           const cone = ColliderDesc.cone( dimensions.hh, dimensions.radius )
           // cone center of mass is at bottom
           cone.centerOfMass = { x: 0, y: 0, z: 0 }
           return cone
         }
         default: {
-          throw new Error( `Unknown collider type: ${colliderType}` )
+          throw new Error(
+            `Unknown collider type: ${
+              colliderType.description || colliderType.toString()
+            }`
+          )
         }
       }
     })()
 
-    const collider = this.world.createCollider( colliderDesc, rigidBody.handle )
+    const collider = this.world.createCollider( colliderDesc, rigidBody )
     const bufferGeometry = (() => {
       switch ( colliderType ) {
-        case ct.CUBE: {
+        case ct.CUBOID: {
           return new BoxGeometry(
             dimensions.hx * 2,
             dimensions.hy * 2,
@@ -244,7 +267,7 @@ export class PhysicsAdapter extends _PhysicsAdapter {
           )
         }
         case ct.CYLINDER: {
-          return CylinderGeometry(
+          return new CylinderGeometry(
             dimensions.radius,
             dimensions.radius,
             dimensions.hh * 2,
@@ -253,21 +276,30 @@ export class PhysicsAdapter extends _PhysicsAdapter {
           )
         }
         case ct.BALL: {
-          return SphereGeometry( dimensions.radius, 32, 32 )
+          return new SphereGeometry( dimensions.radius, 32, 32 )
         }
         case ct.CAPSULE: {
-          return CapsuleGeometry( dimensions.radius, dimensions.height )
+          return new CapsuleGeometry( dimensions.radius, dimensions.height )
         }
         case ct.CONE: {
-          return ConeGeometry( dimensions.radius, dimensions.hh * 2, 32, 32 )
+          return new ConeGeometry(
+            dimensions.radius,
+            dimensions.hh * 2,
+            32,
+            32
+          )
         }
         default: {
-          throw new Error( `Unknown collider type: ${colliderType}` )
+          throw new Error(
+            `Unknown collider type: ${
+              colliderType.description || colliderType.toString()
+            }`
+          )
         }
       }
     })()
 
-    const mesh = new Mesh( bufferGeometry, new MeshPhongMaterial())
+    const mesh = new Mesh( bufferGeometry, new MeshPhongMaterial( meshOptions ))
     return { rigidBody, mesh, collider }
   }
 }

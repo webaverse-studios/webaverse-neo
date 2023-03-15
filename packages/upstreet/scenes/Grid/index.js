@@ -1,12 +1,12 @@
-import { Box3, TextureLoader } from 'three'
-
 import { VRM } from '@pixiv/three-vrm'
+import { TextureLoader } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { PhysicsAdapter } from '@webaverse-studios/physics-rapier'
+
+import { Debug } from '@webaverse-studios/debug'
 import { AvatarCharacter, Scene } from '@webaverse-studios/engine-nyx'
+import { PhysicsAdapter } from '@webaverse-studios/physics-rapier'
 
 import { loadGeometry } from './load'
-
 import {
   createCamera,
   createControls,
@@ -15,12 +15,16 @@ import {
   createLights,
   createRenderer,
   createScene,
+  createTerrain,
 } from './setup'
 
 /** @typedef {import('@webaverse-studios/types').GLTF} GLTF */
 
 /**
  * Grid Scene to display a grid and avatar.
+ *
+ * @class
+ * @augments Scene
  */
 export class Grid extends Scene {
   /** @type {GLTF} */
@@ -43,6 +47,7 @@ export class Grid extends Scene {
    */
   constructor( gridOptions ) {
     super( gridOptions )
+    this._physicsAdapter = gridOptions.physicsAdapter
   }
 
   /**
@@ -101,6 +106,7 @@ export class Grid extends Scene {
   }
 
   #configureCharacter() {
+    Debug.log( 'Configuring Character', this )
     this._character = new AvatarCharacter({
       avatar: this._avatar,
       physicsAdapter: this._physicsAdapter,
@@ -121,15 +127,8 @@ export class Grid extends Scene {
       this.#configureGeometry(),
       this.#configureCharacter(),
       this.#configureInputManager(),
+      createTerrain( this._physicsAdapter, this._grid ),
     ])
-
-    this._physicsAdapter.createCollider({
-      bodyType: 'DYNAMIC',
-      colliderType: 'BALL',
-      dimensions: {
-        radius: 0.5,
-      },
-    })
 
     // function down(this: Grid, event: KeyboardEvent) {
     //   if (event.key == "ArrowUp") this.movementDirection.x = this.speed;
@@ -144,7 +143,8 @@ export class Grid extends Scene {
     //   if (event.key == "ArrowDown") this.movementDirection.x = 0.0;
     //   if (event.key == "ArrowLeft") this.movementDirection.z = 0.0;
     //   if (event.key == "ArrowRight") this.movementDirection.z = 0.0;
-    //   if (event.key == " ") this.movementDirection.y = -this.speed; // Gravity
+    // Gravity
+    //   if (event.key == " ") this.movementDirection.y = -this.speed;
     // }
 
     // document.onkeyup = up.bind(this);

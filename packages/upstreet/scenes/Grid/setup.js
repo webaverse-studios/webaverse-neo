@@ -1,18 +1,26 @@
-import { InputManager } from '@webaverse-studios/input'
 import {
-  Scene,
+  AmbientLight,
+  Box3,
+  BufferGeometry,
   Color,
   Fog,
-  WebGLRenderer,
+  LineBasicMaterial,
+  LineSegments,
   PerspectiveCamera,
   PointLight,
-  AmbientLight,
-  LineBasicMaterial,
-  BufferGeometry,
-  LineSegments,
+  Scene,
+  Vector3,
+  WebGLRenderer,
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import { commands as c, defaultBindings as db } from '@webaverse-studios/input'
+
+import {
+  InputManager,
+  commands as c,
+  defaultBindings as db,
+} from '@webaverse-studios/input'
+import { PhysicsAdapter, bodyType } from '@webaverse-studios/physics-rapier'
+import { colliderType } from '@webaverse-studios/physics-rapier/colliderType'
 
 import { moveController } from './input'
 
@@ -121,4 +129,34 @@ export function createDebugLines() {
 export function createInputManager() {
   const profile = [[c.MOVE_FORWARD, db[c.MOVE_FORWARD], moveController]]
   return new InputManager( profile )
+}
+
+/**
+ * Generate Terrain
+ *
+ * @param {PhysicsAdapter} physicsAdapter The physics adapter to use.
+ * @param {import('@webaverse-studios/types').GLTF} grid The grid to generate terrain from.
+ */
+export function createTerrain( physicsAdapter, grid ) {
+  // floor
+  let floorDimensions = new Box3().setFromObject( grid.scene )
+  physicsAdapter.createCollider({
+    bodyType: bodyType.FIXED,
+    colliderType: colliderType.CUBOID,
+    dimensions: {
+      hy: floorDimensions.max.y,
+      hx: floorDimensions.max.x,
+      hz: floorDimensions.max.z,
+    },
+    rotation: new Vector3( 0, 0, 0 ),
+  })
+
+  physicsAdapter.createCollider({
+    bodyType: bodyType.DYNAMIC,
+    colliderType: colliderType.BALL,
+    dimensions: {
+      radius: 0.5,
+    },
+    translation: new Vector3( 6, 4, 0 ),
+  })
 }
