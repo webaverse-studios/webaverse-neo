@@ -1,4 +1,4 @@
-/** @typedef {import('@webaverse-studios/types').TracingChannel} TracingChannel */
+// import types from '@webaverse-studios/types'
 
 /**
  * Log tracing functionality, allowing for tracing of the internal
