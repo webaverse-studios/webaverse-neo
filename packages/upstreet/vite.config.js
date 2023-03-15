@@ -2,17 +2,17 @@ import {
   dedup,
   draco,
   prune,
-  textureResize,
-  textureCompress,
-  weld,
   quantize,
+  textureCompress,
+  textureResize,
+  weld,
 } from '@gltf-transform/functions'
-
 import strip from '@rollup/plugin-strip'
-import config from '@webaverse-studios/config'
 import sharp from 'sharp'
 import gltf from 'vite-plugin-gltf'
 import wasm from 'vite-plugin-wasm'
+
+import config from '@webaverse-studios/config'
 
 const
   { upstreetConfig } = config,
@@ -79,9 +79,9 @@ export default {
 
     process.env.NODE_ENV != 'development'
       ? strip({
-          debugger: true,
-          functions: stripFunctions,
-        })
+        debugger: true,
+        functions: stripFunctions,
+      })
       : undefined,
   ],
 
