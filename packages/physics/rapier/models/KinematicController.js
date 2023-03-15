@@ -8,15 +8,12 @@ import {
   World,
 } from '@dimforge/rapier3d-compat'
 
-import {
-  KinematicController as _KinematicController
-} from '@webaverse-studios/physics-core'
-
+import { KinematicController as _KinematicController } from '@webaverse-studios/physics-core'
 
 export class KinematicController extends _KinematicController {
   /**
-   * !!! These may not be needed.
-   * We might be able to derive the details from the actual rigid body and collider !!!
+   * These may not be needed. We might be able to derive the details
+   * from the actual rigid body and collider
    */
 
   /**
@@ -54,36 +51,47 @@ export class KinematicController extends _KinematicController {
   characterController
 
   /**
-   * The gap the controller will leave between the character and its environment.
+   * The gap the controller will leave between the character
+   * and its environment.
    *
    * @type {number}
    */
   #characterOffset = 0.1
 
   /**
-   * @param {World} world - Rapier Physics World
+   * Create Kinematic Controller
+   *
+   * @param {World} world Rapier Physics World
    */
   constructor( world ) {
     super()
 
     // Create Rigidbody Description
-    this.characterDescription = RigidBodyDesc.kinematicPositionBased().setTranslation( -10.0, 4.0, -10.0 )
+    this.characterDescription =
+      RigidBodyDesc.kinematicPositionBased().setTranslation( -10.0, 4.0, -10.0 )
     // Create Rigidbody
     this.character = world.createRigidBody( this.characterDescription )
 
     // Create Collider Description
     this.characterColliderDescription = ColliderDesc.cylinder( 1.2, 0.6 )
     // Create Collider
-    this.characterCollider = world.createCollider( this.characterColliderDescription, this.character )
+    this.characterCollider = world.createCollider(
+      this.characterColliderDescription,
+      this.character
+    )
 
     // Create Character Controller
-    this.characterController = world.createCharacterController( this.#characterOffset )
+    // eslint-disable-next-line max-len
+    this.characterController = world.createCharacterController(
+      this.#characterOffset
+    )
 
-    // Autostep if the step height is smaller than 0.7, its width is larger than 0.3,
-    // and allow stepping on dynamic bodies.
+    // Autostep if the step height is smaller than 0.7,
+    // its width is larger than 0.3, and allow stepping on dynamic bodies.
     this.characterController.enableAutostep( 0.7, 0.3, true )
 
-    // Snap to the ground if the vertical distance to the ground is smaller than 0.7.
+    // Snap to the ground if the vertical distance
+    // to the ground is smaller than 0.7.
     this.characterController.enableSnapToGround( 0.7 )
 
     // Enable the automatic application of impulses to the dynamic bodies
@@ -96,11 +104,15 @@ export class KinematicController extends _KinematicController {
   }
 
   /**
+   * Move Character
    *
-   * @param {Vector3} direction - direction to move the character
+   * @param {Vector3} direction direction to move the character
    */
   move( direction ) {
-    this.characterController.computeColliderMovement( this.characterCollider, direction )
+    this.characterController.computeColliderMovement(
+      this.characterCollider,
+      direction
+    )
 
     let movement = this.characterController.computedMovement()
     let newPos = this.character.translation()

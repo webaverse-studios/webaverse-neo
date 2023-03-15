@@ -1,49 +1,64 @@
-import { createCommands } from '../lib/index.js'
-import { defaultProfile } from '../profiles/index.js'
+import { createCommands } from '../lib/index'
+import { defaultProfile } from '../profiles/index'
+import { Command } from './Command'
+import { Debug } from '@webaverse-studios/debug'
+
+/** @typedef {import('../commands').Commands} Commands */
+/** @typedef {import('@webaverse-studios/types').Profile} Profile */
 
 /**
  * @class InputManager
  */
 export class InputManager {
+  /**
+   * @type {Map<string, Command>}
+   */
   #bindings = new Map()
 
   /**
+   * @type {Map<string, (thisArg: Command, ...argArray: any[]) => void>}
    */
   #eventListeners = {}
 
+  /**
+   * @type {Commands}
+   */
   #commands = null
 
+  /**
+   * @type {Profile}
+   */
   #profile = null
 
   /**
-   * @param {Command[]} commands
+   * InputManager Constructor
+   *
+   * @param {Profile} [profile=defaultProfile] The profile to use
    */
-  constructor({
-    profile,
-  } = {}) {
-    this.profile = profile || defaultProfile
+  constructor( profile = defaultProfile ) {
+    this.profile = profile
   }
 
   /**
+   * Handle Keyboard Input
    *
-   * @param {KeyboardEvent} event
+   * @param {KeyboardEvent} event The keyboard event to handle
    */
   #handleKeyboardInput( event ) {
-    const command = this.#bindings.get( event.code )
-
-    if ( command )
-      this.#triggerCommand( command )
+    const binding = event.code
+    const command = this.#bindings.get( binding )
+    if ( command ) this.#triggerCommand( command, binding )
   }
 
   /**
+   * Handle Mouse Input
    *
-   * @param {MouseEvent} event
+   * @param {MouseEvent} event The mouse event to handle
    */
   #handleMouseInput( event ) {
-    const command = this.#bindings.get( `Mouse${event.button}` )
-
-    if ( command )
-      this.#triggerCommand( command )
+    const binding = `Mouse${event.button}`
+    const command = this.#bindings.get( binding )
+    if ( command ) this.#triggerCommand( command, binding )
   }
 
   #removeEventListeners( element ) {
@@ -55,11 +70,13 @@ export class InputManager {
   }
 
   /**
+   * Trigger a command's callback
    *
-   * @param {Command} command
+   * @param {Command} command The command to trigger
+   * @param binding
    */
-  #triggerCommand( command ) {
-    command?.callback()
+  #triggerCommand( command, binding ) {
+    command?.callback( binding )
   }
 
   /**
@@ -70,10 +87,10 @@ export class InputManager {
   addEventListeners( element ) {
     // Store events listeners so they can be removed later
     this.#eventListeners = {
-      keydown: this.handleInput.bind( this ),
+      // keydown: this.handleInput.bind( this ),
       keyup: this.handleInput.bind( this ),
       mousedown: this.handleInput.bind( this ),
-      mouseup: this.handleInput.bind( this ),
+      // mouseup: this.handleInput.bind( this ),
     }
 
     for ( const event in this.#eventListeners ) {
@@ -81,13 +98,17 @@ export class InputManager {
     }
   }
 
+  /**
+   * Destroy the input manager
+   */
   destroy() {
     this.#removeEventListeners()
   }
 
   /**
+   * Handle mouse and keyboard input
    *
-   * @param {KeyboardEvent | MouseEvent} event
+   * @param {KeyboardEvent | MouseEvent} event The event to handle
    */
   handleInput( event ) {
     if ( event instanceof KeyboardEvent ) {
@@ -100,17 +121,16 @@ export class InputManager {
   /**
    * Register commands.
    *
-   * @param commands The commands to register.
+   * @param {Commands} commands The commands to register.
    * @returns {void}
    */
   registerCommands( commands ) {
-    for ( const [ ,command ] of commands ) {
-      command.bindings.forEach( binding => {
+    for ( const [, command] of commands ) {
+      command.bindings.forEach(( binding ) => {
         this.#bindings.set( binding, command )
       })
     }
   }
-
 
   /**
    * Unregister commands.
@@ -119,18 +139,29 @@ export class InputManager {
    * @returns {void}
    */
   unregisterCommands( ...commands ) {
-    for ( const [ ,command ] of commands ) {
-      command.bindings.forEach( binding => {
+    for ( const [, command] of commands ) {
+      command.bindings.forEach(( binding ) => {
         this.#bindings.delete( binding )
       })
     }
   }
 
+  /**
+   * Get the input profile
+   *
+   * @returns {Profile} The input profile
+   */
   get profile() {
     return this.#profile
   }
 
+  /**
+   * Set the input profile
+   *
+   * @param {Profile} profile The input profile to set
+   */
   set profile( profile ) {
+    Debug.log( 'Setting profile', profile )
     this.#profile = profile
     this.#commands = createCommands( profile )
     this.#bindings.clear()

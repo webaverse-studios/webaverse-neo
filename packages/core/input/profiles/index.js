@@ -1,2 +1,1 @@
-
-export { defaultProfile } from './default.js'
+export { defaultProfile } from './default'

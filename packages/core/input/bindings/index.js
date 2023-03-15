@@ -1,2 +1,1 @@
-
-export { defaultBindings } from './default.js'
+export { defaultBindings } from './default'

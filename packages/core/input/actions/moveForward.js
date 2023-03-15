@@ -1,4 +1,3 @@
-
 /**
  * Move forward.
  */

@@ -1,4 +1,3 @@
-
 export { attack } from './attack'
 export { jump } from './jump'
 export { moveBackward } from './moveBackward'

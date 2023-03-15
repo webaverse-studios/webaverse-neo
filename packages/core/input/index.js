@@ -1,5 +1,5 @@
-
-export * from './actions/index.js'
-export * from './bindings/index.js'
-export * from './models/index.js'
-export * from './profiles/index.js'
+export * from './actions'
+export * from './bindings'
+export * from './models'
+export * from './profiles'
+export * from './commands'

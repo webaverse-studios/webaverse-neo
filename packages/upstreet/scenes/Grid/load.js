@@ -4,11 +4,10 @@ import { VRMLoaderPlugin, VRM } from '@pixiv/three-vrm'
 import avatarURL from './assets/Scilly.vrm'
 import gridURL from './assets/grid.glb'
 
-
 /**
  * Load the geometry for the scene.
  *
- * @param {GLTFLoader} loader - The loader to use.
+ * @param {GLTFLoader} loader The loader to use.
  * @returns {Promise<{avatar: VRM}>} - The loaded geometry.
  */
 export async function loadGeometry( loader ) {

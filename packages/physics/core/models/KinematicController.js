@@ -1,7 +1,6 @@
-/* eslint-disable no-unused-vars */
-import { Scene } from '@webaverse-studios/engine-core'
-import { Vector3 } from 'three'
+/* eslint-disable no-console */
 
+import { Vector3 } from 'three'
 
 /**
  * Kinematic Controller Class
@@ -32,6 +31,8 @@ export class KinematicController {
   }
 
   /**
+   * Is the controller grounded?
+   *
    * @returns {boolean} is the controller grounded?
    */
   get grounded() {
@@ -41,15 +42,18 @@ export class KinematicController {
   /**
    * Move the kinematic controller in a direction
    *
-   * @param {Vector3} direction - direction to move the controller
+   * @param {Vector3} direction direction to move the controller
    * @returns {void}
    */
   move( direction ) {
-    throw new Error( "[`KinematicController`]: Method 'move(direction)' must be implemented." )
+    const _ = direction
+    console.warn( '[KinematicController]: `move` not implemented' )
   }
 
   /**
    * Destroy the kinematic controller
    */
-  destroy() {}
+  destroy() {
+    console.warn( '[KinematicController]: `destroy` not implemented' )
+  }
 }

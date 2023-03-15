@@ -1,4 +1,5 @@
 import {
+  TextureLoader,
   AmbientLight,
   Camera,
   Color,
@@ -11,7 +12,7 @@ import {
 } from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { PhysicsAdapter } from '@webaverse-studios/physics-core'
-import {InputManager} from '@webaverse-studios/input'
+import { InputManager } from '@webaverse-studios/input'
 
 /**
  * Abstract Scene Class
@@ -82,6 +83,14 @@ export class Scene {
   _gltfLoader
 
   /**
+   * Base Texture Loader
+   *
+   * @type {TextureLoader}
+   * @see {@link https://threejs.org/docs/#api/en/loaders/TextureLoader}
+   */
+  _textureLoader
+
+  /**
    * Debugging lines
    *
    * @type {LineSegments}
@@ -111,8 +120,7 @@ export class Scene {
     }
 
     this._name = this.constructor.name
-    this._physicsAdapter = physicsAdapter
-    this.#configureScene( canvas )
+    this.#configureScene( canvas, physicsAdapter )
   }
 
   get name() {
@@ -127,12 +135,15 @@ export class Scene {
    * Configure Scene
    *
    * @param {HTMLCanvasElement} canvas scene canvas
+   * @param {PhysicsAdapter} physicsAdapter physics adapter
    */
-  #configureScene = ( canvas ) => {
+  #configureScene = ( canvas, physicsAdapter ) => {
     this._canvas = canvas
     this._camera = createCamera()
     this._scene = createTHREEScene()
     this._gltfLoader = new GLTFLoader()
+    this._physicsAdapter = physicsAdapter
+    this._textureLoader = new TextureLoader()
     this._debugLines = new LineSegments()
     this._inputManager = createInputManager()
     this._renderer = createRenderer( canvas, 1 )

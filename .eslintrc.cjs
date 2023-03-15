@@ -4,11 +4,18 @@ module.exports = {
     node: true,
   },
   rules: {
+    'no-unused-vars': [
+      1,
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+      },
+    ],
     'max-len': [
       1,
       {
-        code: 85,
-        comments: 85,
+        ignorePattern: '^import .*',
         ignoreUrls: true,
       },
     ],

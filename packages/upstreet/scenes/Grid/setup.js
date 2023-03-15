@@ -1,3 +1,4 @@
+import { InputManager } from '@webaverse-studios/input'
 import {
   Scene,
   Color,
@@ -11,8 +12,13 @@ import {
   LineSegments,
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { commands as c, defaultBindings as db } from '@webaverse-studios/input'
+
+import { moveController } from './input'
 
 /**
+ * Create Scene
+ *
  * @returns {Scene} - The configured scene.
  */
 export function createScene() {
@@ -25,10 +31,10 @@ export function createScene() {
 }
 
 /**
- * Setup WebGL Renderer
+ * Create WebGL Renderer
  *
- * @param {HTMLCanvasElement} canvas - Canvas to render the scene to
- * @param {number} scale - Scale the renderer by this amount.
+ * @param {HTMLCanvasElement} canvas Canvas to render the scene to
+ * @param {number} scale Scale the renderer by this amount.
  * @returns {WebGLRenderer} The configured renderer.
  */
 export function createRenderer( canvas, scale = 1 ) {
@@ -39,6 +45,8 @@ export function createRenderer( canvas, scale = 1 ) {
 }
 
 /**
+ * Create Camera
+ *
  * @returns {PerspectiveCamera} The configured camera.
  */
 export function createCamera() {
@@ -56,6 +64,8 @@ export function createCamera() {
 }
 
 /**
+ * Create Lights
+ *
  * @returns {PointLight[]} The configured lights.
  */
 export function createLights() {
@@ -75,32 +85,23 @@ export function createLights() {
 /**
  * Create Camera controls for test scene
  *
- * @param {PerspectiveCamera} camera - The camera to attach to.
- * @param {WebGLRenderer} renderer - The renderer to attach to.
+ * @param {PerspectiveCamera} camera The camera to attach to.
+ * @param {WebGLRenderer} renderer The renderer to attach to.
  * @returns {OrbitControls} - The configured controls.
  */
-export function createControls(
-  camera,
-  renderer,
-) {
+export function createControls( camera, renderer ) {
   const controls = new OrbitControls( camera, renderer.domElement )
-  // controls.listenToKeyEvents( window ) // optional
 
   controls.rotateSpeed = 1.0
   controls.zoomSpeed = 1.2
   controls.panSpeed = 0.8
 
-  // controls.keys = {
-  //   LEFT: 'KeyA', //left arrow
-  //   UP: 'KeyW', // up arrow
-  //   RIGHT: 'KeyD', // right arrow
-  //   BOTTOM: 'KeyS', // down arrow
-  // }
-
   return controls
 }
 
 /**
+ * Create debug lines for test scene
+ *
  * @returns {LineSegments} - The configured debug lines.
  */
 export function createDebugLines() {
@@ -110,4 +111,14 @@ export function createDebugLines() {
   })
   const geometry = new BufferGeometry()
   return new LineSegments( geometry, material )
+}
+
+/**
+ * Create input manager for test scene
+ *
+ * @returns {InputManager} - The configured input manager.
+ */
+export function createInputManager() {
+  const profile = [[c.MOVE_FORWARD, db[c.MOVE_FORWARD], moveController]]
+  return new InputManager( profile )
 }
