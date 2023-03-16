@@ -1,8 +1,8 @@
 /**
  * This file is used to setup the global variables that are used by the WASM
  *
- * @param bevyModJsScripting
- * @param op_name_map_str
+ * @param {Function} bevyModJsScripting The bevy_mod_js_scripting module
+ * @param {string} op_name_map_str The op name map as a JSON string
  */
 export function setup_js_globals( bevyModJsScripting, op_name_map_str ) {
   const op_name_map = JSON.parse( op_name_map_str )

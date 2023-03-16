@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "target": "es6",
+    "lib": ["es2015"],
+    "strict": true,
+    "noImplicitAny": true
+  },
+  "include": [
+    "./types/lib.bevy.d.ts",
+    "./types/bevy_types.ts",
+    "./assets/**/*"
+  ]
+}

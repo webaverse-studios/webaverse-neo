@@ -5,8 +5,7 @@ use tokio::sync::{Mutex, MutexGuard};
 use type_map::TypeMap;
 use wasm_bindgen::prelude::*;
 
-use super::{OpNames, Ops};
-use crate::ScriptInfo;
+use crate::{OpNames, Ops, ScriptInfo};
 
 const LOCK_SHOULD_NOT_FAIL: &str =
     "Mutex lock should not fail because there should be no concurrent access";

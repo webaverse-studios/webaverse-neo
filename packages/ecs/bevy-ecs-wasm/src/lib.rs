@@ -1,12 +1,17 @@
 use std::path::PathBuf;
 
 use asset::JsScript;
-use bevy::{prelude::*, reflect::TypeRegistry, utils::HashMap};
+use bevy::{ecs::storage::Resources, prelude::*, reflect::TypeRegistry, utils::HashMap};
 use type_map::TypeMap;
+use wasm_bindgen::prelude::wasm_bindgen;
 
 mod asset;
+mod runtime;
 mod utils;
-mod wasm;
+
+pub use runtime::*;
+
+use crate::ecs::types::JsComponentInfo;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -71,3 +76,67 @@ pub type OpIndexes = HashMap<&'static str, usize>;
 
 /// List of [`JsRuntimeOp`]s installed for the [`JsRuntime`]
 pub type Ops = Vec<Box<dyn JsRuntimeOp>>;
+
+type JsResult<T> = std::result::Result<T, String>;
+
+#[wasm_bindgen]
+#[derive(Default)]
+pub struct WWorld {
+    raw: World,
+}
+
+impl std::fmt::Display for WWorld {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self.raw)
+    }
+}
+
+#[wasm_bindgen]
+impl WWorld {
+    #[wasm_bindgen(constructor)]
+    pub fn new() -> Self {
+        Self { raw: World::new() }
+    }
+
+    #[wasm_bindgen(js_name = toString)]
+    pub fn as_string(&self) -> JsResult<String> {
+        Ok(serde_json::Value::String(format!("{:?}", self.to_string())).to_string())
+    }
+
+    #[wasm_bindgen(js_name = getComponents)]
+    pub fn get_components(&self) -> JsResult<String> {
+        let infos = self
+            .raw
+            .components()
+            .iter()
+            .map(JsComponentInfo::from)
+            .collect::<Vec<_>>();
+
+        match serde_json::to_value(infos) {
+            Ok(v) => Ok(v.to_string()),
+            Err(e) => Err(e.to_string()),
+        }
+    }
+
+    #[wasm_bindgen(js_name = getResources)]
+    pub fn get_resources(&self) -> JsResult<String> {
+        let infos = self
+            .raw
+            .storages()
+            .resources
+            .iter()
+            .map(|(id, storage)| {
+                self.raw
+                    .components()
+                    .get_info(id)
+                    .expect("Component info not found")
+            })
+            .map(JsComponentInfo::from)
+            .collect::<Vec<_>>();
+
+        match serde_json::to_value(infos) {
+            Ok(v) => Ok(v.to_string()),
+            Err(e) => Err(e.to_string()),
+        }
+    }
+}
