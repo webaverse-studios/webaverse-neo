@@ -14,7 +14,6 @@
     "@webaverse-studios/debug": "workspace:*",
     "@webaverse-studios/input": "workspace:*",
     "@webaverse-studios/physics-core": "workspace:*",
-    "@webaverse-studios/physics-rapier": "workspace:*",
     "@webaverse-studios/types": "workspace:*",
     "murmurhash": "=2.0.1",
     "nanoid": "^4.0.1",

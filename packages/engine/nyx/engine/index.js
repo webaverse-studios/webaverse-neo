@@ -1,4 +1,5 @@
 import { Engine } from '@webaverse-studios/engine-core'
+import { PhysicsAdapter } from '@webaverse-studios/physics-rapier'
 
 export class NyxEngine extends Engine {
   /**
@@ -12,7 +13,16 @@ export class NyxEngine extends Engine {
    * @param {number} options.width The width of the canvas.
    */
   constructor({ canvas, dom, height, width }) {
-    super({ canvas, dom, height, width })
+    // Use Rapier physics adapter
+    let physicsAdapter = new PhysicsAdapter()
+
+    super({
+      canvas,
+      dom,
+      height,
+      width,
+      physicsAdapter,
+    })
   }
 
   pause() {
