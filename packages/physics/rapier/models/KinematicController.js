@@ -5,10 +5,13 @@ import {
   RigidBody,
   RigidBodyDesc,
   Vector3,
-  World,
 } from '@dimforge/rapier3d-compat'
 
 import { KinematicController as _KinematicController } from '@webaverse-studios/physics-core'
+
+import { PhysicsAdapter } from './PhysicsAdapter'
+import { bodyType } from '../bodyType'
+import { colliderType } from '../colliderType'
 
 export class KinematicController extends _KinematicController {
   /**
@@ -56,33 +59,33 @@ export class KinematicController extends _KinematicController {
    *
    * @type {number}
    */
-  #characterOffset = 0.1
+  #characterOffset = 0.01 // 0.1 was default
 
   /**
    * Create Kinematic Controller
    *
-   * @param {World} world Rapier Physics World
+   * @param {PhysicsAdapter} ctx Context
    */
-  constructor( world ) {
+  constructor( ctx ) {
     super()
 
-    // Create Rigidbody Description
-    this.characterDescription =
-      RigidBodyDesc.kinematicPositionBased().setTranslation( -10.0, 4.0, -10.0 )
-    // Create Rigidbody
-    this.character = world.createRigidBody( this.characterDescription )
+    const { collider, rigidBody } = ctx.createCollider({
+      bodyType: bodyType.KINEMATIC_POSITION_BASED,
+      colliderType: colliderType.CAPSULE,
+      translation: new Vector3( 0, 4, 0 ),
+      rotation: new Vector3( 0, 0, 0 ),
+      dimensions: {
+        halfHeight: 0.2,
+        radius: 0.5,
+      },
+    })
 
-    // Create Collider Description
-    this.characterColliderDescription = ColliderDesc.cylinder( 1.2, 0.6 )
-    // Create Collider
-    this.characterCollider = world.createCollider(
-      this.characterColliderDescription,
-      this.character
-    )
+    this.character = rigidBody
+    this.characterCollider = collider
 
     // Create Character Controller
     // eslint-disable-next-line max-len
-    this.characterController = world.createCharacterController(
+    this.characterController = ctx.world.createCharacterController(
       this.#characterOffset
     )
 
@@ -99,6 +102,9 @@ export class KinematicController extends _KinematicController {
     this.characterController.setApplyImpulsesToDynamicBodies( true )
   }
 
+  /**
+   * @override
+   */
   destroy() {
     this.characterController.free()
   }
@@ -106,6 +112,7 @@ export class KinematicController extends _KinematicController {
   /**
    * Move Character
    *
+   * @override
    * @param {Vector3} direction direction to move the character
    */
   move( direction ) {
@@ -116,12 +123,13 @@ export class KinematicController extends _KinematicController {
 
     let movement = this.characterController.computedMovement()
     let newPos = this.character.translation()
+
     newPos.x += movement.x
     newPos.y += movement.y
     newPos.z += movement.z
 
     this._position = newPos
-    this._rotation = this.character.rotation()
+    this._quaternion = this.character.rotation()
     this.character.setNextKinematicTranslation( newPos )
   }
 }

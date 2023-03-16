@@ -8,5 +8,4 @@
 
 export { KinematicController } from './models/KinematicController.js'
 export { PhysicsAdapter } from './models/PhysicsAdapter.js'
-
 export * from './bodyType'

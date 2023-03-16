@@ -1,11 +1,8 @@
 import {
-  CoefficientCombineRule,
-  Collider,
   ColliderDesc,
   RigidBodyDesc,
   Vector3,
   World,
-  init,
 } from '@dimforge/rapier3d-compat'
 import {
   BoxGeometry,
@@ -19,15 +16,14 @@ import {
   MeshPhongMaterial,
   Quaternion,
   SphereGeometry,
-  Vector3 as THREEVector3,
 } from 'three'
 
-import { Debug } from '@webaverse-studios/debug'
 import { PhysicsAdapter as _PhysicsAdapter } from '@webaverse-studios/physics-core'
 
 import { KinematicController } from './KinematicController'
 import { bodyType as bt } from '../bodyType'
 import { colliderType as ct } from '../colliderType'
+import { getRapier } from '../lib'
 
 /**
  * @typedef {import('../bodyType').BodyType} BodyType
@@ -57,6 +53,9 @@ export class PhysicsAdapter extends _PhysicsAdapter {
    */
   world
 
+  /**
+   * Gravity of the world
+   */
   gravity = new Vector3( 0.0, -9.81, 0.0 )
 
   constructor() {
@@ -64,7 +63,7 @@ export class PhysicsAdapter extends _PhysicsAdapter {
   }
 
   async init() {
-    await init()
+    await getRapier()
     this.world = new World( this.gravity )
   }
 
@@ -74,7 +73,8 @@ export class PhysicsAdapter extends _PhysicsAdapter {
   }
 
   createKinematicController() {
-    return new KinematicController( this.world )
+    let ctx = this
+    return new KinematicController( ctx )
   }
 
   /**
@@ -105,55 +105,10 @@ export class PhysicsAdapter extends _PhysicsAdapter {
   }
 
   /**
-   * Create Heightmap Collider
-   *
-   * @param {object} params Heightmap parameters
-   * @param {number} params.nsubdivs Number of subdivisions
-   * @param {number[]} params.heights Heightmap heights
-   * @param {THREEVector3} params.scale Scale of the heightmap
-   * @returns {Collider} Generated heightmap collider
-   */
-  createHeightMapCollider({ nsubdivs, heights, scale }) {
-    Debug.log( '[PhysicsAdapter: Rapier] - Creating heightmap collider', {
-      nsubdivs,
-      scale,
-      heights,
-    })
-
-    let bodyDesc = RigidBodyDesc.fixed()
-    let body = this.world.createRigidBody( bodyDesc )
-    let collider = ColliderDesc.heightfield(
-      nsubdivs,
-      nsubdivs,
-      new Float32Array( heights ),
-      scale
-    )
-
-    // Create rigid body for the sphere.
-    const rbDesc = RigidBodyDesc.dynamic()
-      .setTranslation( 6, 4, 0 )
-      .setLinearDamping( 0.1 )
-      // .restrictRotations(false, true, false) // Y-axis only
-      .setCcdEnabled( true )
-    this.sphereBody = this.world.createRigidBody( rbDesc )
-
-    const clDesc = ColliderDesc.ball( 0.5 )
-      .setFriction( 0.1 )
-      .setFrictionCombineRule( CoefficientCombineRule.Max )
-      // .setTranslation(0, 0, 0)
-      .setRestitution( 0.6 )
-      .setRestitutionCombineRule( CoefficientCombineRule.Max )
-    // .setCollisionGroups(CollisionMask.ActorMask | CollisionMask.TouchActor);
-    this.world.createCollider( clDesc, this.sphereBody )
-
-    return this.world.createCollider( collider, body )
-  }
-
-  /**
    * @typedef {object} ColliderReturn
    * @property {Mesh} mesh Generated THREE.Mesh
-   * @property {Collider} collider Generated Collider
-   * @property {import('@dimforge/rapier3d-compat').RigidBody} rigidBody
+   * @property {import('@dimforge/rapier3d-compat').Collider} collider Generated Collider
+   * @property {import('@dimforge/rapier3d-compat').RigidBody} rigidBody Generated Rigid-body
    * Generated Rigid-body
    */
 

@@ -1,5 +1,6 @@
 import { VRM } from '@pixiv/three-vrm'
 import { nanoid } from 'nanoid'
+import { Box3 } from 'three'
 
 import { PhysicsAdapter } from '@webaverse-studios/physics-core'
 
@@ -45,6 +46,13 @@ export class AvatarCharacter extends PhysicsCharacter {
     this.avatar = avatar
     this.playerId = nanoid()
     this.playerData = new PlayerData()
+
+    console.log( new Box3().expandByObject( avatar.scene ))
+  }
+
+  #syncAvatarWithPhysics() {
+    this.avatar.scene.position.copy( this.position )
+    this.avatar.scene.rotation.copy( this.rotation )
   }
 
   /**
@@ -60,10 +68,6 @@ export class AvatarCharacter extends PhysicsCharacter {
   update() {
     // Update the physics character controller
     super.update()
-    this.avatar.scene.position.set(
-      this.position.x,
-      this.position.y,
-      this.position.z
-    )
+    this.#syncAvatarWithPhysics()
   }
 }

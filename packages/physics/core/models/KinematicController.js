@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import { Vector3 } from 'three'
+import { Quaternion, Vector3 } from 'three'
 
 /**
  * Kinematic Controller Class
@@ -30,15 +30,15 @@ export class KinematicController {
   /**
    * Rotation of the controller
    *
-   * @type {Vector3}
+   * @type {Quaternion}
    */
-  _rotation
+  _quaternion
 
   constructor() {
     this.#grounded = false
     this.#velocity = new Vector3()
     this._position = new Vector3()
-    this._rotation = new Vector3()
+    this._quaternion = new Quaternion()
   }
 
   /**
@@ -71,10 +71,10 @@ export class KinematicController {
   /**
    * Rotation of the controller
    *
-   * @returns {Vector3} position of the controller
+   * @returns {Quaternion} rotation of the controller
    */
-  get rotation() {
-    return this._rotation
+  get quaternion() {
+    return this._quaternion
   }
 
   /**

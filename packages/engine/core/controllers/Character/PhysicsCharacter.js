@@ -1,6 +1,5 @@
-import { Euler, Object3D, Vector3 } from 'three'
+import { Object3D, Vector3 } from 'three'
 
-import { Debug } from '@webaverse-studios/debug'
 import {
   KinematicController,
   PhysicsAdapter,
@@ -29,14 +28,14 @@ export class PhysicsCharacter extends Object3D {
    *
    * @type {number}
    */
-  #speed = 0.1
+  #speed = 0.05
 
   /**
    * Movement vector for the character.
    *
    * @type {Vector3}
    */
-  #movementVector = new Vector3( 0, -1, 0 )
+  #movementVector = new Vector3( 0, -this.#speed, 0 )
 
   /**
    * Construct a physics player
@@ -47,25 +46,45 @@ export class PhysicsCharacter extends Object3D {
   constructor({ physicsAdapter }) {
     super()
 
-    console.log( physicsAdapter )
-    // this.#movementVector = physicsAdapter.gravity
     this.physicsAdapter = physicsAdapter
     this.kinematicController = physicsAdapter.createKinematicController()
   }
 
   #syncThreeWithPhysics() {
     this.position.copy( this.kinematicController.position )
-    this.rotation.copy(
-      new Euler(
-        this.kinematicController.rotation.x,
-        this.kinematicController.rotation.y,
-        this.kinematicController.rotation.z
-      )
-    )
+    this.quaternion.copy( this.kinematicController.quaternion )
   }
 
-  applyMovementVector( movementVector ) {
-    this.#movementVector.add( movementVector )
+  moveForward() {
+    this.#movementVector.x = this.#speed
+  }
+
+  moveBackward() {
+    this.#movementVector.x = -this.#speed
+  }
+
+  moveLeft() {
+    this.#movementVector.z = -this.#speed
+  }
+
+  moveRight() {
+    this.#movementVector.z = this.#speed
+  }
+
+  stopForward() {
+    this.#movementVector.x = 0
+  }
+
+  stopBackward() {
+    this.#movementVector.x = 0
+  }
+
+  stopLeft() {
+    this.#movementVector.z = 0
+  }
+
+  stopRight() {
+    this.#movementVector.z = 0
   }
 
   /**
