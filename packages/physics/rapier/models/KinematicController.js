@@ -69,13 +69,14 @@ export class KinematicController extends _KinematicController {
   constructor( ctx ) {
     super()
 
+    // TODO: Derive these values from the VRM Avatar
     const { collider, rigidBody } = ctx.createCollider({
       bodyType: bodyType.KINEMATIC_POSITION_BASED,
       colliderType: colliderType.CAPSULE,
       translation: new Vector3( 0, 4, 0 ),
       rotation: new Vector3( 0, 0, 0 ),
       dimensions: {
-        halfHeight: 0.2,
+        halfHeight: 0.5,
         radius: 0.5,
       },
     })
@@ -89,13 +90,16 @@ export class KinematicController extends _KinematicController {
       this.#characterOffset
     )
 
+    //TODO: This causes weird friction issues with the ground and collider
+    // find a way to tweak these values :D
+
     // Autostep if the step height is smaller than 0.7,
     // its width is larger than 0.3, and allow stepping on dynamic bodies.
-    this.characterController.enableAutostep( 0.7, 0.3, true )
+    // this.characterController.enableAutostep( 0.7, 0.3, true )
 
     // Snap to the ground if the vertical distance
     // to the ground is smaller than 0.7.
-    this.characterController.enableSnapToGround( 0.7 )
+    // this.characterController.enableSnapToGround( 0.7 )
 
     // Enable the automatic application of impulses to the dynamic bodies
     // hit by the character along its path.
