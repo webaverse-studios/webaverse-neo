@@ -18,8 +18,11 @@
     "murmurhash": "=2.0.1",
     "nanoid": "=4.0.1",
     "stats.js": "=0.17.0",
-    "three": "=0.150.1",
+    "three": "=0.149.0",
     "troika-three-text": "=0.47.1"
+  },
+  "devDependencies": {
+    "@types/three": "^0.149.0"
   },
   "engines": {
     "node": "=19.0.0"
