@@ -130,6 +130,9 @@ export function createDebugLines() {
 export function createInputManager( ctx ) {
   const profile = [
     [c.MOVE_FORWARD, db[c.MOVE_FORWARD], moveController.bind( ctx )],
+    [c.MOVE_BACKWARD, db[c.MOVE_BACKWARD], moveController.bind( ctx )],
+    [c.MOVE_LEFT, db[c.MOVE_LEFT], moveController.bind( ctx )],
+    [c.MOVE_RIGHT, db[c.MOVE_RIGHT], moveController.bind( ctx )],
   ]
   return new InputManager( profile )
 }
