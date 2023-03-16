@@ -48,7 +48,7 @@ export class InputManager {
   #handleKeyboardInput( event ) {
     const binding = event.code
     const command = this.#bindings.get( binding )
-    if ( command ) this.#triggerCommand( command, binding )
+    if ( command ) this.#triggerCommand( command, event, binding )
   }
 
   /**
@@ -59,7 +59,7 @@ export class InputManager {
   #handleMouseInput( event ) {
     const binding = `Mouse${event.button}`
     const command = this.#bindings.get( binding )
-    if ( command ) this.#triggerCommand( command, binding )
+    if ( command ) this.#triggerCommand( command, event, binding )
   }
 
   #removeEventListeners( element ) {
@@ -74,10 +74,12 @@ export class InputManager {
    * Trigger a command's callback
    *
    * @param {Command} command The command to trigger
+   * @param {KeyboardEvent | MouseEvent} event The event that
+   * triggered the command
    * @param {string} binding The binding that triggered the command
    */
-  #triggerCommand( command, binding ) {
-    command?.callback( binding )
+  #triggerCommand( command, event, binding ) {
+    command?.callback({ event, binding })
   }
 
   /**
@@ -88,7 +90,7 @@ export class InputManager {
   addEventListeners( element ) {
     // Store events listeners so they can be removed later
     this.#eventListeners = {
-      // keydown: this.handleInput.bind( this ),
+      keydown: this.handleInput.bind( this ),
       keyup: this.handleInput.bind( this ),
       mousedown: this.handleInput.bind( this ),
       // mouseup: this.handleInput.bind( this ),
