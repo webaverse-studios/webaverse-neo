@@ -1,5 +1,4 @@
-import { client } from '#Feathers'
-
+import { client } from '../../feathers/index.js'
 
 /**
  * Adds a memory to the Feathers database.
@@ -18,9 +17,9 @@ import { client } from '#Feathers'
  * @returns {Promise<object>} The response from the Feathers database service.
  * @throws {Error} If the data is invalid.
  */
-export async function addMemoryToFeathersDB( data ) {
+export async function addMemoryToFeathersDB(data) {
   // add a memory to the feathers database
-  return client.service( 'files' ).create( data )
+  return client.service('files').create(data)
 }
 
 /**
@@ -31,7 +30,7 @@ export async function addMemoryToFeathersDB( data ) {
  * @param {string} id - The ID of the memory to retrieve from the Feathers database.
  * @returns {Promise<object>} The memory retrieved from the Feathers database.
  */
-export async function getMemoryFromFeathersDB( id ) {
+export async function getMemoryFromFeathersDB(id) {
   // get memories from the feathers database
-  return client.service( 'files' ).get( id )
+  return client.service('files').get(id)
 }
