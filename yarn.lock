@@ -2005,6 +2005,7 @@ __metadata:
     "@types/three": =0.149.0
     "@webaverse-studios/backend-agent": "workspace:*"
     "@webaverse-studios/config": "workspace:*"
+    "@webaverse-studios/debug": "workspace:*"
     "@webaverse-studios/engine-nyx": "workspace:*"
     "@webaverse-studios/input": "workspace:*"
     "@webaverse-studios/physics-rapier": "workspace:*"
