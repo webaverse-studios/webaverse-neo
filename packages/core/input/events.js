@@ -2,10 +2,10 @@ import { createEnum } from '@soulofmischief/js-utils'
 
 /**
  * @typedef Events
- * @property {string} keyup Keyup event
- * @property {string} keydown Keydown event
- * @property {string} mouseup Mouseup event
- * @property {string} mousedown Mousedown event
+ * @property {symbol} keyup Keyup event
+ * @property {symbol} keydown Keydown event
+ * @property {symbol} mouseup Mouseup event
+ * @property {symbol} mousedown Mousedown event
  */
 
 /**
