@@ -1,9 +1,8 @@
-use std::path::PathBuf;
-
 use asset::JsScript;
-use bevy::{ecs::storage::Resources, prelude::*, reflect::TypeRegistry, utils::HashMap};
-use type_map::TypeMap;
-use wasm_bindgen::prelude::wasm_bindgen;
+use js_sys::JsString;
+use wasm_bindgen::{prelude::wasm_bindgen, JsValue};
+
+use bevy_ecs::{component::ComponentInfo, prelude::World as BevyWorld};
 
 mod asset;
 mod runtime;
@@ -19,124 +18,89 @@ use crate::ecs::types::JsComponentInfo;
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
-pub struct OpContext<'a> {
-    pub op_state: &'a mut TypeMap,
-    pub script_info: &'a ScriptInfo,
-    pub type_registry: &'a TypeRegistry,
-}
-
-/// Info about the currently executing script, exposed to [`JsRuntimeOp`]s.
-pub struct ScriptInfo {
-    pub path: PathBuf,
-    pub handle: Handle<JsScript>,
-}
-
-pub trait JsRuntimeOp {
-    /// Returns any extra JavaScript that should be executed when the runtime is initialized.
-    fn js(&self) -> Option<&'static str> {
-        None
-    }
-
-    /// The function called to execute the operation
-    fn run(
-        &self,
-        context: OpContext<'_>,
-        world: &mut World,
-        args: serde_json::Value,
-    ) -> anyhow::Result<serde_json::Value> {
-        // Satisfy linter without changing argument names for the sake of the API docs
-        let (_, _, _) = (context, world, args);
-
-        // Ops may be inserted simply to add JS, so a default implementation of `run` is useful to
-        // indicate that the op is not meant to be run.
-        anyhow::bail!("Op is not meant to be called");
-    }
-
-    /// Function called at  to allow the op to do any preparation work
-    fn frame_start(&self, op_state: &mut TypeMap, world: &mut World) {
-        // Fix clippy warning by using variables
-        let _ = (op_state, world);
-    }
-
-    fn frame_end(&self, op_state: &mut TypeMap, world: &mut World) {
-        // Fix clippy warning by using variables
-        let _ = (op_state, world);
-    }
-}
-
-// Hash map of op names to op implementation
-pub type OpMap = HashMap<&'static str, Box<dyn JsRuntimeOp>>;
-
-/// Contains mapping from op index to op name
-#[derive(Deref, DerefMut, Debug)]
-struct OpNames(HashMap<usize, &'static str>);
-
-/// Contains mapping from op name to op index
-pub type OpIndexes = HashMap<&'static str, usize>;
-
-/// List of [`JsRuntimeOp`]s installed for the [`JsRuntime`]
-pub type Ops = Vec<Box<dyn JsRuntimeOp>>;
-
 type JsResult<T> = std::result::Result<T, String>;
+
+#[wasm_bindgen(typescript_custom_section)]
+const ITEXT_STYLE: &'static str = r#"
+interface IJsComponentInfo {
+    name: string;
+    id: number;
+    size: number;
+}
+"#;
+
+#[wasm_bindgen]
+extern "C" {
+    #[wasm_bindgen(typescript_type = "IJsComponentInfo")]
+    pub type IJsComponentInfo;
+
+    #[wasm_bindgen(typescript_type = "string[]")]
+    pub type StringArray;
+}
+
+impl From<&ComponentInfo> for IJsComponentInfo {
+    fn from(value: &ComponentInfo) -> Self {
+        let info = JsComponentInfo::from(value);
+
+        Self {
+            obj: serde_wasm_bindgen::to_value(&info).expect("Failed to convert to JsValue"),
+        }
+    }
+}
+
+impl From<JsComponentInfo> for IJsComponentInfo {
+    fn from(info: JsComponentInfo) -> Self {
+        Self {
+            obj: serde_wasm_bindgen::to_value(&info).expect("Failed to convert to JsValue"),
+        }
+    }
+}
 
 #[wasm_bindgen]
 #[derive(Default)]
-pub struct WWorld {
-    raw: World,
+pub struct World {
+    raw_world: BevyWorld,
 }
 
-impl std::fmt::Display for WWorld {
+impl std::fmt::Display for World {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:?}", self.raw)
+        write!(f, "{:?}", self.raw_world)
     }
 }
 
 #[wasm_bindgen]
-impl WWorld {
+impl World {
     #[wasm_bindgen(constructor)]
     pub fn new() -> Self {
-        Self { raw: World::new() }
+        Self {
+            raw_world: BevyWorld::new(),
+        }
     }
 
     #[wasm_bindgen(js_name = toString)]
-    pub fn as_string(&self) -> JsResult<String> {
-        Ok(serde_json::Value::String(format!("{:?}", self.to_string())).to_string())
+    pub fn as_string(&self) -> String {
+        format!("{:?}", self.to_string())
     }
 
     #[wasm_bindgen(js_name = getComponents)]
-    pub fn get_components(&self) -> JsResult<String> {
-        let infos = self
-            .raw
+    pub fn get_components(&self) -> Vec<IJsComponentInfo> {
+        self.raw_world
             .components()
             .iter()
-            .map(JsComponentInfo::from)
-            .collect::<Vec<_>>();
-
-        match serde_json::to_value(infos) {
-            Ok(v) => Ok(v.to_string()),
-            Err(e) => Err(e.to_string()),
-        }
+            .map(IJsComponentInfo::from)
+            .collect::<Vec<_>>()
     }
 
     #[wasm_bindgen(js_name = getResources)]
-    pub fn get_resources(&self) -> JsResult<String> {
-        let infos = self
-            .raw
+    pub fn get_resources(&self) -> Vec<IJsComponentInfo> {
+        let components = self.raw_world.components();
+
+        self.raw_world
             .storages()
             .resources
             .iter()
-            .map(|(id, storage)| {
-                self.raw
-                    .components()
-                    .get_info(id)
-                    .expect("Component info not found")
-            })
-            .map(JsComponentInfo::from)
-            .collect::<Vec<_>>();
-
-        match serde_json::to_value(infos) {
-            Ok(v) => Ok(v.to_string()),
-            Err(e) => Err(e.to_string()),
-        }
+            .map(|(id, storage)| components.get_info(id).expect("Component info not found"))
+            .map(IJsComponentInfo::from)
+            .collect::<Vec<_>>()
     }
 }
