@@ -9,18 +9,17 @@ const client = feathers(socket)
 
 client.configure(socketio(socket))
 client.configure(auth())
-
-await client
+client
   .authenticate({
-    strategy: 'gun',
-    proof: 'test sig',
+    strategy: 'local',
+    email: 'admin',
+    password: 'admin',
   })
   .then((result) => {
-    console.log('AUTHENTICATED', result)
-    return true
+    console.log('authenticated', result)
   })
-  .catch((error) => {
-    console.error('ERROR', error)
+  .catch((err) => {
+    console.log('error', err)
   })
 
 export { client }
