@@ -80,20 +80,25 @@ export class Agent {
 
     addEventListener('keydown', function (event) {
       if (event.key === 'Enter') {
+        console.log('rendering')
         renderManager()
       }
       if (event.key === ' ') {
+        console.log('memorizing')
         memorizeManager()
       }
 
       if (event.key === 'Shift') {
+        console.log('remembering')
         rememberManager()
       }
 
       if (event.key === 'Backspace') {
+        console.log('clearing')
         clearRenderer()
       }
       if (event.key === 'Control') {
+        console.log('getting all memories')
         getAllMemories()
       }
     })

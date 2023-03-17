@@ -18,6 +18,7 @@ import { client } from '../../feathers/index.js'
  * @throws {Error} If the data is invalid.
  */
 export async function addMemoryToFeathersDB(data) {
+  console.log('data:', data)
   // add a memory to the feathers database
   return client.service('files').create(data)
 }
