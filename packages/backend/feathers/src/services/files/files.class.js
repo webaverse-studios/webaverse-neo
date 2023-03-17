@@ -11,6 +11,8 @@ export class FilesService extends blobService.Service {
 export const getOptions = (app) => {
   return {
     paginate: app.get('paginate'),
-    Model: fs('./uploads/files')
+    Model: fs('./uploads/files'),
+    returnUri: false,
+    returnBuffer: true
   }
 }
