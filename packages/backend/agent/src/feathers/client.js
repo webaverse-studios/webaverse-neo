@@ -1,7 +1,7 @@
 import auth from '@feathersjs/authentication-client'
 import { feathers, socketio } from '@feathersjs/client'
-import { feathersConfig } from '@uwebaverse-studios/config'
 import io from 'socket.io-client'
+import { feathersConfig } from '@webaverse-studios/config'
 
 
 const socket = io( feathersConfig.url )
