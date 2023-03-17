@@ -8,8 +8,8 @@ const { port, url } = feathersConfig
 
 
 module.exports = {
-  host: 'localhost',
   port,
+  host: 'localhost',
   public: './public/',
   origins: [
     url,
