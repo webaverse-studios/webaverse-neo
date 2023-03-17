@@ -4,13 +4,13 @@
  */
 
 import * as THREE from 'three'
-import fs from 'fs'
 
 import { addMemory, getMemoryIDs, remember } from '../lib/memories/index.js'
 import { addAgentToGunDB } from '../lib/gun/addAgentToGunDB.js'
 
 import { describe } from '../lib/emotional-vision/img2text'
 import { img2img } from '../lib/emotional-vision/img2img.js'
+import { emotional_states } from './config.js'
 
 /**
  * @class Agent
@@ -23,7 +23,6 @@ export class Agent {
    * @param engine The engine instance for the game server.
    */
   constructor({ engine }) {
-    console.log('ENGINE:', engine)
     this.engine = engine
     this.avatar = engine.scene.character
     addAgentToGunDB(this.avatar.playerId)
@@ -32,14 +31,10 @@ export class Agent {
     this.renderer = new THREE.WebGLRenderer({ canvas: this.offscreenCanvas })
     this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000)
 
-    this.happy_prefix = '((Bright)), ((Happy)), ((Joyful)), '
-    this.angry_prefix = '((Dark)), ((Angry)), ((Wrath)), ((Hate)), '
-    this.sad_prefix = '((Dark)), ((Sad)), ((Lonely)), ((Depressed)), '
-    this.nervous_prefix = '((Dark)), ((Nervous)), ((Anxious)), ((Stressed)), '
-    this.excited_prefix = '((Bright)), ((Excited)), ((Energetic)), ((Happy)), '
-    this.calm_prefix = '((Bright)), ((Calm)), ((Peaceful)), ((Relaxed)), '
-    this.tired_prefix =
-      '((Dark)), ((Tired)), ((Sleepy)), ((Relaxed)), ((Hazy)), '
+    // set random emotional state and strength
+    const states = Object.keys(emotional_states)
+    this.setEmotionalState(states[Math.floor(Math.random() * states.length)])
+    this.setEmotionalStrength(Math.random())
 
     // example of how to use the memory functions
     const renderManager = async () => {
@@ -49,42 +44,33 @@ export class Agent {
     const memorizeManager = async () => {
       this.timestamp = Date.now()
       const imageBlob = await this.offscreenCanvas.convertToBlob()
-
-      const b64str = await BlobToString(imageBlob)
-      console.log('b64str', b64str)
-      const description = await describe(b64str)
-      console.log('Description', description)
-
-      const prompt = this.sad_prefix + description
-      const neg_prompt = this.happy_prefix
-      const img2img_result = await img2img({
-        init_images: [b64str],
-        prompt: prompt,
-        negative_prompt: neg_prompt,
-        denoising_strength: 0.5,
-      })
-      console.log('img2img_result', img2img_result)
-
-      const imageBlob2 = await base64ToBlobWithOffscreenCanvas(
-        img2img_result[0],
-        'image/png'
-      )
-      console.log('imageBlob2', imageBlob2)
+      const { editedImage, description } =
+        await this.applyEmotionalStateToImage(imageBlob)
 
       const img_data = {
         hash_condition: {
           agentID: this.avatar.playerId,
           timestamp: this.timestamp,
         },
-        file: imageBlob2,
+        file: editedImage,
         metadata: {
-          type: imageBlob2.type,
-          size: imageBlob2.size,
+          type: editedImage.type,
+          size: editedImage.size,
         },
       }
 
       const text_blob = new Blob(
-        ['Prompt: ' + prompt + ' || Negative prompt: ' + neg_prompt],
+        [
+          'Prompt: ' +
+            this.prefix +
+            description +
+            ' || Negative prompt: ' +
+            this.suffix +
+            ' || Emotional State: ' +
+            this.emotional_state +
+            ' || Emotional Strength: ' +
+            this.emotional_strength,
+        ],
         { type: 'text/plain' }
       )
       const text_data = {
@@ -98,6 +84,7 @@ export class Agent {
           size: text_blob.size,
         },
       }
+
       await addMemory(this.avatar.playerId, this.timestamp, {
         text: text_data,
         image: img_data,
@@ -148,13 +135,62 @@ export class Agent {
   async renderAvatarView() {
     const position = this.avatar.position
     const rotation = this.avatar.rotation
-    this.camera.position.set(position.x, position.y + 2, position.z) // faked height, will need to decapitate the avatar and get height in the future
+    // faked height, will need to decapitate the avatar and get height in the future
+    this.camera.position.set(position.x, position.y + 2, position.z)
     this.camera.rotation.set(rotation.x, rotation.y, rotation.z)
     this.camera.up = this.up
     this.renderer.render(this.engine.scene._scene, this.camera)
   }
+
+  async applyEmotionalStateToImage(imgBlob) {
+    const b64str = await BlobToString(imgBlob)
+    const description = await describe(b64str)
+
+    const prompt = this.prefix + description
+    const neg_prompt = this.suffix
+    const img2img_result = await img2img({
+      init_images: [b64str],
+      prompt: prompt,
+      negative_prompt: neg_prompt,
+      denoising_strength: this.emotional_strength,
+      alwayson_scripts: {
+        controlnet: {
+          args: [
+            {
+              input_image: b64str,
+              module: 'canny',
+              model: 'control_canny-fp16 [e3fe7712]',
+            },
+          ],
+        },
+      },
+    })
+
+    return {
+      editedImage: await base64ToBlobWithOffscreenCanvas(
+        img2img_result[0],
+        'image/png'
+      ),
+      description: description,
+    }
+  }
+
+  setEmotionalState(key) {
+    if (key in emotional_states) {
+      this.emotional_state = key
+      this.prefix = emotional_states[this.emotional_state][0]
+      this.suffix = emotional_states[this.emotional_state][1]
+    }
+  }
+
+  setEmotionalStrength(strength) {
+    this.emotional_strength = strength
+  }
 }
 
+/**
+ *
+ */
 function BlobToString(blob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -167,16 +203,9 @@ function BlobToString(blob) {
   })
 }
 
-function base64ToBlob(base64String, mimeType) {
-  return new Promise((resolve, reject) => {
-    const binaryString = atob(base64String)
-    const blob = new Blob([binaryString], {
-      type: mimeType || 'application/octet-stream',
-    })
-    resolve(blob)
-  })
-}
-
+/**
+ *
+ */
 async function base64ToBlobWithOffscreenCanvas(base64String, mimeType) {
   const offscreenCanvas = new OffscreenCanvas(1, 1)
   const context = offscreenCanvas.getContext('2d')

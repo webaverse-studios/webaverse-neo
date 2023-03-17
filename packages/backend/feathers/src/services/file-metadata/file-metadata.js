@@ -41,7 +41,7 @@ export const fileMetadata = (app) => {
     },
     before: {
       all: [
-        // disallow('external')
+        disallow('external')
         // schemaHooks.validateQuery(fileMetadataQueryValidator),
         // schemaHooks.resolveQuery(fileMetadataQueryResolver)
       ],

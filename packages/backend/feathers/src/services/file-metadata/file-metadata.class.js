@@ -7,10 +7,8 @@ export class FileMetadataService extends KnexService {
   }
 
   async create(data, params) {
-    console.log('FILEMETADATA DATA', data)
     try {
       const existing = await this.get(data.id)
-      console.log('EXISTING', existing)
       return existing
     } catch (e) {
       return await super.create(data, params)

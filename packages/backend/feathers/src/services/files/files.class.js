@@ -4,7 +4,6 @@ import fs from 'fs-blob-store'
 
 export class FilesService extends blobService.Service {
   async create(data, params) {
-    console.log('FILES CREATE', data)
     return super.create({ id: `${data.id}.${mimeTypes.extension(data.type)}`, uri: data.uri }, params)
   }
 }
