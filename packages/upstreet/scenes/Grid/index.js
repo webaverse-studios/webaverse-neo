@@ -137,26 +137,6 @@ export class Grid extends Scene {
       createTerrain( this._physicsAdapter, this._grid ),
     ])
 
-    // function down(this: Grid, event: KeyboardEvent) {
-    //   if (event.key == "ArrowUp") this.movementDirection.x = this.speed;
-    //   if (event.key == "ArrowDown") this.movementDirection.x = -this.speed;
-    //   if (event.key == "ArrowLeft") this.movementDirection.z = -this.speed;
-    //   if (event.key == "ArrowRight") this.movementDirection.z = this.speed;
-    //   if (event.key == " ") this.movementDirection.y = this.speed;
-    // }
-
-    // function up(this: Grid, event: KeyboardEvent) {
-    //   if (event.key == "ArrowUp") this.movementDirection.x = 0.0;
-    //   if (event.key == "ArrowDown") this.movementDirection.x = 0.0;
-    //   if (event.key == "ArrowLeft") this.movementDirection.z = 0.0;
-    //   if (event.key == "ArrowRight") this.movementDirection.z = 0.0;
-    // Gravity
-    //   if (event.key == " ") this.movementDirection.y = -this.speed;
-    // }
-
-    // document.onkeyup = up.bind(this);
-    // document.onkeydown = down.bind(this);
-
     this.update()
   }
 

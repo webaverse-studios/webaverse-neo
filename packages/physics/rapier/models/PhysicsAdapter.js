@@ -4,19 +4,7 @@ import {
   Vector3,
   World,
 } from '@dimforge/rapier3d-compat'
-import {
-  BoxGeometry,
-  BufferAttribute,
-  CapsuleGeometry,
-  ConeGeometry,
-  CylinderGeometry,
-  Euler,
-  LineSegments,
-  Mesh,
-  MeshPhongMaterial,
-  Quaternion,
-  SphereGeometry,
-} from 'three'
+import { BufferAttribute, Euler, LineSegments, Quaternion } from 'three'
 
 import { PhysicsAdapter as _PhysicsAdapter } from '@webaverse-studios/physics-core'
 
@@ -38,11 +26,9 @@ import { getRapier } from '../lib'
  * @property {number} [hy] Height y dimension
  * @property {number} [hz] Height z dimension
  * @property {number} [halfHeight] Half height
- */
-
-/**
- * @typedef {object} MeshOptions
- * @property {string} [color] Color of Mesh
+ * @property {Float32Array} [points] Points for convex hull
+ * @property {Float32Array} [vertices] vertices for triangle mesh
+ * @property {Uint32Array} [indices] indices for triangle mesh
  */
 
 export class PhysicsAdapter extends _PhysicsAdapter {
@@ -106,7 +92,6 @@ export class PhysicsAdapter extends _PhysicsAdapter {
 
   /**
    * @typedef {object} ColliderReturn
-   * @property {Mesh} mesh Generated THREE.Mesh
    * @property {import('@dimforge/rapier3d-compat').Collider} collider Generated Collider
    * @property {import('@dimforge/rapier3d-compat').RigidBody} rigidBody Generated Rigid-body
    * Generated Rigid-body
@@ -121,7 +106,6 @@ export class PhysicsAdapter extends _PhysicsAdapter {
    * @param {Vector3} params.translation Translation
    * @param {Vector3} params.rotation Rotation
    * @param {DimensionOptions} params.dimensions Collider dimensions
-   * @param {import('three').MeshPhongMaterialParameters} params.meshOptions
    * Mesh options
    * @returns {ColliderReturn} Generated collider
    */
@@ -131,7 +115,6 @@ export class PhysicsAdapter extends _PhysicsAdapter {
     translation,
     rotation,
     dimensions,
-    meshOptions,
   }) {
     const bodyDesc = (() => {
       switch ( bodyType ) {
@@ -201,60 +184,23 @@ export class PhysicsAdapter extends _PhysicsAdapter {
           cone.centerOfMass = { x: 0, y: 0, z: 0 }
           return cone
         }
+        case ct.CONVEX_HULL: {
+          return ColliderDesc.convexHull( dimensions.points )
+        }
+        case ct.TRIMESH: {
+          return ColliderDesc.trimesh( dimensions.vertices, dimensions.indices )
+        }
         default: {
           throw new Error(
-            `Unknown collider type: ${
+            `Collider type: ${
               colliderType.description || colliderType.toString()
-            }`
+            } is not found or not supported.`
           )
         }
       }
     })()
 
     const collider = this.world.createCollider( colliderDesc, rigidBody )
-    const bufferGeometry = (() => {
-      switch ( colliderType ) {
-        case ct.CUBOID: {
-          return new BoxGeometry(
-            dimensions.hx * 2,
-            dimensions.hy * 2,
-            dimensions.hz * 2
-          )
-        }
-        case ct.CYLINDER: {
-          return new CylinderGeometry(
-            dimensions.radius,
-            dimensions.radius,
-            dimensions.hh * 2,
-            32,
-            32
-          )
-        }
-        case ct.BALL: {
-          return new SphereGeometry( dimensions.radius, 32, 32 )
-        }
-        case ct.CAPSULE: {
-          return new CapsuleGeometry( dimensions.radius, dimensions.height )
-        }
-        case ct.CONE: {
-          return new ConeGeometry(
-            dimensions.radius,
-            dimensions.hh * 2,
-            32,
-            32
-          )
-        }
-        default: {
-          throw new Error(
-            `Unknown collider type: ${
-              colliderType.description || colliderType.toString()
-            }`
-          )
-        }
-      }
-    })()
-
-    const mesh = new Mesh( bufferGeometry, new MeshPhongMaterial( meshOptions ))
-    return { rigidBody, mesh, collider }
+    return { rigidBody, collider }
   }
 }

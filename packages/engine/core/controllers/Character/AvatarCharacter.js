@@ -50,7 +50,7 @@ export class AvatarCharacter extends PhysicsCharacter {
     this.playerId = nanoid()
     this.playerData = new PlayerData()
 
-    console.log( new Box3().expandByObject( avatar.scene ))
+    // console.log( new Box3().expandByObject( avatar.scene ))
 
     document.addEventListener( 'keydown', this.#updatePos.bind( this ))
   }
