@@ -4,9 +4,13 @@
  */
 
 import * as THREE from 'three'
+import fs from 'fs'
 
 import { addMemory, getMemoryIDs, remember } from '../lib/memories/index.js'
 import { addAgentToGunDB } from '../lib/gun/addAgentToGunDB.js'
+
+import { describe } from '../lib/emotional-vision/img2text'
+import { img2img } from '../lib/emotional-vision/img2img.js'
 
 /**
  * @class Agent
@@ -24,9 +28,18 @@ export class Agent {
     this.avatar = engine.scene.character
     addAgentToGunDB(this.avatar.playerId)
 
-    this.offscreenCanvas = new OffscreenCanvas(1024, 1024)
+    this.offscreenCanvas = new OffscreenCanvas(512, 512)
     this.renderer = new THREE.WebGLRenderer({ canvas: this.offscreenCanvas })
     this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000)
+
+    this.happy_prefix = '((Bright)), ((Happy)), ((Joyful)), '
+    this.angry_prefix = '((Dark)), ((Angry)), ((Wrath)), ((Hate)), '
+    this.sad_prefix = '((Dark)), ((Sad)), ((Lonely)), ((Depressed)), '
+    this.nervous_prefix = '((Dark)), ((Nervous)), ((Anxious)), ((Stressed)), '
+    this.excited_prefix = '((Bright)), ((Excited)), ((Energetic)), ((Happy)), '
+    this.calm_prefix = '((Bright)), ((Calm)), ((Peaceful)), ((Relaxed)), '
+    this.tired_prefix =
+      '((Dark)), ((Tired)), ((Sleepy)), ((Relaxed)), ((Hazy)), '
 
     // example of how to use the memory functions
     const renderManager = async () => {
@@ -36,19 +49,44 @@ export class Agent {
     const memorizeManager = async () => {
       this.timestamp = Date.now()
       const imageBlob = await this.offscreenCanvas.convertToBlob()
+
+      const b64str = await BlobToString(imageBlob)
+      console.log('b64str', b64str)
+      const description = await describe(b64str)
+      console.log('Description', description)
+
+      const prompt = this.sad_prefix + description
+      const neg_prompt = this.happy_prefix
+      const img2img_result = await img2img({
+        init_images: [b64str],
+        prompt: prompt,
+        negative_prompt: neg_prompt,
+        denoising_strength: 0.5,
+      })
+      console.log('img2img_result', img2img_result)
+
+      const imageBlob2 = await base64ToBlobWithOffscreenCanvas(
+        img2img_result[0],
+        'image/png'
+      )
+      console.log('imageBlob2', imageBlob2)
+
       const img_data = {
         hash_condition: {
           agentID: this.avatar.playerId,
           timestamp: this.timestamp,
         },
-        file: imageBlob,
+        file: imageBlob2,
         metadata: {
-          type: imageBlob.type,
-          size: imageBlob.size,
+          type: imageBlob2.type,
+          size: imageBlob2.size,
         },
       }
 
-      const text_blob = new Blob(['this is a test'], { type: 'text/plain' })
+      const text_blob = new Blob(
+        ['Prompt: ' + prompt + ' || Negative prompt: ' + neg_prompt],
+        { type: 'text/plain' }
+      )
       const text_data = {
         hash_condition: {
           agentID: this.avatar.playerId,
@@ -61,8 +99,8 @@ export class Agent {
         },
       }
       await addMemory(this.avatar.playerId, this.timestamp, {
-        image: img_data,
         text: text_data,
+        image: img_data,
       })
     }
 
@@ -115,4 +153,53 @@ export class Agent {
     this.camera.up = this.up
     this.renderer.render(this.engine.scene._scene, this.camera)
   }
+}
+
+function BlobToString(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(blob)
+    reader.onloadend = () => {
+      const base64data = reader.result.replace(/^data:.+;base64,/, '')
+      resolve(base64data)
+    }
+    reader.onerror = reject
+  })
+}
+
+function base64ToBlob(base64String, mimeType) {
+  return new Promise((resolve, reject) => {
+    const binaryString = atob(base64String)
+    const blob = new Blob([binaryString], {
+      type: mimeType || 'application/octet-stream',
+    })
+    resolve(blob)
+  })
+}
+
+async function base64ToBlobWithOffscreenCanvas(base64String, mimeType) {
+  const offscreenCanvas = new OffscreenCanvas(1, 1)
+  const context = offscreenCanvas.getContext('2d')
+
+  return new Promise((resolve, reject) => {
+    const image = new Image()
+    image.onload = () => {
+      offscreenCanvas.width = image.width
+      offscreenCanvas.height = image.height
+      context.drawImage(image, 0, 0)
+
+      offscreenCanvas
+        .convertToBlob({ type: mimeType || 'image/png' })
+        .then((blob) => {
+          resolve(blob)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    }
+    image.onerror = (error) => {
+      reject(error)
+    }
+    image.src = `data:${mimeType || 'image/png'};base64,${base64String}`
+  })
 }

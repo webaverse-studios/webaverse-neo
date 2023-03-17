@@ -6,6 +6,7 @@ import {
   PerspectiveCamera,
   PointLight,
   AmbientLight,
+  DirectionalLight,
   LineBasicMaterial,
   BufferGeometry,
   LineSegments,
@@ -18,8 +19,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 export function createScene() {
   const scene = new Scene()
 
-  scene.background = new Color( 0x2a2a2a )
-  scene.fog = new Fog( 0xffffff, 0, 750 )
+  scene.background = new Color(0x2a2a2a)
+  scene.fog = new Fog(0xffffff, 0, 750)
 
   return scene
 }
@@ -31,10 +32,10 @@ export function createScene() {
  * @param {number} scale - Scale the renderer by this amount.
  * @returns {WebGLRenderer} The configured renderer.
  */
-export function createRenderer( canvas, scale = 1 ) {
+export function createRenderer(canvas, scale = 1) {
   const renderer = new WebGLRenderer({ canvas })
-  renderer.setSize( window.innerWidth, window.innerHeight )
-  renderer.setSize( innerWidth * scale, innerHeight * scale, false )
+  renderer.setSize(window.innerWidth, window.innerHeight)
+  renderer.setSize(innerWidth * scale, innerHeight * scale, false)
   return renderer
 }
 
@@ -59,14 +60,14 @@ export function createCamera() {
  * @returns {PointLight[]} The configured lights.
  */
 export function createLights() {
-  const light1 = new PointLight( 0xffffff, 1, 0, 2 ),
-    light2 = new PointLight( 0xffffff, 1, 0, 2 ),
-    light3 = new AmbientLight( 0xffffff, 2 )
+  const light1 = new DirectionalLight(0xffc589, 1.5),
+    light2 = new DirectionalLight(0xb9beff, 0.75),
+    light3 = new AmbientLight(0xffffff, 0.3)
 
-  light1.position.set( 5 * Math.random(), 5 * Math.random(), 10 )
+  light1.position.set(5 * Math.random(), 5 * Math.random(), 10)
   light1.castShadow = true
 
-  light2.position.set( 5 * Math.random(), 10 * Math.random(), 10 )
+  light2.position.set(5 * Math.random(), 10 * Math.random(), 10)
   light2.castShadow = true
 
   return [light1, light2, light3]
@@ -79,11 +80,8 @@ export function createLights() {
  * @param {WebGLRenderer} renderer - The renderer to attach to.
  * @returns {OrbitControls} - The configured controls.
  */
-export function createControls(
-  camera,
-  renderer,
-) {
-  const controls = new OrbitControls( camera, renderer.domElement )
+export function createControls(camera, renderer) {
+  const controls = new OrbitControls(camera, renderer.domElement)
   // controls.listenToKeyEvents( window ) // optional
 
   controls.rotateSpeed = 1.0
@@ -109,5 +107,5 @@ export function createDebugLines() {
     vertexColors: true,
   })
   const geometry = new BufferGeometry()
-  return new LineSegments( geometry, material )
+  return new LineSegments(geometry, material)
 }

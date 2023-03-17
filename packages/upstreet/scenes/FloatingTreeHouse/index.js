@@ -1,5 +1,6 @@
 import { LineSegments } from 'three'
 // import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+import * as THREE from 'three'
 
 import { VRM } from '@pixiv/three-vrm'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -64,6 +65,11 @@ export class FloatingTreehouse extends Scene {
     this._scene = scene
     this._camera = camera
     this._lights = lights
+    const _skygeo = new THREE.BoxGeometry(1000, 1000, 1000)
+    const _skyMaterial = new THREE.MeshBasicMaterial({ color: 0x87ceeb })
+    _skyMaterial.side = THREE.BackSide
+    this._skybox = new THREE.Mesh(_skygeo, _skyMaterial)
+
     this._renderer = renderer
     this.#controls = createControls(camera, renderer)
   }
@@ -86,7 +92,7 @@ export class FloatingTreehouse extends Scene {
   #configureGeometry() {
     // rotate to face the camera
     this.#avatar.scene.position.set(5, -1.5, 1)
-    this.#avatar.scene.rotation.set(0, 180, 0)
+    this.#avatar.scene.rotation.set(0, -45, 0)
 
     const scale = 1
     this.#floatingTreehouse.scene.scale.set(scale, scale, scale)
@@ -100,6 +106,7 @@ export class FloatingTreehouse extends Scene {
     this._scene.add(this.#avatar.scene)
     this._scene.add(this.#floatingTreehouse.scene)
     this._scene.add(this.#islands.scene)
+    this._scene.add(this._skybox)
   }
 
   #configureCharacter() {
@@ -163,6 +170,8 @@ export class FloatingTreehouse extends Scene {
   }
 
   get character() {
+    this.#character.position.set(...this.#avatar.scene.position.toArray())
+    this.#character.rotation.set(...this.#avatar.scene.rotation.toArray())
     return this.#character
   }
 }

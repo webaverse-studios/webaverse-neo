@@ -1,5 +1,5 @@
-import {addMemoryToFeathersDB} from './feathersdb.js'
-import {addMemoryToGunDB} from './gundb.js'
+import { addMemoryToFeathersDB } from './feathersdb.js'
+import { addMemoryToGunDB } from './gundb.js'
 
 /**
  * Add a specific memory associated with an agent and timestamp to the
@@ -15,13 +15,15 @@ import {addMemoryToGunDB} from './gundb.js'
  * object.
  * @returns {Promise<void>}
  */
-export async function addMemory( agent, timestamp, data ) {
+export async function addMemory(agent, timestamp, data) {
   // store data in feathers and store the ids in the gun database
-  for ( const key of Object.keys( data )) {
-    const feathers_response = await addMemoryToFeathersDB( data[key])
-    const {id} = feathers_response
+  for (const key of Object.keys(data)) {
+    console.log(key, 'data[key]', data[key])
+    const feathers_response = await addMemoryToFeathersDB(data[key])
+    console.log('feathers_response', feathers_response)
+    const { id } = feathers_response
 
     // add to gun
-    await addMemoryToGunDB( agent, timestamp, {[key]: id})
+    await addMemoryToGunDB(agent, timestamp, { [key]: id })
   }
 }

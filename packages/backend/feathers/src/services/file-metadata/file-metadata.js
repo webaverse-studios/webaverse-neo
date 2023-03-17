@@ -1,6 +1,6 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
 import { authenticate } from '@feathersjs/authentication'
-import {disallow, keep} from 'feathers-hooks-common';
+import { disallow, keep } from 'feathers-hooks-common'
 
 import { hooks as schemaHooks } from '@feathersjs/schema'
 import {
@@ -34,14 +34,14 @@ export const fileMetadata = (app) => {
   app.service(fileMetadataPath).hooks({
     around: {
       all: [
-        authenticate('jwt'),
+        // authenticate('jwt'),
         // schemaHooks.resolveExternal(fileMetadataExternalResolver),
         // schemaHooks.resolveResult(fileMetadataResolver)
       ]
     },
     before: {
       all: [
-        disallow('external'),
+        // disallow('external')
         // schemaHooks.validateQuery(fileMetadataQueryValidator),
         // schemaHooks.resolveQuery(fileMetadataQueryResolver)
       ],
