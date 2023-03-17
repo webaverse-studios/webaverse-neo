@@ -120,7 +120,6 @@ web_modules/
 
 # dotenv environment variables
 
-.env
 .env.local
 .env.production
 .env.test
