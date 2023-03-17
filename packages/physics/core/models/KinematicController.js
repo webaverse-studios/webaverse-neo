@@ -80,11 +80,11 @@ export class KinematicController {
   /**
    * Move the kinematic controller in a direction
    *
-   * @param {Vector3} direction direction to move the controller
+   * @param {Vector3} desiredTranslation Desired translation for the character
    * @returns {void}
    */
-  move( direction ) {
-    const _ = direction
+  update( desiredTranslation ) {
+    const _ = desiredTranslation
     console.warn( '[KinematicController]: `move` not implemented' )
   }
 

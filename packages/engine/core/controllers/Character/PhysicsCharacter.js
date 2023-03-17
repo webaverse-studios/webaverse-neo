@@ -37,6 +37,9 @@ export class PhysicsCharacter extends Object3D {
    */
   #movementVector = new Vector3( 0, -this.#speed, 0 )
 
+  #movingLeft = false
+  #movingRight = false
+
   /**
    * Construct a physics player
    *
@@ -64,10 +67,12 @@ export class PhysicsCharacter extends Object3D {
   }
 
   moveLeft() {
+    this.#movingLeft = true
     this.#movementVector.z = -this.#speed
   }
 
   moveRight() {
+    this.#movingRight = true
     this.#movementVector.z = this.#speed
   }
 
@@ -80,11 +85,19 @@ export class PhysicsCharacter extends Object3D {
   }
 
   stopLeft() {
-    this.#movementVector.z = 0
+    this.#movingLeft = false
+
+    if ( !this.#movingRight ) {
+      this.#movementVector.z = 0
+    }
   }
 
   stopRight() {
-    this.#movementVector.z = 0
+    this.#movingRight = false
+
+    if ( !this.#movingLeft ) {
+      this.#movementVector.z = 0
+    }
   }
 
   /**
@@ -92,6 +105,6 @@ export class PhysicsCharacter extends Object3D {
    */
   update() {
     this.#syncThreeWithPhysics()
-    this.kinematicController.move( this.#movementVector )
+    this.kinematicController.update( this.#movementVector )
   }
 }

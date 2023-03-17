@@ -124,7 +124,7 @@ export function createDebugLines() {
 /**
  * Create input manager for test scene
  *
- * @param ctx
+ * @param {import('./index').Grid} ctx The context to bind to.
  * @returns {InputManager} - The configured input manager.
  */
 export function createInputManager( ctx ) {
@@ -150,11 +150,10 @@ export function createTerrain( physicsAdapter, grid ) {
     bodyType: bodyType.FIXED,
     colliderType: colliderType.CUBOID,
     dimensions: {
-      hy: floorDimensions.max.y,
+      hy: 0.0,
       hx: floorDimensions.max.x,
       hz: floorDimensions.max.z,
     },
-    rotation: new Vector3( 0, 0, 0 ),
   })
 
   physicsAdapter.createCollider({

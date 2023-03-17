@@ -1,7 +1,8 @@
 import { VRM } from '@pixiv/three-vrm'
 import { nanoid } from 'nanoid'
-import { Box3 } from 'three'
+import { Box3, Vector3 } from 'three'
 
+import { Debug } from '@webaverse-studios/debug'
 import { PhysicsAdapter } from '@webaverse-studios/physics-core'
 
 import { PhysicsCharacter } from './PhysicsCharacter'
@@ -33,6 +34,8 @@ export class AvatarCharacter extends PhysicsCharacter {
    */
   avatar
 
+  #pos = new Vector3()
+
   /**
    * Create a new base character controller.
    *
@@ -48,6 +51,21 @@ export class AvatarCharacter extends PhysicsCharacter {
     this.playerData = new PlayerData()
 
     console.log( new Box3().expandByObject( avatar.scene ))
+
+    document.addEventListener( 'keydown', this.#updatePos.bind( this ))
+  }
+
+  #updatePos( event ) {
+    const code = event.code
+
+    if ( code === 'KeyX' ) {
+      this.#pos.y += 0.1
+      Debug.log( this.#pos, this.position )
+    }
+    if ( code === 'KeyZ' ) {
+      this.#pos.y -= 0.1
+      Debug.log( this.#pos, this.position )
+    }
   }
 
   #syncAvatarWithPhysics() {

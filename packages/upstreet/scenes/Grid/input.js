@@ -1,5 +1,3 @@
-import { Debug } from '@webaverse-studios/debug'
-import { AvatarCharacter } from '@webaverse-studios/engine-nyx'
 import { events } from '@webaverse-studios/input'
 
 /**
@@ -12,8 +10,6 @@ import { events } from '@webaverse-studios/input'
  * @this {import('./index').Grid}
  */
 export function moveController({ event, binding }) {
-  Debug.log( event, binding )
-
   if ( event.type === events.keydown.description ) {
     keydown( this._character, binding )
   } else {
@@ -24,7 +20,7 @@ export function moveController({ event, binding }) {
 /**
  * Keydown handler
  *
- * @param {import('@webaverse-studios/engine-nyx').AvatarCharacter} character
+ * @param {import('@webaverse-studios/engine-nyx').AvatarCharacter} character Character Controller
  * @param {string} binding The binding to move the controller for
  */
 function keydown( character, binding ) {
@@ -47,7 +43,7 @@ function keydown( character, binding ) {
 /**
  * Keyup handler
  *
- * @param {import('@webaverse-studios/engine-nyx').AvatarCharacter} character
+ * @param {import('@webaverse-studios/engine-nyx').AvatarCharacter} character Character Controller
  * @param {string} binding The binding to move the controller for
  */
 function keyup( character, binding ) {
