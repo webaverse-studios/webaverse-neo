@@ -18,10 +18,8 @@ use crate::ecs::types::JsComponentInfo;
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
-type JsResult<T> = std::result::Result<T, String>;
-
 #[wasm_bindgen(typescript_custom_section)]
-const ITEXT_STYLE: &'static str = r#"
+const IJS_COMPONENT_INFO: &'static str = r#"
 interface IJsComponentInfo {
     name: string;
     id: number;
@@ -99,8 +97,11 @@ impl World {
             .storages()
             .resources
             .iter()
-            .map(|(id, storage)| components.get_info(id).expect("Component info not found"))
+            .map(|(id, _storage)| components.get_info(id).expect("Component info not found"))
             .map(IJsComponentInfo::from)
             .collect::<Vec<_>>()
     }
+
+    #[wasm_bindgen(js_name = getEntities)]
+    pub fn get_entities(&self) {}
 }
