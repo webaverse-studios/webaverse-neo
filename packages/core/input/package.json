@@ -22,9 +22,7 @@
   },
   "devDependencies": {
     "@types/stats": "^0.16.30",
-    "@types/three": "^0.149.0",
-    "eslint": "=8.34.0",
-    "prettier": "^2.8.4"
+    "@types/three": "^0.149.0"
   },
   "engines": {
     "node": "=19.0.0"
