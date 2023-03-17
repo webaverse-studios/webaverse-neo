@@ -1,5 +1,6 @@
 const defaultConfig = require( './default.js' )
 const development = require( './development.js' )
+const { merge } = require( 'lodash' )
 
 
 const
@@ -9,18 +10,12 @@ const
     process.env.NODE_ENV
     || 'production',
 
-  configs = {
-    development,
-  },
-
+  configs = { development },
   envConfig = configs[ mode ] || {}
 
 
 const config = new Map(
-  Object.entries({
-    ...defaultConfig,
-    ...envConfig,
-  })
+  Object.entries( merge( defaultConfig, envConfig ))
 )
 
 

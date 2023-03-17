@@ -10,9 +10,11 @@
     "directory": "packages/config"
   },
   "dependencies": {
-    "config": "^3.3.9"
+    "config": "^3.3.9",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@types/config": "^3"
+    "@types/config": "^3",
+    "@types/lodash": "^4"
   }
 }

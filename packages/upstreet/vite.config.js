@@ -1,9 +1,22 @@
+import {
+  dedup,
+  draco,
+  prune,
+  textureResize,
+  textureCompress,
+  weld,
+  quantize,
+} from '@gltf-transform/functions'
+
 import strip from '@rollup/plugin-strip'
+import config from '@webaverse-studios/config'
+import sharp from 'sharp'
+import gltf from 'vite-plugin-gltf'
 import wasm from 'vite-plugin-wasm'
 
-import config from '@webaverse-studios/config'
 
-const { upstreetConfig } = config,
+const
+  { feathersConfig, upstreetConfig } = config,
   { port } = upstreetConfig,
   stripFunctions = [
     'Debug.assert',
@@ -48,19 +61,44 @@ export default {
   plugins: [
     wasm(),
     // topLevelAwait(),
+    gltf({
+      transforms: [
+        // remove unused resources
+        prune(),
+        weld(),
+        quantize(),
+        // combine duplicated resources
+        dedup(),
+        // keep textures under 2048x2048
+        textureResize({ size: [2048, 2048] }),
+        // optimize images
+        textureCompress({ encoder: sharp }),
+        // compress mesh geometry
+        draco(),
+      ],
+    }),
 
     process.env.NODE_ENV != 'development'
       ? strip({
-        debugger: true,
-        functions: stripFunctions,
-      })
+          debugger: true,
+          functions: stripFunctions,
+        })
       : undefined,
   ],
 
   server: {
     port,
+
     fs: {
       strict: true,
+    },
+
+    proxy: {
+      '/api/v1': {
+        target: feathersConfig.url,
+        changeOrigin: true,
+        rewrite: path => path.replace( /^\/api\/v1/, '' ),
+      },
     },
   },
 

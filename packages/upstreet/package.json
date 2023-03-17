@@ -13,6 +13,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@feathersjs/authentication-client": "^5.0.1",
+    "@feathersjs/client": "^5.0.1",
     "@pixiv/three-vrm": "=1.0.9",
     "@soulofmischief/js-utils": "=0.22.0",
     "@webaverse-studios/backend-agent": "workspace:*",
@@ -24,6 +26,7 @@
     "@webaverse-studios/types": "workspace:*",
     "gun": "=0.2020.1239",
     "mithril": "=3.0.0-next.12",
+    "socket.io-client": "^4.6.1",
     "three": "=0.149.0"
   },
   "devDependencies": {
