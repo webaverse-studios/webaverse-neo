@@ -1,28 +1,17 @@
 import { Engine } from '@webaverse-studios/engine-core'
-import { PhysicsAdapter } from '@webaverse-studios/physics-rapier'
 
 export class NyxEngine extends Engine {
   /**
-   * Create a new NyxEngine instance.
+   *  Create a new NyxEngine instance.
    *
-   * @param {object} options The options for the engine.
-   * @param {HTMLCanvasElement} options.canvas The canvas element to render
-   * the scene on.
-   * @param {HTMLElement} options.dom The dom element to render the scene on.
-   * @param {number} options.height The height of the canvas.
-   * @param {number} options.width The width of the canvas.
+   * @param {object} nyxEngineOptions The options for the engine.
+   * @param {HTMLCanvasElement} nyxEngineOptions.canvas The canvas element to render the scene on.
+   * @param {HTMLElement} nyxEngineOptions.root The root element to render the scene on.
+   * @param {number} nyxEngineOptions.height The height of the canvas.
+   * @param {number} nyxEngineOptions.width The width of the canvas.
    */
-  constructor({ canvas, dom, height, width }) {
-    // Use Rapier physics adapter
-    let physicsAdapter = new PhysicsAdapter()
-
-    super({
-      canvas,
-      dom,
-      height,
-      width,
-      physicsAdapter,
-    })
+  constructor({ canvas, root, height, width }) {
+    super({ canvas, root, height, width })
   }
 
   pause() {

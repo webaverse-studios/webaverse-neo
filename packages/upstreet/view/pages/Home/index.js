@@ -32,7 +32,10 @@ export default () => {
       addEventListener( 'resize', resizeListener )
 
       // Create engine.
-      const engine = new NyxEngine({ canvas, dom })
+      const engine = new NyxEngine({
+        canvas,
+        root: dom
+      })
 
       // Start the engine. VROOM!!
       await engine.load( defaultScene )
