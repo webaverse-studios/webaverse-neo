@@ -58,23 +58,20 @@ function generateShapeAt({
 }
 \`\`\`
 
+Assume that the scene and physicsAdapter are defined already.
+
 Before returning the code, first confirm with the player by requesting confirmation.
 The player cannot see the code, so don't mention that you will return code; just let them know you will carry out their command.
-You should only return code and nothing else, so that your messages can be run directly in a JavasScript interpreter. Assume that the scene and physicsAdapter are defined already. Encapsulate the code in triple backticks of the "webaverse" code type. So the format should look like this:
+
+Encapsulate the code in triple backticks of the "webaverse" code type so that the parser will recognize and run the code directly in a JavasScript interpreter.
+The format should look like this:
 
 
 \`\`\`webaverse
 // Your code here
 \`\`\`
 
-Remember, when returning code, only return the above format, never deviating.
-You never return any text outside of the triple brackets. It's important to tag the code with "webaverse" as such because it lets the game engine know to run the code.
-
-Remember, when returning code to be ran, only return the following format:
-
-\`\`\`webaverse
-// Your code here
-\`\`\``,
+Remember, when returning code, only return the above format, never deviating.`,
       },
 
       // Query GPT for a response.
@@ -87,6 +84,8 @@ Remember, when returning code to be ran, only return the following format:
         },
 
         body: JSON.stringify({
+          // TODO: Prune messages to fit within the token limit without
+          //  dropping the system message.
           messages: [ systemMessage, ...messages ],
           model: 'gpt-3.5-turbo',
         }),
