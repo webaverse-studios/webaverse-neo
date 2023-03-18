@@ -30,6 +30,7 @@ export function Textbox() {
           m( Input, {
             type: 'text',
             name: 'content',
+            autocomplete: 'off',
             placeholder: 'Say something...',
             oninput: ( e ) => {
               e.preventDefault()
@@ -101,7 +102,8 @@ async function getResponse( messages ) {
   // "webaverse" and if so, mark it as code, replace the content and run the
   // code.
 
-  const codeBlockRegex = /```webaverse\n([\s\S]*?)\n```/g,
+  const
+    codeBlockRegex = /```webaverse\n([\s\S]*?)\n```/g,
     codeBlock = codeBlockRegex.exec( newMessage.content )
 
   if ( codeBlock ) {
@@ -112,9 +114,7 @@ async function getResponse( messages ) {
     try {
       // Create a new function from the code block.
       // eslint-disable-next-line no-new-func
-      const fn = new Function( 'param', newMessage.content )
-
-      console.log( 'fn:', fn )
+      eval( message.content )
     } catch ( error ) {
       console.error( error )
     }
