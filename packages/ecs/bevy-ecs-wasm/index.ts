@@ -1,6 +1,5 @@
 import { World } from './pkg'
 
-
 let world = new World()
 console.log(world.toString())
 console.log(world.getComponents(), typeof world.getComponents())
