@@ -1,18 +1,25 @@
 import {
-  Scene,
+  AmbientLight,
+  Box3,
+  BufferGeometry,
   Color,
   Fog,
-  WebGLRenderer,
+  LineBasicMaterial,
+  LineSegments,
   PerspectiveCamera,
   PointLight,
-  AmbientLight,
-  LineBasicMaterial,
-  BufferGeometry,
-  LineSegments,
+  Scene,
+  Vector3,
+  WebGLRenderer,
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
+import { PhysicsAdapter, bodyType } from '@webaverse-studios/physics-rapier'
+import { colliderType } from '@webaverse-studios/physics-rapier/colliderType'
+
 /**
+ * Create Scene
+ *
  * @returns {Scene} - The configured scene.
  */
 export function createScene() {
@@ -25,10 +32,10 @@ export function createScene() {
 }
 
 /**
- * Setup WebGL Renderer
+ * Create WebGL Renderer
  *
- * @param {HTMLCanvasElement} canvas - Canvas to render the scene to
- * @param {number} scale - Scale the renderer by this amount.
+ * @param {HTMLCanvasElement} canvas Canvas to render the scene to
+ * @param {number} scale Scale the renderer by this amount.
  * @returns {WebGLRenderer} The configured renderer.
  */
 export function createRenderer( canvas, scale = 1 ) {
@@ -39,6 +46,8 @@ export function createRenderer( canvas, scale = 1 ) {
 }
 
 /**
+ * Create Camera
+ *
  * @returns {PerspectiveCamera} The configured camera.
  */
 export function createCamera() {
@@ -56,6 +65,8 @@ export function createCamera() {
 }
 
 /**
+ * Create Lights
+ *
  * @returns {PointLight[]} The configured lights.
  */
 export function createLights() {
@@ -75,32 +86,23 @@ export function createLights() {
 /**
  * Create Camera controls for test scene
  *
- * @param {PerspectiveCamera} camera - The camera to attach to.
- * @param {WebGLRenderer} renderer - The renderer to attach to.
+ * @param {PerspectiveCamera} camera The camera to attach to.
+ * @param {WebGLRenderer} renderer The renderer to attach to.
  * @returns {OrbitControls} - The configured controls.
  */
-export function createControls(
-  camera,
-  renderer,
-) {
+export function createControls( camera, renderer ) {
   const controls = new OrbitControls( camera, renderer.domElement )
-  // controls.listenToKeyEvents( window ) // optional
 
   controls.rotateSpeed = 1.0
   controls.zoomSpeed = 1.2
   controls.panSpeed = 0.8
 
-  // controls.keys = {
-  //   LEFT: 'KeyA', //left arrow
-  //   UP: 'KeyW', // up arrow
-  //   RIGHT: 'KeyD', // right arrow
-  //   BOTTOM: 'KeyS', // down arrow
-  // }
-
   return controls
 }
 
 /**
+ * Create debug lines for test scene
+ *
  * @returns {LineSegments} - The configured debug lines.
  */
 export function createDebugLines() {
@@ -110,4 +112,24 @@ export function createDebugLines() {
   })
   const geometry = new BufferGeometry()
   return new LineSegments( geometry, material )
+}
+
+/**
+ * Generate Terrain
+ *
+ * @param {PhysicsAdapter} physicsAdapter The physics adapter to use.
+ * @param {import('@webaverse-studios/types').GLTF} grid The grid to generate terrain from.
+ */
+export function createTerrain( physicsAdapter, grid ) {
+  // floor
+  let floorDimensions = new Box3().setFromObject( grid.scene )
+  physicsAdapter.createCollider({
+    bodyType: bodyType.FIXED,
+    colliderType: colliderType.CUBOID,
+    dimensions: {
+      hy: 0.0,
+      hx: floorDimensions.max.x,
+      hz: floorDimensions.max.z,
+    },
+  })
 }

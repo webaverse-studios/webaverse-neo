@@ -1,11 +1,10 @@
 import m from 'mithril'
+
+import { Messages } from './components/Messages/index.js'
 import { Textbox } from './components/Textbox/index.js'
-import {Messages} from './components/Messages/index.js'
 import { body } from './style.module.scss'
 
-
 const _Chatbox = `.${body}`
-
 
 /**
  * Chatbox
@@ -13,17 +12,16 @@ const _Chatbox = `.${body}`
  * @returns {object} mithril component
  */
 export function Chatbox() {
-  const
-    messages = [],
+  const messages = [],
     agentState = {
       isTyping: false,
     }
 
   return {
-    view() {
+    view( vnode ) {
       return m( _Chatbox, [
         m( Messages, { agentState, messages }),
-        m( Textbox, { agentState, messages }),
+        m( Textbox, { agentState, messages, engine: vnode.attrs.engine }),
       ])
     },
   }

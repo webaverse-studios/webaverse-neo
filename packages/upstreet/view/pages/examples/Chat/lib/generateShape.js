@@ -47,7 +47,7 @@ export function generateShape({
           32
         )
       }
-      case ct.BALL: {
+      case ct.SPHERE: {
         return new SphereGeometry( dimensions.radius, 32, 32 )
       }
       case ct.CAPSULE: {

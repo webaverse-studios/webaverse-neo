@@ -1,19 +1,21 @@
-import m from 'mithril'
-import { NyxEngine } from '@webaverse-studios/engine-nyx'
 import { throttle } from '@soulofmischief/js-utils'
-import { Chat } from '../../../../scenes'
+import m from 'mithril'
+
+import { NyxEngine } from '@webaverse-studios/engine-nyx'
+
 import { Chatbox } from './components/Chatbox'
 import { body, canvas } from './style.module.scss'
+import { Chat } from '../../../../scenes'
 
 const defaultScene = Chat
 
 // Components
-const
-  _Chat = `.${body}`,
+const _Chat = `.${body}`,
   Canvas = `canvas.${canvas}`
 
 export default () => {
   let resizeListener
+  let engine
 
   return {
     async oncreate({ dom }) {
@@ -31,9 +33,9 @@ export default () => {
       addEventListener( 'resize', resizeListener )
 
       // Create engine.
-      const engine = new NyxEngine({
+      engine = new NyxEngine({
         canvas,
-        root: dom
+        root: dom,
       })
 
       // Start the engine. VROOM!!
@@ -42,6 +44,7 @@ export default () => {
       const t1 = performance.now()
 
       console.log( `Engine started in ${t1 - t0}ms.` )
+      m.redraw()
     },
 
     // Remove resize listener.
@@ -52,7 +55,9 @@ export default () => {
     view() {
       return m( _Chat, [
         m( Canvas ),
-        m( Chatbox ),
+        m( Chatbox, {
+          engine,
+        }),
       ])
     },
   }

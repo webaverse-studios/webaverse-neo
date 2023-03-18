@@ -169,7 +169,7 @@ export class PhysicsAdapter extends _PhysicsAdapter {
             dimensions.radius
           )
         }
-        case ct.BALL: {
+        case ct.SPHERE: {
           return ColliderDesc.ball( dimensions.radius )
         }
         case ct.CAPSULE: {

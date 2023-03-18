@@ -13,6 +13,7 @@ import {
   createLights,
   createRenderer,
   createScene,
+  createTerrain,
 } from './setup'
 
 /**
@@ -61,6 +62,10 @@ export class Chat extends Scene {
     this._controls = createControls( camera, renderer )
   }
 
+  get scene() {
+    return this._scene
+  }
+
   /**
    * Load GLTF Model and return Object3D
    */
@@ -87,13 +92,6 @@ export class Chat extends Scene {
     this._scene.add( this._grid.scene )
   }
 
-  #configureCharacter() {
-    this._character = new AvatarCharacter({
-      avatar: this._avatar,
-      physicsAdapter: this._physicsAdapter,
-    })
-  }
-
   /**
    * Add lights to the scene
    */
@@ -101,22 +99,20 @@ export class Chat extends Scene {
     this._lights.forEach(( light ) => this._scene.add( light ))
   }
 
-  async init() {
-    await Promise.all([this.#configureScene(), this.#initGeometry()])
-
-    this.#addLightsToScene()
-    this.#configureGeometry()
-    this.#configureCharacter()
-
-    this.#inputManager.destroy()
-    this.#inputManager.addEventListeners( document )
-
-    this.update()
-  }
-
   #render() {
     this._physicsAdapter.displayDebugInformation( this._lines )
     this._renderer.render( this._scene, this._camera )
+  }
+
+  async init() {
+    await Promise.all([this.#configureScene(), this.#initGeometry()])
+    await Promise.all([
+      this.#addLightsToScene(),
+      this.#configureGeometry(),
+      createTerrain( this._physicsAdapter, this._grid ),
+    ])
+
+    this.update()
   }
 
   update() {

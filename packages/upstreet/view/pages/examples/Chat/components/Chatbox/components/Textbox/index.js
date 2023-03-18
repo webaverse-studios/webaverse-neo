@@ -1,9 +1,15 @@
 import m from 'mithril'
+import { Vector3 } from 'three'
 
 import config from '@webaverse-studios/config'
+import {
+  bodyType as bt,
+  colliderType as ct,
+} from '@webaverse-studios/physics-rapier'
 
 import { body, input } from './style.module.scss'
 import { client } from '../../../../../../../../lib/feathers-client.js'
+import { generateShapeAt } from '../../lib/generate'
 
 const // Components
   _Textbox = `form.${body}`,
@@ -23,7 +29,8 @@ export function Textbox() {
       return m(
         _Textbox,
         {
-          onsubmit: ( e ) => onsubmit( e, v.attrs.messages, v.attrs.agentState ),
+          onsubmit: ( e ) =>
+            onsubmit( e, v.attrs.messages, v.attrs.agentState, v.attrs.engine ),
         },
         [
           // Input
@@ -50,8 +57,9 @@ export function Textbox() {
  * @param e
  * @param messages
  * @param agentState
+ * @param engine
  */
-async function onsubmit( e, messages, agentState ) {
+async function onsubmit( e, messages, agentState, engine ) {
   e.preventDefault()
 
   const formData = new FormData( e.target ),
@@ -71,7 +79,7 @@ async function onsubmit( e, messages, agentState ) {
   m.redraw()
 
   // Get response and end typing state.
-  await getResponse( messages )
+  await getResponse( messages, engine )
   agentState.isTyping = false
   m.redraw()
 }
@@ -79,8 +87,9 @@ async function onsubmit( e, messages, agentState ) {
 /**
  *
  * @param messages
+ * @param engine
  */
-async function getResponse( messages ) {
+async function getResponse( messages, engine ) {
   /*const newMessage = await fetch(
     `/api/v1/${api.chat}`, {
       method: 'GET',
@@ -89,12 +98,18 @@ async function getResponse( messages ) {
     },
   )*/
 
-  const { message } = await client.service( api.chat ).create({ messages })
-
   console.log( messages )
+  const { message } = await client.service( api.chat ).create({ messages })
+  if ( !message ) {
+    messages.push({
+      content: 'Having technical difficulties. Please try again :)',
+      role: 'assistant',
+    })
+    return
+  }
 
   const newMessage = {
-    content: message.content.trim(),
+    content: message.content.trim() || '',
     role: message.role,
   }
 
@@ -102,19 +117,21 @@ async function getResponse( messages ) {
   // "webaverse" and if so, mark it as code, replace the content and run the
   // code.
 
-  const
-    codeBlockRegex = /```webaverse\n([\s\S]*?)\n```/g,
+  const codeBlockRegex = /```webaverse\n([\s\S]*?)\n```/g,
     codeBlock = codeBlockRegex.exec( newMessage.content )
 
   if ( codeBlock ) {
-    newMessage.content = codeBlock[1]
+    newMessage.content = codeBlock[1] || ''
     newMessage.isCode = true
+
+    const scene = engine.scene.scene
+    const physicsAdapter = engine.physicsAdapter
 
     // Run the code.
     try {
       // Create a new function from the code block.
       // eslint-disable-next-line no-new-func
-      eval( message.content )
+      eval( newMessage.content )
     } catch ( error ) {
       console.error( error )
     }

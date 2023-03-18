@@ -2,7 +2,7 @@ import { createEnum } from '@soulofmischief/js-utils'
 
 /**
  * @typedef ColliderType
- * @property {symbol} BALL Ball shape.
+ * @property {symbol} SPHERE SPHERE shape.
  * @property {symbol} CONE Cone shape.
  * @property {symbol} CUBOID Cuboid shape.
  * @property {symbol} CAPSULE Capsule shape.
@@ -28,7 +28,7 @@ import { createEnum } from '@soulofmischief/js-utils'
  * @type {ColliderType}
  */
 export const colliderType = createEnum(
-  'BALL',
+  'SPHERE',
   'CONE',
   'CUBOID',
   'CAPSULE',

@@ -18,19 +18,28 @@ export class ChatService {
   }
   async create( data, params ) {
     if ( Array.isArray( data )) {
-      return Promise.all( data.map(( current ) =>
-        this.create( current, params )
-      ))
+      return Promise.all( data.map(( current ) => this.create( current, params )))
     }
 
-    const
-      { messages } = data,
-
+    const { messages } = data,
       systemMessage = {
         role: 'system',
         content: `You are an embodied AI companion who can, if a player specifically requests it, place objects in a scene by returning valid JavaScript code which calls the following function:
 
 \`\`\`js
+/**
+ * @typedef {object} DimensionOptions
+ * @property {number} [height] Height
+ * @property {number} [radius] Radius
+ * @property {number} [hx] Height x dimension
+ * @property {number} [hy] Height y dimension
+ * @property {number} [hz] Height z dimension
+ * @property {number} [halfHeight] Half height
+ * @property {Float32Array} [points] Points for convex hull
+ * @property {Float32Array} [vertices] vertices for triangle mesh
+ * @property {Uint32Array} [indices] indices for triangle mesh
+ */
+
 /**
  * Generate a Shape
  *
@@ -48,8 +57,8 @@ function generateShapeAt({
   scene,
   physicsAdapter,
   dimensions,
-  bodyType = bt.DYNAMIC,
-  colliderType = ct.CUBOID,
+  bodyType = bt.DYNAMIC, // use enum bt from @webaverse-studios/physics-rapier
+  colliderType = ct.CUBOID, // use enum ct from @webaverse-studios/physics-rapier
   rotation = new Vector3(),
   translation = new Vector3(),
   meshOptions = { color: '#D3D3D3' },
@@ -57,6 +66,8 @@ function generateShapeAt({
   // Code which places a shape in the scene.
 }
 \`\`\`
+
+
 
 Assume that the scene and physicsAdapter are defined already.
 
@@ -73,7 +84,6 @@ The format should look like this:
 
 Remember, when returning code, only return the above format, never deviating.`,
       },
-
       // Query GPT for a response.
       response = await fetch( `${this.endpoint}`, {
         method: 'POST',
@@ -86,11 +96,16 @@ Remember, when returning code, only return the above format, never deviating.`,
         body: JSON.stringify({
           // TODO: Prune messages to fit within the token limit without
           //  dropping the system message.
-          messages: [ systemMessage, ...messages ],
+          messages: [
+            systemMessage,
+            ...messages.map(( message ) => ({
+              role: message.role,
+              content: message.content,
+            })),
+          ],
           model: 'gpt-4',
         }),
       }),
-
       json = await response.json(),
       message = json.choices?.[0]?.message
 
