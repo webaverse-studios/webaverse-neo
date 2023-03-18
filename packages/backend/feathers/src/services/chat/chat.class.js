@@ -87,7 +87,7 @@ Remember, when returning code, only return the above format, never deviating.`,
           // TODO: Prune messages to fit within the token limit without
           //  dropping the system message.
           messages: [ systemMessage, ...messages ],
-          model: 'gpt-3.5-turbo',
+          model: 'gpt-4',
         }),
       }),
 
