@@ -1,9 +1,10 @@
 import Stats from 'stats.js'
+
 import { Debug } from '@webaverse-studios/debug'
 import { PhysicsAdapter } from '@webaverse-studios/physics-rapier'
 
-import { disableChromePerformanceBloat } from '../lib'
 import { WebGL } from './WebGL.js'
+import { disableChromePerformanceBloat } from '../lib'
 
 export class Engine {
   #stats = new Stats()
@@ -40,7 +41,14 @@ export class Engine {
    * @param {PhysicsAdapter} engineOptions.physicsAdapter The physics adapter
    * to use.
    */
-  constructor({ root, width, height, canvas, physicsAdapter, debugMode = false }) {
+  constructor({
+    root,
+    width,
+    height,
+    canvas,
+    physicsAdapter,
+    debugMode = false,
+  }) {
     if ( !WebGL.isWebGLAvailable()) {
       console.error( 'WebGL Is not supported!' )
       const warning = WebGL.getWebGLErrorMessage()
@@ -54,7 +62,7 @@ export class Engine {
     this.debugMode = debugMode
     this.physicsAdapter = physicsAdapter || new PhysicsAdapter()
 
-    dom.appendChild( this.#stats.dom )
+    root.appendChild( this.#stats.dom )
     this.#stats.showPanel( 0 )
     this.initializeCanvas({ height, width })
   }

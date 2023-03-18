@@ -1,18 +1,16 @@
-import config from '@webaverse-studios/config'
 import m from 'mithril'
-import { client } from '../../../../../../../../lib/feathers-client.js'
+
+import config from '@webaverse-studios/config'
+
 import { body, input } from './style.module.scss'
+import { client } from '../../../../../../../../lib/feathers-client.js'
 
-
-const
-  // Components
+const // Components
   _Textbox = `form.${body}`,
   Input = `input.${input}`,
-
   // Config
   { feathersConfig } = config,
   { api } = feathersConfig
-
 
 /**
  * Chatbox
@@ -22,30 +20,29 @@ const
 export function Textbox() {
   return {
     view( v ) {
-      return m( _Textbox, {
-        onsubmit: e => onsubmit(
-          e,
-          v.attrs.messages,
-          v.attrs.agentState,
-        ),
-      }, [
-        // Input
-        m( Input, {
-          type: 'text',
-          name: 'content',
-          placeholder: 'Say something...',
-          oninput: e => {
-            e.preventDefault()
-            e.stopPropagation()
+      return m(
+        _Textbox,
+        {
+          onsubmit: ( e ) => onsubmit( e, v.attrs.messages, v.attrs.agentState ),
+        },
+        [
+          // Input
+          m( Input, {
+            type: 'text',
+            name: 'content',
+            placeholder: 'Say something...',
+            oninput: ( e ) => {
+              e.preventDefault()
+              e.stopPropagation()
 
-            e.redraw = false
-          },
-        })
-      ])
+              e.redraw = false
+            },
+          }),
+        ]
+      )
     },
   }
 }
-
 
 /**
  *
@@ -56,8 +53,7 @@ export function Textbox() {
 async function onsubmit( e, messages, agentState ) {
   e.preventDefault()
 
-  const
-    formData = new FormData( e.target ),
+  const formData = new FormData( e.target ),
     content = formData.get( 'content' )
 
   // Return if no message.
@@ -79,7 +75,6 @@ async function onsubmit( e, messages, agentState ) {
   m.redraw()
 }
 
-
 /**
  *
  * @param messages
@@ -93,40 +88,33 @@ async function getResponse( messages ) {
     },
   )*/
 
-  const
-    { message } = await client
-      .service( api.chat )
-      .create({ messages }),
+  const { message } = await client.service( api.chat ).create({ messages })
 
-    newMessage = {
-      content: message.content.trim(),
-      role: message.role
-    }
+  console.log( messages )
+
+  const newMessage = {
+    content: message.content.trim(),
+    role: message.role,
+  }
 
   // Check if the new message contains a code block tagged with
   // "webaverse" and if so, mark it as code, replace the content and run the
   // code.
 
-  const
-    codeBlockRegex = /```webaverse\n([\s\S]*?)\n```/g,
+  const codeBlockRegex = /```webaverse\n([\s\S]*?)\n```/g,
     codeBlock = codeBlockRegex.exec( newMessage.content )
 
   if ( codeBlock ) {
-    newMessage.content = codeBlock[ 1 ]
+    newMessage.content = codeBlock[1]
     newMessage.isCode = true
 
     // Run the code.
     try {
-
       // Create a new function from the code block.
       // eslint-disable-next-line no-new-func
-      const fn = new Function(
-        'param',
-        newMessage.content
-      )
+      const fn = new Function( 'param', newMessage.content )
 
       console.log( 'fn:', fn )
-
     } catch ( error ) {
       console.error( error )
     }
