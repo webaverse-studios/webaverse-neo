@@ -47,6 +47,12 @@ export function Textbox() {
 }
 
 
+/**
+ *
+ * @param e
+ * @param messages
+ * @param agentState
+ */
 async function onsubmit( e, messages, agentState ) {
   e.preventDefault()
 
@@ -74,6 +80,10 @@ async function onsubmit( e, messages, agentState ) {
 }
 
 
+/**
+ *
+ * @param messages
+ */
 async function getResponse( messages ) {
   /*const newMessage = await fetch(
     `/api/v1/${api.chat}`, {
@@ -94,7 +104,8 @@ async function getResponse( messages ) {
     }
 
   // Check if the new message contains a code block tagged with
-  // "webaverse" and if so, mark it as code. Then, run the code.
+  // "webaverse" and if so, mark it as code, replace the content and run the
+  // code.
 
   const
     codeBlockRegex = /```webaverse\n([\s\S]*?)\n```/g,
@@ -103,6 +114,22 @@ async function getResponse( messages ) {
   if ( codeBlock ) {
     newMessage.content = codeBlock[ 1 ]
     newMessage.isCode = true
+
+    // Run the code.
+    try {
+
+      // Create a new function from the code block.
+      // eslint-disable-next-line no-new-func
+      const fn = new Function(
+        'param',
+        newMessage.content
+      )
+
+      console.log( 'fn:', fn )
+
+    } catch ( error ) {
+      console.error( error )
+    }
   }
 
   console.log( 'message:', newMessage )
