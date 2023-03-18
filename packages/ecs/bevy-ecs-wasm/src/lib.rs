@@ -2,7 +2,7 @@ use asset::JsScript;
 use js_sys::JsString;
 use wasm_bindgen::{prelude::wasm_bindgen, JsValue};
 
-use bevy_ecs::{component::ComponentInfo, prelude::World as BevyWorld};
+use bevy_ecs::{prelude::World as BevyWorld, prelude::*};
 
 mod asset;
 mod runtime;
@@ -103,5 +103,10 @@ impl World {
     }
 
     #[wasm_bindgen(js_name = getEntities)]
-    pub fn get_entities(&self) {}
+    pub fn get_entities(&self) -> Vec<Entity> {
+        self.raw_world
+            .query::<Entity>()
+            .iter(&self.raw_world)
+            .collect::<Vec<_>>()
+    }
 }
