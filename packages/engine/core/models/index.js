@@ -1,3 +1,3 @@
 export { Engine } from './Engine'
-export { Scene } from './Scene'
+export { RenderScene } from './Scene'
 export { WebGL } from './WebGL'

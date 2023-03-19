@@ -29,10 +29,7 @@ export class PhysicsAdapter {
    */
   createKinematicController() {
     console.warn(
-      ```
-      [PhysicsAdapter]: \`createKinematicController\` not implemented.
-      Using default dummy controller.
-      ```
+      '[PhysicsAdapter]: `createKinematicController` not implemented. Using default dummy controller.'
     )
     return new KinematicController()
   }

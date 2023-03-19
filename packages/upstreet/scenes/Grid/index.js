@@ -123,7 +123,7 @@ export class Grid extends Scene {
   }
 
   #render() {
-    this._physicsAdapter.displayDebugInformation( this._lines )
+    // this._physicsAdapter.displayDebugInformation( this._lines )
     this._renderer.render( this._scene, this._camera )
   }
 
@@ -132,16 +132,18 @@ export class Grid extends Scene {
     await Promise.all([
       this.#addLightsToScene(),
       this.#configureGeometry(),
-      this.#configureCharacter(),
+      // this.#configureCharacter(),
       this.#configureInputManager(),
       createTerrain( this._physicsAdapter, this._grid ),
     ])
+
+    this._initialized = true
 
     this.update()
   }
 
   update() {
-    this._character.update()
+    // this._character.update()
     this._controls.update()
     this.#render()
   }

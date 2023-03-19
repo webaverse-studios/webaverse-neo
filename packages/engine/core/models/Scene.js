@@ -20,7 +20,7 @@ import { PhysicsAdapter } from '@webaverse-studios/physics-core'
  *
  * @class
  */
-export class Scene {
+export class RenderScene {
   /**
    * Class Name
    *
@@ -108,6 +108,8 @@ export class Scene {
    */
   _inputManager
 
+  _initialized = false
+
   /**
    * Create a Scene
    *
@@ -118,7 +120,7 @@ export class Scene {
    * ⚠️ **NOTE**: {@link Engine} will call {@link init} after instantiation. ⚠️
    */
   constructor({ canvas, physicsAdapter }) {
-    if ( this.constructor === Scene ) {
+    if ( this.constructor === RenderScene ) {
       throw new Error( "Abstract classes can't be instantiated." )
     }
 
@@ -132,6 +134,10 @@ export class Scene {
 
   get debugLines() {
     return this._debugLines
+  }
+
+  get isInitialized() {
+    return this._initialized
   }
 
   /**
@@ -224,7 +230,7 @@ const createRenderer = ( canvas, scale = 1 ) => {
 /**
  * Creates the scene input manager
  *
- * @returns {Light[]} The configured renderer.
+ * @returns {InputManager} The configured input manager.
  */
 const createInputManager = () => {
   return new InputManager() // default profile

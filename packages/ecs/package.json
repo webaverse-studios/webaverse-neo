@@ -2,13 +2,20 @@
   "name": "@webaverse-studios/ecs",
   "version": "0.1.0",
   "type": "module",
+  "main": "index.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/webaverse-studios/webaverse-neo.git",
     "directory": "packages/ecs"
   },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@webaverse-studios/debug": "workspace:*",
-    "bitecs": "=0.3.38"
+    "bitecs": "NateTheGreatt/bitECS",
+    "vite": "=4"
   }
 }
