@@ -10,10 +10,10 @@ import {
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-import { Scene } from '@webaverse-studios/engine-nyx'
+import { RenderingScene } from '@webaverse-studios/engine-nyx'
 import { PhysicsAdapter } from '@webaverse-studios/physics-rapier'
 
-export class OrbitControlsScene extends Scene {
+export class OrbitControlsScene extends RenderingScene {
   /** @type {OrbitControls} */
   controls
 

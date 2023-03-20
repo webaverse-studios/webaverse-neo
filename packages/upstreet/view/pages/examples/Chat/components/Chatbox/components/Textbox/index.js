@@ -102,7 +102,7 @@ async function getResponse( messages, engine ) {
   const { message } = await client.service( api.chat ).create({ messages })
   if ( !message ) {
     messages.push({
-      content: 'Having technical difficulties. Please try again :)',
+      content: 'I`m sorry, Dave. I cannot do that.',
       role: 'assistant',
     })
     return
@@ -124,17 +124,20 @@ async function getResponse( messages, engine ) {
     newMessage.content = codeBlock[1] || ''
     newMessage.isCode = true
 
-    const scene = engine.scene.scene
+    const scene = engine.renderingScene
     const physicsAdapter = engine.physicsAdapter
+    let result
 
     // Run the code.
     try {
       // Create a new function from the code block.
       // eslint-disable-next-line no-new-func
-      eval( newMessage.content )
+      eval( 'result = ' + newMessage.content )
     } catch ( error ) {
       console.error( error )
     }
+
+    scene.addPhysicsObject( result )
   }
 
   console.log( 'message:', newMessage )

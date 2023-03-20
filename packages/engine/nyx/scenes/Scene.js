@@ -3,12 +3,12 @@
  * @author Yendor <lecoqjacob@gmail.com>
  */
 
-import { Scene as _Scene } from '@webaverse-studios/engine-core'
+import { RenderingScene as _RenderingScene } from '@webaverse-studios/engine-core'
 
 /**
  * Default scene.
  *
  * @class Nyx Scene
- * @augments _Scene
+ * @augments _RenderingScene
  */
-export class Scene extends _Scene {}
+export class RenderingScene extends _RenderingScene {}

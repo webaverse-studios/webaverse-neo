@@ -5,7 +5,7 @@ import { commands as c } from '../commands'
 /**
  * The default profile.
  *
- * @type {Profile}
+ * @type {import('@webaverse-studios/types').Profile}
  */
 export const defaultProfile = [
   [c.ATTACK, b[c.ATTACK], a.attack],

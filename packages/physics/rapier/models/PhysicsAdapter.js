@@ -1,17 +1,21 @@
 import {
+  Collider,
   ColliderDesc,
+  RigidBody,
   RigidBodyDesc,
   Vector3,
   World,
 } from '@dimforge/rapier3d-compat'
-import { BufferAttribute, Euler, LineSegments, Quaternion } from 'three'
+import {BufferAttribute, Euler, LineSegments, Quaternion} from 'three'
 
-import { PhysicsAdapter as _PhysicsAdapter } from '@webaverse-studios/physics-core'
+import {
+  PhysicsAdapter as _PhysicsAdapter
+} from '@webaverse-studios/physics-core'
 
-import { KinematicController } from './KinematicController'
-import { bodyType as bt } from '../bodyType'
-import { colliderType as ct } from '../colliderType'
-import { getRapier } from '../lib'
+import {KinematicController} from './KinematicController'
+import {bodyType as bt} from '../bodyType'
+import {colliderType as ct} from '../colliderType'
+import {getRapier} from '../lib'
 
 /**
  * @typedef {import('../bodyType').BodyType} BodyType
@@ -101,13 +105,14 @@ export class PhysicsAdapter extends _PhysicsAdapter {
    * Create a collider for a rigid-body
    *
    * @param {object} params Collider parameters
-   * @param {BodyType} params.bodyType Rigid-body type
-   * @param {string} params.colliderType Collider type
+   * @param {symbol} params.bodyType Rigid-body type
+   * @param {symbol} params.colliderType Collider type
    * @param {Vector3} params.translation Translation
    * @param {Vector3} params.rotation Rotation
    * @param {DimensionOptions} params.dimensions Collider dimensions
    * Mesh options
-   * @returns {ColliderReturn} Generated collider
+   * @returns {{collider: Collider, rigidBody: RigidBody}} Generated
+   * collider and rigid-body
    */
   createCollider({
     bodyType,
@@ -179,7 +184,10 @@ export class PhysicsAdapter extends _PhysicsAdapter {
           )
         }
         case ct.CONE: {
-          const cone = ColliderDesc.cone( dimensions.hh, dimensions.radius )
+          const cone = ColliderDesc.cone(
+            dimensions.halfHeight,
+            dimensions.radius
+          )
           // cone center of mass is at bottom
           cone.centerOfMass = { x: 0, y: 0, z: 0 }
           return cone

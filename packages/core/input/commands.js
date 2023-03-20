@@ -6,6 +6,8 @@ import { createEnum } from '@soulofmischief/js-utils'
  * @property {string} JUMP Jump command
  * @property {string} MOVE_FORWARD Move forward command
  * @property {string} MOVE_BACKWARD Move backward command
+ * @property {string} MOVE_LEFT Move left command
+ * @property {string} MOVE_RIGHT Move right commands
  */
 
 /**

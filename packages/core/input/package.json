@@ -12,6 +12,7 @@
   "dependencies": {
     "@soulofmischief/js-utils": "=0.22.0",
     "@webaverse-studios/debug": "workspace:*",
+    "@webaverse-studios/types": "workspace:*",
     "lodash.clonedeep": "^4.5.0",
     "lodash.pull": "^4.1.0",
     "murmurhash": "=2.0.1",

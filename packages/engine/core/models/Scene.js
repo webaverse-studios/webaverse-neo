@@ -10,31 +10,23 @@ import {
   TextureLoader,
   WebGLRenderer,
 } from 'three'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
 
-import { InputManager } from '@webaverse-studios/input'
-import { PhysicsAdapter } from '@webaverse-studios/physics-core'
+import {InputManager} from '@webaverse-studios/input'
+import {PhysicsAdapter} from '@webaverse-studios/physics-core'
 
 /**
  * Abstract Scene Class
  *
  * @class
  */
-export class Scene {
+export class RenderingScene extends THREEScene {
   /**
    * Class Name
    *
    * @type {string}
    */
   _name
-
-  /**
-   * Base Three.js Scene
-   *
-   * @type {THREEScene}
-   * @see {@link https://threejs.org/docs/#api/en/scenes/Scene}
-   */
-  _scene
 
   /**
    * Canvas to paint to
@@ -92,15 +84,6 @@ export class Scene {
    * @see {@link https://threejs.org/docs/#api/en/loaders/TextureLoader}
    */
   _textureLoader
-
-  /**
-   * Debugging lines
-   *
-   * @type {LineSegments}
-   * @see {@link https://threejs.org/docs/#api/en/objects/LineSegments}
-   */
-  _debugLines
-
   /**
    * Input Manager
    *
@@ -118,17 +101,23 @@ export class Scene {
    * ⚠️ **NOTE**: {@link Engine} will call {@link init} after instantiation. ⚠️
    */
   constructor({ canvas, physicsAdapter }) {
-    if ( this.constructor === Scene ) {
+    super()
+
+    if ( this.constructor === RenderingScene ) {
       throw new Error( "Abstract classes can't be instantiated." )
     }
 
-    this._name = this.constructor.name
+    this.name = this.constructor.name
     this.#configureScene( canvas, physicsAdapter )
   }
 
-  get name() {
-    return this._name
-  }
+  /**
+   * Debugging lines
+   *
+   * @type {LineSegments}
+   * @see {@link https://threejs.org/docs/#api/en/objects/LineSegments}
+   */
+  _debugLines
 
   get debugLines() {
     return this._debugLines
@@ -143,13 +132,16 @@ export class Scene {
   #configureScene = ( canvas, physicsAdapter ) => {
     this._canvas = canvas
     this._camera = createCamera()
-    this._scene = createTHREEScene()
     this._gltfLoader = new GLTFLoader()
     this._physicsAdapter = physicsAdapter
     this._textureLoader = new TextureLoader()
     this._debugLines = new LineSegments()
     this._inputManager = createInputManager()
     this._renderer = createRenderer( canvas, 1 )
+
+    // Configure scene.
+    this.background = new Color( 0x2a2a2a )
+    this.fog = new Fog( 0xffffff, 0, 750 )
   }
 
   /**
@@ -172,21 +164,6 @@ export class Scene {
    * Update the scene
    */
   update() {}
-}
-
-/**
- * Creates the THREE.js scene
- *
- * @returns {THREEScene} The configured scene.
- */
-const createTHREEScene = () => {
-  const scene = new THREEScene()
-
-  // Configure scene.
-  scene.background = new Color( 0x2a2a2a )
-  scene.fog = new Fog( 0xffffff, 0, 750 )
-
-  return scene
 }
 
 /**
@@ -224,7 +201,7 @@ const createRenderer = ( canvas, scale = 1 ) => {
 /**
  * Creates the scene input manager
  *
- * @returns {Light[]} The configured renderer.
+ * @returns {InputManager} The configured renderer.
  */
 const createInputManager = () => {
   return new InputManager() // default profile

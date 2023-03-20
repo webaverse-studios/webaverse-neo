@@ -1,1 +1,1 @@
-export { Scene } from './Scene'
+export { RenderingScene } from './Scene'

@@ -16,6 +16,7 @@ export class ChatService {
       text: 'hi',
     }
   }
+
   async create( data, params ) {
     if ( Array.isArray( data )) {
       return Promise.all( data.map(( current ) => this.create( current, params )))
@@ -53,7 +54,7 @@ export class ChatService {
  * @param {import('@webaverse-studios/physics-rapier').BodyType} params.bodyType Body Type
  * @param {import('@webaverse-studios/physics-rapier/colliderType').ColliderType} params.colliderType Collider Type
  */
-function generateShapeAt({
+var result = function generateShapeAt({
   scene,
   physicsAdapter,
   dimensions,

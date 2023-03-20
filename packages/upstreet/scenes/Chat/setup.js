@@ -2,34 +2,23 @@ import {
   AmbientLight,
   Box3,
   BufferGeometry,
-  Color,
-  Fog,
   LineBasicMaterial,
   LineSegments,
   PerspectiveCamera,
   PointLight,
-  Scene,
-  Vector3,
   WebGLRenderer,
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
+import {
+  InputManager,
+  commands as c,
+  defaultBindings as db,
+} from '@webaverse-studios/input'
 import { PhysicsAdapter, bodyType } from '@webaverse-studios/physics-rapier'
 import { colliderType } from '@webaverse-studios/physics-rapier/colliderType'
 
-/**
- * Create Scene
- *
- * @returns {Scene} - The configured scene.
- */
-export function createScene() {
-  const scene = new Scene()
-
-  scene.background = new Color( 0x2a2a2a )
-  scene.fog = new Fog( 0xffffff, 0, 750 )
-
-  return scene
-}
+import { moveController } from './input'
 
 /**
  * Create WebGL Renderer
@@ -67,7 +56,7 @@ export function createCamera() {
 /**
  * Create Lights
  *
- * @returns {PointLight[]} The configured lights.
+ * @returns {[PointLight, PointLight, AmbientLight]} The configured lights.
  */
 export function createLights() {
   const light1 = new PointLight( 0xffffff, 1, 0, 2 ),
@@ -119,11 +108,12 @@ export function createDebugLines() {
  *
  * @param {PhysicsAdapter} physicsAdapter The physics adapter to use.
  * @param {import('@webaverse-studios/types').GLTF} grid The grid to generate terrain from.
+ * @returns {{collider: import('@webaverse-studios/physics-rapier').Collider, rigidBody: import('@webaverse-studios/physics-rapier').RigidBody}} - The configured terrain.
  */
 export function createTerrain( physicsAdapter, grid ) {
   // floor
   let floorDimensions = new Box3().setFromObject( grid.scene )
-  physicsAdapter.createCollider({
+  const { collider, rigidBody } = physicsAdapter.createCollider({
     bodyType: bodyType.FIXED,
     colliderType: colliderType.CUBOID,
     dimensions: {
@@ -132,4 +122,22 @@ export function createTerrain( physicsAdapter, grid ) {
       hz: floorDimensions.max.z,
     },
   })
+
+  return { collider, rigidBody }
+}
+
+/**
+ * Create input manager for test scene
+ *
+ * @param {import('./index').Grid} ctx The context to bind to.
+ * @returns {InputManager} - The configured input manager.
+ */
+export function createInputManager( ctx ) {
+  const profile = [
+    [c.MOVE_FORWARD, db[c.MOVE_FORWARD], moveController.bind( ctx )],
+    [c.MOVE_BACKWARD, db[c.MOVE_BACKWARD], moveController.bind( ctx )],
+    [c.MOVE_LEFT, db[c.MOVE_LEFT], moveController.bind( ctx )],
+    [c.MOVE_RIGHT, db[c.MOVE_RIGHT], moveController.bind( ctx )],
+  ]
+  return new InputManager( profile )
 }

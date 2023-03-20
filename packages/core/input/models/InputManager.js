@@ -16,12 +16,23 @@ export class InputManager {
   #profile = null
 
   /**
-   * @param {Command[]} commands
+   * Create an input manager
+   *
+   * @param {import('@webaverse-studios/types').Profile} profile The profile to register
    */
-  constructor({
-    profile,
-  } = {}) {
-    this.profile = profile || defaultProfile
+  constructor( profile = defaultProfile ) {
+    this.profile = profile
+  }
+
+  get profile() {
+    return this.#profile
+  }
+
+  set profile( profile ) {
+    this.#profile = profile
+    this.#commands = createCommands( profile )
+    this.#bindings.clear()
+    this.registerCommands( this.#commands )
   }
 
   /**
@@ -31,8 +42,7 @@ export class InputManager {
   #handleKeyboardInput( event ) {
     const command = this.#bindings.get( event.code )
 
-    if ( command )
-      this.#triggerCommand( command )
+    if ( command ) this.#triggerCommand( command, event )
   }
 
   /**
@@ -42,8 +52,7 @@ export class InputManager {
   #handleMouseInput( event ) {
     const command = this.#bindings.get( `Mouse${event.button}` )
 
-    if ( command )
-      this.#triggerCommand( command )
+    if ( command ) this.#triggerCommand( command )
   }
 
   #removeEventListeners( element ) {
@@ -57,9 +66,10 @@ export class InputManager {
   /**
    *
    * @param {Command} command
+   * @param {KeyboardEvent | MouseEvent} event
    */
-  #triggerCommand( command ) {
-    command?.callback()
+  #triggerCommand( command, event ) {
+    command?.callback( event )
   }
 
   /**
@@ -104,13 +114,12 @@ export class InputManager {
    * @returns {void}
    */
   registerCommands( commands ) {
-    for ( const [ ,command ] of commands ) {
-      command.bindings.forEach( binding => {
+    for ( const [, command] of commands ) {
+      command.bindings.forEach(( binding ) => {
         this.#bindings.set( binding, command )
       })
     }
   }
-
 
   /**
    * Unregister commands.
@@ -119,21 +128,10 @@ export class InputManager {
    * @returns {void}
    */
   unregisterCommands( ...commands ) {
-    for ( const [ ,command ] of commands ) {
-      command.bindings.forEach( binding => {
+    for ( const [, command] of commands ) {
+      command.bindings.forEach(( binding ) => {
         this.#bindings.delete( binding )
       })
     }
-  }
-
-  get profile() {
-    return this.#profile
-  }
-
-  set profile( profile ) {
-    this.#profile = profile
-    this.#commands = createCommands( profile )
-    this.#bindings.clear()
-    this.registerCommands( this.#commands )
   }
 }

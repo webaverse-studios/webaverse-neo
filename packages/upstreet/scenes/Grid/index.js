@@ -1,12 +1,12 @@
-import { VRM } from '@pixiv/three-vrm'
-import { TextureLoader } from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import {VRM} from '@pixiv/three-vrm'
+import {TextureLoader} from 'three'
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 
-import { Debug } from '@webaverse-studios/debug'
-import { AvatarCharacter, Scene } from '@webaverse-studios/engine-nyx'
-import { PhysicsAdapter } from '@webaverse-studios/physics-rapier'
+import {Debug} from '@webaverse-studios/debug'
+import {AvatarCharacter, RenderingScene,} from '@webaverse-studios/engine-nyx'
+import {PhysicsAdapter} from '@webaverse-studios/physics-rapier'
 
-import { loadGeometry } from './load'
+import {loadGeometry} from './load'
 import {
   createCamera,
   createControls,
@@ -26,7 +26,7 @@ import {
  * @class
  * @augments Scene
  */
-export class Grid extends Scene {
+export class Grid extends RenderingScene {
   /** @type {GLTF} */
   _grid
   /** @type {VRM} */

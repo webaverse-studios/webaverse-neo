@@ -1,9 +1,9 @@
 /* eslint-disable max-len */
 /* eslint-disable no-console */
 
-import { LineSegments, Vector3 } from 'three'
+import {LineSegments, Vector3} from 'three'
 
-import { KinematicController } from './KinematicController'
+import {KinematicController} from './KinematicController'
 
 /** TODO: Move this into a utils lib :) @cosmos */
 
@@ -29,10 +29,7 @@ export class PhysicsAdapter {
    */
   createKinematicController() {
     console.warn(
-      ```
-      [PhysicsAdapter]: \`createKinematicController\` not implemented.
-      Using default dummy controller.
-      ```
+      '[PhysicsAdapter]: `createKinematicController` not implemented. Using default dummy controller.'
     )
     return new KinematicController()
   }
@@ -45,6 +42,11 @@ export class PhysicsAdapter {
   async init() {}
 
   /**
+   * Update the physics adapter
+   */
+  update() {}
+
+  /**
    * Create a collider for a rigid-body
    *
    * @param {object} colliderParams Collider parameters
@@ -55,14 +57,14 @@ export class PhysicsAdapter {
    * @param {object} colliderParams.dimensions Collider dimensions
    * @returns {object} Generated collider
    */
-  async createCollider( colliderParams ) {
+  createCollider( colliderParams ) {
     inlineParameters( colliderParams )
     console.warn( '[PhysicsAdapter]: `createCollider` not implemented' )
   }
 
   /**
    * Update the physics adapterimport { Scene } from '@webaverse-studios/engine-core'
-   
+
    *
    * @param {KinematicController} controller controller to destroy
    * @returns {void}

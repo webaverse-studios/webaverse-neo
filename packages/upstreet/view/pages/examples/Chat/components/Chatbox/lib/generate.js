@@ -44,7 +44,7 @@ export function generateShapeAt({
   translation = new Vector3(),
   meshOptions = { color: '#D3D3D3' },
 }) {
-  physicsAdapter.createCollider({
+  const { collider, rigidBody } = physicsAdapter.createCollider({
     bodyType,
     colliderType,
     dimensions,
@@ -82,5 +82,8 @@ export function generateShapeAt({
     }
   })()
 
-  scene.add( new Mesh( bufferGeometry, new MeshPhongMaterial( meshOptions )))
+  const mesh = new Mesh( bufferGeometry, new MeshPhongMaterial( meshOptions ))
+  scene.add( mesh )
+
+  return { mesh, collider, rigidBody }
 }

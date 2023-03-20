@@ -1,21 +1,18 @@
 import {
   AmbientLight,
-  Color,
-  Fog,
   Object3D,
   PerspectiveCamera,
   PointLight,
-  Scene as THREEScene,
   WebGLRenderer,
 } from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
-import { Scene } from '@webaverse-studios/engine-nyx'
+import { RenderingScene } from '@webaverse-studios/engine-nyx'
 import { PhysicsAdapter } from '@webaverse-studios/physics-rapier'
 
 import { loadGeometry } from './geometry'
 
-export class Example extends Scene {
+export class Example extends RenderingScene {
   /** @type {Object3D} */
   _cube
 
@@ -38,7 +35,6 @@ export class Example extends Scene {
    * Configure Scene
    */
   #configureScene() {
-    this._scene = createTHREEScene()
     this._camera = createCamera()
     this._lights = createLights()
     this._renderer = createRenderer( this._canvas, 1 )
@@ -125,21 +121,6 @@ function createRenderer( canvas, scale = 1 ) {
   renderer.setSize( window.innerWidth, window.innerHeight )
   renderer.setSize( innerWidth * scale, innerHeight * scale, false )
   return renderer
-}
-
-/**
- * Create THREE Scene
- *
- * @returns {Scene} - The configured scene.
- */
-function createTHREEScene() {
-  const scene = new THREEScene()
-
-  // Configure scene.
-  scene.background = new Color( 0x2a2a2a )
-  scene.fog = new Fog( 0xffffff, 0, 750 )
-
-  return scene
 }
 
 /**
