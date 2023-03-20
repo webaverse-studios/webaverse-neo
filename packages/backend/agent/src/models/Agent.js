@@ -11,6 +11,7 @@ import { addAgentToGunDB } from '../lib/gun/addAgentToGunDB.js'
 import { describe } from '../lib/emotional-vision/img2text'
 import { img2img } from '../lib/emotional-vision/img2img.js'
 import { emotional_states } from './config.js'
+import { computeVisualSentiment } from '../lib/visual-sentiment-analysis/visual-sentiment.js'
 
 /**
  * @class Agent
@@ -46,6 +47,9 @@ export class Agent {
       const imageBlob = await this.offscreenCanvas.convertToBlob()
       const { editedImage, description } =
         await this.applyEmotionalStateToImage(imageBlob)
+
+      const sentiment = await computeVisualSentiment(editedImage)
+      console.log('sentiment', sentiment)
 
       const img_data = {
         hash_condition: {
