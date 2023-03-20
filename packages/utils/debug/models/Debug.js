@@ -15,7 +15,7 @@ export class Debug {
    * @type {Set<string>}
    * @private
    */
-  #loggedMessages = new Set()
+  static _loggedMessages = new Set()
 
   /**
    * Assertion error message. If the assertion is false, the error
@@ -76,12 +76,12 @@ export class Debug {
   /**
    * Info message logged no more than once.
    *
-   * @param {string} message The message to log.
+   * @param {...*} message The message to log.
    */
-  static logOnce( message ) {
-    if ( !Debug._loggedMessages.has( message )) {
-      Debug._loggedMessages.add( message )
-      console.log( message )
+  static logOnce( ...message ) {
+    if ( !Debug._loggedMessages.has( message[0])) {
+      Debug._loggedMessages.add( message[0])
+      console.log( ...message )
     }
   }
 
@@ -118,12 +118,12 @@ export class Debug {
   /**
    * Error message logged no more than once.
    *
-   * @param {string} message The message to log.
+   * @param {...any} message The message to log.
    */
-  static errorOnce( message ) {
-    if ( !Debug._loggedMessages.has( message )) {
-      Debug._loggedMessages.add( message )
-      console.error( message )
+  static errorOnce( ...message ) {
+    if ( !Debug._loggedMessages.has( message[0])) {
+      Debug._loggedMessages.add( message[0])
+      console.error( `[Error]:`, ...message )
     }
   }
 
@@ -137,7 +137,7 @@ export class Debug {
   static gpuError( ...args ) {
     if ( !Debug._loggedMessages.has( args[0])) {
       Debug._loggedMessages.add( args[0])
-      console.error( `GPU VALIDATION ERROR: `, ...args )
+      console.error( `[GPU VALIDATION ERROR]: `, ...args )
     }
   }
 

@@ -97,7 +97,7 @@ function createCamera() {
 /**
  * Create Lights
  *
- * @returns {PointLight[]} - The configured lights.
+ * @returns {[PointLight, PointLight, AmbientLight]} - The configured lights.
  */
 function createLights() {
   const light1 = new PointLight( 0xffffff, 1, 0, 2 ),
@@ -130,7 +130,7 @@ function createRenderer( canvas, scale = 1 ) {
 /**
  * Create THREE Scene
  *
- * @returns {Scene} - The configured scene.
+ * @returns {THREEScene} - The configured scene.
  */
 function createTHREEScene() {
   const scene = new THREEScene()
@@ -150,5 +150,5 @@ function createTHREEScene() {
  */
 async function createCube( loader ) {
   const cube = await loadGeometry( loader )
-  return cube.scene.getObjectByName( 'Cube' )
+  return cube.scene.getObjectByName( 'Cube' ) ?? cube.scene
 }

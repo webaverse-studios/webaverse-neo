@@ -16,7 +16,7 @@ import { InputManager } from '@webaverse-studios/input'
 import { PhysicsAdapter } from '@webaverse-studios/physics-core'
 
 /**
- * Abstract Scene Class
+ * Render Scene Class
  *
  * @class
  */
@@ -108,6 +108,8 @@ export class RenderScene {
    */
   _inputManager
 
+  _engine
+
   _initialized = false
 
   /**
@@ -134,10 +136,6 @@ export class RenderScene {
 
   get debugLines() {
     return this._debugLines
-  }
-
-  get isInitialized() {
-    return this._initialized
   }
 
   /**

@@ -1,18 +1,13 @@
+import * as bitECS from 'bitecs'
 import Stats from 'stats.js'
 
 import { Debug } from '@webaverse-studios/debug'
+import { SceneComponent, renderSystem } from '@webaverse-studios/ecs'
 import { PhysicsAdapter } from '@webaverse-studios/physics-core'
 
 import { RenderScene } from './Scene'
 import { WebGL } from './WebGL.js'
 import { disableChromePerformanceBloat } from '../lib'
-
-/**
- * @typedef {object} Time
- * @property {number} last The last time the engine was updated.
- * @property {number} delta The time in milliseconds since the last frame.
- * @property {number} elapsed The time in milliseconds since the engine started.
- */
 
 export class Engine {
   stats = new Stats()
@@ -44,16 +39,19 @@ export class Engine {
    */
   fps = 60
 
-  /** @type {number} */
-  fpsTolerance = 0.1
-
-  /** @type {number} */
-  dt = 0
-
   /**
    * @type {Map<number, RenderScene>}
    */
   #scenes = new Map()
+
+  /**
+   * @type {bitECS.IWorld}
+   */
+  #world
+
+  #systems = [renderSystem]
+
+  #pipeline = bitECS.pipe( ...this.#systems )
 
   /**
    * Create a new Base Engine instance.
@@ -86,6 +84,7 @@ export class Engine {
 
     this.canvas = canvas
     this.debugMode = debugMode
+    this.#world = bitECS.createWorld( this )
     this.physicsAdapter = physicsAdapter || new PhysicsAdapter()
 
     dom.appendChild( this.stats.dom )
@@ -95,6 +94,25 @@ export class Engine {
 
   get scenes() {
     return this.#scenes
+  }
+
+  /**
+   *
+   * Add a scene to the engine
+   *
+   * @param {import('./Scene').RenderScene} RenderScene scene to load
+   */
+  #addScene( RenderScene ) {
+    const sceneId = bitECS.addEntity( this.#world )
+    bitECS.addComponent( this.#world, SceneComponent, sceneId )
+
+    const renderingScene = new RenderScene({
+      canvas: this.canvas,
+      physicsAdapter: this.physicsAdapter,
+    })
+
+    renderingScene._engine = this
+    this.#scenes.set( sceneId, renderingScene )
   }
 
   /**
@@ -115,19 +133,10 @@ export class Engine {
    *
    * Load a scene into the engine
    *
-   * @param {typeof RenderScene} RenderScene scene to load
+   * @param {RenderScene} RenderScene scene to load
    */
   async load( RenderScene ) {
-    // Initialize Physics
-    await this.physicsAdapter.init()
-
-    this.#scenes.set(
-      0,
-      new RenderScene({
-        canvas: this.canvas,
-        physicsAdapter: this.physicsAdapter,
-      })
-    )
+    this.#addScene( RenderScene )
   }
 
   pause() {
@@ -148,13 +157,6 @@ export class Engine {
   start() {
     this.reset()
     this.isPlaying = true
-
-    if ( !this.renderingScene ) {
-      Debug.error( 'No scene loaded for engine' )
-    } else {
-      Debug.log( `Scene ${this.renderingScene.name} is Starting` )
-    }
-
     requestAnimationFrame(() => this.update())
   }
 
@@ -162,9 +164,24 @@ export class Engine {
     this.isPlaying = false
   }
 
+  /**
+   * Add a system to the engine.
+   *
+   * @param {(engine: Engine) => Promise<Engine>} system The system to add to
+   * the engine.
+   */
+  addSystem( system ) {
+    this.#systems.push( system )
+    this.#pipeline = bitECS.pipe( ...this.#systems )
+  }
+
   update() {
     // Encapsulate context.
     const ctx = this
+
+    const fpsTolerance = 0.1
+    var then = performance.now()
+    const interval = 1000 / ctx.fps
 
     /**
      *
@@ -172,19 +189,14 @@ export class Engine {
      *
      * @param {number} dt The time in milliseconds since the last frame.
      */
-    // eslint-disable-next-line no-unused-vars
     function loop( dt ) {
-      ctx.dt = dt
+      const delta = dt - then
 
-      // Run physics
-      // ctx.physicsAdapter.update()
+      if ( delta >= interval - fpsTolerance ) {
+        then = dt - ( delta % interval )
+        ctx.#pipeline( ctx.#world )
+      }
 
-      // Run scene update
-      ctx.stats.begin()
-      // ctx.renderingScene.update()
-      ctx.stats.end()
-
-      // Debug.log( `[Engine Update]: delta: ${delta}` )
       if ( ctx.isPlaying ) requestAnimationFrame( loop )
     }
 

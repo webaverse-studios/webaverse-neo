@@ -87,6 +87,8 @@ export class OrbitControlsScene extends Scene {
     this.update()
   }
 
+  async init() {}
+
   update() {
     this.controls.update()
     this._renderer.render( this._scene, this._camera )

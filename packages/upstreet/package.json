@@ -15,6 +15,7 @@
   "dependencies": {
     "@pixiv/three-vrm": "=1.0.9",
     "@soulofmischief/js-utils": "=0.22.0",
+    "@types/node": "^18",
     "@webaverse-studios/backend-agent": "workspace:*",
     "@webaverse-studios/config": "workspace:*",
     "@webaverse-studios/debug": "workspace:*",

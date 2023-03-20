@@ -9,8 +9,8 @@ export class NyxEngine extends Engine {
    * @param {HTMLCanvasElement} options.canvas The canvas element to render
    * the scene on.
    * @param {HTMLElement} options.dom The dom element to render the scene on.
-   * @param {number} options.height The height of the canvas.
-   * @param {number} options.width The width of the canvas.
+   * @param {number} [options.height] The height of the canvas.
+   * @param {number} [options.width] The width of the canvas.
    */
   constructor({ canvas, dom, height, width }) {
     // Use Rapier physics adapter
@@ -37,6 +37,12 @@ export class NyxEngine extends Engine {
     super.reset()
   }
 
+  /**
+   * Resize the canvas.
+   *
+   * @param {number} [width] The width of the canvas.
+   * @param {number} [height] The height of the canvas.
+   */
   resize( width, height ) {
     super.resize( width, height )
   }

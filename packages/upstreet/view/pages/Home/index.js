@@ -4,10 +4,11 @@ import m from 'mithril'
 import { Debug } from '@webaverse-studios/debug'
 import { NyxEngine } from '@webaverse-studios/engine-nyx'
 
+// @ts-ignore
 import { body, canvas } from './style.module.scss'
-import { Grid } from '../../../scenes/index'
+import { Example } from '../../../scenes/index'
 
-const defaultScene = Grid
+const defaultScene = Example
 
 // Components
 const _Home = `.${body}`,

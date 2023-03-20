@@ -12,6 +12,7 @@
   "dependencies": {
     "@soulofmischief/js-utils": "=0.22.0",
     "@webaverse-studios/debug": "workspace:*",
+    "@webaverse-studios/ecs": "workspace:*",
     "@webaverse-studios/input": "workspace:*",
     "@webaverse-studios/physics-core": "workspace:*",
     "@webaverse-studios/types": "workspace:*",
