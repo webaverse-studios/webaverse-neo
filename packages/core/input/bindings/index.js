@@ -1,1 +1,0 @@
-export { defaultBindings } from './default'

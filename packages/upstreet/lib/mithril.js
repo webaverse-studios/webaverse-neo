@@ -16,8 +16,10 @@ m.redraw.sync = new Proxy( m.redraw.sync, {
   get( target, prop ) {
     return target[prop]
   },
+
   set( target, prop, value ) {
     target[prop] = value
+    return true
   },
 })
 
@@ -38,6 +40,7 @@ m.redraw = new Proxy( m.redraw, {
   },
   set( target, prop, value ) {
     target[prop] = value
+    return true
   },
 })
 

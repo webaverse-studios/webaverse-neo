@@ -1,1 +1,0 @@
-export { defaultProfile } from './default'
