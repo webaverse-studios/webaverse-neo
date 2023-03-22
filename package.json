@@ -5,17 +5,14 @@
   "type": "module",
   "packageManager": "yarn@3.4.1",
   "scripts": {
+    "compiler": "yarn workspace @webaverse-studios/compiler",
     "config-pkg": "yarn workspace @webaverse-studios/config",
     "dev": "concurrently -c #6D1A36,#53917E,#36558F \"yarn:upstreet dev\" \"yarn:feathers dev\" \"yarn:gun dev\"",
-    "engine": "yarn workspace @webaverse-studios/engine",
     "feathers": "yarn workspace @webaverse-studios/backend-feathers",
     "gun": "yarn workspace @webaverse-studios/backend-gun",
-    "input": "yarn workspace @webaverse-studios/input",
     "lint": "eslint . --config ./.eslintrc.cjs --fix",
-    "engine-nyx": "yarn workspace @webaverse-studios/engine-nyx",
+    "metaversefile": "yarn workspace @webaverse-studios/metaversefile",
     "start": "concurrently \"yarn upstreet start\"",
-    "physics-core": "yarn workspace @webaverse-studios/physics-core",
-    "physics-rapier": "yarn workspace @webaverse-studios/physics-rapier",
     "upstreet": "yarn workspace @webaverse-studios/upstreet"
   },
   "devDependencies": {
@@ -38,13 +35,10 @@
   ],
   "resolutions": {
     "@webaverse-studios/backend-agent": "workspace:*",
+    "@webaverse-studios/compiler": "workspace:*",
     "@webaverse-studios/config": "workspace:*",
     "@webaverse-studios/debug": "workspace:*",
-    "@webaverse-studios/engine-core": "workspace:*",
-    "@webaverse-studios/engine-nyx": "workspace:*",
-    "@webaverse-studios/input": "workspace:*",
-    "@webaverse-studios/physics-core": "workspace:*",
-    "@webaverse-studios/physics-rapier": "workspace:*",
+    "@webaverse-studios/metaversefile": "workspace:*",
     "@webaverse-studios/types": "workspace:*",
     "@webaverse-studios/upstreet": "workspace:*"
   }

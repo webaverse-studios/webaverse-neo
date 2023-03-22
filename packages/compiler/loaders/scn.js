@@ -8,14 +8,17 @@ const templateString = fs.readFileSync(
   'utf8'
 )
 
-export default {
+/**
+ * @type {import('../plugins/metaversefilePlugin').MetaverseFilePluigin}
+ */
+const scnLoader = {
   async load( id ) {
     const { contentId, name, description, components } = parseIdHash( id )
 
     const code = fillTemplate( templateString, {
       srcUrl: JSON.stringify( id ),
-      contentId: JSON.stringify( contentId ),
       name: JSON.stringify( name ),
+      contentId: JSON.stringify( contentId ),
       description: JSON.stringify( description ),
       components: JSON.stringify( components ),
     })
@@ -26,3 +29,5 @@ export default {
     }
   },
 }
+
+export default scnLoader

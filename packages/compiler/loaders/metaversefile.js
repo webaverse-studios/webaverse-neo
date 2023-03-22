@@ -69,6 +69,9 @@ function makeHash({ mapped_start_url, name, description, components }) {
   return params ? '#' + params : ''
 }
 
+/**
+ * @type {import('../plugins/metaversefilePlugin').MetaverseFilePluigin}
+ */
 const metaversefile = {
   async resolveId( id ) {
     const file = await fetchFileFromId( id, 'utf8' )

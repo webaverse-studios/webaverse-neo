@@ -24,7 +24,12 @@ import vox from './vox.js'
 import vrm from './vrm.js'
 import wind from './wind.js'
 
-export default {
+/** @typedef {import('../plugins/metaversefilePlugin').MetaverseFilePluigin} MetaverseFilePluigin */
+
+/**
+ * @type {Object<string,MetaverseFilePluigin>}
+ */
+const loaders = {
   gif,
   glb,
   glbb,
@@ -56,3 +61,5 @@ export default {
   wind,
   '': directory,
 }
+
+export default loaders

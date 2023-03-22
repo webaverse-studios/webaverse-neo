@@ -8,20 +8,26 @@ const templateString = fs.readFileSync(
   'utf8'
 )
 
-export default {
+/**
+ * @type {import('../plugins/metaversefilePlugin').MetaverseFilePluigin}
+ */
+const vrmLoader = {
   async load( id ) {
     const { contentId, name, description, components } = parseIdHash( id )
 
     const code = fillTemplate( templateString, {
       srcUrl: JSON.stringify( id ),
-      contentId: JSON.stringify( contentId ),
       name: JSON.stringify( name ),
-      description: JSON.stringify( description ),
+      contentId: JSON.stringify( contentId ),
       components: JSON.stringify( components ),
+      description: JSON.stringify( description ),
     })
+
     return {
       code,
       map: null,
     }
   },
 }
+
+export default vrmLoader

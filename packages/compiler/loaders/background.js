@@ -8,7 +8,10 @@ const templateString = fs.readFileSync(
   'utf8'
 )
 
-export default {
+/**
+ * @type {import('../plugins/metaversefilePlugin').MetaverseFilePluigin}
+ */
+const backgroundLoader = {
   load( id ) {
     const { contentId, name, description, components } = parseIdHash( id )
 
@@ -26,3 +29,5 @@ export default {
     }
   },
 }
+
+export default backgroundLoader

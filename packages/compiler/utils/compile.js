@@ -5,17 +5,21 @@ import metaversefilePlugin from '../plugins/metaversefilePlugin'
 
 const metaversefilePluginInstance = metaversefilePlugin()
 
+/**
+ * Proxy the metaversefile plugin to esbuild
+ */
 const metaversefilePluginProxy = {
   name: 'metaversefile',
   setup( build ) {
     build.onResolve({ filter: /^/ }, async ( args ) => {
       try {
-        const p = await metaversefilePluginInstance.resolveId(
+        const path = await metaversefilePluginInstance.resolveId(
           args.path,
           args.importer
         )
+
         return {
-          path: p,
+          path,
           namespace: 'metaversefile',
         }
       } catch ( err ) {
@@ -28,13 +32,11 @@ const metaversefilePluginProxy = {
         }
       }
     })
+
     build.onLoad({ filter: /^/ }, async ( args ) => {
       try {
-        let c = await metaversefilePluginInstance.load( args.path )
-        c = c.code
-        return {
-          contents: c,
-        }
+        let loadedInstance = await metaversefilePluginInstance.load( args.path )
+        return { contents: loadedInstance.code }
       } catch ( err ) {
         return {
           errors: [
@@ -58,9 +60,9 @@ async function compile( moduleUrl ) {
     entryPoints: [moduleUrl],
     bundle: true,
     format: 'esm',
-    plugins: [metaversefilePluginProxy],
     write: false,
     outdir: 'out',
+    plugins: [metaversefilePluginProxy],
   })
 
   if ( build.outputFiles.length > 0 ) {

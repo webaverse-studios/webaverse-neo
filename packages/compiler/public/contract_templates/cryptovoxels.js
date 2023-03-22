@@ -17,6 +17,7 @@ function convertDataURIToBinary(base64) {
 const _getParcel = (x, z, parcels) => parcels.find(parcel => {
   return x >= parcel.x1 && x < parcel.x2 && z >= parcel.z1 && z < parcel.z2;
 });
+
 const _getContent = async (id, hash) => {
   const res = await fetch('https://https-js-cryptovoxels-com.proxy.webaverse.com/grid/parcels/' + id + '/at/' + hash);
   const j = await res.json();
@@ -26,9 +27,7 @@ const _getContent = async (id, hash) => {
 
 const _getTextureMaterial = u => {
 
-  const material = new THREE.MeshBasicMaterial({
-    side: THREE.DoubleSide,
-    // transparent: true,
+  const material = new THREE.MeshBasicMaterial({side: THREE.DoubleSide,
   });
   material.polygonOffset = true;
   material.polygonOffsetFactor = -1.0;
@@ -67,19 +66,20 @@ const _getTextureMaterialCached = (() => {
     return entry;
   };
 })();
+
 const zoom = 8;
 const tileRange = 4;
 const centerTile = 128;
 const tilePixelWidth = 256;
 const numTiles = tileRange*2;
 const mapSize = 1000*2*(1 + 1/numTiles);
-// const tileVoxelWidth = mapSize/4/numTiles;
 
 const _loadVox = async u => {
   let o = await new Promise((accept, reject) => {
     const {voxLoader} = useLoaders();
     voxLoader.load(u, accept, function onprogress() {}, reject);
   });
+
   const {geometry} = o;
   const positions = geometry.attributes.position.array;
   const normals = geometry.attributes.normal.array;

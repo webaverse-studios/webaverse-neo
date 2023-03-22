@@ -2,7 +2,7 @@
   "name": "@webaverse-studios/compiler",
   "version": "0.1.0",
   "description": "",
-  "author": "Webaverse",
+  "author": "Yendor <lecoqjacob@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/webaverse/metaversefile#readme",
   "bugs": {
@@ -21,27 +21,26 @@
     "lint": "next lint --fix"
   },
   "dependencies": {
-    "@babel/core": "^7.21.3",
-    "@babel/preset-react": "^7.18.6",
-    "data-urls": "^4.0.0",
-    "esbuild": "^0.17.12",
-    "etag": "^1.8.1",
-    "mime-types": "^2.1.35",
-    "next": "^13.2.4",
-    "node-fetch": "^3.3.1",
-    "pako": "^2.1.0",
-    "postcss": "^8.4.21",
-    "postcss-modules": "^6.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "unix-path": "^0.2.0"
+    "@babel/core": "=7.21.3",
+    "@babel/preset-react": "=7.18.6",
+    "@webaverse-studios/metaversefile": "workspace:*",
+    "data-urls": "=4.0.0",
+    "esbuild": "=0.17.12",
+    "etag": "=1.8.1",
+    "mime-types": "=2.1.35",
+    "next": "=13.2.4",
+    "node-fetch": "=3.3.1",
+    "pako": "=2.1.0",
+    "postcss": "=8.4.21",
+    "postcss-modules": "=6.0.0",
+    "react": "=18.2.0",
+    "react-dom": "=18.2.0"
   },
   "devDependencies": {
-    "@types/data-urls": "^3.0.1",
-    "@types/etag": "^1.8.1",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "eslint": "^8.36.0",
-    "eslint-config-next": "^13.2.4"
+    "@types/data-urls": "=3.0.1",
+    "@types/eslint": "=8",
+    "@types/etag": "=1.8.1",
+    "@types/react": "=18",
+    "@types/react-dom": "=18"
   }
 }

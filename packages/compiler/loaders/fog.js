@@ -8,7 +8,10 @@ const templateString = fs.readFileSync(
   'utf8'
 )
 
-module.exports = {
+/**
+ * @type {import('../plugins/metaversefilePlugin').MetaverseFilePluigin}
+ */
+const fogLoader = {
   load( id ) {
     const { contentId, name, description, components } = parseIdHash( id )
 
@@ -26,3 +29,5 @@ module.exports = {
     }
   },
 }
+
+export default fogLoader

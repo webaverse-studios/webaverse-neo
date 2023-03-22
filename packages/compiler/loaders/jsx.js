@@ -9,6 +9,9 @@ import { getCwd, parseIdHash } from '../utils'
 
 const textDecoder = new TextDecoder()
 
+/**
+ * @type {import('../plugins/metaversefilePlugin').MetaverseFilePluigin}
+ */
 const jsx = {
   async load( id ) {
     let src
@@ -18,33 +21,31 @@ const jsx = {
       id = url.toString()
 
       const res = await fetch( id )
-
-      if ( res.ok ) {
-        src = await res.text()
-      } else {
+      if ( !res.ok ) {
         throw new Error( `invalid status code: ${res.status} "${id}"` )
       }
+
+      src = await res.text()
     } else if ( /^data:/.test( id )) {
       const dataUrl = dataUrls( id )
-      if ( dataUrl ) {
-        const { body } = dataUrl
-        src = textDecoder.decode( body )
-      } else {
+      if ( !dataUrl ) {
         throw new Error( 'invalid data url: ', { id })
       }
+
+      const { body } = dataUrl
+      src = textDecoder.decode( body )
     } else {
       let localPath = '.' + id.replace( /#[\s\S]+$/, '' )
-      const cwd = getCwd()
-      localPath = path.resolve( cwd, localPath )
+      localPath = path.resolve( getCwd(), localPath )
       src = await fs.promises.readFile( localPath, 'utf8' )
     }
 
     const { contentId, name, description, components } = parseIdHash( id )
 
-    const spec = Babel.transform( src, {
+    let { code } = Babel.transform( src, {
       presets: ['@babel/preset-react'],
     })
-    let { code } = spec
+
     code += `
 
 export const contentId = ${JSON.stringify( contentId )};
