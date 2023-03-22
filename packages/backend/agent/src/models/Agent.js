@@ -4,13 +4,52 @@
  */
 
 import * as THREE from 'three'
+import m from 'mithril'
 
-import { addMemory, getMemoryIDs, remember } from '../lib/memories/index.js'
-import { addAgentToGunDB } from '../lib/gun/addAgentToGunDB.js'
+const basePrompt = {
+  role: 'system',
+  content: `You are playing a survival game called Upstreet. You die when either when your Thirst or Hunger reach 0/10. In this game, you are given an Observed State that describes your current situation. You need to make a Plan of possible actions and follow it by performing an Action. After every action, you wait for the user to send you a new Observed state and you update your plan and perform a new action. Your task is to provide a plan of action and an action to take based on the user's observed state.
+  The conversation should follow the structure:
+  \`\`\`
+   User Input -> Observed State: ...
+   Assistant reply -> Plan: ...
+                      Action: ...
 
-import { describe } from '../lib/emotional-vision/img2text'
-import { img2img } from '../lib/emotional-vision/img2img.js'
+   \`\`\`
+
+  Here's an example conversation structure that you can use as a guide:
+
+  Example Conversation:
+  \`\`\`
+  User: Observed State: Position = {"x":0,"y":0,"z":0}, Rotation = {"isEuler":true,"_x":0,"_y":3.141592653589793,"_z":0,"_order":"XYZ"}, Actions = ["move","rotate"], Thirst 4/10, Hunger 10/10, Items = ["bottle":{"state":"empty","actions":["fill"]}], Surrounding = {}
+  Assistant: Plan: I should: 1. Look for water. 2. Go to water. 3. Fill bottle. 4. Drink water.
+  Action: agent rotate -degrees 360
+
+  User: Observed State: Position = {"x":0,"y":0,"z":0}, Rotation = {"isEuler":true,"_x":0,"_y":3.141592653589793,"_z":0,"_order":"XYZ"}, Actions = ["move","rotate"], Thirst 4/10, Hunger 10/10, Items = ["bottle":{"state":"empty","actions":["fill"]}], Surrounding = {"lake":{"position":{"x":10,"y":0,"z":0},"actions":[]},"well":{"position":{"x":20,"y":0,"z":10}}
+  Assistant: Plan: 1. Go to water. 2. Fill bottle. 3. Drink water.
+  Action: agent move -position 10,0,0
+
+  User: Observed State: Position = {"x":10,"y":0,"z":0}, Rotation = {"isEuler":true,"_x":0,"_y":3.141592653589793,"_z":0,"_order":"XYZ"}, Actions = ["move","rotate","use"], Thirst 3 / 10, Hunger 10/10, Items = ["bottle":{"state":"empty","actions":["fill"]}], Surrounding = {"lake":{"position":{"x":10,"y":0,"z":0},"actions":[]},"well":{"position":{"x":20,"y":0,"z":10}}
+  Assistant: Plan: 1. Fill bottle. 2. Drink water.
+  Action: agent use bottle fill
+
+  User: Observed State: Position = {"x":10,"y":0,"z":0}, Rotation = {"isEuler":true,"_x":0,"_y":3.141592653589793,"_z":0,"_order":"XYZ"}, Actions = ["move","rotate","use"], Thirst 3 / 10, Hunger 10/10, Items = ["bottle": {"state":"full","actions":["drink"]}], Surrounding = {"lake":{"position":{"x":10,"y":0,"z":0},"actions":[]},"well":{"position":{"x":20,"y":0,"z":10}}
+  Assistant: Plan: 1. Drink water.
+  Action: agent use bottle drink
+
+  User: Observed State: Position = {"x":10,"y":0,"z":0}, Rotation = {"isEuler":true,"_x":0,"_y":3.141592653589793,"_z":0,"_order":"XYZ"}, Actions = ["move","rotate","use"], Thirst 10 / 10, Hunger 10/10, Items = ["bottle": {"state":"full","actions":["drink"]}], Surrounding = {"lake":{"position":{"x":10,"y":0,"z":0},"actions":[]},"well":{"position":{"x":20,"y":0,"z":10}}
+  Assistant: Plan: [Done]
+  Action: [Done]
+  \`\`\`
+  `,
+}
+const endpoint = 'https://api.openai.com/v1/chat/completions'
+
 import { emotional_states } from './config.js'
+import { img2img } from '../lib/emotional-vision/img2img.js'
+import { describe } from '../lib/emotional-vision/img2text'
+import { addAgentToGunDB } from '../lib/gun/addAgentToGunDB.js'
+import { addMemory, getMemoryIDs, remember } from '../lib/memories/index.js'
 
 /**
  * @class Agent
@@ -18,23 +57,34 @@ import { emotional_states } from './config.js'
  */
 export class Agent {
   /**
-   * @brief Constructor for the Agent class.
-   * @param engine.engine
    * @param engine The engine instance for the game server.
+   * @param canvas The canvas element to render the agentView to.
+   * @brief Constructor for the Agent class.
    */
-  constructor({ engine }) {
+  constructor({ engine, canvas }) {
     this.engine = engine
+    this.canvas = canvas
+    console.log('engine', engine)
     this.avatar = engine.scene.character
+    console.log('avatar', this.avatar)
     addAgentToGunDB(this.avatar.playerId)
 
-    this.offscreenCanvas = new OffscreenCanvas(512, 512)
-    this.renderer = new THREE.WebGLRenderer({ canvas: this.offscreenCanvas })
+    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas })
     this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000)
+    const position = this.avatar.position
+    const rotation = this.avatar.rotation
+    this.camera.position.set(position.x, position.y + 3, position.z)
+    this.camera.rotation.set(rotation.x, rotation.y, rotation.z)
 
     // set random emotional state and strength
     const states = Object.keys(emotional_states)
     this.setEmotionalState(states[Math.floor(Math.random() * states.length)])
     this.setEmotionalStrength(Math.random())
+    this.surrounding = []
+    this.items = {}
+    this.hunger = 10
+    this.thirst = 2
+    this.actions = ['move', 'rotate']
 
     // example of how to use the memory functions
     const renderManager = async () => {
@@ -43,7 +93,9 @@ export class Agent {
 
     const memorizeManager = async () => {
       this.timestamp = Date.now()
-      const imageBlob = await this.offscreenCanvas.convertToBlob()
+      const imageBlob = await new Promise((resolve) => {
+        this.canvas.toBlob(resolve)
+      })
       const { editedImage, description } =
         await this.applyEmotionalStateToImage(imageBlob)
 
@@ -103,11 +155,21 @@ export class Agent {
       this.renderer.clear()
     }
 
+    const checkSurroundings = () => {
+      this.performAction(this.engine.scene._scene)
+    }
+
     addEventListener('keydown', function (event) {
       if (event.key === 'Enter') {
         console.log('rendering')
         renderManager()
       }
+
+      if (event.key === '/') {
+        console.log('check surroundings')
+        checkSurroundings()
+      }
+
       if (event.key === ' ') {
         console.log('memorizing')
         memorizeManager()
@@ -186,10 +248,177 @@ export class Agent {
   setEmotionalStrength(strength) {
     this.emotional_strength = strength
   }
+
+  updateActions() {
+    // based on the surrounding objects, update the actions that the agent can take, e.g. if there is an object that is close enough to pick up, add the pick-up action
+    // check if any objects in 1m radius
+    this.actions = ['move', 'rotate']
+    console.log('Surrounding: ', this.surrounding, this.actions)
+    for (let i = 0; i < this.surrounding.length; i++) {
+      if (
+        this.surrounding[i].position.distanceTo(this.avatar.position) < 1 &&
+        this.surrounding[i].userData?.actions?.includes('pick-up')
+      ) {
+        this.actions.push('pick-up')
+      }
+    }
+    // iterate over the this.items object and extract possible actions
+    for (const key in this.items) {
+      if (this.items[key].userData?.actions) {
+        this.actions = this.actions.concat(this.items[key].userData.actions)
+      }
+    }
+  }
+
+  observedState() {
+    const position = this.avatar.position
+    const rotation = this.avatar.rotation
+    const surrounding = {}
+    for (let i = 0; i < this.surrounding.length; i++) {
+      surrounding[this.surrounding[i].name] = {
+        position: this.surrounding[i].position,
+        actions: this.surrounding[i].userData.actions ?? [],
+      }
+    }
+    console.log(surrounding)
+    const items = {}
+    for (const key in this.items) {
+      items[key] = { actions: this.items[key].userData.actions }
+    }
+    console.log('ITEMS', JSON.stringify(items))
+
+    return `Observed State: Position = ${JSON.stringify(
+      position
+    )}, Rotation = ${JSON.stringify(rotation)}, Thirst ${
+      this.thirst
+    }/10, Hunger ${this.hunger}/10, Items = ${JSON.stringify(
+      items
+    )}, Actions = ${JSON.stringify(
+      this.actions
+    )}, Surrounding = ${JSON.stringify(surrounding)}`
+  }
+
+  async performAction(scene) {
+    await this.checkSurrounding(scene)
+    this.updateActions()
+    const observedState = this.observedState()
+    console.log('OSBERVED', observedState)
+    const { message } = await callGPT([
+      {
+        role: 'user',
+        content: observedState,
+      },
+    ])
+    console.log('OUT', message)
+    this.compileCommand(message.content)
+    await this.checkSurrounding(scene)
+    this.updateActions()
+    m.redraw()
+  }
+
+  async checkSurrounding(scene) {
+    // add all objects visible to the camera to this.surrounding with the objects name, position, and timestamp of when it was seen
+    this.camera.updateMatrixWorld()
+    const cameraViewProjectionMatrix = new THREE.Matrix4()
+    cameraViewProjectionMatrix.multiplyMatrices(
+      this.camera.projectionMatrix,
+      this.camera.matrixWorldInverse
+    )
+
+    const frustum = new THREE.Frustum()
+    // set the frustum from the camera's view projection matrix
+    frustum.setFromProjectionMatrix(cameraViewProjectionMatrix)
+    console.log('SCENE TO CHECK = ', this.engine.scene._scene)
+    this.surrounding = [] // TODO better filtering so it doesn't forget objects immediatlly
+    scene.traverse((object) => {
+      if (object.type === 'Group' || object.type === 'Object3D') {
+        if (
+          object.children.length > 0 &&
+          object.children.every((child) => child.isMesh)
+        ) {
+          // check if any of the children are visible to the camera/
+          // intersect with the frustum
+          if (
+            object.children.some((child) => frustum.intersectsObject(child))
+          ) {
+            console.log('Object in view: ', object)
+            this.surrounding.push(object)
+          }
+        }
+      }
+    })
+    console.log('Surrounding', this.surrounding)
+  }
+
+  compileCommand(message) {
+    // Split text at position 'Action: '
+    const split = message.split('Action: ')
+    // Get the action from the second part of the split
+    const action = split[1]
+    console.log('action: ', action)
+    const parts = action.split(' ')
+    const command = parts[1]
+    if (command === 'move') {
+      const movementType = parts[2]
+      if (movementType === '-position') {
+        const position = parts[3]
+        const positionParts = position.split(',')
+        const x = positionParts[0]
+        const y = positionParts[1]
+        const z = positionParts[2]
+        console.log('move to position', x, y, z)
+        this.avatar.position.set(x, y, z)
+        this.avatar.avatar.scene.position.set(x, y, z)
+      }
+    } else if (command === 'pick-up') {
+      const objectName = parts[2]
+      const object = this.surrounding.find((o) => o.name === objectName)
+      if (object && object.userData.actions.includes('pick-up')) {
+        // replace pick-up action with drop action
+        object.userData.actions = object.userData.actions.map((action) => {
+          if (action === 'pick-up') {
+            return 'drop'
+          }
+          return action
+        })
+        // check if object.name is already in this.items and if so add a number to the end of the name
+        let name = object.name
+        let counter = 1
+        while (name in this.items) {
+          name = object.name + counter
+          counter++
+        }
+        this.items[name] = object
+        console.log('updated items = ', this.items)
+        // remove object from this.engine.scene._scene
+        this.engine.scene._scene.remove(object)
+        console.log('Picked up object', objectName)
+        console.log('updated scene = ', this.engine.scene._scene)
+      }
+    } else if (command === 'use') {
+      const objectName = parts[2]
+      const object = this.items[objectName]
+      console.log('object', object, objectName)
+      if (object && object.userData.actions) {
+        const action = parts[3]
+        if (object.userData.actions.includes(action)) {
+          if (action === 'drink') {
+            console.log('drank water')
+            this.thirst = 10
+            // remove object from this.items by objectName
+            delete this.items[objectName]
+          } else if (action === 'eat') {
+            this.hunger = 10
+          }
+        }
+      }
+    }
+  }
 }
 
 /**
  *
+ * @param blob
  */
 function BlobToString(blob) {
   return new Promise((resolve, reject) => {
@@ -205,6 +434,8 @@ function BlobToString(blob) {
 
 /**
  *
+ * @param base64String
+ * @param mimeType
  */
 async function base64ToBlobWithOffscreenCanvas(base64String, mimeType) {
   const offscreenCanvas = new OffscreenCanvas(1, 1)
@@ -231,4 +462,38 @@ async function base64ToBlobWithOffscreenCanvas(base64String, mimeType) {
     }
     image.src = `data:${mimeType || 'image/png'};base64,${base64String}`
   })
+}
+
+/**
+ *
+ * @param messages
+ */
+async function callGPT(messages) {
+  const response = await fetch(`${endpoint}`, {
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+
+      body: JSON.stringify({
+        // TODO: Prune messages to fit within the token limit without
+        //  dropping the system message.
+        messages: [
+          basePrompt,
+          ...messages.map((message) => ({
+            role: message.role,
+            content: message.content,
+          })),
+        ],
+        model: 'gpt-4',
+      }),
+    }),
+    json = await response.json(),
+    message = json.choices?.[0]?.message
+
+  console.log('message:', json)
+
+  return { message }
 }

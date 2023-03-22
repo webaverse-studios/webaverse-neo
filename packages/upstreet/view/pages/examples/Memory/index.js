@@ -1,19 +1,22 @@
 import m from 'mithril'
 import { NyxEngine } from '@webaverse-studios/engine-nyx'
 import { throttle } from '@soulofmischief/js-utils'
-import { FloatingTreehouse } from '../../../../scenes/index'
-import { body, canvas } from './style.module.scss'
+import { Grid } from '../../../../scenes/index'
+import { body, canvas, agentview } from './style.module.scss'
+import { HUD } from './components/hud'
 
 import { Agent } from '@webaverse-studios/backend-agent'
 
-const defaultScene = FloatingTreehouse
+const defaultScene = Grid
 
 // Components
 const _Home = `.${body}`,
-  Canvas = `canvas.${canvas}`
+  Canvas = `canvas.${canvas}`,
+  AgentView = `canvas.${agentview}`
 
 export default () => {
   let resizeListener
+  let agent
 
   return {
     async oncreate({ dom }) {
@@ -21,6 +24,7 @@ export default () => {
 
       // Get canvas element.
       const canvas = dom.querySelector(Canvas)
+      const agentView = dom.querySelector(AgentView)
 
       // Add resize listener.
       resizeListener = throttle(() => {
@@ -38,8 +42,9 @@ export default () => {
       await engine.start()
       const t1 = performance.now()
 
-      new Agent({ engine })
+      agent = new Agent({ engine, canvas: agentView })
       console.log(`Engine started in ${t1 - t0}ms.`)
+      m.redraw()
     },
 
     // Remove resize listener.
@@ -48,7 +53,8 @@ export default () => {
     },
 
     view() {
-      return m(_Home, m(Canvas))
+      console.log('VIEW', agent)
+      return m(_Home, m(Canvas), m(AgentView), m(HUD, { agent }))
     },
   }
 }

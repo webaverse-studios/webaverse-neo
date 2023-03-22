@@ -23,6 +23,7 @@
     "@feathersjs/client": "^5.0.0",
     "@webaverse-studios/config": "workspace:*",
     "gun": "^0.2020.1239",
+    "openai": "^3.2.1",
     "socket.io-client": "^4.6.1",
     "three": "^0.150.1"
   }

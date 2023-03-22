@@ -1596,7 +1596,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/sharp@npm:^0":
+"@types/sharp@npm:=0.31.1":
   version: 0.31.1
   resolution: "@types/sharp@npm:0.31.1"
   dependencies:
@@ -1740,6 +1740,7 @@ __metadata:
     "@feathersjs/client": ^5.0.0
     "@webaverse-studios/config": "workspace:*"
     gun: ^0.2020.1239
+    openai: ^3.2.1
     socket.io-client: ^4.6.1
     three: ^0.150.1
   languageName: unknown
@@ -1843,13 +1844,14 @@ __metadata:
   dependencies:
     "@pixiv/three-vrm": ^1.0.9
     "@soulofmischief/js-utils": =0.22.0
+    "@types/three": ^0.149.0
     "@webaverse-studios/engine-core": "workspace:*"
     "@webaverse-studios/physics-core": "workspace:*"
     bitecs: =0.3.38
     murmurhash: =2.0.1
     nanoid: =4.0.1
     stats.js: =0.17.0
-    three: =0.150.1
+    three: =0.149.0
     troika-three-text: =0.47.1
   languageName: unknown
   linkType: soft
@@ -1923,17 +1925,20 @@ __metadata:
     "@pixiv/three-vrm": =1.0.9
     "@rollup/plugin-strip": =3.0.2
     "@soulofmischief/js-utils": =0.22.0
-    "@types/sharp": ^0
+    "@types/sharp": =0.31.1
+    "@types/three": ^0.149.0
     "@webaverse-studios/backend-agent": "workspace:*"
     "@webaverse-studios/config": "workspace:*"
+    "@webaverse-studios/debug": "workspace:*"
     "@webaverse-studios/engine-nyx": "workspace:*"
     "@webaverse-studios/input": "workspace:*"
     "@webaverse-studios/physics-rapier": "workspace:*"
+    "@webaverse-studios/types": "workspace:*"
     gun: ^0.2020.1239
     mithril: =3.0.0-next.12
     sass: =1.59.2
     sharp: ^0.31.3
-    three: =0.150.1
+    three: =0.149.0
     vite: =4.1.4
     vite-plugin-gltf: =3.1.0
     vite-plugin-top-level-await: =1.3.0
@@ -2252,6 +2257,15 @@ __metadata:
   version: 1.12.0
   resolution: "aws4@npm:1.12.0"
   checksum: 68f79708ac7c335992730bf638286a3ee0a645cf12575d557860100767c500c08b30e24726b9f03265d74116417f628af78509e1333575e9f8d52a80edfe8cbc
+  languageName: node
+  linkType: hard
+
+"axios@npm:^0.26.0":
+  version: 0.26.1
+  resolution: "axios@npm:0.26.1"
+  dependencies:
+    follow-redirects: ^1.14.8
+  checksum: d9eb58ff4bc0b36a04783fc9ff760e9245c829a5a1052ee7ca6013410d427036b1d10d04e7380c02f3508c5eaf3485b1ae67bd2adbfec3683704745c8d7a6e1a
   languageName: node
   linkType: hard
 
@@ -3937,7 +3951,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.15.0":
+"follow-redirects@npm:^1.14.8, follow-redirects@npm:^1.15.0":
   version: 1.15.2
   resolution: "follow-redirects@npm:1.15.2"
   peerDependenciesMeta:
@@ -6146,6 +6160,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"openai@npm:^3.2.1":
+  version: 3.2.1
+  resolution: "openai@npm:3.2.1"
+  dependencies:
+    axios: ^0.26.0
+    form-data: ^4.0.0
+  checksum: ef3942e9b527cf27273c4355bb8fb9ebd94ae3a88c12eec0ac51c4ef0ad8c18864683759471597390816bcd822bdc9f2f1cea7a3eb1e432c9101f568f7c6d19a
+  languageName: node
+  linkType: hard
+
 "optionator@npm:^0.9.1":
   version: 0.9.1
   resolution: "optionator@npm:0.9.1"
@@ -7465,6 +7489,13 @@ __metadata:
   version: 0.2.0
   resolution: "text-table@npm:0.2.0"
   checksum: b6937a38c80c7f84d9c11dd75e49d5c44f71d95e810a3250bd1f1797fc7117c57698204adf676b71497acc205d769d65c16ae8fa10afad832ae1322630aef10a
+  languageName: node
+  linkType: hard
+
+"three@npm:=0.149.0":
+  version: 0.149.0
+  resolution: "three@npm:0.149.0"
+  checksum: bb11e28054ce11ecfbe94150c2f253fe149cd7532b7b9253cf0806022d234ba3711944f42d65131d146193e7396b92c9965d88cd779b979f007795e13dfb44e9
   languageName: node
   linkType: hard
 

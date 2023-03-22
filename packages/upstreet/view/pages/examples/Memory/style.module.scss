@@ -13,3 +13,30 @@
   height: 100%;
   width: 100%;
 }
+
+.agentview {
+  /* Display */
+  position: absolute;
+  top: 70%;
+  left: 70%;
+
+  /* Size */
+  width: 30%; /* or any other percentage */
+  height: 30%; /* or any other percentage */
+
+
+}
+
+.hud {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 8px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.4);
+
+  span {
+    margin-right: 8px;
+  }
+}

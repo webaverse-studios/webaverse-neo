@@ -1,4 +1,4 @@
-import { LineSegments } from 'three'
+import { LineSegments, Vector3 } from 'three'
 // import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 import { VRM } from '@pixiv/three-vrm'
@@ -25,6 +25,8 @@ import {
 export class Grid extends Scene {
   /** @type {GLTF} */
   #grid
+  #emptyBottle
+  #fullBottle
   /** @type {VRM} */
   #avatar
   /** @type {OrbitControls} */
@@ -42,8 +44,8 @@ export class Grid extends Scene {
    * @param {HTMLCanvasElement} gridOptions.canvas Canvas to render the scene to
    * @param {PhysicsAdapter} gridOptions.physicsAdapter Physics Adapter to use
    */
-  constructor( gridOptions ) {
-    super( gridOptions )
+  constructor(gridOptions) {
+    super(gridOptions)
   }
 
   /**
@@ -55,24 +57,29 @@ export class Grid extends Scene {
       createCamera(),
       createLights(),
       createDebugLines(),
-      createRenderer( this._canvas, 1 ),
+      createRenderer(this._canvas, 1),
     ])
 
     this.#lines = lines
     this._scene = scene
+    this._scene.autoUpdate = true
     this._camera = camera
     this._lights = lights
     this._renderer = renderer
-    this.#controls = createControls( camera, renderer )
+    this.#controls = createControls(camera, renderer)
   }
 
   /**
    * Load GLTF Model and return Object3D
    */
   async #initGeometry() {
-    const { avatar, grid } = await loadGeometry( this._gltfLoader )
+    const { avatar, grid, emptyBottle, fullBottle } = await loadGeometry(
+      this._gltfLoader
+    )
     this.#avatar = avatar
     this.#grid = grid
+    this.#emptyBottle = emptyBottle
+    this.#fullBottle = fullBottle
   }
 
   /**
@@ -83,13 +90,24 @@ export class Grid extends Scene {
     this.#avatar.scene.rotation.y = Math.PI
 
     const scale = 5
-    this.#grid.scene.scale.set( scale, scale, scale )
-    this.#grid.scene.position.set( 0, 0, 0 )
-    this.#grid.scene.rotation.set( 0, 0, 0 )
+    this.#grid.scene.scale.set(scale, scale, scale)
+    this.#grid.scene.position.set(0, 0, 0)
+    this.#grid.scene.rotation.set(0, 0, 0)
 
-    this._scene.add( this.#lines )
-    this._scene.add( this.#avatar.scene )
-    this._scene.add( this.#grid.scene )
+    this.#emptyBottle.scene.position.set(-2, 0, 10)
+    this.#emptyBottle.scene.userData = { actions: ['fill'] }
+
+    this.#fullBottle.scene.scale.set(10, 10, 10)
+    this.#fullBottle.scene.rotation.set(0, 0, 0)
+    this.#fullBottle.scene.position.set(3, 0, 10)
+    this.#fullBottle.scene.userData = { actions: ['drink', 'pick-up'] }
+    console.log('BOTTLES', this.#fullBottle.scene, this.#emptyBottle.scene)
+
+    this._scene.add(this.#lines)
+    this._scene.add(this.#avatar.scene)
+    this._scene.add(this.#grid.scene)
+    // this._scene.add(this.#emptyBottle.scene)
+    this._scene.add(this.#fullBottle.scene)
   }
 
   #configureCharacter() {
@@ -103,7 +121,7 @@ export class Grid extends Scene {
    * Add lights to the scene
    */
   #addLightsToScene() {
-    this._lights.forEach(( light ) => this._scene.add( light ))
+    this._lights.forEach((light) => this._scene.add(light))
   }
 
   async init() {
@@ -114,7 +132,7 @@ export class Grid extends Scene {
     this.#configureCharacter()
 
     this.#inputManager.destroy()
-    this.#inputManager.addEventListeners( document )
+    this.#inputManager.addEventListeners(document)
 
     // function down(this: Grid, event: KeyboardEvent) {
     //   if (event.key == "ArrowUp") this.movementDirection.x = this.speed;
@@ -139,16 +157,26 @@ export class Grid extends Scene {
   }
 
   #render() {
-    this._physicsAdapter.displayDebugInformation( this )
-    this._renderer.render( this._scene, this._camera )
+    this._physicsAdapter.displayDebugInformation(this)
+    this._renderer.render(this._scene, this._camera)
   }
 
   // speed = 0.1;
-  // movementDirection = new Vector3(0.0, -0.1, 0.0);
+  // movementDirection = new Vector3(0.0, -0.1, 0.0)
 
   update() {
-    // this.#character.update(this.movementDirection);
+    // this.#character.update(this.movementDirection)
     this.#controls.update()
     this.#render()
+  }
+
+  get character() {
+    this.#character.position.set(...this.#avatar.scene.position.toArray())
+    this.#character.rotation.set(...this.#avatar.scene.rotation.toArray())
+    return this.#character
+  }
+
+  set character(character) {
+    this.#character = character
   }
 }
