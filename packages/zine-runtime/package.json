@@ -1,0 +1,12 @@
+{
+  "name": "@webaverse-studios/zine-runtime",
+  "version": "0.1.0",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webaverse-studios/webaverse-neo.git",
+    "directory": "packages/zine-runtime"
+  }
+}

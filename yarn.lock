@@ -2549,6 +2549,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@webaverse-studios/zine-aux@workspace:packages/zine-aux":
+  version: 0.0.0-use.local
+  resolution: "@webaverse-studios/zine-aux@workspace:packages/zine-aux"
+  languageName: unknown
+  linkType: soft
+
+"@webaverse-studios/zine-runtime@workspace:packages/zine-runtime":
+  version: 0.0.0-use.local
+  resolution: "@webaverse-studios/zine-runtime@workspace:packages/zine-runtime"
+  languageName: unknown
+  linkType: soft
+
 "@webaverse-studios/zjs@workspace:packages/zjs":
   version: 0.0.0-use.local
   resolution: "@webaverse-studios/zjs@workspace:packages/zjs"

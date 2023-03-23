@@ -13,6 +13,8 @@
     "lint": "eslint . --config ./.eslintrc.cjs --fix",
     "start": "concurrently \"yarn upstreet start\"",
     "upstreet": "yarn workspace @webaverse-studios/upstreet",
+    "zine-aux": "yarn workspace @webaverse-studios/zjs",
+    "zine-runtime": "yarn workspace @webaverse-studios/zjs",
     "zjs": "yarn workspace @webaverse-studios/zjs"
   },
   "devDependencies": {
@@ -40,6 +42,8 @@
     "@webaverse-studios/debug": "workspace:*",
     "@webaverse-studios/types": "workspace:*",
     "@webaverse-studios/upstreet": "workspace:*",
+    "@webaverse-studios/zine-aux": "workspace:*",
+    "@webaverse-studios/zine-runtime": "workspace:*",
     "@webaverse-studios/zjs": "workspace:*"
   }
 }
