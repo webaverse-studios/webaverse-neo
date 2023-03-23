@@ -1,7 +1,6 @@
-import * as THREE from 'three';
-// import alea from 'alea';
-import alea from '../alea.js';
-// import metaversefileApi from '../../metaversefile-api.js';
+import * as THREE from 'three'
+
+import alea from '../alea.js'
 
 const itemNames = [
   'alienburger.glb',
@@ -263,41 +262,42 @@ const itemNames = [
   'woodgrenade.glb',
   'yellowcore.glb',
   'yellowflower.glb',
-];
-const itemUrls = itemNames.map(name => `./packages/zine/resources/items/${name}`);
+]
+const itemUrls = itemNames.map(
+  ( name ) => `./packages/zine/resources/items/${name}`
+)
 
 export class PanelRuntimeItems extends THREE.Object3D {
-  constructor({
-    candidateLocations,
-    n = 1,
-    seed = '',
-  }) {
-    super();
+  constructor({ candidateLocations, n = 1, seed = '' }) {
+    super()
 
-    // console.warn('load panel runtime items', candidateLocations);
-    // debugger;
-    return;
+    return
 
-    const rng = alea(seed);
-    
-    for (let i = 0; i < n; i++) {
-      const candidateLocationIndex = Math.floor(rng() * candidateLocations.length);
-      const candidateLocation = candidateLocations.splice(candidateLocationIndex, 1)[0];
+    const rng = alea( seed )
+
+    for ( let i = 0; i < n; i++ ) {
+      const candidateLocationIndex = Math.floor(
+        rng() * candidateLocations.length
+      )
+      const candidateLocation = candidateLocations.splice(
+        candidateLocationIndex,
+        1
+      )[0]
       const {
         position, // array[3]
         quaternion, // array[4]
-      } = candidateLocation;
+      } = candidateLocation
 
-      const itemUrlIndex = Math.floor(rng() * itemUrls.length);
-      const itemName = itemNames[itemUrlIndex];
-      const itemUrl = itemUrls[itemUrlIndex];
+      const itemUrlIndex = Math.floor( rng() * itemUrls.length )
+      const itemName = itemNames[itemUrlIndex]
+      const itemUrl = itemUrls[itemUrlIndex]
 
       const itemJson = {
         name: itemName,
         modelUrl: itemUrl,
-      };
+      }
 
-      (async () => {
+      ;( async () => {
         const opts = {
           type: 'application/item',
           content: itemJson,
@@ -309,12 +309,10 @@ export class PanelRuntimeItems extends THREE.Object3D {
               value: 'float',
             },
           ],
-        };
-        console.warn('would have loaded item', opts);
-        debugger;
-        // const npcApp = await metaversefileApi.createAppAsync(opts);
-        this.add(npcApp);
-      })();
+        }
+        console.warn( 'would have loaded item', opts )
+        this.add( npcApp )
+      })()
     }
   }
 }

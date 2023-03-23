@@ -1,12 +1,12 @@
 import * as THREE from 'three'
 
 // import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import * as BufferGeometryUtils from '../../zine/third_party/three/BufferGeometryUtils.js'
+import * as BufferGeometryUtils from '@webaverse-studios/zine/third_party/three/BufferGeometryUtils.js'
 import {
   entranceExitDepth,
   entranceExitHeight,
   entranceExitWidth,
-} from '../../zine/zine-constants.js'
+} from '@webaverse-studios/zine/zine-constants.js'
 
 //
 
