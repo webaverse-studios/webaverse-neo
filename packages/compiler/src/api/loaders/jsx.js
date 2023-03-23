@@ -5,54 +5,54 @@ import url from 'url'
 import Babel from '@babel/core'
 import dataUrls from 'data-urls'
 
-import {parseIdHash,getCwd} from '../../utils/index.js'
+import { getCwd, parseIdHash } from '../../utils/index.js'
 
 const textDecoder = new TextDecoder()
 
 const jsx = {
-  async load(id) {
+  async load( id ) {
     let src
-    if (/https?:/i.test(id)) {
-      const o = url.parse(id, true)
+    if ( /https?:/i.test( id )) {
+      const o = url.parse( id, true )
       o.query.noimport = 1 + ''
-      id = url.format(o)
+      id = url.format( o )
 
-      const res = await fetch(id)
-      if (res.ok) {
+      const res = await fetch( id )
+      if ( res.ok ) {
         src = await res.text()
       } else {
-        throw new Error(`invalid status code: ${res.status} "${id}"`)
+        throw new Error( `invalid status code: ${res.status} "${id}"` )
       }
-    } else if (/^data:/.test(id)) {
-      const o = dataUrls(id)
-      if (o) {
-        const {/* mimeType, */ body} = o
-        src = textDecoder.decode(body)
+    } else if ( /^data:/.test( id )) {
+      const o = dataUrls( id )
+      if ( o ) {
+        const { /* mimeType, */ body } = o
+        src = textDecoder.decode( body )
       } else {
-        throw new Error('invalid data url')
+        throw new Error( 'invalid data url' )
       }
     } else {
-      let p = '.' + id.replace(/#[\s\S]+$/, '')
+      let p = '.' + id.replace( /#[\s\S]+$/, '' )
       const cwd = getCwd()
-      p = path.resolve(cwd, p)
-      src = await fs.promises.readFile(p, 'utf8')
+      p = path.resolve( cwd, p )
+      src = await fs.promises.readFile( p, 'utf8' )
     }
 
-    const {contentId, name, description, components} = parseIdHash(id)
+    const { contentId, name, description, components } = parseIdHash( id )
 
-    const spec = Babel.transform(src, {
+    const spec = Babel.transform( src, {
       presets: ['@babel/preset-react'],
       // compact: false,
     })
-    let {code} = spec
+    let { code } = spec
 
     code += `
 
-export const contentId = ${JSON.stringify(contentId)};
-export const name = ${JSON.stringify(name)};
-export const description = ${JSON.stringify(description)};
+export const contentId = ${JSON.stringify( contentId )};
+export const name = ${JSON.stringify( name )};
+export const description = ${JSON.stringify( description )};
 export const type = 'js';
-export const components = ${JSON.stringify(components)};
+export const components = ${JSON.stringify( components )};
 `
     return {
       code,

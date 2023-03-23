@@ -3,12 +3,11 @@ import path from 'path'
 
 // import fetch from 'node-fetch';
 import metaversefileLoader from './metaversefile.js'
-
-import { fillTemplate,getCwd } from '../../utils/index.js'
+import { fillTemplate, getCwd } from '../../utils/index.js'
 
 const templateString = fs.readFileSync(
-  path.resolve('..', 'public', 'type_templates', 'html.js'),
-  'utf8',
+  path.resolve( '..', 'public', 'type_templates', 'html.js' ),
+  'utf8'
 )
 
 const _resolveHtml = async ( id ) => {
@@ -53,19 +52,21 @@ export default {
       const cwd = getCwd()
       id = path.resolve( id )
       const idFullPath = path.join( cwd, id )
-      const isDirectory = await new Promise(( accept, reject ) => {
+      const isDirectory = await new Promise(( resolve ) => {
         fs.lstat( idFullPath, ( err, stats ) => {
-          accept( !err && stats.isDirectory())
+          resolve( !err && stats.isDirectory())
         })
       })
+
       if ( isDirectory ) {
         const metaversefilePath = path.join( id, '.metaversefile' )
         const metaversefileFullPath = path.join( cwd, metaversefilePath )
-        const metaversefileExists = await new Promise(( accept, reject ) => {
+        const metaversefileExists = await new Promise(( resolve ) => {
           fs.lstat( metaversefileFullPath, ( err, stats ) => {
-            accept( !err && stats.isFile())
+            resolve( !err && stats.isFile())
           })
         })
+
         if ( metaversefileExists ) {
           const fakeImporter = path.join( id, '.fakeFile' )
           const fakeId = path.join(
@@ -80,9 +81,9 @@ export default {
         } else {
           const indexHtmlPath = path.join( id, 'index.html' )
           const indexHtmlFullPath = path.join( cwd, indexHtmlPath )
-          const indexHtmlExists = await new Promise(( accept, reject ) => {
+          const indexHtmlExists = await new Promise(( resolve ) => {
             fs.lstat( indexHtmlFullPath, ( err, stats ) => {
-              accept( !err && stats.isFile())
+              resolve( !err && stats.isFile())
             })
           })
 

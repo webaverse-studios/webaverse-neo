@@ -2,15 +2,15 @@
 /* eslint-disable max-statements */
 /* eslint-disable max-len */
 
-import {createHash} from 'crypto'
+import { createHash } from 'crypto'
 import path from 'path'
 
 import mimeTypes from 'mime-types'
 import postcss from 'postcss'
 import cssModules from 'postcss-modules'
 
-import {getCwd,readFile} from '../../utils/index.js'
-import {absoluteImportRegex, httpsRegex} from '../../lib/index.js'
+import { absoluteImportRegex, httpsRegex } from '../../lib/index.js'
+import { getCwd, readFile } from '../../utils/index.js'
 import contracts from '../contracts/index.js'
 import loaders from '../loaders/index.js'
 
@@ -39,10 +39,10 @@ const dataUrlRegexNoSuffix =
  */
 const mappedModules = {
   metaversefile: {
-    resolveId(source) {
+    resolveId( source ) {
       return `/@map/${source}`
     },
-    load(_id) {
+    load( _id ) {
       return {
         code: `\
           const {metaversefile} = globalThis.Metaversefile.exports;
@@ -52,10 +52,10 @@ const mappedModules = {
     },
   },
   three: {
-    resolveId(source) {
+    resolveId( source ) {
       return `/@map/${source}`
     },
-    load(_id) {
+    load( _id ) {
       return {
         code: `\
           const {THREE} = globalThis.Metaversefile.exports;
@@ -67,10 +67,10 @@ const mappedModules = {
     },
   },
   react: {
-    resolveId(source) {
+    resolveId( source ) {
       return `/@map/${source}`
     },
-    load(_id) {
+    load( _id ) {
       return {
         code: `\
           const {React} = globalThis.Metaversefile.exports;
@@ -89,45 +89,45 @@ const mappedModules = {
  * @param {string} id the id of the file
  * @returns {string} the loader type
  */
-function getLoaderType(id) {
+function getLoaderType( id ) {
   /** @type {string} */
   let match
 
-  const url = new URL(id, 'https://baseUrl.com')
+  const url = new URL( id, 'https://baseUrl.com' )
 
-  if (url.href && (match = url.href.match(dataUrlRegexNoSuffix))) {
+  if ( url.href && ( match = url.href.match( dataUrlRegexNoSuffix ))) {
     let type = match[1] ?? ''
-    if (match[1] === 'text/javascript') {
+    if ( match[1] === 'text/javascript' ) {
       type = 'application/javascript'
     }
 
     let extension, typeMatch
     if (
-      (typeMatch = type.match(
-        /^application\/(light|text|rendersettings|spawnpoint|lore|quest|npc|mob|react|group|wind|vircadia|item)$/,
+      ( typeMatch = type.match(
+        /^application\/(light|text|rendersettings|spawnpoint|lore|quest|npc|mob|react|group|wind|vircadia|item)$/
       ))
     ) {
       extension = typeMatch[1]
-    } else if ((typeMatch = type.match(/^application\/(javascript)$/))) {
+    } else if (( typeMatch = type.match( /^application\/(javascript)$/ ))) {
       extension = 'js'
     } else {
-      extension = mimeTypes.extension(type)
+      extension = mimeTypes.extension( type )
     }
 
     return extension || ''
   }
 
   // if hash type is set, use that
-  if (url.hash && (match = url.hash.match(/^#type=(.+)$/))) {
+  if ( url.hash && ( match = url.hash.match( /^#type=(.+)$/ ))) {
     return match[1] || ''
   }
 
   // if query type is set, use that
-  if (url.search && url.searchParams.get('type')) {
-    return url.searchParams.get('type')
+  if ( url.search && url.searchParams.get( 'type' )) {
+    return url.searchParams.get( 'type' )
   }
 
-  if ((match = url.pathname.match(/\.([^.\\/]+)$/))) {
+  if (( match = url.pathname.match( /\.([^.\\/]+)$/ ))) {
     return match[1].toLowerCase() || ''
   }
 
@@ -140,14 +140,14 @@ function getLoaderType(id) {
  * @param {string} loaderId the id of the loader
  * @returns {string} the resolved loader id
  */
-function resolveLoaderId(loaderId) {
+function resolveLoaderId( loaderId ) {
   /**
    * This check is specifically added because of windows
    * as windows is converting constantly all forward slashes into
    * backward slash
    */
-  if (process.platform === 'win32') {
-    loaderId = loaderId.replaceAll('\\', '/')
+  if ( process.platform === 'win32' ) {
+    loaderId = loaderId.replaceAll( '\\', '/' )
   }
 
   return loaderId
@@ -160,7 +160,7 @@ function resolveLoaderId(loaderId) {
  * @param {string | undefined} cssFullPath CSS file path
  * @param {object} [options={}] Css processor options
  */
-async function buildCssModulesJs(css, cssFullPath, options = {}) {
+async function buildCssModulesJs( css, cssFullPath, options = {}) {
   const {
     inject = true,
     generateScopedName,
@@ -173,24 +173,24 @@ async function buildCssModulesJs(css, cssFullPath, options = {}) {
     cssModules({
       localsConvention,
       generateScopedName,
-      getJSON(cssSourceFile, json) {
-        cssModulesJSON = {...json}
+      getJSON( cssSourceFile, json ) {
+        cssModulesJSON = { ...json }
         return cssModulesJSON
       },
       ...cssModulesOption,
     }),
-  ]).process(css, {
+  ]).process( css, {
     from: cssFullPath,
     map: false,
   })
 
-  const classNames = JSON.stringify(cssModulesJSON)
-  const hash = createHash('sha256')
-  hash.update(cssFullPath)
-  const digest = hash.digest('hex')
+  const classNames = JSON.stringify( cssModulesJSON )
+  const hash = createHash( 'sha256' )
+  hash.update( cssFullPath )
+  const digest = hash.digest( 'hex' )
 
   let injectedCode = ''
-  if (inject === true) {
+  if ( inject === true ) {
     injectedCode = `
 (function() {
   if (typeof document === 'undefined') {
@@ -204,8 +204,8 @@ async function buildCssModulesJs(css, cssFullPath, options = {}) {
   }
 })();
     `
-  } else if (typeof inject === 'function') {
-    injectedCode = inject(result.css, digest)
+  } else if ( typeof inject === 'function' ) {
+    injectedCode = inject( result.css, digest )
   }
 
   const jsContent = `
@@ -228,163 +228,163 @@ export default function metaversefilePlugin() {
   return {
     name: 'metaversefile',
     enforce: 'pre',
-    async resolveId(source, importer) {
+    async resolveId( source, importer ) {
       const mappedModule = mappedModules[source]
-      if (mappedModule) {
-        return mappedModule.resolveId(source, importer)
+      if ( mappedModule ) {
+        return mappedModule.resolveId( source, importer )
       }
 
       // scripts/compile.js: handle local compile case
-      if (/^\.+\//.test(source)) {
-        if (importer) {
-          if (/^data:/.test(importer)) {
-            return path.join(getCwd(), source)
+      if ( /^\.+\//.test( source )) {
+        if ( importer ) {
+          if ( /^data:/.test( importer )) {
+            return path.join( getCwd(), source )
           }
 
-          const match = importer.match(/^(#[\s\S]*)$/)
+          const match = importer.match( /^(#[\s\S]*)$/ )
           const hash = match ? match[1] : ''
-          if (absoluteImportRegex.test(importer)) {
+          if ( absoluteImportRegex.test( importer )) {
             const fakeBase = 'https://example.com'
             importer = `${fakeBase}${importer}`
             source =
-              new URL(source, importer).href.slice(fakeBase.length) + hash
+              new URL( source, importer ).href.slice( fakeBase.length ) + hash
           } else {
-            source = new URL(source, importer).href + hash
+            source = new URL( source, importer ).href + hash
           }
         } else {
-          source = source.replace(/^\.+/, '')
+          source = source.replace( /^\.+/, '' )
         }
       }
 
       let match
-      if ((match = source.match(dataUrlRegex))) {
+      if (( match = source.match( dataUrlRegex ))) {
         source =
           'data:' +
           match[1] +
-          (match[2] ? ';' + match[2] : '') +
+          ( match[2] ? ';' + match[2] : '' ) +
           ',' +
-          decodeURIComponent(match[3])
+          decodeURIComponent( match[3])
       }
 
-      if (/^ipfs:\/\//.test(source)) {
+      if ( /^ipfs:\/\//.test( source )) {
         source = source.replace(
           /^ipfs:\/\/(?:ipfs\/)?/,
-          'https://cloudflare-ipfs.com/ipfs/',
+          'https://cloudflare-ipfs.com/ipfs/'
         )
 
-        const url = new URL(source)
-        if (!url.searchParams.get('type')) {
-          const res = await fetch(source, {
+        const url = new URL( source )
+        if ( !url.searchParams.get( 'type' )) {
+          const res = await fetch( source, {
             method: 'HEAD',
           })
 
           // Errpr handling
-          if (!res.ok) {
-            throw new Error('IPFS content not found: ' + source)
+          if ( !res.ok ) {
+            throw new Error( 'IPFS content not found: ' + source )
           }
 
-          const contentType = res.headers.get('content-type')
-          const typeTag = mimeTypes.extension(contentType)
-          if (!typeTag) {
-            console.warn('unknown IPFS content type:', contentType)
+          const contentType = res.headers.get( 'content-type' )
+          const typeTag = mimeTypes.extension( contentType )
+          if ( !typeTag ) {
+            console.warn( 'unknown IPFS content type:', contentType )
           }
 
           source += `#type=${typeTag}`
         }
       }
 
-      if ((match = source.match(/^eth:\/\/(0x[0-9a-f]+)\/([0-9]+)$/))) {
+      if (( match = source.match( /^eth:\/\/(0x[0-9a-f]+)\/([0-9]+)$/ ))) {
         const address = match[1]
         const contractName = contractNames[address]
         const contract = contracts[contractName]
         const resolveId = contract?.resolveId
-        if (resolveId) return await resolveId(source, importer)
+        if ( resolveId ) return await resolveId( source, importer )
       }
 
-      const type = getLoaderType(source)
+      const type = getLoaderType( source )
       const loader = loaders[type]
       const resolveId = loader?.resolveId
-      if (resolveId) {
-        const source2 = await resolveId(source, importer)
-        if (source2) {
+      if ( resolveId ) {
+        const source2 = await resolveId( source, importer )
+        if ( source2 ) {
           return source2
         }
       }
 
-      if (!source) {
-        throw new Error(`could not resolve`)
+      if ( !source ) {
+        throw new Error( `could not resolve` )
       }
 
       return source
     },
 
-    async load(id) {
-      if (/\.css$/.test(id)) {
-        const css = await readFile(id)
-        const result = await buildCssModulesJs(css, id)
+    async load( id ) {
+      if ( /\.css$/.test( id )) {
+        const css = await readFile( id )
+        const result = await buildCssModulesJs( css, id )
         return {
           code: result,
         }
       }
 
       let match
-      if ((match = id.match(/^\/@map\/(.+)$/))) {
+      if (( match = id.match( /^\/@map\/(.+)$/ ))) {
         const id2 = match[1]
         const mappedModule = mappedModules[id2]
-        if (mappedModule) {
-          const res = mappedModule.load(id2)
+        if ( mappedModule ) {
+          const res = mappedModule.load( id2 )
           return res
         }
       }
 
-      id = id.replace(/^(eth:\/(?!\/))/, '$1/')
+      id = id.replace( /^(eth:\/(?!\/))/, '$1/' )
 
       // ETH Address
-      if ((match = id.match(/^eth:\/\/(0x[0-9a-f]+)\/([0-9]+)$/))) {
+      if (( match = id.match( /^eth:\/\/(0x[0-9a-f]+)\/([0-9]+)$/ ))) {
         const address = match[1]
         const contractName = contractNames[address]
         const contract = contracts[contractName]
         const load = contract?.load
-        if (load) {
-          const src = await load(id)
-          if (src) {
+        if ( load ) {
+          const src = await load( id )
+          if ( src ) {
             return src
           }
         }
       }
 
-      const type = getLoaderType(id)
+      const type = getLoaderType( id )
       const loader = loaders[type]
       const load = loader?.load
 
-      if (load) {
-        const src = await load(resolveLoaderId(id))
-        if (src) {
+      if ( load ) {
+        const src = await load( resolveLoaderId( id ))
+        if ( src ) {
           return src
         }
       }
 
       // Is it a https url?
-      if (httpsRegex.test(id)) {
-        const res = await fetch(id)
-        if (!res.ok) {
-          throw new Error(`invalid status code: ${res.status} ${id}`)
+      if ( httpsRegex.test( id )) {
+        const res = await fetch( id )
+        if ( !res.ok ) {
+          throw new Error( `invalid status code: ${res.status} ${id}` )
         }
 
         return await res.text()
       }
 
       // Is it a data url?
-      if ((match = id.match(dataUrlRegexNoSuffix))) {
+      if (( match = id.match( dataUrlRegexNoSuffix ))) {
         const encoding = match[2]
         const src = match[3]
 
         return encoding === 'base64'
-          ? Buffer.from(src, 'base64')
-          : decodeURIComponent(src)
+          ? Buffer.from( src, 'base64' )
+          : decodeURIComponent( src )
       }
 
-      throw new Error(`could not load "${id}"`)
+      throw new Error( `could not load "${id}"` )
     },
   }
 }

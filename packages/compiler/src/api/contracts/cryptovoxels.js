@@ -1,31 +1,31 @@
 import fs from 'fs'
 import path from 'path'
 
-import {fillTemplate, parseIdHash} from '../../utils/index.js'
+import { fillTemplate, parseIdHash } from '../../utils/index.js'
 
 const templateString = fs.readFileSync(
-  path.resolve('..', 'public', 'contract_templates', 'cryptovoxels.js'),
-  'utf8',
+  path.resolve( '..', 'public', 'contract_templates', 'cryptovoxels.js' ),
+  'utf8'
 )
 
 /**
  * @type {import('../plugins/metaversefilePlugin').MetaverseFilePluigin}
  */
 const cryptovoxelsLoader = {
-  resolveId(source) {
+  resolveId( source ) {
     return source
   },
-  async load(id) {
-    id = id.replace(/^(eth?:\/(?!\/))/, '$1/')
+  async load( id ) {
+    id = id.replace( /^(eth?:\/(?!\/))/, '$1/' )
 
-    const match = id.match(/^eth:\/\/(0x[0-9a-f]+)\/([0-9]+)$/i)
-    if (match) {
+    const match = id.match( /^eth:\/\/(0x[0-9a-f]+)\/([0-9]+)$/i )
+    if ( match ) {
       const contractAddress = match[1]
-      const tokenId = parseInt(match[2], 10)
+      const tokenId = parseInt( match[2], 10 )
 
-      const {contentId, name, description, components} = parseIdHash(id)
+      const { contentId, name, description, components } = parseIdHash( id )
 
-      const code = fillTemplate(templateString, {
+      const code = fillTemplate( templateString, {
         contractAddress,
         tokenId,
         contentId,

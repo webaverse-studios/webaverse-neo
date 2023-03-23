@@ -4,8 +4,8 @@ import path from 'path'
 import { fillTemplate, parseIdHash } from '../../utils/index.js'
 
 const templateString = fs.readFileSync(
-  path.resolve('..', 'public', 'type_templates', 'vircadia.js'),
-  'utf8',
+  path.resolve( '..', 'public', 'type_templates', 'vircadia.js' ),
+  'utf8'
 )
 
 export default {

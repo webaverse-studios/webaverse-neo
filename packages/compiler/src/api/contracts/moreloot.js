@@ -4,8 +4,8 @@ import path from 'path'
 import { fillTemplate, parseIdHash } from '../../utils/index.js'
 
 const templateString = fs.readFileSync(
-  path.resolve('..', 'public', 'contract_templates', 'moreloot.js'),
-  'utf8',
+  path.resolve( '..', 'public', 'contract_templates', 'moreloot.js' ),
+  'utf8'
 )
 
 /**
