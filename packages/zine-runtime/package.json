@@ -8,5 +8,8 @@
     "type": "git",
     "url": "https://github.com/webaverse-studios/webaverse-neo.git",
     "directory": "packages/zine-runtime"
+  },
+  "engines": {
+    "node": "=19.0.0"
   }
 }
