@@ -5,6 +5,7 @@
   "type": "module",
   "packageManager": "yarn@3.4.1",
   "scripts": {
+    "app-runtime": "yarn workspace @webaverse-studios/app-runtime",
     "compiler": "yarn workspace @webaverse-studios/compiler",
     "config-pkg": "yarn workspace @webaverse-studios/config",
     "dev": "concurrently -c #6D1A36,#53917E,#36558F \"yarn:upstreet dev\" \"yarn:feathers dev\" \"yarn:gun dev\"",
@@ -37,6 +38,8 @@
     "packages/**/*"
   ],
   "resolutions": {
+    "@pixiv/three-vrm": "workspace:*",
+    "@webaverse-studios/app-runtime": "workspace:*",
     "@webaverse-studios/backend-agent": "workspace:*",
     "@webaverse-studios/compiler": "workspace:*",
     "@webaverse-studios/config": "workspace:*",
@@ -46,6 +49,8 @@
     "@webaverse-studios/zine": "workspace:*",
     "@webaverse-studios/zine-aux": "workspace:*",
     "@webaverse-studios/zine-runtime": "workspace:*",
-    "@webaverse-studios/zjs": "workspace:*"
+    "@webaverse-studios/zjs": "workspace:*",
+    "gun": "workspace:*",
+    "three": "workspace:*"
   }
 }

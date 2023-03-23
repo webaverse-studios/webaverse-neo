@@ -1,7 +1,6 @@
 import * as THREE from 'three'
 
 import * as BufferGeometryUtils from './third_party/three/BufferGeometryUtils.js'
-// import alea from 'alea';
 import { setOrthographicCameraFromJson } from './zine-camera-utils.js'
 import {
   floorNetPixelSize,
@@ -137,9 +136,6 @@ class SceneMesh extends THREE.Mesh {
     planeLabels,
     planeLabelIndices,
     portalLabels,
-    // segmentSpecs,
-    // planeSpecs,
-    // portalSpecs,
     firstFloorPlaneIndex,
   }) {
     const map = new THREE.Texture()
@@ -176,8 +172,6 @@ class SceneMesh extends THREE.Mesh {
       'planeColor',
       new THREE.BufferAttribute( planeColor, 3 )
     )
-    // const portalColor = getHighlightArrayFromValueArray(portalArray);
-    // geometry.setAttribute('portalColor', new THREE.BufferAttribute(portalColor, 3));
     const indexedGeometry = geometry
     geometry = geometry.toNonIndexed()
     decorateGeometryTriangleIds( geometry )
@@ -343,14 +337,6 @@ class CapSceneMesh extends THREE.Mesh {
       }
     }
 
-    // material
-    // const map = new THREE.Texture(image);
-    // map.needsUpdate = true;
-    // const material = new THREE.MeshBasicMaterial({
-    //   // color: 0x000000,
-    //   map,
-    //   side: THREE.DoubleSide,
-    // });
     const material = new SceneMaterial({
       map,
     })
@@ -388,11 +374,6 @@ class ScenePhysicsMesh extends THREE.Mesh {
     const segments = new originalSegmentArray.constructor( // Float32Array
       originalSegmentArray.length / ( physicsPixelStride * physicsPixelStride )
     )
-
-    // if (segments.length * 3 !== geometry.attributes.position.array.length) {
-    //   console.log('mismatch', segments.length, geometry.attributes.position.array.length);
-    //   debugger;
-    // }
 
     const arrayBuffer = pointCloudArrayBuffer
     const pixelStride = physicsPixelStride
@@ -1117,11 +1098,6 @@ export class ZineRenderer extends EventTarget {
     exitWorldLocation,
     entranceLocalLocation
   ) {
-    // if (floorPosition === undefined || exitWorldLocation === undefined || entranceLocalLocation === undefined) {
-    //   console.warn('bad args', {floorPosition, exitWorldLocation, entranceLocalLocation});
-    //   debugger;
-    // }
-    // console.log('exit matrix world', exitWorldLocation.position);
     const exitDropMatrixWorld = new THREE.Matrix4().compose(
       floorPosition,
       localQuaternion
