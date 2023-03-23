@@ -15,7 +15,8 @@ export function HUD() {
       if (agent.items) {
         for (const key in agent.items) {
           items[key] = {
-            actions: agent.items[key].userData.actions,
+            actions: agent.items[key].userData.item_actions,
+            state: agent.items[key].userData.state,
           }
         }
       }
@@ -24,6 +25,8 @@ export function HUD() {
         m('span', `Hunger: ${hunger}`),
         m('div', `Actions: ${agent.actions}`),
         m('div', `Items: ${JSON.stringify(items)}`),
+        m('div', `Plan: ${agent.plan}`),
+        m('div', `Action: ${agent.command}`),
       ])
     },
   }

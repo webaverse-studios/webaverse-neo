@@ -1,4 +1,4 @@
-import { LineSegments, Vector3 } from 'three'
+import { LineSegments } from 'three'
 // import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 import { VRM } from '@pixiv/three-vrm'
@@ -27,8 +27,11 @@ export class Grid extends Scene {
   #grid
   #emptyBottle
   #fullBottle
+  #monster
+  #sword
   /** @type {VRM} */
   #avatar
+  #npc
   /** @type {OrbitControls} */
   #controls
   /** @type {AvatarCharacter} */
@@ -73,13 +76,15 @@ export class Grid extends Scene {
    * Load GLTF Model and return Object3D
    */
   async #initGeometry() {
-    const { avatar, grid, emptyBottle, fullBottle } = await loadGeometry(
-      this._gltfLoader
-    )
+    const { avatar, grid, emptyBottle, fullBottle, npc, monster, sword } =
+      await loadGeometry(this._gltfLoader)
     this.#avatar = avatar
     this.#grid = grid
     this.#emptyBottle = emptyBottle
     this.#fullBottle = fullBottle
+    this.#npc = npc
+    this.#monster = monster
+    this.#sword = sword
   }
 
   /**
@@ -97,17 +102,39 @@ export class Grid extends Scene {
     this.#emptyBottle.scene.position.set(-2, 0, 10)
     this.#emptyBottle.scene.userData = { actions: ['fill'] }
 
-    this.#fullBottle.scene.scale.set(10, 10, 10)
+    this.#fullBottle.scene.scale.set(3, 3, 3)
     this.#fullBottle.scene.rotation.set(0, 0, 0)
-    this.#fullBottle.scene.position.set(3, 0, 10)
-    this.#fullBottle.scene.userData = { actions: ['drink', 'pick-up'] }
+    this.#fullBottle.scene.position.set(3, 1, 10)
+    this.#fullBottle.scene.userData = {
+      scene_actions: ['pick-up'],
+      item_actions: ['drink'],
+      state: ['full'],
+    }
     console.log('BOTTLES', this.#fullBottle.scene, this.#emptyBottle.scene)
+
+    this.#npc.scene.position.set(0, 0, 10)
+    this.#npc.scene.name = 'bob'
+    this.#npc.scene.userData = { scene_actions: ['talk'] }
+
+    this.#monster.scene.position.set(0, 0, -10)
+    this.#monster.scene.name = 'monster'
+    this.#monster.scene.userData = { scene_actions: ['attack'] }
+
+    this.#sword.scene.position.set(0, 0, 20)
+    this.#sword.scene.name = 'sword'
+    this.#sword.scene.userData = {
+      scene_actions: ['pick-up'],
+      item_actions: ['equip'],
+    }
 
     this._scene.add(this.#lines)
     this._scene.add(this.#avatar.scene)
     this._scene.add(this.#grid.scene)
     // this._scene.add(this.#emptyBottle.scene)
     this._scene.add(this.#fullBottle.scene)
+    this._scene.add(this.#npc.scene)
+    this._scene.add(this.#monster.scene)
+    this._scene.add(this.#sword.scene)
   }
 
   #configureCharacter() {
