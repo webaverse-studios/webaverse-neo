@@ -20,4 +20,11 @@
  * @property {"PipelineLayoutAlloc"} TRACEID_PIPELINE_LAYOUT_ALLOC Logs the allocation of pipeline layouts.
  */
 
+/**
+ * @typedef {object} Debug
+ * @property {(...args: any[]) => void} log log a message
+ * @property {(...args: any[]) => void} warn log a warning
+ * @property {(...args: any[]) => void} error log an error
+ */
+
 export default {}

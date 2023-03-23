@@ -1,18 +1,18 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.html
 import { authenticate } from '@feathersjs/authentication'
-
 import { hooks as schemaHooks } from '@feathersjs/schema'
+
+import { ChatService, getOptions } from './chat.class.js'
 import {
+  chatDataResolver,
   chatDataValidator,
+  chatExternalResolver,
+  chatPatchResolver,
   chatPatchValidator,
+  chatQueryResolver,
   chatQueryValidator,
   chatResolver,
-  chatExternalResolver,
-  chatDataResolver,
-  chatPatchResolver,
-  chatQueryResolver,
 } from './chat.schema.js'
-import { ChatService, getOptions } from './chat.class.js'
 
 export const chatPath = 'chat'
 export const chatMethods = ['find', 'get', 'create', 'patch', 'remove']

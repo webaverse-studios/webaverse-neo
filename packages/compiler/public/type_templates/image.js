@@ -3,17 +3,9 @@ import * as THREE from 'three';
 import metaversefile from 'metaversefile';
 const {useApp, useFrame, useCleanup, usePhysics} = metaversefile;
 
-/* const flipGeomeryUvs = geometry => {
-  for (let i = 0; i < geometry.attributes.uv.array.length; i += 2) {
-    const j = i + 1;
-    geometry.attributes.uv.array[j] = 1 - geometry.attributes.uv.array[j];
-  }
-}; */
-// console.log('got gif 0');
 
 export default e => {
   const app = useApp();
-  // const {gifLoader} = useLoaders();
   const physics = usePhysics();
 
   app.image = null;
@@ -22,7 +14,6 @@ export default e => {
   // console.log('got gif 1');
 
   const physicsIds = [];
-  // const staticPhysicsIds = [];
   e.waitUntil((async () => {
     const img = await (async() => {
       for (let i = 0; i < 10; i++) { // hack: give it a few tries, sometimes images fail for some reason
@@ -68,16 +59,13 @@ export default e => {
       transparent: true,
       alphaTest: 0.5,
     });
-    /* const material = meshComposer.material.clone();
-    material.uniforms.map.value = texture;
-    material.uniforms.map.needsUpdate = true; */
 
     const mesh = new THREE.Mesh(geometry, material);
     mesh.frustumCulled = false;
     // mesh.contentId = contentId;
     app.add(mesh);
     mesh.updateMatrixWorld();
-    
+
     const physicsId = physics.addBoxGeometry(
       app.position,
       app.quaternion,
@@ -85,14 +73,12 @@ export default e => {
       false
     );
     physicsIds.push(physicsId);
-    // staticPhysicsIds.push(physicsId);
   })());
   useCleanup(() => {
     for (const physicsId of physicsIds) {
       physics.removeGeometry(physicsId);
     }
     physicsIds.length = 0;
-    // staticPhysicsIds.length = 0;
   });
 
   return app;

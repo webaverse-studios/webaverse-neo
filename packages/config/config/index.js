@@ -1,6 +1,7 @@
+const { merge } = require( 'lodash' )
+
 const defaultConfig = require( './default.js' )
 const development = require( './development.js' )
-const { merge } = require( 'lodash' )
 
 
 const

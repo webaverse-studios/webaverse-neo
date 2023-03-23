@@ -2,9 +2,6 @@ import * as THREE from 'three';
 import metaversefile from 'metaversefile';
 const {useApp, useDefaultModules, useQuests, useCleanup} = metaversefile;
 
-// const localVector = new THREE.Vector3();
-// const localVector2 = new THREE.Vector3();
-// const localQuaterion = new THREE.Quaternion();
 
 export default e => {
   const app = useApp();
@@ -23,7 +20,6 @@ export default e => {
         size,
       },
     });
-    // console.log('create area app', areaApp);
     return areaApp;
   };
   const _makeCameraPlaceholderApp = ({
@@ -42,12 +38,6 @@ export default e => {
     const pathApp = metaversefile.createApp({
       module: defaultModules.modules.path,
       parent: app,
-      /* components: {
-        line: [
-          [92.5, 0, -33],
-          [19.5, -4, 59.5],
-        ],
-      }, */
     });
     return pathApp;
   };
@@ -89,7 +79,7 @@ export default e => {
   };
   const _checkPaused = async () => {
     await loadPromise;
-    
+
     const paused = _getPaused();
     if (!paused && quest === null) {
       _bindQuest();

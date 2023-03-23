@@ -1,26 +1,25 @@
 import metaversefile from 'metaversefile';
 const {useApp, useFrame, useDomRenderer, useInternals, useWear, useCleanup} = metaversefile;
 
-export default e => {  
+export default e => {
   const app = useApp();
   const {sceneLowerPriority} = useInternals();
   const domRenderEngine = useDomRenderer();
 
   let srcUrl = ${this.srcUrl};
-  
+
   let dom = null;
-  // const transformMatrix = new THREE.Matrix4();
   e.waitUntil((async () => {
     const res = await fetch(srcUrl);
     const json = await res.json();
-    let {/*position, quaternion, scale,*/ jsxUrl} = json;
+    let {jsxUrl} = json;
 
     if (/^\\./.test(jsxUrl)) {
       jsxUrl = new URL(jsxUrl, srcUrl).href;
     }
-    
+
     const m = await import(jsxUrl);
-  
+
     dom = domRenderEngine.addDom({
       render: () => m.default(),
     });

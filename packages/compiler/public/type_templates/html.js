@@ -29,18 +29,12 @@ class IFrameMesh extends THREE.Mesh {
 
     // this.iframe = iframe;
   }
-  
-  /* onBeforeRender(renderer, scene, camera, geometry, material, group) {
-    super.onBeforeRender && super.onBeforeRender.apply(this, arguments);
-    
-    console.log('before render', this.iframe);
-  } */
 }
 
 export default e => {
   const app = useApp();
   const physics = usePhysics();
-  
+
   const object = app;
   const {
     sceneHighPriority,
@@ -55,8 +49,8 @@ export default e => {
 
   const _makeIframe = () => {
     const iframe = document.createElement('iframe');
-    iframe.setAttribute('width', width); 
-    iframe.setAttribute('height', height); 
+    iframe.setAttribute('width', width);
+    iframe.setAttribute('height', height);
     iframe.style.width = width + 'px';
     iframe.style.height = height + 'px';
     // iframe.style.opacity = 0.75;
@@ -70,16 +64,16 @@ export default e => {
     return iframe;
   };
   let iframe = _makeIframe();
-  
+
   const iframeContainer2 = document.createElement('div');
   iframeContainer2.style.cssText = 'position: absolute; left: 0; top: 0; bottom: 0; right: 0;';
   iframeContainer.appendChild(iframeContainer2);
   iframeContainer2.appendChild(iframe);
-  
+
   let fov = 0;
   const _updateSize = () => {
     fov = iframeContainer.getFov();
-    
+
     iframe.style.transform = 'translate(' + (window.innerWidth/2 - width/2) + 'px,' + (window.innerHeight/2 - height/2) + 'px) ' + getObjectCSSMatrix(
       localMatrix.compose(
         localVector.set(0, 0, 0),
@@ -185,7 +179,7 @@ export default e => {
     );
     physicsIds.push(physicsId);
     staticPhysicsIds.push(physicsId);
-    
+
     iframe.addEventListener('load', e => {
       iframe.style.visibility = null;
     }, {once: true});
@@ -197,7 +191,7 @@ export default e => {
     }
     physicsIds.length = 0;
     staticPhysicsIds.length = 0;
-    
+
     iframeContainer2.removeChild(iframe);
     iframeContainer2.parentElement.removeChild(iframeContainer2);
   });
@@ -210,7 +204,7 @@ export default e => {
       died: false,
     };
   }; */
-  
+
   useFrame(e => {
     if (app.parent) {
       const cameraCSSMatrix =
@@ -237,7 +231,7 @@ export default e => {
     }
   });
   useResize(_updateSize);
-  
+
   return object;
 };
 export const contentId = ${this.contentId};

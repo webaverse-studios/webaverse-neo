@@ -4,9 +4,9 @@ import { Tracer } from '../models'
 /**
  * Generates a message to be logged.
  *
- * @param id
- * @param {...any} args
- * @returns
+ * @param {string} id Tracer id.
+ * @param {...any} args The values to be written to the log.
+ * @returns {string[]} The message to be logged.
  */
 function generateMessage( id, ...args ) {
   const instanceId = id ? `[${id}]` : ''
@@ -17,7 +17,6 @@ function generateMessage( id, ...args ) {
  * Engine debug log system. Note that the logging only executes in the
  * debug build of the engine, and is stripped out in other builds.
  *
- * @ignore
  */
 export class Debug {
   /**

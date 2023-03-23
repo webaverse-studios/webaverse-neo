@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import Metaversefile from '@webaverse-studios/metaversefile';
-const {useApp, addTrackedApp, removeTrackedApp, useLocalPlayer, useActivate, useLoaders, useCleanup, usePhysics, useWeb3, useAbis} = Metaversefile.instance;
+import metaversefile from 'metaversefile';
+const {useApp, addTrackedApp, removeTrackedApp, useLocalPlayer, useActivate, useLoaders, useCleanup, usePhysics, useWeb3, useAbis} = metaversefile;
 
 const _capitalize = s => s.slice(0, 1).toUpperCase() + s.slice(1);
 const _capitalizeWords = s => {
@@ -414,7 +414,6 @@ export default e => {
           const {position, quaternion, scale} = slotOuter;
           const components = _makeComponents(slotName, slotInner, srcUrl);
 
-          // console.log('got loot components', srcUrl, components);
           const p = addTrackedApp(
             srcUrl,
             app.position.clone()
@@ -428,7 +427,6 @@ export default e => {
           p.then(app => {
             apps.push(app);
           });
-        // }
       }
       await Promise.all(promises);
     } catch(err) {

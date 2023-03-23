@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import pako from 'pako';
-
 import metaversefile from 'metaversefile';
 const {useApp, useLoaders, useCleanup, usePhysics} = metaversefile;
 
@@ -18,7 +17,6 @@ function convertDataURIToBinary(base64) {
 const _getParcel = (x, z, parcels) => parcels.find(parcel => {
   return x >= parcel.x1 && x < parcel.x2 && z >= parcel.z1 && z < parcel.z2;
 });
-
 const _getContent = async (id, hash) => {
   const res = await fetch('https://https-js-cryptovoxels-com.proxy.webaverse.com/grid/parcels/' + id + '/at/' + hash);
   const j = await res.json();
@@ -28,7 +26,9 @@ const _getContent = async (id, hash) => {
 
 const _getTextureMaterial = u => {
 
-  const material = new THREE.MeshBasicMaterial({side: THREE.DoubleSide,
+  const material = new THREE.MeshBasicMaterial({
+    side: THREE.DoubleSide,
+    // transparent: true,
   });
   material.polygonOffset = true;
   material.polygonOffsetFactor = -1.0;
@@ -67,7 +67,6 @@ const _getTextureMaterialCached = (() => {
     return entry;
   };
 })();
-
 const zoom = 8;
 const tileRange = 4;
 const centerTile = 128;
@@ -80,11 +79,9 @@ const _loadVox = async u => {
     const {voxLoader} = useLoaders();
     voxLoader.load(u, accept, function onprogress() {}, reject);
   });
-
   const {geometry} = o;
   const positions = geometry.attributes.position.array;
   const normals = geometry.attributes.normal.array;
-  // const indices = geometry.index.array;
   for (let i = 0; i < positions.length; i += 3) {
     positions[i] = -positions[i];
 
@@ -142,16 +139,7 @@ function AddUvs(index, transparent, uvs, uvIndex)
 
     const s = 1.0 / 16 / 128 * 128;
 
-    // long textureIndex = index - (1 << 15);
     const textureIndex = index % 16;
-    // const textureIndex = index & 15;
-
-    // if (textureIndex >= 32) {
-    //   // inverted
-    //   textureIndex = (textureIndex % 32) * 2 + 1
-    // } else {
-    //   textureIndex = (textureIndex % 32) * 2
-    // }
 
     let x = 1.0 / 4 * ((textureIndex % 4) + 0.5);
     let y = 1.0 / 4 * (Math.floor(textureIndex / 4.0) + 0.5);
@@ -184,15 +172,9 @@ const red = new THREE.Color(0xFF0000);
 
 function UIntToColor(color)
 {
-    //string binary = Convert.ToString(color, 2);
-    //binary = binary.Remove(binary.Length - 2 - 1, 2);
-    //uint newValue = Convert.ToUInt32(binary, 2);
-    //uint c = color;// - (byte) color;//  (byte)(color & ~(1 << 4));
-    // string debug = "";
     if (color >= 32768)
     {
         color -= 32768;
-        // debug += "big ";
     }
 
     if (color === 0)
@@ -202,9 +184,6 @@ function UIntToColor(color)
 
     if (color > 32)
     {
-        //uint colorIndex = (uint)Mathf.Floor(color / 32.0f);
-        //Debug.Log(color-32);
-
         const index = Math.floor(color / 32);
         if (index >= _colorTable.length) {
             return red;
@@ -246,11 +225,6 @@ function GenerateField(field, width, height, depth, transparent) {
               if (IsGeometry(i, transparent) !== IsGeometry(nX, transparent))
               {
                   const v = vertexIndex/3;
-
-                  /* newVertices.Add(new Vector3(x + 1, y + 1, z));
-                  newVertices.Add(new Vector3(x + 1, y + 1, z + 1));
-                  newVertices.Add(new Vector3(x + 1, y, z));
-                  newVertices.Add(new Vector3(x + 1, y, z + 1)); */
 
                   newVertices[vertexIndex++] = x + 1;
                   newVertices[vertexIndex++] = y + 1;
@@ -315,11 +289,6 @@ function GenerateField(field, width, height, depth, transparent) {
               {
                   const v = vertexIndex/3;
 
-                  /* newVertices.Add(new Vector3(x, y + 1, z));
-                  newVertices.Add(new Vector3(x + 1, y + 1, z));
-                  newVertices.Add(new Vector3(x, y + 1, z + 1));
-                  newVertices.Add(new Vector3(x + 1, y + 1, z + 1)); */
-
                   newVertices[vertexIndex++] = x;
                   newVertices[vertexIndex++] = y + 1;
                   newVertices[vertexIndex++] = z;
@@ -383,11 +352,6 @@ function GenerateField(field, width, height, depth, transparent) {
               if (IsGeometry(i, transparent) !== IsGeometry(nZ, transparent))
               {
                   const v = vertexIndex/3;
-
-                  /* newVertices.Add(new Vector3(x, y, z + 1));
-                  newVertices.Add(new Vector3(x + 1, y, z + 1));
-                  newVertices.Add(new Vector3(x, y + 1, z + 1));
-                  newVertices.Add(new Vector3(x + 1, y + 1, z + 1)); */
 
                   newVertices[vertexIndex++] = x;
                   newVertices[vertexIndex++] = y;
@@ -484,7 +448,6 @@ export default () => {
       return parcels;
     })();
     const parcel = parcels.find(parcel => parcel.id === tokenId);
-    // console.log('got parcels', parcels, parcel);
 
     const imageGeometry = new THREE.PlaneBufferGeometry(2, 2)
       .applyMatrix4(new THREE.Matrix4().makeScale(-1, 1, 1));
@@ -500,9 +463,6 @@ export default () => {
       opacity: 0.5,
       side: THREE.DoubleSide,
     });
-
-    // const parcel = _getParcel(x, z, parcels);
-    // console.log('load coord', x, z, parcel);
 
     const object = new THREE.Object3D();
     {
@@ -520,8 +480,6 @@ export default () => {
       const d = z2 - z1;
       const field = new Uint16Array(pako.inflate(convertDataURIToBinary(voxels)).buffer);
 
-      // object.position.x = x1*2;
-      // object.position.z = -z1*2;
       object.rotation.order = 'YXZ';
       object.rotation.y = Math.PI;
 
@@ -550,7 +508,6 @@ export default () => {
       {
         solidGeometry.computeVertexNormals();
         const material = new THREE.MeshPhongMaterial({
-          // color: 0xFF0000,
           map: texture,
           vertexColors: true,
         });
@@ -561,8 +518,6 @@ export default () => {
       {
         transparentGeometry.computeVertexNormals();
         const material = new THREE.MeshPhongMaterial({
-          // map: texture,
-          // color: 0xFFFFFF,
           vertexColors: true,
           transparent: true,
           opacity: 0.5,
@@ -572,7 +527,6 @@ export default () => {
         object.add(mesh);
       }
       for (const feature of features) {
-        // console.log('got feature', feature);
 
         try {
           const {type} = feature;
@@ -593,7 +547,6 @@ export default () => {
               mesh.position.x -= w - 0.5;
               mesh.position.y += 0.5;
               mesh.position.z += d - 0.5;
-              // console.log('pos x 1', url, position, mesh);
               mesh.rotation.order = 'YXZ';
               mesh.rotation.fromArray(rotation);
               mesh.rotation.y *= -1;
@@ -622,7 +575,6 @@ export default () => {
                 mesh.position.x -= w - 0.5;
                 mesh.position.y += 0.5;
                 mesh.position.z += d - 0.5;
-                // console.log('pos x 2', url, position, mesh);
                 mesh.rotation.order = 'YXZ';
                 mesh.rotation.fromArray(rotation);
                 mesh.rotation.y *= -1;
@@ -634,12 +586,8 @@ export default () => {
             }
             case 'vox-model': {
               const {url, position, rotation, scale, flipX} = feature;
-              // const u = new URL(url);
-              // u.host = u.protocol.replace(/:/g, '-') + u.host.replace(/\\./g, '-') + '.proxy.webaverse.com';
-              // const model = await _loadVoxCached(u.href);
               const u = 'https://https-cdn-cryptovoxels-com.proxy.webaverse.com/node/vox?url=' + encodeURI(url);
               const model = await _loadVoxCached(u);
-              // console.log('got u', u.href, model, {w, h, d, position, rotation, scale});
               model.position.fromArray(position);
               model.position.x *= -1;
               model.position.multiplyScalar(2);
@@ -648,11 +596,9 @@ export default () => {
               model.position.z += d - 0.5;
               model.rotation.order = 'YXZ';
               model.rotation.fromArray(rotation);
-              // model.rotation.x *= -1;
               model.rotation.y *= -1;
               model.rotation.z *= -1;
               model.scale.fromArray(scale).multiplyScalar(0.04);
-              // model.scale.z *= -1;
               model.frustumCulled = false;
               object.add(model);
               break;
@@ -688,7 +634,6 @@ export default () => {
     }
   });
 
-  // console.log('got app', app);
 
   return app;
 };

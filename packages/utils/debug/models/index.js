@@ -1,3 +1,3 @@
-export { Debug } from './Debug.js'
-export { DebugHelper } from './DebugHelper.js'
-export { Tracer } from './Tracer.js'
+export { Debug } from './Debug'
+export { DebugHelper } from './DebugHelper'
+export { Tracer } from './Tracer'

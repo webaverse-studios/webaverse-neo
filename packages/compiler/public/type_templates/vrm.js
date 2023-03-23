@@ -1,12 +1,5 @@
 import * as THREE from 'three';
-import metaversefile from 'metaversefile';
-const {useApp, usePhysics, useAvatarIconer, useAvatarRenderer, useCamera, useCleanup, useFrame, useActivate, useLocalPlayer, useExport} = metaversefile;
 
-const localVector = new THREE.Vector3();
-const localVector2 = new THREE.Vector3();
-const localQuaternion = new THREE.Quaternion();
-const localMatrix = new THREE.Matrix4();
-// const q180 = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
 
 const _fetchArrayBuffer = async srcUrl => {
   const res = await fetch(srcUrl);
@@ -18,10 +11,33 @@ const _fetchArrayBuffer = async srcUrl => {
   }
 };
 
-export default e => {
+export default ctx => {
+  const {
+    useApp,
+    useFrame,
+    useActivate,
+    useCleanup,
+    useCamera,
+    usePhysics,
+    useExport,
+    useLoaders,
+    useAvatarManager,
+    useTempManager,
+    useEngine,
+  } = ctx;
+
   const app = useApp();
   const camera = useCamera();
   const physics = usePhysics();
+  const loaders = useLoaders();
+  const avatarManager = useAvatarManager();
+  const tmpManager = useTempManager();
+  const engine = useEngine();
+
+  const localVector = tmpManager.get(THREE.Vector3);
+  const localVector2 = tmpManager.get(THREE.Vector3);
+  const localQuaternion = tmpManager.get(THREE.Quaternion);
+  const localMatrix = tmpManager.get(THREE.Matrix4);
 
   const srcUrl = ${this.srcUrl};
   const quality = app.getComponent('quality') ?? undefined;
@@ -30,58 +46,24 @@ export default e => {
   let physicsIds = [];
   let activateCb = null;
   let frameCb = null;
-  e.waitUntil((async () => {
+  ctx.waitUntil((async () => {
+    const {
+      gltfLoader,
+    } = loaders;
+
     const arrayBuffer = await _fetchArrayBuffer(srcUrl);
-
-    const AvatarRenderer = useAvatarRenderer();
-    avatarRenderer = new AvatarRenderer({
-      arrayBuffer,
-      srcUrl,
-      camera,
-      quality,
+    const gltf = await new Promise((accept, reject) => {
+      gltfLoader.parse(arrayBuffer, srcUrl, accept, reject);
     });
-    app.avatarRenderer = avatarRenderer;
-    await avatarRenderer.waitForLoad();
-    app.add(avatarRenderer.scene);
-    avatarRenderer.scene.updateMatrixWorld();
 
-    // globalThis.app = app;
-    // globalThis.avatarRenderer = avatarRenderer;
-
-     const _addPhysics = () => {
-      const {height, width} = app.avatarRenderer.getAvatarSize();
-      const widthPadding = 0.5; // Padding around the avatar since the base width is computed from shoulder distance
-
-      const capsuleRadius = (width / 2) + widthPadding;
-      const capsuleHalfHeight = height / 2;
-
-      const halfAvatarCapsuleHeight = (height + width) / 2; // (full world height of the capsule) / 2
-
-      localMatrix.compose(
-        localVector.set(0, halfAvatarCapsuleHeight, 0), // start position
-        localQuaternion.setFromAxisAngle(localVector2.set(0, 0, 1), Math.PI / 2), // rotate 90 degrees
-        localVector2.set(capsuleRadius, halfAvatarCapsuleHeight, capsuleRadius)
-      )
-        .premultiply(app.matrixWorld)
-        .decompose(localVector, localQuaternion, localVector2);
-
-      const physicsId = physics.addCapsuleGeometry(
-        localVector,
-        localQuaternion,
-        capsuleRadius,
-        capsuleHalfHeight,
-        false
-      );
-      physicsIds.push(physicsId);
-    };
-
-    if (app.getComponent('physics')) {
-      _addPhysics();
-    }
+    const avatarQuality = avatarManager.makeQuality(gltf);
+    app.avatarQuality = avatarQuality;
+    app.add(avatarQuality.scene);
+    avatarQuality.scene.updateMatrixWorld();
 
     // we don't want to have per-frame bone updates for unworn avatars
     const _disableSkeletonMatrixUpdates = () => {
-      avatarRenderer.scene.traverse(o => {
+      avatarQuality.scene.traverse(o => {
         if (o.isBone) {
           o.matrixAutoUpdate = false;
         }
@@ -91,27 +73,21 @@ export default e => {
 
     // handle wearing
     activateCb = async () => {
-      const localPlayer = useLocalPlayer();
+      const {
+        playersManager,
+      } = engine;
+      const localPlayer = playersManager.getLocalPlayer();
       localPlayer.setAvatarApp(app);
     };
 
-    frameCb = ({timestamp, timeDiff}) => {
-      if (!avatarRenderer.isControlled) {
-        avatarRenderer.scene.updateMatrixWorld();
-        avatarRenderer.update(timestamp, timeDiff);
-      }
-    };
+
   })());
 
   useActivate(() => {
     activateCb && activateCb();
   });
 
-  useFrame((e) => {
-    frameCb && frameCb(e);
-  });
 
-  // controlled tracking
   const _setPhysicsEnabled = enabled => {
     if (enabled) {
       for (const physicsId of physicsIds) {
@@ -125,17 +101,6 @@ export default e => {
       }
     }
   };
-  const _setControlled = controlled => {
-    avatarRenderer && avatarRenderer.setControlled(controlled);
-    _setPhysicsEnabled(controlled);
-  };
-  _setControlled(!!app.getComponent('controlled'));
-  app.addEventListener('componentupdate', e => {
-    const {key, value} = e;
-    if (key === 'controlled') {
-      _setControlled(value);
-    }
-  });
 
   // cleanup
   useCleanup(() => {
@@ -146,10 +111,8 @@ export default e => {
   });
 
   useExport(async (opts) => {
-    // console.log('use export', JSON.stringify(opts));
     const {mimeType} = opts;
     if (mimeType === 'image/png+icon') {
-      // console.log('yes mime type', JSON.stringify({mimeType}));
       const avatarIconer = useAvatarIconer();
       const {getDefaultCanvas} = avatarIconer;
 

@@ -4,8 +4,8 @@ import {
   body,
   message,
   role,
-  roleUser,
   roleCompanion,
+  roleUser,
   typingIndicator,
 } from './style.module.scss'
 

@@ -6,7 +6,7 @@ const localMatrix = new THREE.Matrix4();
 
 function getObjectUrl(object) {
   let {start_url, type, content} = object;
-  
+
   let u;
   if (start_url) {
     // make path relative to the .scn file
@@ -26,9 +26,8 @@ export default e => {
   const app = useApp();
 
   const srcUrl = ${this.srcUrl};
-  
+
   const _updateSubAppMatrix = subApp => {
-    // localMatrix.decompose(subApp.position, subApp.quaternion, subApp.scale);
     if (subApp === subApps[0]) { // group head
       subApp.updateMatrixWorld();
       app.position.copy(subApp.position);
@@ -42,11 +41,10 @@ export default e => {
         localMatrix.premultiply(subApps[0].matrixWorld);
       }
       localMatrix.decompose(subApp.position, subApp.quaternion, subApp.scale);
-      // /light/.test(subApp.name) && console.log('update subapp', subApp.position.toArray().join(', '));
       subApp.updateMatrixWorld();
     }
   };
-  
+
   let live = true;
   let subApps = [];
   e.waitUntil((async () => {
@@ -57,7 +55,6 @@ export default e => {
     for (let i = 0; i < subApps.length; i++) {
       subApps[i] = null;
     }
-    // console.log('group objects 1', objects);
     const promises = objects.map(async (object, i) => {
       if (live) {
         let {position = [0, 0, 0], quaternion = [0, 0, 0, 1], scale = [1, 1, 1], components = []} = object;
@@ -66,15 +63,7 @@ export default e => {
         scale = new THREE.Vector3().fromArray(scale);
 
         let u2 = getObjectUrl(object);
-        // console.log('add object', u2, {start_url, type, content});
-        
-        // console.log('group objects 2', u2);
-        
-        // if (/^https?:/.test(u2)) {
-        //   u2 = '/@proxy/' + u2;
-        // }
         const m = await metaversefile.import(u2);
-        // console.log('group objects 3', u2, m);
         const subApp = metaversefile.createApp({
           name: u2,
         });
@@ -91,7 +80,6 @@ export default e => {
         subApp.updateMatrixWorld();
         subApp.contentId = u2;
         subApp.offsetMatrix = subApp.matrix.clone();
-        // console.log('group objects 3', subApp);
         subApp.setComponent('physics', true);
         for (const {key, value} of components) {
           subApp.setComponent(key, value);
@@ -99,13 +87,12 @@ export default e => {
         subApps[i] = subApp;
         _updateSubAppMatrix(subApp);
         await subApp.addModule(m);
-        // console.log('group objects 4', subApp);
         metaversefile.addApp(subApp);
       }
     });
     await Promise.all(promises);
   })());
-  
+
   app.getPhysicsObjects = () => {
     const result = [];
     for (const subApp of subApps) {
@@ -115,31 +102,31 @@ export default e => {
     }
     return result;
   };
-  
+
   useFrame(() => {
     for (const subApp of subApps) {
       subApp && _updateSubAppMatrix(subApp);
     }
   });
-  
+
   useActivate(() => {
     for (const subApp of subApps) {
       subApp && subApp.activate();
     }
   });
-  
+
   useWear(() => {
     for (const subApp of subApps) {
       subApp && subApp.wear();
     }
   });
-  
+
   useUse(() => {
     for (const subApp of subApps) {
       subApp && subApp.use();
     }
   });
-  
+
   useCleanup(() => {
     live = false;
     for (const subApp of subApps) {

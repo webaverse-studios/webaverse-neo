@@ -1,6 +1,4 @@
 import * as THREE from 'three';
-import metaversefile from 'metaversefile';
-const {useApp, createApp, getObjectUrl, createAppAsync, addTrackedApp, removeTrackedApp, useCleanup} = metaversefile;
 
 function mergeComponents(a, b) {
   const result = a.map(({
@@ -27,68 +25,40 @@ function mergeComponents(a, b) {
   return result;
 }
 
-export default e => {
+export default ctx => {
+  const {
+    useApp,
+    useEngine,
+    useWorld,
+    useCleanup,
+  } = ctx;
   const app = useApp();
-  
+  const engine = useEngine();
+  const {
+    world,
+    importManager,
+  } = engine;
   const srcUrl = ${this.srcUrl};
-  
+
   const mode = app.getComponent('mode') ?? 'attached';
   const paused = app.getComponent('paused') ?? false;
   const objectComponents = app.getComponent('objectComponents') ?? [];
-  // console.log('scn got mode', app.getComponent('mode'), 'attached');
   const loadApp = (() => {
-    switch (mode) {
-      case 'detached': {
         return async (url, position, quaternion, scale, components) => {
-          const components2 = {};
-          for (const {key, value} of components) {
-            components2[key] = value;
-          }
-          for (const {key, value} of objectComponents) {
-            components2[key] = value;
-          }
-          if (components2.mode === undefined) {
-            components2.mode = 'detached';
-          }
-          if (components2.paused === undefined) {
-            components2.paused = paused;
-          }
+          components = mergeComponents(components, objectComponents);
 
-          const subApp = await createAppAsync({
-            start_url: url,
+          await world.appManager.addAppAsync(
+            url,
             position,
             quaternion,
             scale,
-            parent: app,
-            components: components2,
-          });
-          // app.add(subApp);
-          // console.log('scn app add subapp', app, subApp, subApp.parent);
-          // subApp.updateMatrixWorld();
-
-          app.addEventListener('componentsupdate', e => {
-            const {keys} = e;
-            if (keys.includes('paused')) {
-              const paused = app.getComponent('paused') ?? false;
-              subApp.setComponent('paused', paused);
-            }
-          });
+            components,
+          );
         };
-      }
-      case 'attached': {
-        return async (url, position, quaternion, scale, components) => {
-          components = mergeComponents(components, objectComponents);
-          await addTrackedApp(url, position, quaternion, scale, components);
-        };
-      }
-      default: {
-        throw new Error('unknown mode: ' + mode);
-      }
-    }
   })();
-  
+
   let live = true;
-  e.waitUntil((async () => {
+  ctx.waitUntil((async () => {
     console.log('loading scn', srcUrl);
     const res = await fetch(srcUrl);
     const j = await res.json();
@@ -106,7 +76,7 @@ export default e => {
     }
 
     const sKeys = Object.keys(buckets).sort((a, b) => a - b);
-    
+
     for (let i=0; i<sKeys.length; i++) {
       const lp = sKeys[i];
       await Promise.all(buckets[lp].map(async object => {
@@ -115,10 +85,10 @@ export default e => {
           position = new THREE.Vector3().fromArray(position);
           quaternion = new THREE.Quaternion().fromArray(quaternion);
           scale = new THREE.Vector3().fromArray(scale);
-          
+
           const baseUrl = import.meta.url;
           console.log('baseUrl', baseUrl);
-          const url = getObjectUrl(object, baseUrl);
+          const url = importManager.getObjectUrl(object, baseUrl);
           console.log('url', url)
           await loadApp(url, position, quaternion, scale, components);
         }
@@ -127,7 +97,7 @@ export default e => {
 
     console.log('scene loaded:', srcUrl);
   })());
-  
+
   useCleanup(() => {
     live = false;
   });

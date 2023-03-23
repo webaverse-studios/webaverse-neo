@@ -3,13 +3,6 @@ import * as THREE from 'three';
 import metaversefile from 'metaversefile';
 const {useApp, useFrame, useCleanup, usePhysics} = metaversefile;
 
-/* const flipGeomeryUvs = geometry => {
-  for (let i = 0; i < geometry.attributes.uv.array.length; i += 2) {
-    const j = i + 1;
-    geometry.attributes.uv.array[j] = 1 - geometry.attributes.uv.array[j];
-  }
-}; */
-// console.log('got gif 0');
 
 export default e => {
   const app = useApp();
@@ -19,10 +12,8 @@ export default e => {
   app.video = null;
 
   const srcUrl = ${this.srcUrl};
-  // console.log('got gif 1');
 
   const physicsIds = [];
-  // const staticPhysicsIds = [];
   e.waitUntil((async () => {
     const video = await (async() => {
       for (let i = 0; i < 10; i++) { // hack: give it a few tries, sometimes videos fail for some reason
@@ -31,17 +22,13 @@ export default e => {
             const vid = document.createElement('video');
             vid.onload = () => {
               accept(vid);
-              // startMonetization(instanceId, monetizationPointer, ownerAddress);
-              // _cleanup();
             };
             vid.onerror = err => {
               const err2 = new Error('failed to load video: ' + srcUrl + ': ' + err);
               reject(err2);
               // _cleanup();
             }
-            /* const _cleanup = () => {
-              gcFiles && URL.revokeObjectURL(u);
-            }; */
+
             vid.crossOrigin = 'Anonymous';
             vid.referrPolicy = 'no-referrer-on-downgrade';
             vid.src = srcUrl;
@@ -74,7 +61,6 @@ export default e => {
 
     const texture = new THREE.VideoTexture(video);
     texture.anisotropy = 16;
-    // texture.encoding = THREE.sRGBEncoding;
     texture.needsUpdate = true;
     const material = new THREE.MeshBasicMaterial({
       map: texture,
@@ -83,16 +69,12 @@ export default e => {
       transparent: true,
       alphaTest: 0.5,
     });
-    /* const material = meshComposer.material.clone();
-    material.uniforms.map.value = texture;
-    material.uniforms.map.needsUpdate = true; */
 
     const mesh = new THREE.Mesh(geometry, material);
     mesh.frustumCulled = false;
-    // mesh.contentId = contentId;
     app.add(mesh);
     mesh.updateMatrixWorld();
-    
+
     const physicsId = physics.addBoxGeometry(
       app.position,
       app.quaternion,
@@ -100,14 +82,12 @@ export default e => {
       false
     );
     physicsIds.push(physicsId);
-    // staticPhysicsIds.push(physicsId);
   })());
   useCleanup(() => {
     for (const physicsId of physicsIds) {
       physics.removeGeometry(physicsId);
     }
     physicsIds.length = 0;
-    // staticPhysicsIds.length = 0;
   });
 
   return app;

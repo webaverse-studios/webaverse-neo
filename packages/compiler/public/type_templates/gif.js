@@ -14,16 +14,12 @@ export default e => {
   const app = useApp();
   const {gifLoader} = useLoaders();
   const physics = usePhysics();
-  
+
   const srcUrl = ${this.srcUrl};
 
   app.gif = null;
-  
+
   const geometry = new THREE.PlaneBufferGeometry(1, 1);
-  /* geometry.boundingBox = new THREE.Box3(
-    new THREE.Vector3(-worldWidth/2, -worldHeight/2, -0.1),
-    new THREE.Vector3(worldWidth/2, worldHeight/2, 0.1),
-  ); */
   flipGeomeryUvs(geometry);
   const colors = new Float32Array(geometry.attributes.position.array.length);
   colors.fill(1, 0, colors.length);
@@ -50,12 +46,11 @@ export default e => {
     textures = frames.map(frame => {
       const t = new THREE.Texture(frame);
       t.anisotropy = 16;
-      // t.encoding = THREE.sRGBEncoding;
       t.needsUpdate = true;
       return t;
     });
     app.gif = frames;
-    
+
     // set scale
     const frame = frames[0];
     const {width, height} = frame;
@@ -70,7 +65,7 @@ export default e => {
       worldHeight = 1;
     }
     model.scale.set(worldWidth, worldHeight, 1);
-    
+
     // add physics mesh
     const physicsId = physics.addBoxGeometry(
       app.position,
@@ -97,7 +92,7 @@ export default e => {
       material.map = textures[frameIndex];
     }
   });
-  
+
   return app;
 };
 export const contentId = ${this.contentId};

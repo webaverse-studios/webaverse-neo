@@ -76,7 +76,7 @@ export default e => {
       varying vec2 vUv;
       // varying vec3 vPosition;
       // varying vec3 vNormal;
-      
+
       mat4 getRotationMatrix(vec4 quaternion) {
         // vec4 quaternion = uHeadQuaternion;
         float qw = quaternion.w;
@@ -138,9 +138,9 @@ export default e => {
         }
         return QUATERNION_IDENTITY;
       }
-      vec3 applyQuaternion(vec3 v, vec4 q) { 
+      vec3 applyQuaternion(vec3 v, vec4 q) {
         return v + 2.0*cross(cross(v, q.xyz ) + q.w*v, q.xyz);
-      } 
+      }
 
       void main() {
         float time = mod(uStartTime + uTime, 1.0);
@@ -158,14 +158,14 @@ export default e => {
         if (uv.y > headCutoff) {
           // float zOffset = (vec4(headOffset, 1.) * getRotationMatrix(q_slerp(uHeadQuaternion, vec4(0., 0., 0., 1.), (0.5 - abs(p.x)) * 2.))).z;
           float zOffset = (vec4(headOffset, 1.) * getRotationMatrix(uHeadQuaternion)).z;
-          
+
           // p.z = sin(time * PI * 2.) * (uv.y - headCutoff);
           p -= headOffset;
           // p.xz *= 0.5;
           p = (vec4(p, 1.) * getRotationMatrix(uHeadQuaternion)).xyz;
           // p.xz *= 2.;
           p += headOffset;
-          
+
           p.z += zOffset;
         } else if (uv.y < legsCutoff) {
           if (uv.x >= legsSplit) {
@@ -193,7 +193,7 @@ export default e => {
         // uniform float uTime;
         uniform sampler2D map;
         uniform vec3 uCameraDirection;
-        
+
         varying vec2 vUv;
         // varying vec3 vPosition;
         // varying vec3 vNormal;
@@ -228,7 +228,7 @@ export default e => {
         // uniform float uTime;
         uniform sampler2D map;
         uniform vec3 uCameraDirection;
-        
+
         varying vec2 vUv;
         // varying vec3 vPosition;
         // varying vec3 vNormal;
@@ -251,10 +251,10 @@ export default e => {
     // imageMeshBack.rotation.order = 'YXZ';
     // imageMeshBack.rotation.y = Math.PI;
     imageMesh.add(imageMeshBack);
-    
+
     const _chooseAnimation = (timestamp, timeDiff) => {
       const player = useLocalPlayer();
-      
+
       const r = Math.random();
       if (r < 0.5) {
         const velocity = new THREE.Vector3(0, 5, 0);
@@ -296,7 +296,7 @@ export default e => {
         euler.x = 0;
         euler.z = 0;
         endQuaternion.setFromEuler(euler);
-        
+
         let localDistanceTraveled = 0;
         return {
           type: 'walk',
@@ -318,7 +318,7 @@ export default e => {
                   endQuaternion,
                   Math.min(localDistanceTraveled, 1)
                 );
-              
+
               imageMesh.position.copy(targetPosition);
               imageMesh.quaternion.copy(targetQuaternion);
             } else {
@@ -330,7 +330,7 @@ export default e => {
       }
     };
     // window.imageMesh = imageMesh;
-    
+
     let animation = null;
     let distanceTraveled = 0;
     useFrame(({timestamp, timeDiff}) => {
@@ -341,7 +341,7 @@ export default e => {
         }
       };
       _setToFloor(); */
-      
+
       const _animate = () => {
         if (!animation) {
           animation = _chooseAnimation(timestamp, timeDiff);
@@ -353,14 +353,14 @@ export default e => {
         }
       };
       _animate();
-      
+
       const _setWalk = f => {
         // const f = (timestamp/1000) % 1;
         imageMesh.material.uniforms.uTime.value = f;
         imageMesh.material.uniforms.uTime.needsUpdate = true;
       };
       _setWalk((distanceTraveled * 2) % 1);
-      
+
       const _setLook = () => {
         const player = useLocalPlayer();
 
@@ -385,27 +385,27 @@ export default e => {
         } else {
           lookQuaternion = imageMesh.quaternion.clone();
         }
-        
+
         imageMesh.material.uniforms.uHeadQuaternion.value.slerp(lookQuaternion.clone().premultiply(imageMesh.quaternion.clone().invert()), 0.1); // setFromAxisAngle(new THREE.Vector3(0, 1, 0), (-0.5 + f) * Math.PI);
         imageMesh.material.uniforms.uHeadQuaternion.needsUpdate = true;
-        
+
         imageMesh.material.uniforms.uCameraDirection.value.set(0, 0, -1).applyQuaternion(camera.quaternion);
         imageMesh.material.uniforms.uCameraDirection.needsUpdate = true;
-        
+
         imageMesh.material.uniforms.uCameraQuaternion.value.copy(camera.quaternion);
         imageMesh.material.uniforms.uCameraQuaternion.needsUpdate = true;
       };
       _setLook();
     });
-    
+
     (async () => {
       const contract = new web3.eth.Contract(ERC721LoomLock, contractAddress);
-      
+
       const tokenURI = await contract.methods.preRevealTokenURI(tokenId).call();
       const res = await fetch(tokenURI);
       const j = await res.json();
       console.log('got loomlocknft j', j);
-      
+
       const img = new Image();
       await new Promise((accept, reject) => {
         img.onload = accept;
@@ -413,7 +413,7 @@ export default e => {
         img.crossOrigin = 'Aynonymous';
         img.src = j.image;
       });
-      
+
       const canvas = document.createElement('canvas');
       canvas.width = img.naturalWidth;
       canvas.height = img.naturalHeight;
@@ -433,7 +433,7 @@ export default e => {
         const k = _getKey(x, y);
         if (!seen[k]) {
           seen[k] = true;
-          
+
           const startIndex = y*imageData.width*4 + x*4;
           const endIndex = startIndex + 4;
           const [r, g, b, a] = imageData.data.slice(startIndex, endIndex);
@@ -444,7 +444,7 @@ export default e => {
             imageData.data[startIndex+1] = 0;
             imageData.data[startIndex+2] = 0;
             imageData.data[startIndex+3] = 0;
-            
+
             const _tryQueue = (x, y) => {
               if (x >= 0 && x < canvas.width && y >= 0 && y < canvas.height) {
                 const k = _getKey(x, y);
@@ -456,11 +456,11 @@ export default e => {
             _tryQueue(x-1, y-1);
             _tryQueue(x,   y-1);
             _tryQueue(x+1, y-1);
-            
+
             _tryQueue(x-1, y);
             // _tryQueue(x, y);
             _tryQueue(x+1, y);
-            
+
             _tryQueue(x-1, y+1);
             _tryQueue(x,   y+1);
             _tryQueue(x+1, y+1);
@@ -468,15 +468,15 @@ export default e => {
         }
       }
       ctx.putImageData(imageData, 0, 0);
-      
+
       texture.image = canvas;
       texture.needsUpdate = true;
       imageMesh.material.uniforms.map.needsUpdate = true;
     })();
-    
+
     // imageMesh.position.set(0, 1.3, -0.2);
     app.add(imageMesh);
-    
+
     const physicsId = physics.addBoxGeometry(
       imageMesh.position,
       imageMesh.quaternion,
@@ -491,7 +491,7 @@ export default e => {
       physics.setPhysicsTransform(physicsId, p, q, s);
     });
   }
-  
+
   app.addEventListener('activate', e => {
     removeApp(app);
     app.destroy();
@@ -503,13 +503,13 @@ export default e => {
     }
     physicsIds.length = 0;
   });
-  
+
   return app;
 };
 
 /*
     const npc = await world.addNpc(o.contentId, null, o.position, o.quaternion);
-    
+
     const mesh = npc;
     const animations = mesh.getAnimations();
     const component = mesh.getComponents()[componentIndex];
@@ -534,13 +534,13 @@ export default e => {
         localEuler.z = 0;
         mesh.quaternion.setFromEuler(localEuler);
       }
-      
+
       const mixer = new THREE.AnimationMixer(mesh);
       const idleActions = idleAnimationClips.map(idleAnimationClip => mixer.clipAction(idleAnimationClip));
       for (const idleAction of idleActions) {
         idleAction.play();
       }
-      
+
       updateFns.push(timeDiff => {
         const deltaSeconds = timeDiff / 1000;
         mixer.update(deltaSeconds);
@@ -562,7 +562,7 @@ export default e => {
         if (mesh.position.y < 0) {
           animation = null;
         }
-        
+
         _updatePhysics();
       } else {
         const head = localPlayer.avatar.model.isVrm ? localPlayer.avatar.modelBones.Head : localPlayer.avatar.model;
@@ -577,7 +577,7 @@ export default e => {
             const moveDistance = Math.min(walkSpeed * timeDiff * 1000, maxMoveDistance);
             const moveDelta = direction.clone().multiplyScalar(moveDistance);
             mesh.position.add(moveDelta);
-            
+
             const closestNpc = this.npcs.filter(n => n !== npc).sort((a, b) => {
               return a.position.distanceTo(npc.position) - b.position.distanceTo(npc.position);
             })[0];
@@ -587,7 +587,7 @@ export default e => {
             } else {
               mesh.position.sub(moveDelta);
             }
-            
+
             _updatePhysics();
           }
         }

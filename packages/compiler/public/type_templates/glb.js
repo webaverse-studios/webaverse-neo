@@ -1,54 +1,49 @@
 import * as THREE from 'three';
 
-import metaversefile from 'metaversefile';
-const {useApp, useFrame, useCleanup, useRenderer, useLocalPlayer, usePhysics, useLoaders, useActivate, useExport, useWriters} = metaversefile;
-
-// const wearableScale = 1;
-
-/* const localVector = new THREE.Vector3();
-const localVector2 = new THREE.Vector3();
-const localQuaternion = new THREE.Quaternion();
-const localQuaternion2 = new THREE.Quaternion();
-const localQuaternion3 = new THREE.Quaternion();
-const localEuler = new THREE.Euler();
-const localMatrix = new THREE.Matrix4(); */
-
-// const z180Quaternion = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
-
-//
-
 const FPS = 60;
 const downQuaternion = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI/2);
 
-//
+export default ctx => {
+  const {
+    useApp,
+    useEngine,
+    useFrame,
+    useActivate,
+    useCleanup,
+    useExport,
+    useLoaders,
+    usePhysics,
+    usePhysicsTracker,
+  } = ctx;
 
-export default e => {
   const app = useApp();
-  
+
   const {gltfLoader, exrLoader} = useLoaders();
-  const renderer = useRenderer();
+  const engine = useEngine();
+  const {webaverseRenderer, playersManager} = engine;
+  const {renderer} = webaverseRenderer;
   const physics = usePhysics();
-  const localPlayer = useLocalPlayer();
+  const physicsTracker = usePhysicsTracker();
+  const localPlayer = playersManager.getLocalPlayer();
 
   const srcUrl = ${this.srcUrl};
   for (const {key, value} of components) {
     app.setComponent(key, value);
   }
- 
+
   app.glb = null;
   const animationMixers = [];
   const uvScrolls = [];
-  const physicsIds = [];
-  app.physicsIds = physicsIds;
-  
+  const physicsObjects = [];
+
   // glb state
   let animations;
-  
+
   // sit state
   let sitSpec = null;
-  
+
   let activateCb = null;
-  e.waitUntil((async () => {
+  ctx.waitUntil((async () => {
     let o;
     try {
       o = await new Promise((accept, reject) => {
@@ -57,13 +52,11 @@ export default e => {
     } catch(err) {
       console.warn(err);
     }
-    // console.log('got o', o);
 
     if (o) {
       app.glb = o;
       const {parser} = o;
       animations = o.animations;
-      // console.log('got animations', animations);
       o = o.scene;
 
       // components
@@ -76,7 +69,7 @@ export default e => {
         const physicsComponent = app.getComponent('physics');
         appHasPhysics = physicsComponent;
       }
-      
+
       const _addAntialiasing = aaLevel => {
         o.traverse(o => {
           if (o.isMesh) {
@@ -93,7 +86,7 @@ export default e => {
         });
       };
       _addAntialiasing(16);
-      
+
       const _loadHubsComponents = () => {
         const _loadAnimations = () => {
           const animationEnabled = !!(app.getComponent('animation') ?? true);
@@ -102,7 +95,7 @@ export default e => {
             const clips = idleAnimation ? [idleAnimation] : animations;
             for (const clip of clips) {
               const mixer = new THREE.AnimationMixer(o);
-              
+
               const action = mixer.clipAction(clip);
               action.play();
 
@@ -139,7 +132,7 @@ export default e => {
           }
         };
         _loadLightmaps();
-        
+
         const _loadUvScroll = o => {
           const textureToData = new Map();
           const registeredTextures = [];
@@ -147,7 +140,7 @@ export default e => {
             if (o.isMesh && o?.userData?.gltfExtensions?.MOZ_hubs_components?.['uv-scroll']) {
               const uvScrollSpec = o.userData.gltfExtensions.MOZ_hubs_components['uv-scroll'];
               const {increment, speed} = uvScrollSpec;
-              
+
               const mesh = o; // this.el.getObject3D("mesh") || this.el.getObject3D("skinnedmesh");
               const {material} = mesh;
               if (material) {
@@ -208,14 +201,15 @@ export default e => {
         _loadUvScroll(o);
       };
       _loadHubsComponents();
-      
+
       app.add(o);
       o.updateMatrixWorld();
-      
+
       if (appHasPhysics) {
         const _addPhysics = async () => {
-          const physicsId = physics.addGeometry(o);
-          physicsIds.push(physicsId);
+          const physicsObject = physics.addGeometry(o);
+          physicsObjects.push(physicsObject);
+          physicsTracker.addAppPhysicsObject(app, physicsObject);
         };
 
         _addPhysics();
@@ -223,7 +217,7 @@ export default e => {
 
       // env map
       const pmremGenerator = new THREE.PMREMGenerator(renderer);
-      pmremGenerator.compileEquirectangularShader(); 
+      pmremGenerator.compileEquirectangularShader();
 
       const _loadExr = async path => {
         let t;
@@ -259,7 +253,7 @@ export default e => {
           }
         }
       });
-      
+
       activateCb = () => {
         if (
           app.getComponent('sit')
@@ -269,7 +263,7 @@ export default e => {
       };
     }
   })());
-  
+
   const _unwear = () => {
     if (sitSpec) {
       const sitAction = localPlayer.getAction('sit');
@@ -310,7 +304,7 @@ export default e => {
       _unwear();
     }
   });
-  
+
   useFrame(({timestamp, timeDiff}) => {
     const _updateAnimation = () => {
       const deltaSeconds = timeDiff / 1000;
@@ -320,7 +314,7 @@ export default e => {
       }
     };
     _updateAnimation();
-    
+
     const _updateUvScroll = () => {
       for (const uvScroll of uvScrolls) {
         uvScroll.update(timestamp);
@@ -328,14 +322,15 @@ export default e => {
     };
     _updateUvScroll();
   });
-  
+
   useActivate(() => {
     activateCb && activateCb();
   });
-  
+
   useCleanup(() => {
-    for (const physicsId of physicsIds) {
-      physics.removeGeometry(physicsId);
+    for (const physicsObject of physicsObjects) {
+      physics.removeGeometry(physicsObject);
+      physicsTracker.removeAppPhysicsObject(app, physicsObject);
     }
     _unwear();
   });
@@ -349,7 +344,7 @@ export default e => {
     if (mimeType === 'image/png+360-video') {
       const {webmWriter} = useWriters();
       console.log('got webm writer', webmWriter);
-      
+
       // video writer
       const videoWriter = new webmWriter({
         quality: 1,
@@ -361,14 +356,7 @@ export default e => {
 
       console.log('video 1');
 
-      // write canvas
-      // const writeCanvas = document.createElement('canvas');
-      // writeCanvas.width = width;
-      // writeCanvas.height = height;
-      // const writeCtx = writeCanvas.getContext('2d');
       const _pushFrame = () => {
-        // draw
-        // writeCtx.drawImage(renderer.domElement, 0, 0);
         videoWriter.addFrame(renderer.domElement);
       };
 
@@ -391,13 +379,13 @@ export default e => {
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.xr.enabled = true;
-      
+
       const scene = new THREE.Scene();
       scene.autoUpdate = false;
 
       const ambientLight = new THREE.AmbientLight(0xffffff, 2);
       scene.add(ambientLight);
-      
+
       const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
       directionalLight.position.set(0, 1, 2);
       directionalLight.updateMatrixWorld();
@@ -407,7 +395,7 @@ export default e => {
       directionalLight.shadow.camera.near = 0.5;
       directionalLight.shadow.camera.far = 500;
       scene.add(directionalLight);
-      
+
       scene.add(app);
 
       const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
@@ -450,13 +438,13 @@ export default e => {
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.xr.enabled = true;
-      
+
       const scene = new THREE.Scene();
       scene.autoUpdate = false;
 
       const ambientLight = new THREE.AmbientLight(0xffffff, 2);
       scene.add(ambientLight);
-      
+
       const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
       directionalLight.position.set(0, 1, 2);
       directionalLight.updateMatrixWorld();
@@ -466,7 +454,7 @@ export default e => {
       directionalLight.shadow.camera.near = 0.5;
       directionalLight.shadow.camera.far = 500;
       scene.add(directionalLight);
-      
+
       scene.add(app);
 
       const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
@@ -474,8 +462,6 @@ export default e => {
       camera.lookAt(0, 0, 0);
       camera.updateMatrixWorld();
 
-      // renderer.setClearColor(0xFF0000, 1);
-      // renderer.clear();
       renderer.render(scene, camera);
 
       // get the blob
@@ -496,13 +482,13 @@ export default e => {
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.xr.enabled = true;
-      
+
       const scene = new THREE.Scene();
       scene.autoUpdate = false;
 
       const ambientLight = new THREE.AmbientLight(0xffffff, 2);
       scene.add(ambientLight);
-      
+
       const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
       directionalLight.position.set(0, 1, 2);
       directionalLight.updateMatrixWorld();
@@ -512,10 +498,9 @@ export default e => {
       directionalLight.shadow.camera.near = 0.5;
       directionalLight.shadow.camera.far = 500;
       scene.add(directionalLight);
-      
+
       scene.add(app);
 
-      // const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
       const worldWidth = 40;
       const worldHeight = 40;
       const camera = new THREE.OrthographicCamera(
@@ -525,7 +510,6 @@ export default e => {
       );
       camera.position.set(0, 40, 0);
       camera.quaternion.copy(downQuaternion);
-      // camera.lookAt(0, 0, 0);
       camera.updateMatrixWorld();
 
       renderer.setClearColor(0xFFFFFF, 1);
@@ -547,7 +531,7 @@ export default e => {
     }
     animationMixers.length = 0;
   };
-  
+
   return app;
 };
 export const contentId = ${this.contentId};

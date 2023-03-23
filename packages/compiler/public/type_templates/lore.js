@@ -1,4 +1,3 @@
-// import * as THREE from 'three';
 import metaversefile from 'metaversefile';
 const {useApp, useLoreAIScene, useCleanup} = metaversefile;
 
@@ -23,7 +22,7 @@ export default e => {
       setting = loreAIScene.addSetting(j);
     }
   })();
-  
+
   useCleanup(() => {
     live = false;
 
@@ -35,6 +34,7 @@ export default e => {
 
   return app;
 };
+
 export const contentId = ${this.contentId};
 export const name = ${this.name};
 export const description = ${this.description};

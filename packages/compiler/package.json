@@ -4,27 +4,20 @@
   "description": "",
   "author": "Yendor <lecoqjacob@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/webaverse/metaversefile#readme",
-  "bugs": {
-    "url": "https://github.com/webaverse/metaversefile/issues"
-  },
+  "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/webaverse/metaversefile.git"
+    "url": "https://github.com/webaverse-studios/webaverse-neo.git",
+    "directory": "packages/compiler"
   },
-  "main": "next dev",
-  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint --fix"
+    "dev": "vite dev",
+    "build": "vite build",
+    "start": "vite start"
   },
   "dependencies": {
     "@babel/preset-react": "=7.14.5",
-    "@types/node": "=18.13.0",
-    "@types/react": "=18.0.25",
-    "@types/react-dom": "18.0.9",
+    "@koa/router": "^12.0.0",
     "data-urls": "=3.0.1",
     "esbuild": "=0.15.10",
     "etag": "=1.8.1",
@@ -39,10 +32,15 @@
     "vite": "=4.0.0"
   },
   "devDependencies": {
+    "@babel/core": "=7.21.3",
+    "@types/babel__core": "^7",
     "@types/data-urls": "=3.0.1",
     "@types/eslint": "=8",
     "@types/etag": "=1.8.1",
+    "@types/mime-types": "^2.1.1",
+    "@types/node": "=18.13.0",
     "@types/react": "=18",
-    "@types/react-dom": "=18"
+    "@types/react-dom": "=18",
+    "eslint": "~8.15.0"
   }
 }

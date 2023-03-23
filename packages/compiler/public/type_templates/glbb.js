@@ -8,13 +8,13 @@ const worldSize = 2;
 export default () => {
   const app = useApp();
   const physics = usePhysics();
-  
+
   const o = new THREE.Object3D();
   app.add(o);
   o.updateMatrixWorld();
-  
+
   let _update = null;
-  
+
   const srcUrl = ${this.srcUrl};
   (async () => {
     const {shadertoyLoader} = useLoaders();
@@ -22,16 +22,14 @@ export default () => {
       size,
       worldSize,
     });
-    // await shadertoyRenderer.waitForLoad();
     o.add(shadertoyRenderer.mesh);
     shadertoyRenderer.mesh.updateMatrixWorld();
     _update = timeDiff => {
       shadertoyRenderer.update(timeDiff/1000);
     };
   })();
-  
+
   let physicsIds = [];
-  // let staticPhysicsIds = [];
   const _run = () => {
     const physicsId = physics.addBoxGeometry(
       app.position,
@@ -40,7 +38,6 @@ export default () => {
       false
     );
     physicsIds.push(physicsId);
-    // staticPhysicsIds.push(physicsId);
   };
   _run();
 
@@ -49,7 +46,6 @@ export default () => {
       physics.removeGeometry(physicsId);
     }
     physicsIds.length = 0;
-    // staticPhysicsIds.length = 0;
   });
 
   useFrame(({timeDiff}) => {
