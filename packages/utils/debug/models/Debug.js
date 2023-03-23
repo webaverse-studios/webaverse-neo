@@ -2,6 +2,18 @@
 import { Tracer } from '../models'
 
 /**
+ * Generates a message to be logged.
+ *
+ * @param id
+ * @param {...any} args
+ * @returns
+ */
+function generateMessage( id, ...args ) {
+  const instanceId = id ? `[${id}]` : ''
+  return [instanceId, ...args]
+}
+
+/**
  * Engine debug log system. Note that the logging only executes in the
  * debug build of the engine, and is stripped out in other builds.
  *
@@ -16,6 +28,20 @@ export class Debug {
    * @private
    */
   #loggedMessages = new Set()
+
+  /**
+   * Tracer id.
+   */
+  #instanceId = ''
+
+  /**
+   * Creates an instance of Debug.
+   *
+   * @param {string} id Tracer id.
+   */
+  constructor( id ) {
+    this.#instanceId = id
+  }
 
   /**
    * Assertion error message. If the assertion is false, the error
@@ -70,7 +96,7 @@ export class Debug {
    * @param {...*} args The values to be written to the log.
    */
   static log( ...args ) {
-    console.log( ...args )
+    console.log( ...generateMessage( this.#instanceId, ...args ))
   }
 
   /**

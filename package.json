@@ -11,7 +11,6 @@
     "feathers": "yarn workspace @webaverse-studios/backend-feathers",
     "gun": "yarn workspace @webaverse-studios/backend-gun",
     "lint": "eslint . --config ./.eslintrc.cjs --fix",
-    "metaversefile": "yarn workspace @webaverse-studios/metaversefile",
     "start": "concurrently \"yarn upstreet start\"",
     "upstreet": "yarn workspace @webaverse-studios/upstreet"
   },
@@ -38,7 +37,6 @@
     "@webaverse-studios/compiler": "workspace:*",
     "@webaverse-studios/config": "workspace:*",
     "@webaverse-studios/debug": "workspace:*",
-    "@webaverse-studios/metaversefile": "workspace:*",
     "@webaverse-studios/types": "workspace:*",
     "@webaverse-studios/upstreet": "workspace:*"
   }

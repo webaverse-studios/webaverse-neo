@@ -17,8 +17,8 @@ import compile from '../../utils/compile.js'
  * @type {import('next').NextApiHandler}
  */
 const proxyRequest = ( req, res, url ) =>
-  new Promise(( resolve, reject ) => {
-    console.log( 'redirect asset 1', { url })
+  new Promise(( _resolve, reject ) => {
+    console.log( '[Compiler]: proxyRequest', { url })
 
     res.setHeader( 'Access-Control-Allow-Methods', '*' )
     res.setHeader( 'Access-Control-Allow-Headers', '*' )
@@ -34,7 +34,7 @@ const proxyRequest = ( req, res, url ) =>
     const cwd = getCwd()
     url = path.join( cwd, url )
 
-    console.log( 'fetch file locally', { cwd, url })
+    console.log( '[Compiler]: fetch file locally', { cwd, url })
 
     const rs = fs.createReadStream( url )
     rs.pipe( res )
@@ -50,7 +50,7 @@ const proxyRequest = ( req, res, url ) =>
  * @type {import('next').NextApiHandler}
  */
 export default async function handler( req, res ) {
-  console.log( 'got request', req.url )
+  console.log( '[Compiler]: Request Received', req.url )
 
   const url = req.url
     .replace( /^\/([a-zA-Z0-9]+:)/, '$1' ) // remove initial slash
@@ -63,7 +63,6 @@ export default async function handler( req, res ) {
   // XXX note: sec-fetch-dest is not supported by Safari
   const dest = req.headers['sec-fetch-dest']
   if (['empty', 'image'].includes( dest ) || dest.includes( 'github.io' )) {
-    console.log( '\n\n\n\ncompile', req.headers, req.url, '\n\n\n\n' )
     await proxyRequest( req, res, url )
   } else {
     let resultUint8Array, err
@@ -96,10 +95,10 @@ export default async function handler( req, res ) {
       res.setHeader( 'Cross-Origin-Opener-Policy', 'unsafe-none' )
       res.setHeader( 'Cross-Origin-Embedder-Policy', 'require-corp' )
       res.setHeader( 'Cross-Origin-Resource-Policy', 'cross-origin' )
-      console.log( '304', url )
+      console.log( '[Compiler]: 304', url )
       res.end()
     } else {
-      console.log( '200', url )
+      console.log( '[Compiler]: 200', url )
       res.setHeader( 'Content-Type', 'application/javascript' )
 
       res.setHeader( 'Access-Control-Allow-Methods', '*' )

@@ -8,7 +8,10 @@ const templateString = fs.readFileSync(
   'utf8'
 )
 
-export default {
+/**
+ * @type {import('../plugins/metaversefilePlugin').MetaverseFilePluigin}
+ */
+const loomlockLoader = {
   resolveId( source ) {
     return source
   },
@@ -40,3 +43,5 @@ export default {
     }
   },
 }
+
+export default loomlockLoader

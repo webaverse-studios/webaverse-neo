@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import metaversefile from 'metaversefile';
-const {useApp, addTrackedApp, removeTrackedApp, useLocalPlayer, useActivate, useLoaders, useCleanup, usePhysics, useWeb3, useAbis} = metaversefile;
+import Metaversefile from '@webaverse-studios/metaversefile';
+const {useApp, addTrackedApp, removeTrackedApp, useLocalPlayer, useActivate, useLoaders, useCleanup, usePhysics, useWeb3, useAbis} = Metaversefile.instance;
 
 const _capitalize = s => s.slice(0, 1).toUpperCase() + s.slice(1);
 const _capitalizeWords = s => {
@@ -147,7 +147,7 @@ export default e => {
   const physics = usePhysics();
   const web3 = useWeb3();
   const {ERC721} = useAbis();
-  
+
   const contractAddress = '${this.contractAddress}';
   const tokenId = parseInt('${this.tokenId}', 10);
   console.log('got token id', tokenId);
@@ -155,8 +155,8 @@ export default e => {
   const apps = [];
   const physicsIds = [];
   e.waitUntil((async () => {
-    const promises = []; 
-    
+    const promises = [];
+
     const contract = new web3.eth.Contract(ERC721, contractAddress);
     // console.log('got contract', {ERC721, contractAddress, contract});
 
@@ -164,7 +164,7 @@ export default e => {
     const res = await fetch(tokenURI);
     const j = await res.json();
     // console.log('got moreloot j', j);
-    
+
     promises.push((async () => {
       const texture = new THREE.Texture();
       const geometry = new THREE.PlaneBufferGeometry(1, 1);
@@ -176,13 +176,13 @@ export default e => {
       const img = await (async () => {
         const res = await fetch(j.image);
         const text = await res.text();
-        
+
         const doc = domParser.parseFromString(text, 'image/svg+xml');
         const svg = doc.children[0];
         svg.setAttribute('width', 1024);
         svg.setAttribute('height', 1024);
         const dataUrl = 'data:image/svg+xml;utf8,' + xmlSerializer.serializeToString(svg);
-        
+
         const img = new Image();
         await new Promise((accept, reject) => {
           img.onload = accept;
@@ -196,9 +196,9 @@ export default e => {
       texture.needsUpdate = true;
       imageMesh.position.set(0, 1.3, -0.2);
       app.add(imageMesh);
-      
+
       const physicsId = physics.addBoxGeometry(
-        imageMesh.position,        
+        imageMesh.position,
         imageMesh.quaternion,
         new THREE.Vector3(1/2, 1/2, 0.01),
         false
@@ -214,7 +214,7 @@ export default e => {
       const svg = doc.children[0];
       const elements = Array.from(doc.querySelectorAll('text')).map(e => e.innerHTML);
       // console.log('got doc', doc, Array.from(doc.children), elements);
-      
+
       let index = 0;
       const slots = {
         weapon: elements[index++],
@@ -326,15 +326,15 @@ export default e => {
           scale: new THREE.Vector3(1, 1, 1),
         },
       };
-      
+
       const slotNames = Object.keys(slots);
       const srcUrls = slotNames.map(k => {
         const v = _normalizeName(slots[k]);
         return 'https://webaverse.github.io/loot-assets/' + k + '/' + _underscoreWhitespace(_capitalizeWords(v)) + '/' + _underscoreWhitespace(v.toLowerCase()) + '.glb';
       });
-      
+
       // console.log('loading', {slots, srcUrls});
-      
+
       const _makeComponents = (slotName, slotInner, srcUrl) => {
         const wearComponent = (() => {
           const {boneAttachment, skinnedMesh, position, quaternion, scale} = slotInner;
@@ -358,7 +358,7 @@ export default e => {
             value,
           };
         })();
-        
+
         const components = [
           wearComponent,
         ];
@@ -377,14 +377,14 @@ export default e => {
         }
         return components;
       };
-      
+
       // const srcUrl = 'https://webaverse.github.io/loot-assets/chest/Ring_Mail/ring_mail.glb';
       for (let i = 0; i < srcUrls.length; i++) {
         const srcUrl = srcUrls[i];
         const slotName = slotNames[i];
         const slotOuter = slotOuters[slotName];
         const slotInner = slotInners[slotName];
-        
+
         /* if (Array.isArray(slotOuter.position)) {
           const ps = slotOuter.position.map((position, i) => {
             const quaternion = slotOuter.quaternion[i];
@@ -413,7 +413,7 @@ export default e => {
         } else { */
           const {position, quaternion, scale} = slotOuter;
           const components = _makeComponents(slotName, slotInner, srcUrl);
-          
+
           // console.log('got loot components', srcUrl, components);
           const p = addTrackedApp(
             srcUrl,
@@ -436,7 +436,7 @@ export default e => {
       throw err;
     }
   })());
-  
+
   useActivate(e => {
     for (const a of apps) {
       a.activate();
@@ -451,7 +451,7 @@ export default e => {
     }
     physicsIds.length = 0;
   });
-  
+
   return app;
 };
 

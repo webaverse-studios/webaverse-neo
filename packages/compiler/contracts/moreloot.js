@@ -8,12 +8,14 @@ const templateString = fs.readFileSync(
   'utf8'
 )
 
-export default {
+/**
+ * @type {import('../plugins/metaversefilePlugin').MetaverseFilePluigin}
+ */
+const moreLootLoader = {
   resolveId( source ) {
     return source
   },
   async load( id ) {
-    // console.log('moreloot load id', {id});
     id = id.replace( /^(eth?:\/(?!\/))/, '$1/' )
 
     const match = id.match( /^eth:\/\/(0x[0-9a-f]+)\/([0-9]+)$/i )
@@ -41,3 +43,5 @@ export default {
     }
   },
 }
+
+export default moreLootLoader

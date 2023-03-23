@@ -8,7 +8,10 @@ const templateString = fs.readFileSync(
   'utf8'
 )
 
-export default {
+/**
+ * @type {import('../plugins/metaversefilePlugin').MetaverseFilePluigin}
+ */
+const cryptovoxelsLoader = {
   resolveId( source ) {
     return source
   },
@@ -30,6 +33,7 @@ export default {
         description,
         components,
       })
+      // console.log('got glb id', id);
       return {
         code,
         map: null,
@@ -39,3 +43,5 @@ export default {
     }
   },
 }
+
+export default cryptovoxelsLoader

@@ -202,6 +202,7 @@ export default function metaversefilePlugin() {
 
       id = id.replace( /^(eth:\/(?!\/))/, '$1/' )
 
+      // ETH Address
       if (( match = id.match( /^eth:\/\/(0x[0-9a-f]+)\/([0-9]+)$/ ))) {
         const address = match[1]
         const contractName = contractNames[address]
@@ -221,7 +222,7 @@ export default function metaversefilePlugin() {
 
       if ( load ) {
         const src = await load( resolveLoaderId( id ))
-        if ( src !== null && src !== undefined ) {
+        if ( src ) {
           return src
         }
       }
