@@ -40,15 +40,15 @@ const basePrompt = {
   Action: agent use bottle drink
 
   User: Observed State: Position = {"x":10,"y":0,"z":0}, Rotation = {"isEuler":true,"_x":0,"_y":3.141592653589793,"_z":0,"_order":"XYZ"}, Actions = ["move","rotate","use"], Water 10/10, Food 10/10, Items = ["bottle": {"state":["full"],"actions":["drink"]}], Surrounding = {"lake":{"position":{"x":10,"y":0,"z":0},"actions":[]},"well":{"position":{"x":20,"y":0,"z":10}}
-  Assistant: Plan: [Done]
-  Action: [Done]
+  ...
   \`\`\`
 
   Keep in mind to form the Action in this structure and stay strict with this : Action: agent <action> <args> without any period or spaces between commas
   If you can use an item it follows this structure and stay strict with this: 'Action: agent use <item> <action>' without any period or spaces between commas
   You are only able to specify one action at a time, so you have to wait for the next observed state to be given before you can perform another action.
-  The actions available for an item are defined in the "Items" section of the Observed State in the "actions":[action1, action2] format.
+  The actions available for an item are defined in the "Items" section of the Observed State in the "actions":[action1, action2] format! Only stick to the actions that are available for the item!
   Always remember that you can only use the actions that are available in the Observed State, defined in the "Actions = [option1, option2]" section!!!
+  If an action does not resolve you get penalized by the game!
   You die when either when your Water or Food reach 0/10 and any action will reduce subtract from the value putting you closer to death!
   `,
 }
@@ -59,6 +59,7 @@ import { img2img } from '../lib/emotional-vision/img2img.js'
 import { describe } from '../lib/emotional-vision/img2text'
 import { addAgentToGunDB } from '../lib/gun/addAgentToGunDB.js'
 import { addMemory, getMemoryIDs, remember } from '../lib/memories/index.js'
+import { Deque } from '../lib/util.js'
 
 /**
  * @class Agent
@@ -89,13 +90,14 @@ export class Agent {
     const states = Object.keys(emotional_states)
     this.setEmotionalState(states[Math.floor(Math.random() * states.length)])
     this.setEmotionalStrength(Math.random())
-    this.surrounding = []
+    this.surrounding = new Set()
     this.items = {}
     this.hunger = 10
     this.thirst = 10
     this.actions = ['move', 'rotate']
     this.plan = ''
     this.command = ''
+    this.memory = new Deque(100)
 
     // example of how to use the memory functions
     const renderManager = async () => {
@@ -267,10 +269,10 @@ export class Agent {
     // check if any objects in 1m radius
     this.actions = ['move', 'rotate']
     console.log('Surrounding: ', this.surrounding, this.actions)
-    for (let i = 0; i < this.surrounding.length; i++) {
+    for (const object of this.surrounding) {
       if (
-        this.surrounding[i].position.distanceTo(this.avatar.position) < 1 &&
-        this.surrounding[i].userData?.scene_actions
+        object.position.distanceTo(this.avatar.position) < 1 &&
+        object.userData?.scene_actions
       ) {
         this.actions.push('use')
       }
@@ -287,13 +289,14 @@ export class Agent {
     const position = this.avatar.position
     const rotation = this.avatar.rotation
     const surrounding = {}
-    for (let i = 0; i < this.surrounding.length; i++) {
-      surrounding[this.surrounding[i].name] = {
-        position: this.surrounding[i].position,
-        state: this.surrounding[i].userData.state ?? [],
-        actions: this.surrounding[i].userData.scene_actions ?? [],
+    for (const object of this.surrounding) {
+      surrounding[object.name] = {
+        position: object.position,
+        state: object.userData.state ?? [],
+        actions: object.userData.scene_actions ?? [],
       }
     }
+    console.log('SURROUNDINGused', surrounding, this.surrounding)
     console.log(surrounding)
     const items = {}
     for (const key in this.items) {
@@ -320,13 +323,15 @@ export class Agent {
     this.updateActions()
     const observedState = this.observedState()
     console.log('OSBERVED', observedState)
-    const { message } = await callGPT([
-      {
-        role: 'user',
-        content: observedState,
-      },
-    ])
+    this.memory.push({
+      role: 'user',
+      content: observedState,
+    })
+    const { message } = await callGPT(this.memory.toArray())
     console.log('OUT', message)
+
+    this.memory.push(message)
+    console.log('MEMORY', this.memory)
     this.compileCommand(message.content)
     await this.checkSurrounding(scene)
     this.updateActions()
@@ -347,7 +352,7 @@ export class Agent {
     // set the frustum from the camera's view projection matrix
     frustum.setFromProjectionMatrix(cameraViewProjectionMatrix)
     console.log('SCENE TO CHECK = ', this.engine.scene._scene)
-    this.surrounding = [] // TODO better filtering so it doesn't forget objects immediatlly
+    // this.surrounding = new Set() // TODO better filtering so it doesn't forget objects immediatlly
     for (const object of scene.children) {
       if (object.type === 'Group' || object.type === 'Object3D') {
         var box = new THREE.Box3().setFromObject(object)
@@ -358,7 +363,7 @@ export class Agent {
           sphere.distanceToPoint(this.avatar.position) < 1
         ) {
           // add the object to the surrounding and break out of traverse
-          this.surrounding.push(object)
+          this.surrounding.add(object)
         }
       }
     }
@@ -366,6 +371,7 @@ export class Agent {
   }
 
   compileCommand(message) {
+    let resolved = false
     // Split text at position 'Action: '
     const split = message.split('Action: ')
     // Get the action from the second part of the split
@@ -389,10 +395,13 @@ export class Agent {
         this.thirst -= 1
         this.hunger -= 1
         m.redraw()
+        resolved = true
       }
     } else if (command === 'pick-up') {
       const objectName = parts[2]
-      const object = this.surrounding.find((o) => o.name === objectName)
+      const object = [...this.surrounding.values()].find(
+        (o) => o.name === objectName
+      )
       if (object && object.userData.scene_actions.includes('pick-up')) {
         // replace pick-up action with drop action
         object.userData.item_actions.push('drop')
@@ -409,6 +418,7 @@ export class Agent {
         this.engine.scene._scene.remove(object)
         console.log('Picked up object', objectName)
         console.log('updated scene = ', this.engine.scene._scene)
+        resolved = true
       }
     } else if (command === 'use') {
       console.log('USE', command)
@@ -424,18 +434,31 @@ export class Agent {
             if (action === 'drink') {
               console.log('drank water')
               this.thirst = 10
+              resolved = true
               // remove object from this.items by objectName
               delete this.items[objectName]
             } else if (action === 'eat') {
               this.hunger = 10
+              resolved = true
             }
           }
         }
-      } else if (this.surrounding.find((o) => o.name === objectName)) {
+      } else if (
+        [...this.surrounding.values()].find((o) => o.name === objectName)
+      ) {
         const action = parts[3]
-        const object = this.surrounding.find((o) => o.name === objectName)
+        const object = [...this.surrounding.values()].find(
+          (o) => o.name === objectName
+        )
         console.log('USING SURROUNDING', action, object)
         if (object.userData.scene_actions) {
+          if (action === 'talk') {
+            if (object.userData.scene_actions.includes('talk')) {
+              console.log('TALKING')
+              this.hunger = 10
+              resolved = true
+            }
+          }
           if (action === 'pick-up') {
             console.log('PICKING UP', object.userData.scene_actions)
             if (
@@ -457,11 +480,23 @@ export class Agent {
               this.engine.scene._scene.remove(object)
               console.log('Picked up object', objectName)
               console.log('updated scene = ', this.engine.scene._scene)
+              resolved = true
             }
           }
         }
       }
       console.log('Done Using')
+    }
+
+    if (resolved === false) {
+      console.log('Action not resolved', action)
+      this.memory.push({
+        role: 'system',
+        content:
+          'You tried to ' +
+          action +
+          " but it didn't work. The game penalizes you for trying to do something that doesn't work.",
+      })
     }
   }
 }
@@ -519,6 +554,8 @@ async function base64ToBlobWithOffscreenCanvas(base64String, mimeType) {
  * @param messages
  */
 async function callGPT(messages) {
+  let message
+  console.log('messages:', messages)
   const response = await fetch(`${endpoint}`, {
       method: 'POST',
 
@@ -537,13 +574,43 @@ async function callGPT(messages) {
             content: message.content,
           })),
         ],
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4',
       }),
     }),
-    json = await response.json(),
-    message = json.choices?.[0]?.message
+    json = await response.json()
+  message = json.choices?.[0]?.message
 
   console.log('message:', json)
+  while (message === undefined) {
+    // wait 0.5 seconds and try again
+    await new Promise((r) => setTimeout(r, 500))
+    console.log('messages:', messages)
+    const response = await fetch(`${endpoint}`, {
+        method: 'POST',
+
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apikey}`,
+        },
+
+        body: JSON.stringify({
+          // TODO: Prune messages to fit within the token limit without
+          //  dropping the system message.
+          messages: [
+            basePrompt,
+            ...messages.map((message) => ({
+              role: message.role,
+              content: message.content,
+            })),
+          ],
+          model: 'gpt-3.5-turbo',
+        }),
+      }),
+      json = await response.json()
+    message = json.choices?.[0]?.message
+
+    console.log('message:', json)
+  }
 
   return { message }
 }
