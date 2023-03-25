@@ -17,8 +17,9 @@
 .agentview {
   /* Display */
   position: absolute;
-  top: 70%;
-  left: 70%;
+  top: 0;
+  right: 0;
+  padding: 8px;
 
   /* Size */
   width: 30%; /* or any other percentage */
@@ -29,8 +30,8 @@
 
 .hud {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 70%;
+  left: 0;
   padding: 8px;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 4px;

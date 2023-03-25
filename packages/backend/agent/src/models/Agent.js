@@ -5,12 +5,12 @@
 
 import * as THREE from 'three'
 import m from 'mithril'
-import { apikey } from '../index.js'
+import { apikey, gpt_model } from '../index.js'
 
 const basePrompt = {
   role: 'system',
   content: `You are playing a survival game called Upstreet. You die when either when your Water or Food reach 0/10. In this game, you are given an Observed State that describes your current situation. You need to make a Plan of possible actions and follow it by performing an Action. After every action, you wait for the user to send you a new Observed state and you update your plan and perform a new action. Your task is to provide a plan of action and an action to take based on the user's observed state.
-  The possible actions are described in the Observed State under Actions = [option1, option2].
+  The possible actions are described in the Observed State under Actions = {option1:command style, option2:command style}.
   The conversation should follow the structure:
   \`\`\`
    User Input -> Observed State: ...
@@ -23,31 +23,30 @@ const basePrompt = {
 
   Example Conversation:
   \`\`\`
-  User: Observed State: Position = {"x":0,"y":0,"z":0}, Rotation = {"isEuler":true,"_x":0,"_y":3.141592653589793,"_z":0,"_order":"XYZ"}, Actions = ["move","rotate"], Water 4/10, Food 10/10, Items = ["bottle":{"state":["empty"],"actions":["fill"]}], Surrounding = {}
+  User: Observed State: Position = {"x":0,"y":0,"z":0}, Rotation = {"isEuler":true,"_x":0,"_y":3.141592653589793,"_z":0,"_order":"XYZ"},  Actions = {"move":{format:"agent move -position <x,y,z>"},"rotate":{format:"agent rotate -degrees <d>"},"use":{"format":"agent use <item> <action> <params>"}}, Water 4/10, Food 10/10, Items = {"bottle":{"actions":{"fill":{format:"<action> = drink <params> = target", condition:"user.distanceTo(target)<1 && state.includes("empty")"},"drink":{format:"<action> = drink <params> = ''", condition:"state.includes("full")}, state:["empty"]}}, Surrounding = {}
   Assistant: Plan: I should: 1. Look for water. 2. Go to water. 3. Fill bottle. 4. Drink water.
   Action: agent rotate -degrees 360
 
-  User: Observed State: Position = {"x":0,"y":0,"z":0}, Rotation = {"isEuler":true,"_x":0,"_y":3.141592653589793,"_z":0,"_order":"XYZ"}, Actions = ["move","rotate"], Water 4/10, Food 10/10, Items = ["bottle":{"state":["empty"],"actions":["fill"]}], Surrounding = {"lake":{"position":{"x":10,"y":0,"z":0},"actions":[]},"well":{"position":{"x":20,"y":0,"z":10}}
+  User: Observed State: Position = {"x":0,"y":0,"z":0}, Rotation = {"isEuler":true,"_x":0,"_y":3.141592653589793,"_z":0,"_order":"XYZ"},  Actions = {"move":{format:"agent move -position <x,y,z>"},"rotate":{format:"agent rotate -degrees <d>"},"use":{"format":"agent use <item> <action> <params>"}}, Water 4/10, Food 10/10, Items ={"bottle":{"actions":{"fill":{format:"<action> = drink <params> = target", condition:"user.distanceTo(target)<1 && state.includes("empty")"},"drink":{format:"<action> = drink <params> = ''", condition:"state.includes("full")}, state:["empty"]}}, Surrounding = {"lake":{"position":{"x":10,"y":0,"z":0},"actions":{}},"well":{"position":{"x":20,"y":0,"z":10}}}
   Assistant: Plan: 1. Go to water. 2. Fill bottle. 3. Drink water.
   Action: agent move -position 10,0,0
 
-  User: Observed State: Position = {"x":10,"y":0,"z":0}, Rotation = {"isEuler":true,"_x":0,"_y":3.141592653589793,"_z":0,"_order":"XYZ"}, Actions = ["move","rotate","use"], Water 3/10, Food 10/10, Items = ["bottle":{"state":["empty"],"actions":["fill"]}], Surrounding = {"lake":{"position":{"x":10,"y":0,"z":0},"actions":[]},"well":{"position":{"x":20,"y":0,"z":10}}
+  User: Observed State: Position = {"x":10,"y":0,"z":0}, Rotation = {"isEuler":true,"_x":0,"_y":3.141592653589793,"_z":0,"_order":"XYZ"}, Actions = {"move":{format:"agent move -position <x,y,z>"},"rotate":{format:"agent rotate -degrees <d>"},"use":{"format":"agent use <item> <action> <params>"}}, Water 3/10, Food 10/10, Items = {"bottle":{"actions":{"fill":{format:"<action> = drink <params> = target", condition:"user.distanceTo(target)<1 && state.includes("empty")"},"drink":{format:"<action> = drink <params> = ''", condition:"state.includes("full")}, state:["empty"]}}, Surrounding = {"lake":{"position":{"x":10,"y":0,"z":0},"actions":{}},"well":{"position":{"x":20,"y":0,"z":10},"actions":{}}}
   Assistant: Plan: 1. Fill bottle. 2. Drink water.
-  Action: agent use bottle fill
+  Action: agent use bottle fill lake
 
-  User: Observed State: Position = {"x":10,"y":0,"z":0}, Rotation = {"isEuler":true,"_x":0,"_y":3.141592653589793,"_z":0,"_order":"XYZ"}, Actions = ["move","rotate","use"], Water 3/10, Food 10/10, Items = ["bottle": {"state":["full"],"actions":["drink"]}], Surrounding = {"lake":{"position":{"x":10,"y":0,"z":0},"actions":[]},"well":{"position":{"x":20,"y":0,"z":10}}
+  User: Observed State: Position = {"x":10,"y":0,"z":0}, Rotation = {"isEuler":true,"_x":0,"_y":3.141592653589793,"_z":0,"_order":"XYZ"},  Actions = {"move":{format:"agent move -position <x,y,z>"},"rotate":{format:"agent rotate -degrees <d>"},"use":{"format":"agent use <item> <action> <params>"}}, Water 3/10, Food 10/10, Items = {"bottle":{"actions":{"fill":{format:"<action> = drink <params> = target", condition:"user.distanceTo(target)<1 && state.includes("empty")"},"drink":{format:"<action> = drink <params> = ''", condition:"state.includes("full")}, state:["empty"]}}, Surrounding = {"lake":{"position":{"x":10,"y":0,"z":0},"actions":{}}},"well":{"position":{"x":20,"y":0,"z":10},"actions":{}}}
   Assistant: Plan: 1. Drink water.
   Action: agent use bottle drink
 
-  User: Observed State: Position = {"x":10,"y":0,"z":0}, Rotation = {"isEuler":true,"_x":0,"_y":3.141592653589793,"_z":0,"_order":"XYZ"}, Actions = ["move","rotate","use"], Water 10/10, Food 10/10, Items = ["bottle": {"state":["full"],"actions":["drink"]}], Surrounding = {"lake":{"position":{"x":10,"y":0,"z":0},"actions":[]},"well":{"position":{"x":20,"y":0,"z":10}}
+  User: Observed State: Position = {"x":10,"y":0,"z":0}, Rotation = {"isEuler":true,"_x":0,"_y":3.141592653589793,"_z":0,"_order":"XYZ"},  Actions = {"move":{format:"agent move -position <x,y,z>"},"rotate":{format:"agent rotate -degrees <d>"},"use":{"format":"agent use <item> <action> <params>"}}, Water 10/10, Food 10/10, Items = {"bottle":{"actions":{"fill":{format:"<action> = drink <params> = target", condition:"user.distanceTo(target)<1 && state.includes("empty")"},"drink":{format:"<action> = drink <params> = ''", condition:"state.includes("full")}, state:["empty"]}}, Surrounding = {"lake":{"position":{"x":10,"y":0,"z":0},"actions":{}},"well":{"position":{"x":20,"y":0,"z":10},"actions":{}}}
   ...
   \`\`\`
 
-  Keep in mind to form the Action in this structure and stay strict with this : Action: agent <action> <args> without any period or spaces between commas
-  If you can use an item it follows this structure and stay strict with this: 'Action: agent use <item> <action>' without any period or spaces between commas
+  Keep in mind to form the Action in the structure defined by the action and stay strict with the format, e.g. "use":{"format":"agent use <item> <action> <params>"} --> agent use bottle fill lake
   You are only able to specify one action at a time, so you have to wait for the next observed state to be given before you can perform another action.
-  The actions available for an item are defined in the "Items" section of the Observed State in the "actions":[action1, action2] format! Only stick to the actions that are available for the item!
-  Always remember that you can only use the actions that are available in the Observed State, defined in the "Actions = [option1, option2]" section!!!
+  The actions available for an item are defined in the "Items" section of the Observed State in the "actions":{action1:command format, action2: command format} format! Only stick to the actions that are available for the item!
+  Always remember that you can only use the actions that are available in the Observed State, defined in the "Actions = {action1:command format, action2: command format}" section!!!
   If an action does not resolve you get penalized by the game!
   You die when either when your Water or Food reach 0/10 and any action will reduce subtract from the value putting you closer to death!
   `,
@@ -94,7 +93,10 @@ export class Agent {
     this.items = {}
     this.hunger = 10
     this.thirst = 10
-    this.actions = ['move', 'rotate']
+    this.actions = {
+      move: `agent move -position <x,y,z>`,
+      rotate: `agent rotate -degrees <d>`,
+    }
     this.plan = ''
     this.command = ''
     this.memory = new Deque(100)
@@ -265,22 +267,21 @@ export class Agent {
   }
 
   updateActions() {
-    // based on the surrounding objects, update the actions that the agent can take, e.g. if there is an object that is close enough to pick up, add the pick-up action
+    // based on the surrounding objects, update the actions that the agent can take, e.g. if there is an object that is close enough to pick-up, add the pick-up action
     // check if any objects in 1m radius
-    this.actions = ['move', 'rotate']
     console.log('Surrounding: ', this.surrounding, this.actions)
     for (const object of this.surrounding) {
       if (
         object.position.distanceTo(this.avatar.position) < 1 &&
         object.userData?.scene_actions
       ) {
-        this.actions.push('use')
+        this.actions['use'] = `agent use <item> <action> <params>`
       }
     }
     // iterate over the this.items object and extract possible actions
     for (const key in this.items) {
       if (this.items[key].userData?.item_actions) {
-        this.actions.push('use')
+        this.actions['use'] = `agent use <item> <action> <params>`
       }
     }
   }
@@ -323,16 +324,32 @@ export class Agent {
     this.updateActions()
     const observedState = this.observedState()
     console.log('OSBERVED', observedState)
+
+    if (this.memory.toArray().length > 30) {
+      const { message } = await summarizeGPT(this.memory.toArray())
+      console.log('Summerize', message)
+      const memory_backup = []
+      if (message !== undefined) {
+        memory_backup.push(message)
+      }
+      memory_backup.push(...this.memory.toArray().slice(-5))
+      console.log('MEMORY Backup', memory_backup)
+      this.memory = new Deque(100)
+      this.memory.items = memory_backup
+    }
+
     this.memory.push({
       role: 'user',
       content: observedState,
     })
+
     const { message } = await callGPT(this.memory.toArray())
     console.log('OUT', message)
-
-    this.memory.push(message)
+    if (message !== undefined) {
+      this.memory.push(message)
+      await this.compileCommand(message.content)
+    }
     console.log('MEMORY', this.memory)
-    this.compileCommand(message.content)
     await this.checkSurrounding(scene)
     this.updateActions()
     this.renderAvatarView()
@@ -358,10 +375,7 @@ export class Agent {
         var box = new THREE.Box3().setFromObject(object)
         const sphere = new THREE.Sphere()
         box.getBoundingSphere(sphere)
-        if (
-          frustum.intersectsSphere(sphere) ||
-          sphere.distanceToPoint(this.avatar.position) < 1
-        ) {
+        if (frustum.intersectsSphere(sphere)) {
           // add the object to the surrounding and break out of traverse
           this.surrounding.add(object)
         }
@@ -370,7 +384,7 @@ export class Agent {
     console.log('Surrounding', this.surrounding)
   }
 
-  compileCommand(message) {
+  async compileCommand(message) {
     let resolved = false
     // Split text at position 'Action: '
     const split = message.split('Action: ')
@@ -397,21 +411,71 @@ export class Agent {
         m.redraw()
         resolved = true
       }
+    } else if (command === 'rotate') {
+      const rotationType = parts[2]
+      if (rotationType === '-degrees') {
+        let startRotation = this.avatar.rotation.y
+        const degrees = parts[3]
+        console.log('current rotation', startRotation)
+        console.log(
+          'rotate by degrees',
+          degrees,
+          THREE.MathUtils.degToRad(degrees)
+        )
+        while (
+          this.avatar.avatar.scene.rotation.y - startRotation <
+          THREE.MathUtils.degToRad(degrees)
+        ) {
+          console.log(
+            'current rotation',
+            startRotation,
+            this.avatar.avatar.scene.rotation.y,
+            this.avatar.avatar.scene.rotation.y - startRotation,
+            THREE.MathUtils.degToRad(degrees)
+          )
+          if (degrees > this.avatar.avatar.scene.rotation.y) {
+            console.log('rotate right')
+            this.avatar.rotation.y += 0.01
+            this.avatar.avatar.scene.rotation.y += 0.01
+            this.renderAvatarView()
+            this.checkSurrounding(this.engine.scene._scene)
+            m.redraw()
+            setTimeout(() => {}, 1000)
+          } else {
+            console.log('rotate left')
+            this.avatar.rotation.y -= 0.01
+            this.avatar.avatar.scene.rotation.y -= 0.01
+            this.renderAvatarView()
+            this.checkSurrounding(this.engine.scene._scene)
+            m.redraw()
+            setTimeout(() => {}, 1000)
+          }
+          await new Promise((resolve) => setTimeout(resolve, 5))
+        }
+        this.thirst -= 0.5
+        this.hunger -= 0.5
+        resolved = true
+      }
     } else if (command === 'pick-up') {
       const objectName = parts[2]
       const object = [...this.surrounding.values()].find(
         (o) => o.name === objectName
       )
-      if (object && object.userData.scene_actions.includes('pick-up')) {
+
+      if (object && object.userData.scene_actions['pick-up']) {
         // replace pick-up action with drop action
-        object.userData.item_actions.push('drop')
+        object.userData.item_actions['drop'] = {
+          format: `<action> = drop <params> = ''`,
+        }
         // check if object.name is already in this.items and if so add a number to the end of the name
         let name = object.name
         let counter = 1
+
         while (name in this.items) {
           name = object.name + counter
           counter++
         }
+
         this.items[name] = object
         console.log('updated items = ', this.items)
         // remove object from this.engine.scene._scene
@@ -430,7 +494,8 @@ export class Agent {
         console.log('object', object, objectName)
         if (object && object.userData.item_actions) {
           const action = parts[3]
-          if (object.userData.item_actions.includes(action)) {
+          console.log('Trying to perform action', action)
+          if (object.userData.item_actions[action]) {
             if (action === 'drink') {
               console.log('drank water')
               this.thirst = 10
@@ -440,6 +505,41 @@ export class Agent {
             } else if (action === 'eat') {
               this.hunger = 10
               resolved = true
+            } else if (action === 'equip') {
+              console.log(
+                'equipping',
+                this.items[objectName].userData.item_actions
+              )
+              delete this.items[objectName].userData.item_actions['equip']
+              this.items[objectName].userData.item_actions['unequip'] = {
+                format: `<action> = unequip <params> = ''`,
+              }
+              this.items[objectName].userData.item_actions['attack'] = {
+                format: `<action> = attack <params> = target`,
+                condition: `target.distanceTo(user) < 1`,
+              }
+              resolved = true
+            } else if (action === 'unequip') {
+              delete this.items[objectName].userData.item_actions['unequip']
+              delete this.items[objectName].userData.item_actions['attack']
+              this.items[objectName].userData.item_actions['equip'] = {
+                format: `<action> = equip <params> = ''`,
+              }
+              resolved = true
+            } else if (action === 'attack') {
+              console.log('Trying to attack')
+              const targetName = parts[4]
+              console.log('Trying to attack', targetName)
+              const target = [...this.surrounding.values()].find(
+                (o) => o.name === targetName
+              )
+              if (target) {
+                console.log('ATTACKING', target)
+                this.hunger = 10
+                this.surrounding.delete(target)
+                this.engine.scene._scene.remove(target)
+                resolved = true
+              }
             }
           }
         }
@@ -453,7 +553,7 @@ export class Agent {
         console.log('USING SURROUNDING', action, object)
         if (object.userData.scene_actions) {
           if (action === 'talk') {
-            if (object.userData.scene_actions.includes('talk')) {
+            if (object.userData.scene_actions['talk']) {
               console.log('TALKING')
               this.hunger = 10
               resolved = true
@@ -462,11 +562,13 @@ export class Agent {
           if (action === 'pick-up') {
             console.log('PICKING UP', object.userData.scene_actions)
             if (
-              object.userData.scene_actions.includes('pick-up') &&
+              object.userData.scene_actions['pick-up'] &&
               object.position.distanceTo(this.avatar.position) < 1
             ) {
               // replace pick-up action with drop action
-              object.userData.item_actions.push('drop')
+              object.userData.item_actions[
+                'drop'
+              ] = `<action> = drop <params> = ''`
               // check if object.name is already in this.items and if so add a number to the end of the name
               let name = object.name
               let counter = 1
@@ -478,6 +580,7 @@ export class Agent {
               console.log('updated items = ', this.items)
               // remove object from this.engine.scene._scene
               this.engine.scene._scene.remove(object)
+              this.surrounding.delete(object)
               console.log('Picked up object', objectName)
               console.log('updated scene = ', this.engine.scene._scene)
               resolved = true
@@ -553,6 +656,40 @@ async function base64ToBlobWithOffscreenCanvas(base64String, mimeType) {
  *
  * @param messages
  */
+async function summarizeGPT(messages) {
+  let message
+  console.log('messages:', messages)
+  let summaryPrompt = {
+    role: 'system',
+    content:
+      'You play a video game call "Upstreet". You will be given the last interactions you had in the , by the user. Summarize them in a way that the context will help you follow the same structure in responses, while keeping important game information intact. You are allowed to fill 4000 tokens from the GPT tokenizer.',
+  }
+  const response = await fetch(`${endpoint}`, {
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apikey}`,
+      },
+
+      body: JSON.stringify({
+        // TODO: Prune messages to fit within the token limit without
+        //  dropping the system message.
+        messages: [
+          summaryPrompt,
+          { role: 'user', content: JSON.stringify(messages) },
+        ],
+        model: gpt_model,
+      }),
+    }),
+    json = await response.json()
+  message = json.choices?.[0]?.message
+
+  console.log('message:', json)
+
+  return { message }
+}
+
 async function callGPT(messages) {
   let message
   console.log('messages:', messages)
@@ -574,43 +711,43 @@ async function callGPT(messages) {
             content: message.content,
           })),
         ],
-        model: 'gpt-4',
+        model: gpt_model,
       }),
     }),
     json = await response.json()
   message = json.choices?.[0]?.message
 
   console.log('message:', json)
-  while (message === undefined) {
-    // wait 0.5 seconds and try again
-    await new Promise((r) => setTimeout(r, 500))
-    console.log('messages:', messages)
-    const response = await fetch(`${endpoint}`, {
-        method: 'POST',
-
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${apikey}`,
-        },
-
-        body: JSON.stringify({
-          // TODO: Prune messages to fit within the token limit without
-          //  dropping the system message.
-          messages: [
-            basePrompt,
-            ...messages.map((message) => ({
-              role: message.role,
-              content: message.content,
-            })),
-          ],
-          model: 'gpt-3.5-turbo',
-        }),
-      }),
-      json = await response.json()
-    message = json.choices?.[0]?.message
-
-    console.log('message:', json)
-  }
+  // while (message === undefined) {
+  //   // wait 0.5 seconds and try again
+  //   await new Promise((r) => setTimeout(r, 2000))
+  //   console.log('messages:', messages)
+  //   const response = await fetch(`${endpoint}`, {
+  //       method: 'POST',
+  //
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         Authorization: `Bearer ${apikey}`,
+  //       },
+  //
+  //       body: JSON.stringify({
+  //         // TODO: Prune messages to fit within the token limit without
+  //         //  dropping the system message.
+  //         messages: [
+  //           basePrompt,
+  //           ...messages.map((message) => ({
+  //             role: message.role,
+  //             content: message.content,
+  //           })),
+  //         ],
+  //         model: gpt_model,
+  //       }),
+  //     }),
+  //     json = await response.json()
+  //   message = json.choices?.[0]?.message
+  //
+  //   console.log('message:', json)
+  // }
 
   return { message }
 }

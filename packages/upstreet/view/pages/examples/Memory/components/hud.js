@@ -20,13 +20,21 @@ export function HUD() {
           }
         }
       }
+      const surroundings = []
+      console.log('HUD SURROUNDING', agent.surrounding)
+      if (agent.surrounding) {
+        for (const object of agent.surrounding) {
+          surroundings.push(object.name)
+        }
+      }
       return m(_HUD, [
         m('span', `Thirst: ${thirst}`),
         m('span', `Hunger: ${hunger}`),
-        m('div', `Actions: ${agent.actions}`),
+        m('div', `Actions: ${JSON.stringify(agent.actions)}`),
         m('div', `Items: ${JSON.stringify(items)}`),
         m('div', `Plan: ${agent.plan}`),
         m('div', `Action: ${agent.command}`),
+        m('div', `Surrounding: ${JSON.stringify(surroundings)}`),
       ])
     },
   }

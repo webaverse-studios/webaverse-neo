@@ -105,26 +105,47 @@ export class Grid extends Scene {
     this.#fullBottle.scene.scale.set(3, 3, 3)
     this.#fullBottle.scene.rotation.set(0, 0, 0)
     this.#fullBottle.scene.position.set(3, 1, 10)
+    this.#fullBottle.scene.name = 'bottle'
     this.#fullBottle.scene.userData = {
-      scene_actions: ['pick-up'],
-      item_actions: ['drink'],
+      scene_actions: {
+        'pick-up': {
+          format: `<action> = pick-up <params> = ''`,
+          condition: `item.distanceTo(user) < 1`,
+        },
+      },
+      item_actions: {
+        drink: `<action> = drink <params> = ''`,
+        condition: `state.includes('full')`,
+      },
       state: ['full'],
     }
     console.log('BOTTLES', this.#fullBottle.scene, this.#emptyBottle.scene)
 
     this.#npc.scene.position.set(0, 0, 10)
     this.#npc.scene.name = 'bob'
-    this.#npc.scene.userData = { scene_actions: ['talk'] }
+    this.#npc.scene.userData = {
+      scene_actions: {
+        talk: {
+          format: `<action> = talk <params> = ''`,
+          condition: `item.distanceTo(user) < 1`,
+        },
+      },
+    }
 
     this.#monster.scene.position.set(0, 0, -10)
     this.#monster.scene.name = 'monster'
-    this.#monster.scene.userData = { scene_actions: ['attack'] }
+    this.#monster.scene.userData = { state: ['attackable'] }
 
     this.#sword.scene.position.set(0, 0, 20)
     this.#sword.scene.name = 'sword'
     this.#sword.scene.userData = {
-      scene_actions: ['pick-up'],
-      item_actions: ['equip'],
+      scene_actions: {
+        'pick-up': {
+          format: `<action> = pick-up <params> = ''`,
+          condition: `item.distanceTo(user) < 1`,
+        },
+      },
+      item_actions: { equip: { format: `<action> = equip <params> = ''` } },
     }
 
     this._scene.add(this.#lines)
